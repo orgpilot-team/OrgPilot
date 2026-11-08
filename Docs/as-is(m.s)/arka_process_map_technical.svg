@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3000" height="2250" viewBox="0 0 3000 2250" role="img" aria-labelledby="t d">
+<title id="t">نقشه فنی فرایندها و جریان داده آرکا</title>
+<desc id="d">نقشه یک‌صفحه‌ای فنی شامل سه Swimlane، رویدادهای داده، تیم‌های مالک، SLA، کنترل داده و حلقه مدیریت</desc>
+<defs>
+ <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#f5f7f4"/><stop offset="1" stop-color="#e9efec"/></linearGradient>
+ <linearGradient id="head" x2="1"><stop stop-color="#123247"/><stop offset="1" stop-color="#1f5663"/></linearGradient>
+ <filter id="sh" x="-15%" y="-20%" width="130%" height="145%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#193746" flood-opacity=".13"/></filter>
+ <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1L11 6 1 11" fill="none" stroke="#537887" stroke-width="2"/></marker>
+ <marker id="teal" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1L11 6 1 11" fill="none" stroke="#18877c" stroke-width="2"/></marker>
+ <style>
+ text{font-family:Tahoma,"Segoe UI",sans-serif;fill:#193443}.white{fill:#f7fbfa}.muted{fill:#647d87}.soft{fill:#8aa0a6}.tiny{font-size:15px}.sm{font-size:18px}.md{font-size:21px}.lg{font-size:27px}.xl{font-size:42px}.bold{font-weight:700}.center{text-anchor:middle}.right{text-anchor:end}.lane{fill:#fff;stroke:#cbd8d6;stroke-width:2}.grid{stroke:#d7e1df;stroke-width:2;stroke-dasharray:7 8}.n{fill:#f5fbfa;stroke:#78a29e;stroke-width:2}.n2{fill:#fff8e9;stroke:#d7ae62;stroke-width:2}.n3{fill:#fff3f1;stroke:#d58b7e;stroke-width:2}.pill{fill:#e4f1ee;stroke:#b5d1cb;stroke-width:1.5}.pill2{fill:#fff3dc;stroke:#e5cd9c;stroke-width:1.5}.pill3{fill:#fce8e4;stroke:#e6b4aa;stroke-width:1.5}.flow{fill:none;stroke:#537887;stroke-width:3;marker-end:url(#a)}.dflow{fill:none;stroke:#18877c;stroke-width:3;stroke-dasharray:8 7;marker-end:url(#teal)}.data{fill:#eaf3f4;stroke:#adc5ca;stroke-width:1.5}.team{fill:#163d50}.frame{fill:#f9fbfa;stroke:#bdccca;stroke-width:2}
+ </style>
+</defs>
+<rect width="3000" height="2250" fill="url(#bg)"/>
+<!-- Header -->
+<rect x="0" y="0" width="3000" height="180" fill="url(#head)"/>
+<text x="2860" y="73" class="sm right" fill="#a9d9ce">نقشه فنی سازمان • فرایند × داده × مالکیت</text>
+<text x="2860" y="133" class="xl right white bold">آرکا | از ورودی تقاضا تا تحویل، قرارداد و یادگیری</text>
+<text x="120" y="74" class="sm white">نسخه‌ی کارگاهی</text><text x="120" y="112" class="tiny" fill="#b5cbd0">یک صفحه • مقیاس فرایندی: end-to-end / سطح تیم</text>
+<!-- Legend -->
+<rect x="90" y="205" width="2820" height="105" rx="20" class="frame"/>
+<text x="2845" y="246" class="md right bold">راهنمای خواندن</text>
+<rect x="2450" y="258" width="25" height="22" rx="6" fill="#edf8f5" stroke="#78a29e" stroke-width="2"/><text x="2430" y="278" class="sm right">فعالیت / وضعیت</text>
+<path d="M2160 270h85" class="flow"/><text x="2135" y="278" class="sm right">رویداد / handoff</text>
+<path d="M1785 270h85" class="dflow"/><text x="1760" y="278" class="sm right">جریان داده / ارجاع</text>
+<rect x="1390" y="258" width="115" height="26" rx="13" class="pill2"/><text x="1448" y="278" class="tiny center">SLA / هدف</text><text x="1360" y="278" class="sm right">تعهد زمانی</text>
+<rect x="970" y="258" width="115" height="26" rx="13" class="data"/><text x="1027" y="278" class="tiny center">CSV / رویداد</text><text x="940" y="278" class="sm right">منبع ثبت‌شده</text>
+<text x="720" y="278" class="sm right">مسیر در هر swimlane از راست به چپ است</text>
+<text x="300" y="278" class="tiny muted">شناسه‌ها مطابق داده: M=مدیر، T=تیم، WF=گردش‌کار</text>
+<!-- Org spine -->
+<rect x="90" y="335" width="2820" height="115" rx="20" fill="#e2eeeb" stroke="#a9c4bd" stroke-width="2"/>
+<text x="2840" y="377" class="md right bold">ساختار مالکیت (اسپاین سازمانی)</text>
+<rect x="2040" y="390" width="300" height="43" rx="14" class="team"/><text x="2190" y="419" class="sm center white bold">مدیر ارشد M01 • کل سازمان</text>
+<path d="M2040 412H1900M1900 412V425M1900 412H1880" fill="none" stroke="#73948e" stroke-width="2"/>
+<rect x="1490" y="390" width="360" height="43" rx="14" class="team"/><text x="1670" y="419" class="sm center white bold">فروش M02</text>
+<rect x="1080" y="390" width="360" height="43" rx="14" class="team"/><text x="1260" y="419" class="sm center white bold">عملیات M03</text>
+<rect x="670" y="390" width="360" height="43" rx="14" class="team"/><text x="850" y="419" class="sm center white bold">پشتیبانی M04</text>
+<text x="1815" y="434" class="tiny right muted">T_ENT/M05 • T_DIG/M06 • T_MKT/M11*</text>
+<text x="1405" y="434" class="tiny right muted">T_WH/M07 • T_SHP/M08</text>
+<text x="995" y="434" class="tiny right muted">T_RSP/M09 • T_CMP/M10</text>
+<text x="300" y="419" class="tiny muted">* بازارگاه از روز ۷۵ به ساختار افزوده می‌شود.</text>
+<!-- WF3 -->
+<rect x="90" y="475" width="2820" height="365" rx="24" fill="#f4f0f7" stroke="#cbb9d5" stroke-width="2"/>
+<rect x="2510" y="493" width="360" height="45" rx="15" fill="#624876"/><text x="2690" y="524" class="md center white bold">WF3 • سرنخ تا قرارداد سازمانی</text>
+<text x="2465" y="522" class="tiny right muted">فروش سازمانی • handoff از بازاریابی دیجیتال</text>
+<rect x="2320" y="553" width="540" height="54" rx="13" fill="#e6dcef"/><text x="2840" y="587" class="sm right bold">T_DIG • جذب تقاضا</text>
+<rect x="2320" y="614" width="540" height="54" rx="13" fill="#e6dcef"/><text x="2840" y="648" class="sm right bold">T_ENT • مدیریت فرصت</text>
+<path d="M2300 555v214M1960 555v214M1620 555v214M1280 555v214M940 555v214M600 555v214" class="grid"/>
+<!-- WF3 nodes sequence -->
+<rect x="1980" y="558" width="285" height="78" rx="15" class="n"/><text x="2122" y="588" class="sm center bold">کمپین / سرنخ</text><text x="2122" y="615" class="tiny center muted">mkt_daily • crm_leads</text>
+<rect x="1640" y="619" width="285" height="78" rx="15" class="n2"/><text x="1782" y="650" class="sm center bold">تماس اول</text><text x="1782" y="678" class="tiny center muted">first_contact</text>
+<rect x="1300" y="619" width="285" height="78" rx="15" class="n"/><text x="1442" y="650" class="sm center bold">واجد شرایط</text><text x="1442" y="678" class="tiny center muted">qualified</text>
+<rect x="960" y="619" width="285" height="78" rx="15" class="n"/><text x="1102" y="650" class="sm center bold">پیشنهاد ارسال‌شده</text><text x="1102" y="678" class="tiny center muted">proposal_sent</text>
+<path d="M1970 598H1938V658H1930M1630 658H1598M1290 658H1258" class="flow"/>
+<path d="M1955 580H1935V650" class="dflow"/>
+<rect x="620" y="619" width="285" height="78" rx="15" class="n3"/><text x="762" y="650" class="sm center bold">بستن فرصت</text><text x="762" y="678" class="tiny center muted">won / lost</text>
+<path d="M950 658H918" class="flow"/>
+<rect x="286" y="554" width="278" height="78" rx="15" class="data"/><text x="425" y="586" class="sm center bold">اصلاح ارزش قرارداد</text><text x="425" y="613" class="tiny center muted">value_corrected event</text>
+<path d="M610 656H580V594H574" class="dflow"/>
+<rect x="1640" y="704" width="285" height="40" rx="12" class="pill2"/><text x="1782" y="731" class="tiny center">≤۲۴h • هدف میانه ۸h</text>
+<rect x="1300" y="704" width="285" height="40" rx="12" class="pill2"/><text x="1442" y="731" class="tiny center">≤۷۲h • هدف میانه ۴۸h</text>
+<rect x="960" y="704" width="285" height="40" rx="12" class="pill2"/><text x="1102" y="731" class="tiny center">≤۱۲۰h • هدف میانه ۹۶h</text>
+<rect x="620" y="704" width="285" height="40" rx="12" class="pill2"/><text x="762" y="731" class="tiny center">≤۷۲۰h • هدف میانه ۴۰۰h</text>
+<text x="2840" y="786" class="tiny right muted">شاخص WF3: درصد بستن در SLA، پنجره ۷ روزه • هدف ۶۵٪ / هشدار ۵۰٪ / بحرانی ۴۰٪</text>
+<text x="470" y="786" class="tiny right muted">مقدار قرارداد در revenue_daily از won و آخرین value_corrected بازسازی می‌شود.</text>
+<!-- WF1 -->
+<rect x="90" y="860" width="2820" height="445" rx="24" fill="#edf5f2" stroke="#a9ccc1" stroke-width="2"/>
+<rect x="2510" y="878" width="360" height="45" rx="15" fill="#17675e"/><text x="2690" y="909" class="md center white bold">WF1 • سفارش تا تحویل</text>
+<text x="2465" y="907" class="tiny right muted">سفارش / انبار / ارسال / تیکت پیگیری</text>
+<rect x="2320" y="940" width="540" height="57" rx="13" fill="#dceee8"/><text x="2840" y="976" class="sm right bold">فروش • ثبت / پرداخت</text>
+<rect x="2320" y="1002" width="540" height="57" rx="13" fill="#dceee8"/><text x="2840" y="1038" class="sm right bold">انبار • جمع‌آوری</text>
+<rect x="2320" y="1064" width="540" height="57" rx="13" fill="#dceee8"/><text x="2840" y="1100" class="sm right bold">ارسال • تحویل</text>
+<rect x="2320" y="1126" width="540" height="57" rx="13" fill="#dceee8"/><text x="2840" y="1162" class="sm right bold">پشتیبانی • پیگیری سفارش</text>
+<path d="M2300 940v258M2020 940v258M1740 940v258M1460 940v258M1180 940v258M900 940v258M620 940v258" class="grid"/>
+<rect x="2030" y="950" width="245" height="78" rx="15" class="n"/><text x="2152" y="980" class="sm center bold">ایجاد سفارش</text><text x="2152" y="1008" class="tiny center muted">orders.created_at</text>
+<rect x="1750" y="950" width="245" height="78" rx="15" class="n2"/><text x="1872" y="980" class="sm center bold">پرداخت</text><text x="1872" y="1008" class="tiny center muted">paid / payment_failed</text>
+<rect x="1470" y="1012" width="245" height="78" rx="15" class="n"/><text x="1592" y="1042" class="sm center bold">جمع‌آوری</text><text x="1592" y="1070" class="tiny center muted">picked</text>
+<rect x="1190" y="1074" width="245" height="78" rx="15" class="n"/><text x="1312" y="1104" class="sm center bold">تحویل به ارسال</text><text x="1312" y="1132" class="tiny center muted">handed_over</text>
+<rect x="910" y="1074" width="245" height="78" rx="15" class="n"/><text x="1032" y="1104" class="sm center bold">تحویل مشتری</text><text x="1032" y="1132" class="tiny center muted">delivered ≤ promised_by</text>
+<rect x="640" y="1136" width="235" height="78" rx="15" class="n3"/><text x="757" y="1166" class="sm center bold">تیکت پیگیری</text><text x="757" y="1194" class="tiny center muted">order_id → ticket</text>
+<path d="M2020 990H2005M1740 990H1728V1050H1718M1460 1050H1448V1112H1438M1180 1112H1170M900 1112H888V1174H878" class="flow"/>
+<path d="M2030 1021H2010V1050H1592V1104M1592 1090V1112H1312" class="dflow"/>
+<rect x="1750" y="1140" width="245" height="38" rx="11" class="pill2"/><text x="1872" y="1166" class="tiny center">≤۱h • هدف ۰٫۲۵h</text>
+<rect x="1470" y="1185" width="245" height="38" rx="11" class="pill2"/><text x="1592" y="1211" class="tiny center">≤۱۲h • هدف ۴h</text>
+<rect x="1190" y="1185" width="245" height="38" rx="11" class="pill2"/><text x="1312" y="1211" class="tiny center">≤۶h • هدف ۳h</text>
+<rect x="910" y="1225" width="245" height="38" rx="11" class="pill2"/><text x="1032" y="1251" class="tiny center">موعد وعده‌داده‌شده</text>
+<rect x="2030" y="1042" width="245" height="38" rx="11" class="pill3"/><text x="2152" y="1068" class="tiny center">payment_failed → اصلاح / لغو</text>
+<text x="2840" y="1276" class="tiny right muted">K_WF1_SLA: تمام مراحل زمانی + تحویل تا موعد • هدف ۹۰٪ / هشدار ۸۲٪ / بحرانی ۷۰٪</text>
+<text x="470" y="1276" class="tiny right muted">رویدادها append-only؛ رویدادهای بازپرداخت و لغو بر درآمد/وضعیت سفارش اثر دارند.</text>
+<!-- WF2 -->
+<rect x="90" y="1325" width="2820" height="355" rx="24" fill="#fbefec" stroke="#e2b5aa" stroke-width="2"/>
+<rect x="2510" y="1343" width="360" height="45" rx="15" fill="#a04e45"/><text x="2690" y="1374" class="md center white bold">WF2 • شکایت تا حل</text>
+<text x="2465" y="1372" class="tiny right muted">تیکت → پاسخ → بازرسی عملیاتی → حل / بازگشایی → CSAT</text>
+<rect x="2320" y="1410" width="540" height="57" rx="13" fill="#f7dfda"/><text x="2840" y="1446" class="sm right bold">T_RSP • پاسخ‌گویی</text>
+<rect x="2320" y="1472" width="540" height="57" rx="13" fill="#f7dfda"/><text x="2840" y="1508" class="sm right bold">T_WH / T_OPS • بازرسی</text>
+<rect x="2320" y="1534" width="540" height="57" rx="13" fill="#f7dfda"/><text x="2840" y="1570" class="sm right bold">T_CMP • شکایات و مرجوعی</text>
+<path d="M2300 1410v190M1980 1410v190M1660 1410v190M1340 1410v190M1020 1410v190M700 1410v190" class="grid"/>
+<rect x="1990" y="1418" width="270" height="78" rx="15" class="n"/><text x="2125" y="1448" class="sm center bold">ایجاد تیکت</text><text x="2125" y="1476" class="tiny center muted">ticket + order_id + category</text>
+<rect x="1670" y="1418" width="270" height="78" rx="15" class="n2"/><text x="1805" y="1448" class="sm center bold">پاسخ اول</text><text x="1805" y="1476" class="tiny center muted">first_response</text>
+<rect x="1350" y="1480" width="270" height="78" rx="15" class="n"/><text x="1485" y="1510" class="sm center bold">بازرسی</text><text x="1485" y="1538" class="tiny center muted">inspected • انبار / عملیات</text>
+<rect x="1030" y="1542" width="270" height="78" rx="15" class="n"/><text x="1165" y="1572" class="sm center bold">حل پرونده</text><text x="1165" y="1600" class="tiny center muted">resolved</text>
+<rect x="710" y="1542" width="270" height="78" rx="15" class="n3"/><text x="845" y="1572" class="sm center bold">بازگشایی / CSAT</text><text x="845" y="1600" class="tiny center muted">reopened • answered</text>
+<path d="M1980 1457H1948M1660 1457H1640V1519H1628M1340 1519H1320V1581H1308M1020 1581H988" class="flow"/>
+<path d="M1485 1558V1628H1805V1505" class="dflow"/>
+<rect x="1670" y="1508" width="270" height="38" rx="11" class="pill2"/><text x="1805" y="1534" class="tiny center">≤۸h • هدف ۴h</text>
+<rect x="1350" y="1582" width="270" height="38" rx="11" class="pill2"/><text x="1485" y="1608" class="tiny center">≤۳۶h • هدف ۱۸h</text>
+<rect x="1030" y="1624" width="270" height="38" rx="11" class="pill2"/><text x="1165" y="1650" class="tiny center">≤۲۴h • هدف ۸h</text>
+<text x="2840" y="1648" class="tiny right muted">K_WF2_SLA: شکایات T_CMP حل‌شده ظرف ۴۸h • هدف ۹۰٪ / هشدار ۸۰٪ / بحرانی ۷۰٪</text>
+<text x="470" y="1648" class="tiny right muted">reopened در تاریخچه تیکت حفظ می‌شود؛ حل مجدد باید در تحلیل backlog و کیفیت دیده شود.</text>
+<!-- Data architecture and control -->
+<rect x="90" y="1700" width="2820" height="430" rx="24" fill="#e8eff1" stroke="#b7c9cd" stroke-width="2"/>
+<text x="2840" y="1744" class="lg right bold">لایه‌ی مشترک داده و کنترل — این جریان‌ها چطور قابل مشاهده می‌شوند؟</text>
+<!-- data source chips -->
+<rect x="2050" y="1770" width="800" height="128" rx="18" fill="#f8fbfb" stroke="#b1c5ca" stroke-width="2"/>
+<text x="2815" y="1804" class="md right bold">منابع ورودی شبانه (append-only)</text>
+<text x="2815" y="1840" class="sm right">orders + order_events • web_sessions • CRM leads + events</text>
+<text x="2815" y="1872" class="sm right">tickets + ticket_events + CSAT • mkt_daily • tasks + task_events</text>
+<text x="2815" y="1895" class="tiny right muted">staff_availability • تقویم • ورودی و تصمیم مدیر</text>
+<path d="M2040 1835H1960" class="dflow"/>
+<rect x="1505" y="1770" width="430" height="128" rx="18" fill="#f8fbfb" stroke="#b1c5ca" stroke-width="2"/>
+<text x="1898" y="1805" class="md right bold">ساخت fact / مشتق</text>
+<text x="1898" y="1841" class="sm right">order_fact • ticket_fact</text>
+<text x="1898" y="1873" class="sm right">lead_fact • task_fact</text>
+<path d="M1495 1835H1415" class="dflow"/>
+<rect x="975" y="1770" width="420" height="128" rx="18" fill="#f8fbfb" stroke="#b1c5ca" stroke-width="2"/>
+<text x="1358" y="1805" class="md right bold">KPI / خط پایه / SLA</text>
+<text x="1358" y="1841" class="sm right">تعریف مرجع در kpi_dictionary</text>
+<text x="1358" y="1873" class="sm right">calendar + targets + رخدادها</text>
+<path d="M965 1835H885" class="dflow"/>
+<rect x="435" y="1770" width="430" height="128" rx="18" fill="#f8fbfb" stroke="#b1c5ca" stroke-width="2"/>
+<text x="828" y="1805" class="md right bold">گزارش و تصمیم</text>
+<text x="828" y="1841" class="sm right">مالک شاخص → هشدار → مدیر</text>
+<text x="828" y="1873" class="sm right">کارت تصمیم → task → پیگیری اثر</text>
+<path d="M650 1903V1942H2700V1903" class="flow"/>
+<text x="1680" y="1938" class="tiny center muted">اثر اقدام به داده‌ی روزهای بعد برمی‌گردد؛ ورودی روز D روی گزارش صبح D+1 اثر دارد.</text>
+<!-- quality/privacy -->
+<rect x="2050" y="1960" width="800" height="135" rx="18" fill="#fff6e5" stroke="#ddc48e" stroke-width="2"/>
+<text x="2815" y="1997" class="md right bold">کیفیت داده و ورودی‌های نامطمئن</text>
+<text x="2815" y="2032" class="sm right">manifest • منبع غایب • رکورد دیررس/اصلاحی • export تکراری • تغییر نام ستون</text>
+<text x="2815" y="2066" class="tiny right muted">مفقودی اعلام شود؛ داده‌ی دیررس با تاریخ وقوع تحلیل شود، نه روز ورود.</text>
+<rect x="1150" y="1960" width="850" height="135" rx="18" fill="#eef5f3" stroke="#b8cfca" stroke-width="2"/>
+<text x="1965" y="1997" class="md right bold">قواعد هشدار / دسترسی</text>
+<text x="1965" y="2032" class="sm right">بدون تکرار سیگنالِ ثابت • تشدید با شدت، دوام یا بدترشدن</text>
+<text x="1965" y="2066" class="tiny right muted">داده فردی ظرفیت فقط برای سرپرست مستقیم؛ سایر سطوح تجمیعی.</text>
+<rect x="250" y="1960" width="850" height="135" rx="18" fill="#f1edf6" stroke="#cbbdd9" stroke-width="2"/>
+<text x="1065" y="1997" class="md right bold">پوشش داده و مرز تحلیل</text>
+<text x="1065" y="2032" class="sm right">حجم جریان در فایل‌های خام به‌تنهایی جمع‌بندی بصری معتبری نیست.</text>
+<text x="1065" y="2066" class="tiny right muted">پس این نقشه، پهنای جریان را مقایسه نمی‌کند؛ لازم است ابتدا KPI شود.</text>
+<!-- Bottom technical note -->
+<text x="2910" y="2190" class="tiny right muted">مبنای ترسیم: README_FA + صورت‌جلسه مدیران + workflow_definitions + reference_views + kpi_dictionary + org/access_matrix • داده‌ها شبیه‌سازی‌شده‌اند.</text>
+<text x="100" y="2190" class="tiny muted">پرسش‌های ورکشاپ: کدام handoff بیشترین انتظار دارد؟ چه کسی مالک حل است؟ رویداد ناقص/دیررس چگونه بازسازی می‌شود؟</text>
+</svg>
