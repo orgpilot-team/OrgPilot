@@ -1,0 +1,54 @@
+flowchart LR
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  cal["cal: calculation input"]
+  csat["csat: calculation input"]
+  task_events["task_events: calculation input"]
+  tasks["tasks: calculation input"]
+  ticket_events["ticket_events: calculation input"]
+  tickets["tickets: calculation input"]
+  task_fact["task_fact: SQL view"]
+  tasks -->|DERIVED execution input| task_fact
+  task_events -->|DERIVED execution input| task_fact
+  tasks -->|"DERIVED join/filter: task_id"| task_fact
+  ticket_fact["ticket_fact: SQL view"]
+  tickets -->|DERIVED execution input| ticket_fact
+  ticket_events -->|DERIVED execution input| ticket_fact
+  tickets -->|"DERIVED join/filter: ticket_id"| ticket_fact
+  K_RSP_FRT_MED["K_RSP_FRT_MED"]
+  ticket_fact -->|DERIVED computation| K_RSP_FRT_MED
+  ticket_events -->|"DERIVED join/population: ticket_id"| K_RSP_FRT_MED
+  tickets -->|"DERIVED join/population: ticket_id"| K_RSP_FRT_MED
+  K_RSP_FRT_MED -->|CONFIRMED entity_id| T_RSP
+  K_RSP_FRT_2H_PCT["K_RSP_FRT_2H_PCT"]
+  ticket_fact -->|DERIVED computation| K_RSP_FRT_2H_PCT
+  ticket_events -->|"DERIVED join/population: ticket_id"| K_RSP_FRT_2H_PCT
+  tickets -->|"DERIVED join/population: ticket_id"| K_RSP_FRT_2H_PCT
+  K_RSP_FRT_2H_PCT -->|CONFIRMED entity_id| T_RSP
+  K_RSP_TICKETS["K_RSP_TICKETS"]
+  cal -->|DERIVED computation| K_RSP_TICKETS
+  tickets -->|DERIVED computation| K_RSP_TICKETS
+  K_RSP_TICKETS -->|CONFIRMED entity_id| T_RSP
+  K_RSP_TICKETS_BY_CAT["K_RSP_TICKETS_BY_CAT"]
+  tickets -->|DERIVED computation| K_RSP_TICKETS_BY_CAT
+  K_RSP_TICKETS_BY_CAT -->|CONFIRMED entity_id| T_RSP
+  K_RSP_BACKLOG["K_RSP_BACKLOG"]
+  cal -->|DERIVED computation| K_RSP_BACKLOG
+  ticket_fact -->|DERIVED computation| K_RSP_BACKLOG
+  ticket_events -->|"DERIVED join/population: ticket_id"| K_RSP_BACKLOG
+  tickets -->|"DERIVED join/population: ticket_id"| K_RSP_BACKLOG
+  K_RSP_BACKLOG -->|CONFIRMED entity_id| T_RSP
+  K_RSP_CSAT["K_RSP_CSAT"]
+  csat -->|DERIVED computation| K_RSP_CSAT
+  tickets -->|DERIVED computation| K_RSP_CSAT
+  csat -->|"DERIVED join/population: ticket_id"| K_RSP_CSAT
+  tickets -->|"DERIVED join/population: ticket_id"| K_RSP_CSAT
+  K_RSP_CSAT -->|CONFIRMED entity_id| T_RSP
+  K_TASK_OVERDUE_T_RSP["K_TASK_OVERDUE_T_RSP"]
+  cal -->|DERIVED computation| K_TASK_OVERDUE_T_RSP
+  task_fact -->|DERIVED computation| K_TASK_OVERDUE_T_RSP
+  task_events -->|"DERIVED join/population: task_id"| K_TASK_OVERDUE_T_RSP
+  tasks -->|"DERIVED join/population: task_id"| K_TASK_OVERDUE_T_RSP
+  K_TASK_OVERDUE_T_RSP -->|CONFIRMED entity_id| T_RSP
+  T_RSP -.->|CONFIRMED aggregate display; active dates apply| M01
+  T_RSP -.->|CONFIRMED aggregate display; active dates apply| M04
+  T_RSP -.->|CONFIRMED aggregate display; active dates apply| M09

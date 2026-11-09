@@ -1,0 +1,159 @@
+{
+  "checks": [
+    {
+      "check": "Every nonempty source line located",
+      "result": "PASS",
+      "detail": "346 lines mapped; unmatched lines: []"
+    },
+    {
+      "check": "001-system-blueprint.md content",
+      "result": "PASS",
+      "detail": "Only navigation destinations and one responsibility note may change"
+    },
+    {
+      "check": "002-data-architecture.md content",
+      "result": "PASS",
+      "detail": "Only navigation destinations and one responsibility note may change"
+    },
+    {
+      "check": "004 historical body preserved",
+      "result": "PASS",
+      "detail": "Original review text is retained; former 003 verification text is appended"
+    },
+    {
+      "check": "Matrix identity and semantic fields",
+      "result": "PASS",
+      "detail": "4586 rows; only source navigation fields may change"
+    },
+    {
+      "check": "Governance statuses unchanged",
+      "result": "PASS",
+      "detail": "Five Accepted boundaries, 29 Open issues and 30 unexecuted tests retain their source statuses"
+    },
+    {
+      "check": "Inferred relationships unchanged",
+      "result": "PASS",
+      "detail": "2470 Proposed Relationship rows; no approvals or dependency changes"
+    },
+    {
+      "check": "Open issues and AT execution",
+      "result": "PASS",
+      "detail": "29 Open; 30 Planned / Not Executed"
+    },
+    {
+      "check": "Matrix source paths and anchors",
+      "result": "PASS",
+      "detail": "4586 rows checked; failures []"
+    },
+    {
+      "check": "All legacy anchors",
+      "result": "PASS",
+      "detail": "95 original explicit and heading anchors"
+    },
+    {
+      "check": "Compatibility target anchors",
+      "result": "PASS",
+      "detail": "All 95 canonical targets checked"
+    },
+    {
+      "check": "ADR IDs",
+      "result": "PASS",
+      "detail": "17 IDs in readable Markdown"
+    },
+    {
+      "check": "DL IDs",
+      "result": "PASS",
+      "detail": "19 IDs in readable Markdown"
+    },
+    {
+      "check": "AT IDs",
+      "result": "PASS",
+      "detail": "30 IDs in readable Markdown"
+    },
+    {
+      "check": "Risk IDs",
+      "result": "PASS",
+      "detail": "20 risk records"
+    },
+    {
+      "check": "decisions-registry.md full source extracts",
+      "result": "PASS",
+      "detail": "17 extracts; non-active quoted extracts []; four data-model quotes stay evidence in open issues"
+    },
+    {
+      "check": "open-issues-registry.md full source extracts",
+      "result": "PASS",
+      "detail": "23 extracts; non-active quoted extracts [20, 21, 22, 23]; four data-model quotes stay evidence in open issues"
+    },
+    {
+      "check": "risk-register.md full source extracts",
+      "result": "PASS",
+      "detail": "12 extracts; non-active quoted extracts []; four data-model quotes stay evidence in open issues"
+    },
+    {
+      "check": "acceptance-register.md full source extracts",
+      "result": "PASS",
+      "detail": "37 extracts; non-active quoted extracts []; four data-model quotes stay evidence in open issues"
+    },
+    {
+      "check": "Diagram navigation",
+      "result": "PASS",
+      "detail": "29 diagram files; 0 navigation links; SVG internal targets checked; failures []"
+    },
+    {
+      "check": "Unrelated files unchanged",
+      "result": "PASS",
+      "detail": "1393 original files hashed; 10 allowed changes; removed []; unexpected []"
+    },
+    {
+      "check": "HEAD baseline unchanged",
+      "result": "PASS",
+      "detail": "0a42950d1ce9734433d961540af9ab4be21573b2"
+    },
+    {
+      "check": "Index unchanged",
+      "result": "PASS",
+      "detail": "No staged changes"
+    },
+    {
+      "check": "No new broken Markdown links",
+      "result": "PASS",
+      "detail": "1077 links; 64 retained historical broken references; new failures 0"
+    }
+  ],
+  "source_lines": 346,
+  "missing_lines": [],
+  "existing_changed": [
+    "Docs/architecture/001-system-blueprint.md",
+    "Docs/architecture/002-data-architecture.md",
+    "Docs/architecture/003-decisions-and-roadmap.md",
+    "Docs/architecture/004-reconciliation-review.md",
+    "Docs/architecture/registry/README.md",
+    "Docs/architecture/registry/acceptance-register.md",
+    "Docs/architecture/registry/decisions-registry.md",
+    "Docs/architecture/registry/open-issues-registry.md",
+    "Docs/architecture/registry/risk-register.md",
+    "Docs/architecture/registry/traceability-matrix.csv"
+  ],
+  "links": {
+    "Resolved": 1009,
+    "External or host URL": 4,
+    "Missing file": 64
+  },
+  "new_broken": [],
+  "matrix_rows": 4586,
+  "record_counts": {
+    "ADR": 17,
+    "Decision Statement": 69,
+    "DL": 19,
+    "Registry Issue": 10,
+    "Risk": 20,
+    "AT": 30,
+    "Source": 19,
+    "Requirement": 334,
+    "Decision Boundary": 5,
+    "Roadmap Phase": 6,
+    "Architecture Component": 29,
+    "Acceptance Supplement": 7
+  }
+}

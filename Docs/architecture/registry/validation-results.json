@@ -1,0 +1,235 @@
+{
+  "state": "Draft / Pending Review",
+  "documentation_checks_only": true,
+  "checks": {
+    "Unique main record identities": {
+      "ok": true,
+      "detail": []
+    },
+    "17 ADRs": {
+      "ok": true,
+      "detail": ""
+    },
+    "19 DLs": {
+      "ok": true,
+      "detail": ""
+    },
+    "30 ATs": {
+      "ok": true,
+      "detail": ""
+    },
+    "19 source identities": {
+      "ok": true,
+      "detail": ""
+    },
+    "All ATs planned": {
+      "ok": true,
+      "detail": ""
+    },
+    "All issues Open": {
+      "ok": true,
+      "detail": ""
+    },
+    "Statement status count": {
+      "ok": true,
+      "detail": ""
+    },
+    "Five Accepted boundaries": {
+      "ok": true,
+      "detail": ""
+    },
+    "No exact duplicate CSV rows": {
+      "ok": true,
+      "detail": ""
+    },
+    "One target per relationship": {
+      "ok": true,
+      "detail": ""
+    },
+    "No multi-ID relation cells": {
+      "ok": true,
+      "detail": ""
+    },
+    "All CSV source and Registry locations resolve": {
+      "ok": true,
+      "detail": []
+    },
+    "All active Markdown links resolve": {
+      "ok": true,
+      "detail": {
+        "links": 279,
+        "errors": []
+      }
+    },
+    "Complete ADR, DL and AT source extracts": {
+      "ok": true,
+      "detail": []
+    },
+    "Complete supplementary AT and role/rule matrices": {
+      "ok": true,
+      "detail": ""
+    },
+    "P5 delivery supplement retained": {
+      "ok": true,
+      "detail": ""
+    },
+    "All 13 original risk rows retained": {
+      "ok": true,
+      "detail": ""
+    },
+    "Every risk has unassessed severity": {
+      "ok": true,
+      "detail": ""
+    },
+    "All component targets exist in DSL": {
+      "ok": true,
+      "detail": []
+    },
+    "All relationship targets resolve": {
+      "ok": true,
+      "detail": []
+    },
+    "All 1344 initial files unchanged": {
+      "ok": true,
+      "detail": {
+        "initial_count": 1344,
+        "changed": []
+      }
+    },
+    "All 141 prior untracked files unchanged": {
+      "ok": true,
+      "detail": ""
+    },
+    "No tracked diff against baseline": {
+      "ok": true,
+      "detail": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "warning: unable to access 'C:\\Users\\ashkriz/.config/git/ignore': Permission denied\n"
+      }
+    },
+    "HEAD remains baseline": {
+      "ok": true,
+      "detail": ""
+    },
+    "Every new file is inside Registry": {
+      "ok": true,
+      "detail": [
+        "Docs/architecture/registry/README.md",
+        "Docs/architecture/registry/acceptance-register.md",
+        "Docs/architecture/registry/baseline-comparison.csv",
+        "Docs/architecture/registry/build_registry.py",
+        "Docs/architecture/registry/capture_preflight.py",
+        "Docs/architecture/registry/decisions-registry.md",
+        "Docs/architecture/registry/deduplication-ledger.md",
+        "Docs/architecture/registry/extraction-summary.json",
+        "Docs/architecture/registry/open-issues-registry.md",
+        "Docs/architecture/registry/preflight.json",
+        "Docs/architecture/registry/risk-register.md",
+        "Docs/architecture/registry/source-inventory.md",
+        "Docs/architecture/registry/traceability-matrix.csv",
+        "Docs/architecture/registry/untracked-source-dependencies.csv",
+        "Docs/architecture/registry/validate_registry.py",
+        "Docs/architecture/registry/validation-report.md",
+        "Docs/architecture/registry/validation-results.json"
+      ]
+    },
+    "No prior untracked file removed": {
+      "ok": true,
+      "detail": ""
+    },
+    "S16 copy matches recorded hash": {
+      "ok": true,
+      "detail": ""
+    },
+    "S01 provenance discrepancy recorded": {
+      "ok": true,
+      "detail": {
+        "actual_sha256": "f6761b4fc37145d152f2b9793b298e35f48db666d5205c4d02be0f5f13e4863b",
+        "recorded_sha256": "6d68d3fcc285f6908af0d97c0429dfefb489f00b7f6538ed03573552ed6955f8",
+        "matches": false,
+        "issue": "REG-ISS-010"
+      }
+    }
+  },
+  "errors": [],
+  "warnings": [
+    "Git reports that the global ignore file is not readable. Local status and tracked diff commands return success. The known 141 prior untracked files remain in the explicit inventory.",
+    "No fresh PDF visual audit or product test was run. Existing audit source references remain historical evidence.",
+    "S01 PDF differs from the recorded 001/004 hash. REG-ISS-010 remains Open / Evidence Pending. The PDF is unchanged during this task; no requirement change is inferred."
+  ],
+  "summary": {
+    "decision_status_statements": {
+      "Accepted": 5,
+      "Requirement": 16,
+      "Proposed": 24,
+      "Open": 24
+    },
+    "adrs": 17,
+    "dls": 19,
+    "ats": 30,
+    "open_issues": 29,
+    "team_required": 25,
+    "organizer_source_required": 12,
+    "engineering_evidence_required": 29,
+    "risks": 20,
+    "deduplicated_placements": 42,
+    "requirements": 339,
+    "matrix_rows": 4191
+  },
+  "active_markdown_links_checked": 279,
+  "initial_files": 1344,
+  "initial_untracked": 141,
+  "changed_initial_files": [],
+  "new_files": [
+    "Docs/architecture/registry/README.md",
+    "Docs/architecture/registry/acceptance-register.md",
+    "Docs/architecture/registry/baseline-comparison.csv",
+    "Docs/architecture/registry/build_registry.py",
+    "Docs/architecture/registry/capture_preflight.py",
+    "Docs/architecture/registry/decisions-registry.md",
+    "Docs/architecture/registry/deduplication-ledger.md",
+    "Docs/architecture/registry/extraction-summary.json",
+    "Docs/architecture/registry/open-issues-registry.md",
+    "Docs/architecture/registry/preflight.json",
+    "Docs/architecture/registry/risk-register.md",
+    "Docs/architecture/registry/source-inventory.md",
+    "Docs/architecture/registry/traceability-matrix.csv",
+    "Docs/architecture/registry/untracked-source-dependencies.csv",
+    "Docs/architecture/registry/validate_registry.py",
+    "Docs/architecture/registry/validation-report.md",
+    "Docs/architecture/registry/validation-results.json"
+  ],
+  "direct_untracked_dependencies": 16,
+  "directory_untracked_dependencies": 7,
+  "git_status": {
+    "returncode": 0,
+    "stdout": "?? Docs/architecture/audit-2026-11-09/README.md\n?? Docs/architecture/audit-2026-11-09/acceptance-basis.csv\n?? Docs/architecture/audit-2026-11-09/audit-report.md\n?? Docs/architecture/audit-2026-11-09/audit-summary.json\n?? Docs/architecture/audit-2026-11-09/audit_support.py\n?? Docs/architecture/audit-2026-11-09/brief-content-check.json\n?? Docs/architecture/audit-2026-11-09/build_audit_report.py\n?? Docs/architecture/audit-2026-11-09/build_traceability.py\n?? Docs/architecture/audit-2026-11-09/change-report.md\n?? Docs/architecture/audit-2026-11-09/cross_document_fixes.py\n?? Docs/architecture/audit-2026-11-09/diff-summary.json\n?? Docs/architecture/audit-2026-11-09/document-review-ledger.csv\n?? Docs/architecture/audit-2026-11-09/file-changes.csv\n?? Docs/architecture/audit-2026-11-09/finalize_audit.py\n?? Docs/architecture/audit-2026-11-09/findings.csv\n?? Docs/architecture/audit-2026-11-09/findings.json\n?? Docs/architecture/audit-2026-11-09/kpi-contracts.csv\n?? Docs/architecture/audit-2026-11-09/manager-input-contracts.csv\n?? Docs/architecture/audit-2026-11-09/model_audit.py\n?? Docs/architecture/audit-2026-11-09/output-schema-contracts.csv\n?? Docs/architecture/audit-2026-11-09/phase1.py\n?? Docs/architecture/audit-2026-11-09/phase2.py\n?? Docs/architecture/audit-2026-11-09/phase3.py\n?? Docs/architecture/audit-2026-11-09/phase4.py\n?? Docs/architecture/audit-2026-11-09/pre-edit-manifest.json\n?? Docs/architecture/audit-2026-11-09/pre-edit.zip\n?? Docs/architecture/audit-2026-11-09/reconciliation.diff\n?? Docs/architecture/audit-2026-11-09/request.txt\n?? Docs/architecture/audit-2026-11-09/requirements-traceability.csv\n?? Docs/architecture/audit-2026-11-09/requirements-traceability.md\n?? Docs/architecture/audit-2026-11-09/rule-contracts.csv\n?? Docs/architecture/audit-2026-11-09/source-checks.json\n?? Docs/architecture/audit-2026-11-09/source_audit.py\n?? Docs/architecture/audit-2026-11-09/structurizr-elements.csv\n?? Docs/architecture/audit-2026-11-09/structurizr-gap-report.md\n?? Docs/architecture/audit-2026-11-09/structurizr-inventory.json\n?? Docs/architecture/audit-2026-11-09/structurizr-relationships.csv\n?? Docs/architecture/audit-2026-11-09/structurizr-views.csv\n?? Docs/architecture/audit-2026-11-09/traceability-summary.json\n?? Docs/architecture/audit-2026-11-09/verification.json\n?? Docs/architecture/audit-2026-11-09/verify_audit.py\n?? Docs/architecture/audit-2026-11-09/workflow-contracts.csv\n?? Docs/architecture/registry/README.md\n?? Docs/architecture/registry/acceptance-register.md\n?? Docs/architecture/registry/baseline-comparison.csv\n?? Docs/architecture/registry/build_registry.py\n?? Docs/architecture/registry/capture_preflight.py\n?? Docs/architecture/registry/decisions-registry.md\n?? Docs/architecture/registry/deduplication-ledger.md\n?? Docs/architecture/registry/extraction-summary.json\n?? Docs/architecture/registry/open-issues-registry.md\n?? Docs/architecture/registry/preflight.json\n?? Docs/architecture/registry/risk-register.md\n?? Docs/architecture/registry/source-inventory.md\n?? Docs/architecture/registry/traceability-matrix.csv\n?? Docs/architecture/registry/untracked-source-dependencies.csv\n?? Docs/architecture/registry/validate_registry.py\n?? Docs/architecture/registry/validation-report.md\n?? Docs/architecture/registry/validation-results.json\n?? Docs/architecture/sources/Adr.md\n?? Docs/architecture/visualizations/01-source-calendar-history-detail.mmd\n?? Docs/architecture/visualizations/01-source-configuration-detail.mmd\n?? Docs/architecture/visualizations/01-source-crm-detail.mmd\n?? Docs/architecture/visualizations/01-source-data-erd.mmd\n?? Docs/architecture/visualizations/01-source-marketing-detail.mmd\n?? Docs/architecture/visualizations/01-source-orders-detail.mmd\n?? Docs/architecture/visualizations/01-source-organization-detail.mmd\n?? Docs/architecture/visualizations/01-source-support-detail.mmd\n?? Docs/architecture/visualizations/01-source-workload-detail.mmd\n?? Docs/architecture/visualizations/02-proposed-database-erd.mmd\n?? Docs/architecture/visualizations/02-proposed-layers.mmd\n?? Docs/architecture/visualizations/03-organization-hierarchy.mmd\n?? Docs/architecture/visualizations/04-management-access-graph.mmd\n?? Docs/architecture/visualizations/05-column-access-overview.mmd\n?? Docs/architecture/visualizations/06-kpi-data-lineage.mmd\n?? Docs/architecture/visualizations/06-lineage-ORG.mmd\n?? Docs/architecture/visualizations/06-lineage-T_CMP.mmd\n?? Docs/architecture/visualizations/06-lineage-T_DIG.mmd\n?? Docs/architecture/visualizations/06-lineage-T_ENT.mmd\n?? Docs/architecture/visualizations/06-lineage-T_MKT.mmd\n?? Docs/architecture/visualizations/06-lineage-T_RSP.mmd\n?? Docs/architecture/visualizations/06-lineage-T_SHP.mmd\n?? Docs/architecture/visualizations/06-lineage-T_WH.mmd\n?? Docs/architecture/visualizations/06-lineage-U_OPS.mmd\n?? Docs/architecture/visualizations/06-lineage-U_SAL.mmd\n?? Docs/architecture/visualizations/06-lineage-U_SUP.mmd\n?? Docs/architecture/visualizations/README.md\n?? Docs/architecture/visualizations/access-matrix-detailed.csv\n?? Docs/architecture/visualizations/build_documentation.py\n?? Docs/architecture/visualizations/diagram-validation.csv\n?? Docs/architecture/visualizations/independent-validation.json\n?? Docs/architecture/visualizations/json-inventory.csv\n?? Docs/architecture/visualizations/kpi-source-manager-mapping.csv\n?? Docs/architecture/visualizations/manager-access-summary.csv\n?? Docs/architecture/visualizations/open-questions.md\n?? Docs/architecture/visualizations/organization-scope-evidence.csv\n?? Docs/architecture/visualizations/previews/01-source-calendar-history-detail.md\n?? Docs/architecture/visualizations/previews/01-source-configuration-detail.md\n?? Docs/architecture/visualizations/previews/01-source-crm-detail.md\n?? Docs/architecture/visualizations/previews/01-source-data-erd.md\n?? Docs/architecture/visualizations/previews/01-source-marketing-detail.md\n?? Docs/architecture/visualizations/previews/01-source-orders-detail.md\n?? Docs/architecture/visualizations/previews/01-source-organization-detail.md\n?? Docs/architecture/visualizations/previews/01-source-support-detail.md\n?? Docs/architecture/visualizations/previews/01-source-workload-detail.md\n?? Docs/architecture/visualizations/previews/02-proposed-database-erd.md\n?? Docs/architecture/visualizations/previews/02-proposed-layers.md\n?? Docs/architecture/visualizations/previews/03-organization-hierarchy.md\n?? Docs/architecture/visualizations/previews/04-management-access-graph.md\n?? Docs/architecture/visualizations/previews/05-column-access-overview.md\n?? Docs/architecture/visualizations/previews/06-kpi-data-lineage.md\n?? Docs/architecture/visualizations/previews/06-lineage-ORG.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_CMP.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_DIG.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_ENT.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_MKT.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_RSP.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_SHP.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_WH.md\n?? Docs/architecture/visualizations/previews/06-lineage-U_OPS.md\n?? Docs/architecture/visualizations/previews/06-lineage-U_SAL.md\n?? Docs/architecture/visualizations/previews/06-lineage-U_SUP.md\n?? Docs/architecture/visualizations/proposed-entity-contracts.md\n?? Docs/architecture/visualizations/protected-file-hashes.csv\n?? Docs/architecture/visualizations/relationship-evidence.csv\n?? Docs/architecture/visualizations/security-examples.md\n?? Docs/architecture/visualizations/source-inventory.csv\n?? Docs/architecture/visualizations/sql-execution-column-reads.csv\n?? Docs/architecture/visualizations/table-column-catalog.csv\n?? Docs/architecture/visualizations/table-profiles.csv\n?? Docs/architecture/visualizations/validate_documentation.py\n?? Docs/architecture/visualizations/validation-summary.json\n?? Docs/review/check_types_and_missing.py\n?? Docs/review/dq-001-evidence.json\n?? Docs/review/dq-001-kpi-impact.csv\n?? Docs/review/dq-001-report.md\n?? Docs/review/exploration/01_file_inventory.json\n?? Docs/review/exploration/02_table_profiles.json\n?? Docs/review/exploration/03_exact_duplicate_locations.json\n?? Docs/review/exploration/04_daily_delivery_checks.json\n?? Docs/review/exploration/05_candidate_relationships.json\n?? Docs/review/exploration/06_manager_input_summary.json\n?? Docs/review/exploration/DATA_MAP_FA.md\n?? Docs/review/exploration/README_FA.md\n?? Docs/review/explore_data.py\n?? Docs/review/kpi-val-001-evidence.json\n?? Docs/review/kpi-val-001-report.md\n?? Docs/review/kpi-val-001-results.csv\n?? Docs/review/profile.json\n?? Docs/review/profile_data.py\n?? Docs/review/rca-001-evidence.json\n?? Docs/review/rca-001-report.md\n?? Docs/review/team-guide-technical-review.md\n?? Docs/review/types-and-missing/column-checks.csv\n?? Docs/review/types-and-missing/evidence.json\n?? Docs/review/types-and-missing/report.md\n?? Docs/دیدراه-بریف-دستیار-ایجنتیک-مدیران.md\n?? architecture/structurizr/workspace.dsl\n",
+    "stderr": "warning: unable to access 'C:\\Users\\ashkriz/.config/git/ignore': Permission denied\nwarning: unable to access 'C:\\Users\\ashkriz/.config/git/ignore': Permission denied\n"
+  },
+  "tracked_diff": {
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "warning: unable to access 'C:\\Users\\ashkriz/.config/git/ignore': Permission denied\n"
+  },
+  "new_file_hashes": {
+    "Docs/architecture/registry/acceptance-register.md": "7fe70809831d592c0d777fc2767a98863d0b689bc078c8e702f2e1a39b9663c8",
+    "Docs/architecture/registry/baseline-comparison.csv": "",
+    "Docs/architecture/registry/build_registry.py": "0af7348a5bd4cbe4abad95573bf3ea30ecb4c0ff6770516a9085303d1d0aa53e",
+    "Docs/architecture/registry/capture_preflight.py": "9f0264922b7e1157f57f2a4f7c35f94ff4207e9c4880756379c1a23987f5f2c2",
+    "Docs/architecture/registry/decisions-registry.md": "c479638e817e7b4f372ce9ad7d32a3bfb81d35d5df941c56df745174533df7df",
+    "Docs/architecture/registry/deduplication-ledger.md": "7416634f931c03a5bf68d7d8155de7bc5cd284f1ca462d627c283426f77bbed6",
+    "Docs/architecture/registry/extraction-summary.json": "a7a619e6193ff65a83e99862fc3975b3ed5be236bbe3c6108662f13bc0cc2b0d",
+    "Docs/architecture/registry/open-issues-registry.md": "b679f20add7fbb6aedc1dbbd757c12b9316636a16e42a96d0716340cb537740e",
+    "Docs/architecture/registry/preflight.json": "113e1faf0eac0384fbad3190c7e0dd2f28bd6af55734b5bcac0c4afc2a79ffbc",
+    "Docs/architecture/registry/README.md": "1149b75cb920b0515c2b41f411d4fd1612dd6233a578d511b4af7f3a7b3dc4d5",
+    "Docs/architecture/registry/risk-register.md": "6641162fa4a1ab69c44812fc8ea488f54f7d0a8f3b22175a1a2238eb09350d28",
+    "Docs/architecture/registry/source-inventory.md": "3e765cb1304ba0dba5c43edd98418819044489e27c24613a386dc9fecece6d39",
+    "Docs/architecture/registry/traceability-matrix.csv": "c3f403bd43e2e8033d0159da07b826c6d1837c5891375fa4a69656222f1ac3c1",
+    "Docs/architecture/registry/untracked-source-dependencies.csv": "d81258a5796ef2dbf4a8202d12392016e68054784f303c96a4635bcdc44c683c",
+    "Docs/architecture/registry/validate_registry.py": "f76a376d95a8eb852354707caeede8ac2254fb04946e2a7bae5aa037dc67b667",
+    "Docs/architecture/registry/validation-report.md": "",
+    "Docs/architecture/registry/validation-results.json": ""
+  },
+  "hash_exclusions": "Self-referential validation report/results/comparison are listed as Added with no embedded self hash."
+}

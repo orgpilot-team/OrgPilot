@@ -1,0 +1,53 @@
+flowchart LR
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  subgraph Orders
+    orders["orders<br/>10 observed columns"]
+    order_events["order_events<br/>5 observed columns"]
+  end
+  subgraph Support
+    tickets["tickets<br/>8 observed columns"]
+    ticket_events["ticket_events<br/>5 observed columns"]
+    csat["csat<br/>3 observed columns"]
+  end
+  subgraph CRM
+    crm_leads["crm_leads<br/>3 observed columns"]
+    crm_lead_events["crm_lead_events<br/>4 observed columns"]
+  end
+  subgraph Workload
+    tasks["tasks<br/>7 observed columns"]
+    task_events["task_events<br/>3 observed columns"]
+    staff_availability["staff_availability<br/>4 observed columns"]
+  end
+  subgraph Marketing
+    mkt_daily["mkt_daily<br/>6 observed columns"]
+    web_sessions["web_sessions<br/>3 observed columns"]
+  end
+  subgraph Organization
+    org__units["org__units<br/>4 observed columns"]
+    org__teams["org__teams<br/>6 observed columns"]
+    org__managers["org__managers<br/>6 observed columns"]
+    org__staff["org__staff<br/>5 observed columns"]
+    org__access_matrix["org__access_matrix<br/>4 observed columns"]
+  end
+  subgraph Configuration
+    config__kpi_dictionary["config__kpi_dictionary<br/>13 observed columns"]
+    config__workflow_definitions["config__workflow_definitions<br/>10 observed columns"]
+    config__monthly_targets["config__monthly_targets<br/>3 observed columns"]
+    config__escalation_rules["config__escalation_rules<br/>2 observed columns"]
+  end
+  subgraph Calendar
+    calendar__calendar_days["calendar__calendar_days<br/>8 observed columns"]
+    calendar__events_calendar["calendar__events_calendar<br/>5 observed columns"]
+  end
+  orders -->|"DERIVED order_id; no FK"| order_events
+  orders -->|"DERIVED order_id; no FK"| tickets
+  tickets -->|"DERIVED ticket_id; no FK"| ticket_events
+  tickets -->|"DERIVED ticket_id; no FK"| csat
+  crm_leads -->|"DERIVED lead_id; no FK"| crm_lead_events
+  tasks -->|"DERIVED task_id; no FK"| task_events
+  org__teams -->|"CONFIRMED team_id; no FK"| tasks
+  org__teams -->|"CONFIRMED team_id; no FK"| tickets
+  org__teams|org__units -->|"DERIVED actor_team; no FK"| order_events
+  org__staff -->|"DERIVED staff_id; no FK"| ticket_events
+  org__teams -->|"CONFIRMED team_id; no FK"| org__staff
+  org__units -->|"CONFIRMED unit_id; no FK"| org__teams

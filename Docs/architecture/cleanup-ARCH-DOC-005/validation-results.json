@@ -1,0 +1,197 @@
+{
+  "checks": [
+    {
+      "check": "Task-start broken links accounted for",
+      "result": "PASS",
+      "evidence": "1077 task-start links; 64 existing failures"
+    },
+    {
+      "check": "Sequential Persian Roadmap headings",
+      "result": "PASS",
+      "evidence": "['۱. اولویت پاسخ\\u200cهای لازم', '۲. مسیر مرحله\\u200cای پیاده\\u200cسازی پس از بازبینی', '۳. اندازه\\u200cگیری عملکرد و هزینه', '۴. شرایط شروع اجرای محصول', '۵. مراجع حاکمیت و تحویل']"
+    },
+    {
+      "check": "Legacy Roadmap section IDs removed",
+      "result": "PASS",
+      "evidence": "Descriptive roadmap-* IDs replace legacy section IDs"
+    },
+    {
+      "check": "Roadmap full body preserved",
+      "result": "PASS",
+      "evidence": "Full body lines compared; only heading, list-digit style and link destinations normalized; missing []"
+    },
+    {
+      "check": "001-system-blueprint.md source body",
+      "result": "PASS",
+      "evidence": "Only navigation and the moved measurement section label may change"
+    },
+    {
+      "check": "002-data-architecture.md source body",
+      "result": "PASS",
+      "evidence": "Only navigation and the moved measurement section label may change"
+    },
+    {
+      "check": "004-reconciliation-review.md source body",
+      "result": "PASS",
+      "evidence": "Only navigation and the moved measurement section label may change"
+    },
+    {
+      "check": "decisions-registry.md full content",
+      "result": "PASS",
+      "evidence": "Complete body, original source extracts, all criteria and supplements unchanged after URL normalization"
+    },
+    {
+      "check": "open-issues-registry.md full content",
+      "result": "PASS",
+      "evidence": "Complete body, original source extracts, all criteria and supplements unchanged after URL normalization"
+    },
+    {
+      "check": "risk-register.md full content",
+      "result": "PASS",
+      "evidence": "Complete body, original source extracts, all criteria and supplements unchanged after URL normalization"
+    },
+    {
+      "check": "acceptance-register.md full content",
+      "result": "PASS",
+      "evidence": "Complete body, original source extracts, all criteria and supplements unchanged after URL normalization"
+    },
+    {
+      "check": "Matrix full semantic identity",
+      "result": "PASS",
+      "evidence": "4586 rows; only source file/anchor navigation may change"
+    },
+    {
+      "check": "ADR/DL/AT/risk IDs",
+      "result": "PASS",
+      "evidence": "{'ADR': 17, 'Decision Statement': 69, 'DL': 19, 'Registry Issue': 10, 'Risk': 20, 'AT': 30, 'Source': 19, 'Requirement': 334, 'Decision Boundary': 5, 'Roadmap Phase': 6, 'Architecture Component': 29, 'Acceptance Supplement': 7}"
+    },
+    {
+      "check": "Open and AT states",
+      "result": "PASS",
+      "evidence": "29 Open issues; 30 Planned / Not Executed ATs"
+    },
+    {
+      "check": "Unconfirmed relationships",
+      "result": "PASS",
+      "evidence": "2470 remain unapproved; semantic fields compared in full"
+    },
+    {
+      "check": "Accepted boundaries",
+      "result": "PASS",
+      "evidence": "All five boundary records and all status fields unchanged"
+    },
+    {
+      "check": "Registry draft status",
+      "result": "PASS",
+      "evidence": "Location approval does not approve proposed architecture or product tests"
+    },
+    {
+      "check": "Original combined-source content",
+      "result": "PASS",
+      "evidence": "297 substantive source lines checked against readable canonical documents before deletion; heading map retained separately"
+    },
+    {
+      "check": "Obsolete file removed",
+      "result": "PASS",
+      "evidence": "The one obsolete file was deleted after migration gates passed; no stub remains"
+    },
+    {
+      "check": "All local Markdown paths and anchors",
+      "result": "PASS",
+      "evidence": "1013 links; states {'Resolved': 1009, 'External or host URL': 4}; exact path spelling checked"
+    },
+    {
+      "check": "No active Markdown link to removed file",
+      "result": "PASS",
+      "evidence": "0 remaining; includes code-fence exclusion for source quotations"
+    },
+    {
+      "check": "95 original anchors have exact destinations",
+      "result": "PASS",
+      "evidence": "Mapping retained as evidence; no redirect document"
+    },
+    {
+      "check": "Audit and supporting findings preserved",
+      "result": "PASS",
+      "evidence": "All repaired supporting documents compared after URL and one navigation-label normalization; failures []"
+    },
+    {
+      "check": "Historical broken references reconciled",
+      "result": "PASS",
+      "evidence": "All 64 occurrences individually matched by source file, line and original URL"
+    },
+    {
+      "check": "Repair targets resolve",
+      "result": "PASS",
+      "evidence": "88 URL replacements, including quoted source URLs"
+    },
+    {
+      "check": "Live matrix source paths and anchors",
+      "result": "PASS",
+      "evidence": "4586 source locations checked; failures []"
+    },
+    {
+      "check": "Reference-style definitions",
+      "result": "PASS",
+      "evidence": "[]"
+    },
+    {
+      "check": "Only authorized documentation changed",
+      "result": "PASS",
+      "evidence": "1416 task-start files; 21 navigation/format changes; removed ['Docs/architecture/003-decisions-and-roadmap.md']; unexpected []"
+    },
+    {
+      "check": "Dataset SQL PDF DSL unchanged",
+      "result": "PASS",
+      "evidence": "All task-start hashes compared; DSL historical comment retained"
+    },
+    {
+      "check": "Git HEAD unchanged",
+      "result": "PASS",
+      "evidence": "0a42950d1ce9734433d961540af9ab4be21573b2"
+    },
+    {
+      "check": "No staged changes",
+      "result": "PASS",
+      "evidence": "No commit, push or staging action"
+    }
+  ],
+  "total_markdown_files": 63,
+  "total_links": 1013,
+  "link_states": {
+    "Resolved": 1009,
+    "External or host URL": 4
+  },
+  "unresolved": 0,
+  "newly_broken": 0,
+  "historical_repaired": 64,
+  "url_replacements": 88,
+  "old_003_url_replacements": 16,
+  "changed_files": [
+    "Docs/architecture/002-data-architecture.md",
+    "Docs/architecture/003-roadmap.md",
+    "Docs/architecture/004-reconciliation-review.md",
+    "Docs/architecture/audit-2026-11-09/audit-report.md",
+    "Docs/architecture/audit-2026-11-09/change-report.md",
+    "Docs/architecture/audit-2026-11-09/requirements-traceability.md",
+    "Docs/architecture/registry/README.md",
+    "Docs/architecture/registry/acceptance-register.md",
+    "Docs/architecture/registry/approval-readiness.md",
+    "Docs/architecture/registry/deduplication-ledger.md",
+    "Docs/architecture/registry/open-issues-registry.md",
+    "Docs/architecture/registry/traceability-matrix.csv",
+    "Docs/architecture/restructure-ARCH-DOC-004/report.md",
+    "Docs/architecture/visualizations/README.md",
+    "Docs/architecture/visualizations/open-questions.md",
+    "Docs/architecture/visualizations/proposed-entity-contracts.md",
+    "Docs/architecture/visualizations/security-examples.md",
+    "Docs/review/dq-001-report.md",
+    "Docs/review/kpi-val-001-report.md",
+    "Docs/review/rca-001-report.md",
+    "Docs/review/team-guide-technical-review.md"
+  ],
+  "removed_files": [
+    "Docs/architecture/003-decisions-and-roadmap.md"
+  ],
+  "retained_historical_identifier_occurrences": 7357
+}

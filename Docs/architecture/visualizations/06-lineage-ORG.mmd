@@ -1,0 +1,81 @@
+flowchart LR
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  cal["cal: calculation input"]
+  crm_lead_events["crm_lead_events: calculation input"]
+  crm_leads["crm_leads: calculation input"]
+  csat["csat: calculation input"]
+  monthly_targets["monthly_targets: calculation input"]
+  order_events["order_events: calculation input"]
+  orders["orders: calculation input"]
+  ticket_events["ticket_events: calculation input"]
+  tickets["tickets: calculation input"]
+  lead_fact["lead_fact: SQL view"]
+  crm_leads -->|DERIVED execution input| lead_fact
+  crm_lead_events -->|DERIVED execution input| lead_fact
+  crm_leads -->|"DERIVED join/filter: lead_id; drop_day correction selection"| lead_fact
+  order_fact["order_fact: SQL view"]
+  orders -->|DERIVED execution input| order_fact
+  order_events -->|DERIVED execution input| order_fact
+  orders -->|"DERIVED join/filter: order_id"| order_fact
+  revenue_daily["revenue_daily: SQL view"]
+  orders -->|DERIVED execution input| revenue_daily
+  order_events -->|DERIVED execution input| revenue_daily
+  lead_fact -->|DERIVED execution input| revenue_daily
+  cal -->|DERIVED execution input| revenue_daily
+  orders -->|"DERIVED join/filter: order_id; date; channel and event filters"| revenue_daily
+  ticket_fact["ticket_fact: SQL view"]
+  tickets -->|DERIVED execution input| ticket_fact
+  ticket_events -->|DERIVED execution input| ticket_fact
+  tickets -->|"DERIVED join/filter: ticket_id"| ticket_fact
+  K_ORG_NET_REV["K_ORG_NET_REV"]
+  revenue_daily -->|DERIVED computation| K_ORG_NET_REV
+  cal -->|"DERIVED join/population: d"| K_ORG_NET_REV
+  crm_lead_events -->|"DERIVED join/population: drop_day, lead_id"| K_ORG_NET_REV
+  crm_leads -->|"DERIVED join/population: lead_id"| K_ORG_NET_REV
+  order_events -->|"DERIVED join/population: order_id"| K_ORG_NET_REV
+  orders -->|"DERIVED join/population: order_id"| K_ORG_NET_REV
+  K_ORG_NET_REV -->|CONFIRMED entity_id| ORG
+  K_ORG_REV_MTD_ATTAIN["K_ORG_REV_MTD_ATTAIN"]
+  cal -->|DERIVED computation| K_ORG_REV_MTD_ATTAIN
+  monthly_targets -->|DERIVED computation| K_ORG_REV_MTD_ATTAIN
+  revenue_daily -->|DERIVED computation| K_ORG_REV_MTD_ATTAIN
+  cal -->|"DERIVED join/population: d"| K_ORG_REV_MTD_ATTAIN
+  crm_lead_events -->|"DERIVED join/population: drop_day, lead_id"| K_ORG_REV_MTD_ATTAIN
+  crm_leads -->|"DERIVED join/population: lead_id"| K_ORG_REV_MTD_ATTAIN
+  order_events -->|"DERIVED join/population: order_id"| K_ORG_REV_MTD_ATTAIN
+  orders -->|"DERIVED join/population: order_id"| K_ORG_REV_MTD_ATTAIN
+  K_ORG_REV_MTD_ATTAIN -->|CONFIRMED entity_id| ORG
+  K_ORG_ONTIME["K_ORG_ONTIME"]
+  order_fact -->|DERIVED computation| K_ORG_ONTIME
+  order_events -->|"DERIVED join/population: order_id"| K_ORG_ONTIME
+  orders -->|"DERIVED join/population: order_id"| K_ORG_ONTIME
+  K_ORG_ONTIME -->|CONFIRMED entity_id| ORG
+  K_ORG_CSAT["K_ORG_CSAT"]
+  csat -->|DERIVED computation| K_ORG_CSAT
+  K_ORG_CSAT -->|CONFIRMED entity_id| ORG
+  K_ORG_FRT_MED["K_ORG_FRT_MED"]
+  ticket_fact -->|DERIVED computation| K_ORG_FRT_MED
+  ticket_events -->|"DERIVED join/population: ticket_id"| K_ORG_FRT_MED
+  tickets -->|"DERIVED join/population: ticket_id"| K_ORG_FRT_MED
+  K_ORG_FRT_MED -->|CONFIRMED entity_id| ORG
+  K_ORG_ORDERS["K_ORG_ORDERS"]
+  cal -->|DERIVED computation| K_ORG_ORDERS
+  orders -->|DERIVED computation| K_ORG_ORDERS
+  K_ORG_ORDERS -->|CONFIRMED entity_id| ORG
+  K_WF1_SLA["K_WF1_SLA"]
+  order_fact -->|DERIVED computation| K_WF1_SLA
+  order_events -->|"DERIVED join/population: order_id"| K_WF1_SLA
+  orders -->|"DERIVED join/population: order_id"| K_WF1_SLA
+  K_WF1_SLA -->|CONFIRMED entity_id| ORG
+  K_WF2_SLA["K_WF2_SLA"]
+  ticket_fact -->|DERIVED computation| K_WF2_SLA
+  ticket_events -->|"DERIVED join/population: ticket_id"| K_WF2_SLA
+  tickets -->|"DERIVED join/population: ticket_id"| K_WF2_SLA
+  K_WF2_SLA -->|CONFIRMED entity_id| ORG
+  K_WF3_SLA_7D["K_WF3_SLA_7D"]
+  cal -->|DERIVED computation| K_WF3_SLA_7D
+  lead_fact -->|DERIVED computation| K_WF3_SLA_7D
+  crm_lead_events -->|"DERIVED join/population: lead_id"| K_WF3_SLA_7D
+  crm_leads -->|"DERIVED join/population: lead_id"| K_WF3_SLA_7D
+  K_WF3_SLA_7D -->|CONFIRMED entity_id| ORG
+  ORG -.->|CONFIRMED aggregate display; active dates apply| M01

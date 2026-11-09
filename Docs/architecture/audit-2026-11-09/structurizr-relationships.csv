@@ -1,0 +1,128 @@
+﻿source,target,meaning,source_line
+supervisor,arka,Reviews team work and records human decisions,266
+unitManager,arka,Reviews unit aggregates and records human decisions,267
+executive,arka,Reviews organization health and cross-functional workflows,268
+sources,arka,Supplies simulated read-only data and operational attachments,269
+inputDriver,arka,Submits scripted authorized manager inputs,270
+arka,providers,Requests language analysis through controlled model routing,271
+supervisor,web,Uses authorized direct-team interfaces,273
+unitManager,web,Uses authorized unit interfaces,274
+executive,web,Uses executive interfaces and workflow control room,275
+supervisor,chatUi,Reads team briefs and asks authorized questions,276
+unitManager,chatUi,Reads unit briefs and records authorized decisions,277
+executive,chatUi,Reads executive briefs and asks aggregate questions,278
+supervisor,dashboardUi,Reviews direct-team workload and indicators,279
+unitManager,dashboardUi,Reviews authorized unit and team aggregates,280
+executive,dashboardUi,Reviews organization aggregates,281
+executive,controlUi,Monitors all three cross-functional workflows,282
+sources,worker,"Provides scheduled CSV, JSON, organization and history deliveries",283
+inputDriver,api,Submits scripted inputs with trusted evaluation identity,284
+web,api,"Requests authorized reports, analytics and manager operations",285
+worker,api,"Requests authorized evidence, per-manager generation, validation and publication",286
+api,worker,Submits approved structured uploads and configuration intake jobs,287
+api,postgres,Reads and writes application state under restricted service and user scopes,288
+worker,postgres,Reads committed snapshots and records deterministic job results,289
+worker,rawFiles,Archives original deliveries and reads authorized intake files,290
+api,rawFiles,Preserves uploads and retrieves approved operational document bytes,291
+api,modelGateway,Requests bounded analysis and language drafts with authorized evidence,292
+modelGateway,providers,Routes model requests and receives completions,293
+modelGateway,postgres,"Reserves and settles daily model cost; records usage, retries and traces",294
+chatUi,api,"Uses conversation, reports, uploads and manager operations",296
+dashboardUi,api,"Reads authorized KPI, chart, query and action data",297
+controlUi,api,Reads executive-only workflow and escalation data,298
+web,requests,Submits requests with session credentials,300
+inputDriver,requests,Replays manager inputs with explicit receipt order and authorized identity,301
+worker,requests,"Requests scoped analysis, reports and evaluation outputs",302
+requests,access,Authenticates caller and obtains trusted identity and permissions,303
+access,postgres,Loads versioned hierarchy and grants; binds server-side scope and RLS,304
+managerConfig,access,Checks configuration authority and affected scope,305
+managerConfig,postgres,Versions settings and KPI candidates; activates approved validated definitions,306
+requests,managerConfig,Reads and records authorized manager context and versioned configuration,307
+requests,documents,Submits uploads for validation and evidence registration,308
+documents,access,"Checks uploader, purpose and evidence audience before use",309
+documents,rawFiles,Preserves original upload bytes and reads approved documents,310
+documents,postgres,Registers document evidence or completed upload revisions; records failures,311
+documents,worker,Queues authorized structured uploads in a separate data namespace,312
+requests,insights,Resolves existing common Insight versions before requesting new analysis,313
+requests,agent,"Requests scoped investigation, report language or conversational analysis",314
+requests,publication,Reads packages; publishes reports or exports validated QA,315
+requests,decisions,"Records explicit human decisions, authorizations and status updates",316
+requests,outputValidator,Validates interactive content and QA export,317
+requests,audit,Records request outcomes and restricted failure diagnostics,318
+requests,postgres,Reserves execution budgets and reads ranked analysis candidates,319
+agent,requests,"Checks execution grant; reports completion, cancellation or failure",320
+modelGateway,agent,Returns explicit provider or call-budget failure,321
+requests,worker,Reports manager-job failure to Schedule and Replay Control,322
+worker,documents,Reports structured-upload completion or failure,323
+managerConfig,worker,Submits inactive KPI candidates for deterministic validation,324
+worker,managerConfig,Returns KPI definition validation receipt or failure,325
+managerConfig,audit,"Records definition registration, approval and activation",326
+requests,queryGateway,Cancels active request queries,327
+requests,modelGateway,Cancels active model calls under the execution grant,328
+agent,evidence,Requests scoped evidence and permitted investigative tools,330
+agent,queryGateway,Requests predefined analytical tools or proposes constrained custom SQL,331
+agent,modelGateway,Requests bounded analysis with authorized evidence and tool descriptions,332
+evidence,access,"Checks audience, rows, columns, purpose and derived-claim authorization",333
+evidence,managerConfig,"Reads authorized, versioned goals and evidence focus",334
+evidence,queryGateway,Runs registered evidence queries under the requesting manager scope,335
+evidence,postgres,Reads authorized evidence metadata and decision references,336
+evidence,rawFiles,Reads only approved document fragments after authorization,337
+queryGateway,access,"Obtains trusted identity, relation/column allowlists and scope for every tool call",338
+queryGateway,postgres,"Runs scoped read-only SQL; records query ID, inputs, result and context",339
+queryGateway,audit,"Logs actual SQL, snapshot, policy, duration, row count, result hash and refusals",340
+agent,insights,Submits evidence-linked analytical content and role-scoped revisions,341
+insights,access,Checks evidence audience and permissions for every report projection,342
+insights,postgres,Stores shared versions and build state with separate evidence audiences,343
+reportWriter,insights,Reads an authorized projection of the common analytical source,344
+reportWriter,managerConfig,"Reads versioned role, goals, preferences and priorities",345
+reportWriter,agent,Requests language drafting from the same bounded Agent,346
+reportWriter,outputValidator,"Submits report text, JSON, chart specification and decision card",347
+outputValidator,queryGateway,"Re-runs registered SQL with canonical units, rounding and pinned context",348
+outputValidator,access,"Rechecks recipient scope, staff details and derived evidence",349
+outputValidator,evidence,"Checks independent evidence groups, alternatives and provenance",350
+outputValidator,postgres,Reads rule/recipient history and stores validation receipts and precise failures,351
+outputValidator,reportWriter,Returns bounded repair instructions for invalid report drafts,352
+publication,reportWriter,Builds one manager package from authorized Insight content,353
+publication,outputValidator,"Requires valid content, audience, snapshot and report/QA schema receipt",354
+publication,access,Rechecks audience for publication and every later read,355
+publication,queryGateway,Reads scoped dashboard and workflow observations with registered queries,356
+publication,postgres,Commits immutable packages and report/export success or failure,357
+publication,audit,Records independent publication outcomes and overall partial failure,358
+decisions,access,"Checks the human actor, decision authority and delegated scope",360
+decisions,postgres,"Records decision events, approved draft versions, deadlines, status and later observations",361
+decisions,agent,Requests task/message drafts after a recorded human decision,362
+decisions,evidence,Reads authorized decision memory and later KPI/workflow evidence for follow-up,363
+decisions,audit,Records human authorization and follow-up observations without an execution event,364
+jobs,ingestion,Starts idempotent intake for the current simulated cutoff,365
+ingestion,sources,Reads deliveries through source-specific adapters,366
+ingestion,rawFiles,Archives original bytes with file hashes and delivery occurrence IDs,367
+ingestion,quality,Validates parsed sources or isolated structured-upload records,368
+ingestion,api,Routes authorized operational Markdown to the document-processing boundary,369
+quality,postgres,"Stores RAW payloads, normalized observations, lineage and DQ incidents",370
+jobs,snapshots,Freezes eligible committed deliveries and policy versions,371
+snapshots,postgres,Creates reproducible snapshot manifests and versioned reference relations,372
+jobs,kpi,Validates KPI candidates; computes canonical and approved active definitions,373
+kpi,postgres,Validates definitions; runs active PostgreSQL SQL and registers results,374
+jobs,workflows,Reconstructs all three business workflows for the same snapshot,375
+workflows,postgres,Reads events and workflow configuration; writes case/stage/SLA observations,376
+jobs,signals,Detects and ranks signals; selects eligible deep-analysis candidates,377
+signals,postgres,"Stores deterministic signal state, rank, selection reasons and policy version",378
+jobs,api,Requests selected shared analysis and independent manager reports,379
+jobs,postgres,"Reads active roster/configuration; stores leases, per-manager status and run outcome",380
+audit,postgres,Registers SQL for cost/replay exports; stores restricted diagnostics,382
+overviewInputs,overviewData,Controlled intake,456
+overviewData,overviewProcessing,Snapshots,457
+overviewProcessing,overviewAccess,Observations,458
+overviewAccess,overviewAnalysis,Authorized evidence,459
+overviewAnalysis,overviewReports,Shared Insight Brief,460
+overviewReports,overviewDelivery,Drafts,461
+overviewDelivery,overviewInterfaces,Valid outputs,462
+overviewInterfaces,overviewDecisions,Options,463
+overviewInputs,overviewGoals,Governed changes,464
+overviewGoals,overviewProcessing,Targets / ranking,465
+overviewGoals,overviewAccess,Evidence focus,466
+overviewGoals,overviewReports,Report emphasis,467
+overviewInterfaces,overviewAccess,Manager questions,468
+overviewAnalysis,overviewDelivery,Q&A draft,469
+overviewDelivery,overviewReports,Bounded rewrite,470
+overviewDecisions,overviewData,Decision memory,471

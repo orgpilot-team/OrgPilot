@@ -1,0 +1,47 @@
+﻿identifier,kind,name,source_line
+supervisor,person,Team Supervisor,106
+unitManager,person,Unit Manager,107
+executive,person,Senior Executive,108
+sources,softwareSystem,Simulated Organizational Sources,110
+inputDriver,softwareSystem,Scripted Manager Input Driver,115
+providers,softwareSystem,Local or External AI Model Providers,120
+arka,softwareSystem,ARKA Executive Assistant,126
+web,container,Web Frontend,130
+chatUi,component,Conversational Assistant,131
+dashboardUi,component,Role-Based BI Dashboard,132
+controlUi,component,Executive Workflow Control Room,133
+api,container,Backend API,136
+requests,component,Application API,140
+access,component,Identity and Access Policies,145
+managerConfig,component,Manager Configuration,150
+documents,component,Document Intake and Evidence Registration,155
+queryGateway,component,Query Gateway,160
+evidence,component,Evidence Service,165
+agent,component,Bounded AI Agent,170
+insights,component,Shared Insight Brief Management,175
+reportWriter,component,Report Writer,180
+outputValidator,component,Output Validator,185
+publication,component,Publication,190
+audit,component,Audit and Evaluation,195
+decisions,component,Decision and Follow-up,200
+worker,container,Background Processing Worker,207
+jobs,component,Schedule and Replay Control,211
+ingestion,component,Ingestion Adapters,216
+quality,component,Data Quality and Preprocessing,221
+snapshots,component,Snapshot Management,226
+kpi,component,KPI Engine,231
+workflows,component,Workflow Engine,236
+signals,component,Signal Engine,241
+postgres,container,PostgreSQL,248
+rawFiles,container,Protected Raw File Storage,253
+modelGateway,container,LLM Gateway,258
+overviewInputs,element,Sources & Manager Inputs,387
+overviewData,element,Intake & Trusted Data,392
+overviewProcessing,element,Deterministic Analytics,399
+overviewAccess,element,Authorized Evidence,406
+overviewAnalysis,element,AI Analysis & Shared Insight,412
+overviewReports,element,Role-Based Report Generation,419
+overviewDelivery,element,Validation & Daily Brief,426
+overviewInterfaces,element,User-Facing Interfaces,433
+overviewDecisions,element,Human Decision & Follow-up,439
+overviewGoals,element,Manager Goals & Priorities,446

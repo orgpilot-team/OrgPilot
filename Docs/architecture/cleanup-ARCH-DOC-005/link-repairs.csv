@@ -1,0 +1,89 @@
+source_file,line,old_url,new_url,kind,reason
+Docs/architecture/002-data-architecture.md,484,003-roadmap.md#decisions-8,003-roadmap.md#roadmap-measurement,inline,Roadmap heading or legacy section anchor
+Docs/architecture/004-reconciliation-review.md,66,003-roadmap.md#decisions-8,003-roadmap.md#roadmap-measurement,inline,Roadmap heading or legacy section anchor
+Docs/review/dq-001-report.md,21,../dataset/README_FA.md,../../DataSet/arka_dataset/README_FA.md,inline,Previously reported historical broken reference; real target verified
+Docs/review/dq-001-report.md,21,../dataset/config/kpi_dictionary.csv,../../DataSet/arka_dataset/config/kpi_dictionary.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/dq-001-report.md,21,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/dq-001-report.md,130,../dataset/drops/day_066/manifest.json,../../DataSet/arka_dataset/drops/day_066/manifest.json,inline,Previously reported historical broken reference; real target verified
+Docs/review/dq-001-report.md,150,../dataset/drops/day_067/ticket_events.csv,../../DataSet/arka_dataset/drops/day_067/ticket_events.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/dq-001-report.md,156,../dataset/drops/day_067/manifest.json,../../DataSet/arka_dataset/drops/day_067/manifest.json,inline,Previously reported historical broken reference; real target verified
+Docs/review/kpi-val-001-report.md,13,../dataset/README_FA.md,../../DataSet/arka_dataset/README_FA.md,inline,Previously reported historical broken reference; real target verified
+Docs/review/kpi-val-001-report.md,13,../dataset/config/kpi_dictionary.csv,../../DataSet/arka_dataset/config/kpi_dictionary.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/kpi-val-001-report.md,13,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/kpi-val-001-report.md,241,../dataset/drops/day_076/orders.csv,../../DataSet/arka_dataset/drops/day_076/orders.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/kpi-val-001-report.md,241,../dataset/drops/day_076/manifest.json,../../DataSet/arka_dataset/drops/day_076/manifest.json,inline,Previously reported historical broken reference; real target verified
+Docs/review/kpi-val-001-report.md,241,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/kpi-val-001-report.md,259,../dataset/drops/day_066/manifest.json,../../DataSet/arka_dataset/drops/day_066/manifest.json,inline,Previously reported historical broken reference; real target verified
+Docs/review/kpi-val-001-report.md,288,../dataset/drops/day_067/manifest.json,../../DataSet/arka_dataset/drops/day_067/manifest.json,inline,Previously reported historical broken reference; real target verified
+Docs/review/kpi-val-001-report.md,307,../dataset/calendar/calendar_days.csv,../../DataSet/arka_dataset/calendar/calendar_days.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,22,../dataset/README_FA.md,../../DataSet/arka_dataset/README_FA.md,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,22,../dataset/config/kpi_dictionary.csv,../../DataSet/arka_dataset/config/kpi_dictionary.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,22,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,22,../Project_berif/بریف%20پروژه%20بوتکمپ%20_%20دستیار%20ایجنتیک%20مدیران%20سازمانی%20_%20دیدراه.pdf,../%D8%A8%D8%B1%DB%8C%D9%81%20%D9%BE%D8%B1%D9%88%DA%98%D9%87%20%D8%A8%D9%88%D8%AA%DA%A9%D9%85%D9%BE%20_%20%D8%AF%D8%B3%D8%AA%DB%8C%D8%A7%D8%B1%20%D8%A7%DB%8C%D8%AC%D9%86%D8%AA%DB%8C%DA%A9%20%D9%85%D8%AF%DB%8C%D8%B1%D8%A7%D9%86%20%D8%B3%D8%A7%D8%B2%D9%85%D8%A7%D9%86%DB%8C%20_%20%D8%AF%DB%8C%D8%AF%D8%B1%D8%A7%D9%87.pdf,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,37,../dataset/README_FA.md,../../DataSet/arka_dataset/README_FA.md,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,37,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,37,../dataset/calendar/calendar_days.csv,../../DataSet/arka_dataset/calendar/calendar_days.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,81,../dataset/calendar/calendar_days.csv,../../DataSet/arka_dataset/calendar/calendar_days.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,81,../dataset/README_FA.md,../../DataSet/arka_dataset/README_FA.md,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,81,../dataset/config/monthly_targets.csv,../../DataSet/arka_dataset/config/monthly_targets.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,106,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,106,../dataset/drops/day_070/crm_lead_events.csv,../../DataSet/arka_dataset/drops/day_070/crm_lead_events.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,106,../dataset/drops/day_070/manifest.json,../../DataSet/arka_dataset/drops/day_070/manifest.json,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,120,../dataset/drops/day_064/crm_lead_events.csv,../../DataSet/arka_dataset/drops/day_064/crm_lead_events.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,120,../dataset/drops/day_070/crm_lead_events.csv,../../DataSet/arka_dataset/drops/day_070/crm_lead_events.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,120,../dataset/README_FA.md,../../DataSet/arka_dataset/README_FA.md,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,120,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,120,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,158,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,158,../dataset/drops/day_070/crm_lead_events.csv,../../DataSet/arka_dataset/drops/day_070/crm_lead_events.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,172,../dataset/README_FA.md,../../DataSet/arka_dataset/README_FA.md,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,172,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,172,../dataset/config/kpi_dictionary.csv,../../DataSet/arka_dataset/config/kpi_dictionary.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,212,../dataset/config/kpi_dictionary.csv,../../DataSet/arka_dataset/config/kpi_dictionary.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,212,../dataset/config/kpi_dictionary.csv,../../DataSet/arka_dataset/config/kpi_dictionary.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,212,../dataset/config/kpi_dictionary.csv,../../DataSet/arka_dataset/config/kpi_dictionary.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,237,../dataset/drops/day_076/orders.csv,../../DataSet/arka_dataset/drops/day_076/orders.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,237,../dataset/drops/day_076/manifest.json,../../DataSet/arka_dataset/drops/day_076/manifest.json,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,265,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,265,../dataset/drops/day_076/orders.csv,../../DataSet/arka_dataset/drops/day_076/orders.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,265,../dataset/drops,../../DataSet/arka_dataset/drops,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,265,../dataset/README_FA.md,../../DataSet/arka_dataset/README_FA.md,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,304,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,304,../dataset/config/kpi_dictionary.csv,../../DataSet/arka_dataset/config/kpi_dictionary.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,304,../dataset/config/kpi_dictionary.csv,../../DataSet/arka_dataset/config/kpi_dictionary.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,304,../dataset/config/kpi_dictionary.csv,../../DataSet/arka_dataset/config/kpi_dictionary.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,304,../dataset/config/kpi_dictionary.csv,../../DataSet/arka_dataset/config/kpi_dictionary.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,322,../dataset/drops/day_066/manifest.json,../../DataSet/arka_dataset/drops/day_066/manifest.json,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,322,../dataset/drops/day_067/manifest.json,../../DataSet/arka_dataset/drops/day_067/manifest.json,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,322,../dataset/drops/day_067/tickets.csv,../../DataSet/arka_dataset/drops/day_067/tickets.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,322,../dataset/drops/day_067/ticket_events.csv,../../DataSet/arka_dataset/drops/day_067/ticket_events.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,322,../dataset/drops/day_067/csat.csv,../../DataSet/arka_dataset/drops/day_067/csat.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,322,../dataset/README_FA.md,../../DataSet/arka_dataset/README_FA.md,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,322,../dataset/README_FA.md,../../DataSet/arka_dataset/README_FA.md,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,338,../dataset/drops/day_081/tickets.csv,../../DataSet/arka_dataset/drops/day_081/tickets.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,338,../dataset/drops/day_082/tickets.csv,../../DataSet/arka_dataset/drops/day_082/tickets.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,338,../dataset/drops/day_081/ticket_events.csv,../../DataSet/arka_dataset/drops/day_081/ticket_events.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,338,../dataset/drops/day_082/ticket_events.csv,../../DataSet/arka_dataset/drops/day_082/ticket_events.csv,inline,Previously reported historical broken reference; real target verified
+Docs/review/rca-001-report.md,338,../dataset/config/reference_views.sql,../../DataSet/arka_dataset/config/reference_views.sql,inline,Previously reported historical broken reference; real target verified
+Docs/architecture/audit-2026-11-09/audit-report.md,15,../003-decisions-and-roadmap.md#decision-log,../registry/open-issues-registry.md#decision-log,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/audit-2026-11-09/change-report.md,15,../003-decisions-and-roadmap.md,../registry/README.md#source-context,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/audit-2026-11-09/change-report.md,109,../003-decisions-and-roadmap.md#decision-log,../registry/open-issues-registry.md#decision-log,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/audit-2026-11-09/requirements-traceability.md,18,../003-decisions-and-roadmap.md#decision-log,../registry/open-issues-registry.md#decision-log,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/registry/acceptance-register.md,1003,../003-roadmap.md#decisions-8,../003-roadmap.md#roadmap-measurement,inline,Roadmap heading or legacy section anchor
+Docs/architecture/registry/acceptance-register.md,1030,../003-roadmap.md#decisions-6,../003-roadmap.md#roadmap-phases,inline,Roadmap heading or legacy section anchor
+Docs/architecture/registry/approval-readiness.md,40,../003-decisions-and-roadmap.md#decisions-1,README.md#decisions-1,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/registry/deduplication-ledger.md,46,../003-decisions-and-roadmap.md#decision-log,open-issues-registry.md#decision-log,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/registry/deduplication-ledger.md,49,../003-decisions-and-roadmap.md#adr-01,decisions-registry.md#adr-01,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/registry/deduplication-ledger.md,50,../003-decisions-and-roadmap.md#decisions-5,risk-register.md#decisions-5,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/registry/open-issues-registry.md,672,../003-roadmap.md#decisions-6,../003-roadmap.md#roadmap-phases,inline,Roadmap heading or legacy section anchor
+Docs/architecture/registry/open-issues-registry.md,944,003-decisions-and-roadmap.md#adr-04,decisions-registry.md#adr-04,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/registry/open-issues-registry.md,944,003-decisions-and-roadmap.md#adr-07,decisions-registry.md#adr-07,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/registry/open-issues-registry.md,968,../003-roadmap.md#decisions-8,../003-roadmap.md#roadmap-measurement,inline,Roadmap heading or legacy section anchor
+Docs/architecture/registry/open-issues-registry.md,1011,../003-roadmap.md#decisions-6,../003-roadmap.md#roadmap-phases,inline,Roadmap heading or legacy section anchor
+Docs/architecture/restructure-ARCH-DOC-004/report.md,22,../003-roadmap.md#execution-gates,../003-roadmap.md#roadmap-execution-gates,inline,Roadmap heading or legacy section anchor
+Docs/architecture/restructure-ARCH-DOC-004/report.md,23,../003-decisions-and-roadmap.md,../registry/README.md#source-context,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/visualizations/open-questions.md,3,../003-decisions-and-roadmap.md#decision-log,../registry/open-issues-registry.md#decision-log,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/visualizations/proposed-entity-contracts.md,31,../003-decisions-and-roadmap.md#adr-01,../registry/decisions-registry.md#adr-01,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/visualizations/README.md,28,../003-decisions-and-roadmap.md#decision-log,../registry/open-issues-registry.md#decision-log,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/visualizations/security-examples.md,3,../003-decisions-and-roadmap.md#adr-06,../registry/decisions-registry.md#adr-06,inline,Old combined document: exact legacy-anchor destination
+Docs/architecture/visualizations/security-examples.md,3,../003-decisions-and-roadmap.md#decision-log,../registry/open-issues-registry.md#decision-log,inline,Old combined document: exact legacy-anchor destination

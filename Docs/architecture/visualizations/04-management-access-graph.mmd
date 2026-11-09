@@ -1,0 +1,40 @@
+flowchart LR
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  RAW["Raw CSV archive<br/>No manager raw grant supplied"]
+  CALC["Internal calculator<br/>Cross-unit rows only for supplied formulas"]
+  POLICY["Required boundary before any LLM<br/>Row scope + columns + purpose + active dates"]
+  QUERY["Authorized query projections<br/>Text-to-SQL has the same boundary"]
+  REPORT["Authorized report evidence<br/>No source row grant follows from a KPI"]
+  LLM["LLM sees authorized data only"]
+  RAW -->|DERIVED computation| CALC
+  CALC -->|CONFIRMED security requirement| POLICY
+  POLICY -->|CONFIRMED scoped results| QUERY
+  POLICY -->|CONFIRMED scoped evidence| REPORT
+  QUERY --> LLM
+  REPORT --> LLM
+  M01["M01: ORG|U_SAL|U_OPS|U_SUP|T_ENT|T_DIG|T_WH|T_SHP|T_RSP|T_CMP|T_MKT<br/>Aggregate only"]
+  QUERY -->|CONFIRMED scope; aggregate by default| M01
+  M02["M02: U_SAL|T_ENT|T_DIG|T_MKT<br/>Aggregate only"]
+  QUERY -->|CONFIRMED scope; aggregate by default| M02
+  M03["M03: U_OPS|T_WH|T_SHP<br/>Aggregate only"]
+  QUERY -->|CONFIRMED scope; aggregate by default| M03
+  M04["M04: U_SUP|T_RSP|T_CMP<br/>Aggregate only"]
+  QUERY -->|CONFIRMED scope; aggregate by default| M04
+  M05["M05: T_ENT<br/>Direct-team workload: T_ENT"]
+  QUERY -->|CONFIRMED scope; aggregate by default| M05
+  M06["M06: T_DIG<br/>Direct-team workload: T_DIG"]
+  QUERY -->|CONFIRMED scope; aggregate by default| M06
+  M07["M07: T_WH<br/>Direct-team workload: T_WH"]
+  QUERY -->|CONFIRMED scope; aggregate by default| M07
+  M08["M08: T_SHP<br/>Direct-team workload: T_SHP"]
+  QUERY -->|CONFIRMED scope; aggregate by default| M08
+  M09["M09: T_RSP<br/>Direct-team workload: T_RSP"]
+  QUERY -->|CONFIRMED scope; aggregate by default| M09
+  M10["M10: T_CMP<br/>Direct-team workload: T_CMP"]
+  QUERY -->|CONFIRMED scope; aggregate by default| M10
+  M11["M11: T_MKT<br/>Direct-team workload: T_MKT"]
+  QUERY -->|CONFIRMED scope; aggregate by default| M11
+  ATT["CONFIRMED: leave/attendance only as team capacity<br/>No individual attendance display at any level"]
+  ATT -.-> POLICY
+  START["UNRESOLVED: M11 first report and historic marketplace window"]
+  START -.-> M11

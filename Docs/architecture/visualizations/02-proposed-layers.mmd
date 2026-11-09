@@ -1,0 +1,20 @@
+flowchart TB
+  TITLE["PROPOSED - NOT IMPLEMENTED<br/>Logical layers; no approved physical DDL"]
+  A["Source archive<br/>SourceContract / IngestBatch / SourceFile / SourceRow"]
+  B["Canonical history<br/>EntityObservation / EventRecord / CorrectionLink"]
+  C["Snapshot / SnapshotInput / FactVersion<br/>snapshot_id + projection_id + business_id"]
+  D["KpiDefinition / KpiDependency / QueryRun / KpiObservation<br/>snapshot + definition version + entity + dim + date"]
+  E["SignalEpisode / SignalOccurrence / EvidenceRef / InsightVersion"]
+  F["ReportVersion / DecisionEvent / ActionDraft<br/>report day + manager + run + version"]
+  G["OrgNode / OrgEdgeVersion / AccessGrantVersion / AuthContext"]
+  H["Security audit / Query and access log / Budget ledger / DQIncident"]
+  A -->|PROPOSED| B
+  B -->|PROPOSED| C
+  C -->|PROPOSED| D
+  D -->|PROPOSED| E
+  E -->|PROPOSED| F
+  G -.->|PROPOSED policy context| C
+  G -.->|PROPOSED authorization| F
+  A -.->|PROPOSED receipts| H
+  D -.->|PROPOSED query audit| H
+  F -.->|PROPOSED access audit| H

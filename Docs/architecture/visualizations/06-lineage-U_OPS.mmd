@@ -1,0 +1,20 @@
+flowchart LR
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  order_events["order_events: calculation input"]
+  orders["orders: calculation input"]
+  order_fact["order_fact: SQL view"]
+  orders -->|DERIVED execution input| order_fact
+  order_events -->|DERIVED execution input| order_fact
+  orders -->|"DERIVED join/filter: order_id"| order_fact
+  K_OPS_ONTIME["K_OPS_ONTIME"]
+  order_fact -->|DERIVED computation| K_OPS_ONTIME
+  order_events -->|"DERIVED join/population: order_id"| K_OPS_ONTIME
+  orders -->|"DERIVED join/population: order_id"| K_OPS_ONTIME
+  K_OPS_ONTIME -->|CONFIRMED entity_id| U_OPS
+  K_OPS_PICK_MED["K_OPS_PICK_MED"]
+  order_fact -->|DERIVED computation| K_OPS_PICK_MED
+  order_events -->|"DERIVED join/population: order_id"| K_OPS_PICK_MED
+  orders -->|"DERIVED join/population: order_id"| K_OPS_PICK_MED
+  K_OPS_PICK_MED -->|CONFIRMED entity_id| U_OPS
+  U_OPS -.->|CONFIRMED aggregate display; active dates apply| M01
+  U_OPS -.->|CONFIRMED aggregate display; active dates apply| M03

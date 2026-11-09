@@ -1,0 +1,17 @@
+﻿key,kind,scope,description,source_line
+IntegratedOverview,custom,logical summaries,One-page unified architecture overview for team discussion.,650
+SystemContext,systemContext,arka,Human management roles and external source/model boundaries.,656
+Containers,container,arka,Six runtime containers; one modular codebase and one PostgreSQL database.,663
+Interfaces,component,web,Three Persian RTL interfaces with API access controls.,669
+DataIntake,component,worker,"Structured intake, RAW preservation, data quality and snapshots.",675
+DeterministicAnalytics,component,worker,"Deterministic KPI/workflow analysis, signal ranking and selection.",681
+EvidenceAndAnalysis,component,api,"Authorized evidence, controlled SQL and a bounded investigation.",687
+ReportDelivery,component,api,"Role projection, validation and independent report/QA export.",693
+ManagerGovernance,component,api,Authorized manager inputs and the controlled new-KPI lifecycle.,704
+NightlyReporting,dynamic,arka,"Scheduled data processing, selected shared analysis and independent morning reports.",718
+NightlyData,dynamic,worker,"D-1 intake, canonical calculations and deterministic deep-analysis selection.",737
+NightlyBrief,dynamic,api,"Reuse shared authorized analysis. Investigate selected gaps within limits, then validate each package.",758
+InteractiveAssistant,dynamic,api,Scoped questions use D-1 data and approved upload revisions. Validate the answer and export required QA JSON.,785
+ManagerUpload,dynamic,api,Document and structured paths are alternatives. Only successful authorized revisions become evidence.,812
+HumanDecisionFollowUp,dynamic,api,"Humans decide, approve and execute. ARKA records drafts, status and later observations.",841
+PartialPublication,dynamic,api,Provider or budget failure may precede a draft. Report failures remain separate from ten-valid-report acceptance.,868

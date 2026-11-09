@@ -1,0 +1,3831 @@
+[
+  {
+    "table": "calendar/calendar_days.csv",
+    "rows": 90,
+    "unique_exact_rows": 90,
+    "columns": [
+      {
+        "column": "date",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 90,
+        "examples": [
+          "2026-07-23",
+          "2026-07-24",
+          "2026-07-25"
+        ]
+      },
+      {
+        "column": "day_idx",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 90,
+        "examples": [
+          "1",
+          "2",
+          "3"
+        ]
+      },
+      {
+        "column": "jdate",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 90,
+        "examples": [
+          "1405/05/01",
+          "1405/05/02",
+          "1405/05/03"
+        ]
+      },
+      {
+        "column": "jmonth",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "1405-05",
+          "1405-06",
+          "1405-07"
+        ]
+      },
+      {
+        "column": "day_in_month",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 31,
+        "examples": [
+          "1",
+          "2",
+          "3"
+        ]
+      },
+      {
+        "column": "mdays",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "31",
+          "30"
+        ]
+      },
+      {
+        "column": "iwd",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7,
+        "examples": [
+          "5",
+          "6",
+          "0"
+        ]
+      },
+      {
+        "column": "is_holiday",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "0",
+          "1"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "date",
+          "day_idx",
+          "jdate",
+          "jmonth",
+          "day_in_month",
+          "mdays",
+          "iwd",
+          "is_holiday"
+        ],
+        "files": [
+          "dataset/calendar/calendar_days.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "date": "2026-07-23",
+          "day_idx": "1",
+          "jdate": "1405/05/01",
+          "jmonth": "1405-05",
+          "day_in_month": "1",
+          "mdays": "31",
+          "iwd": "5",
+          "is_holiday": "0"
+        },
+        "source": "dataset/calendar/calendar_days.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "date": "2026-07-24",
+          "day_idx": "2",
+          "jdate": "1405/05/02",
+          "jmonth": "1405-05",
+          "day_in_month": "2",
+          "mdays": "31",
+          "iwd": "6",
+          "is_holiday": "0"
+        },
+        "source": "dataset/calendar/calendar_days.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "calendar/events_calendar.csv",
+    "rows": 7,
+    "unique_exact_rows": 7,
+    "columns": [
+      {
+        "column": "date",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7,
+        "examples": [
+          "2026-08-11",
+          "2026-08-31",
+          "2026-09-23"
+        ]
+      },
+      {
+        "column": "end_date",
+        "absent_from_rows": 0,
+        "empty_cells": 3,
+        "distinct_nonempty": 4,
+        "examples": [
+          "2026-08-15",
+          "2026-08-31",
+          "2026-09-29"
+        ]
+      },
+      {
+        "column": "type",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 5,
+        "examples": [
+          "campaign",
+          "holiday",
+          "system_release"
+        ]
+      },
+      {
+        "column": "title_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 6,
+        "examples": [
+          "جشنواره تابستانه −۲۰٪",
+          "تعطیل رسمی",
+          "جشنواره پاییز −۳۰٪"
+        ]
+      },
+      {
+        "column": "detail_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 6,
+        "examples": [
+          "تخفیف روی کانال‌های وب و اپ؛ شناسه CMP-01",
+          "تعطیل رسمی (تاریخ شبیه‌سازی‌شده)",
+          "تخفیف روی کانال‌های وب و اپ؛ شناسه CMP-02"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "date",
+          "end_date",
+          "type",
+          "title_fa",
+          "detail_fa"
+        ],
+        "files": [
+          "dataset/calendar/events_calendar.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "date": "2026-08-11",
+          "end_date": "2026-08-15",
+          "type": "campaign",
+          "title_fa": "جشنواره تابستانه −۲۰٪",
+          "detail_fa": "تخفیف روی کانال‌های وب و اپ؛ شناسه CMP-01"
+        },
+        "source": "dataset/calendar/events_calendar.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "date": "2026-08-31",
+          "end_date": "2026-08-31",
+          "type": "holiday",
+          "title_fa": "تعطیل رسمی",
+          "detail_fa": "تعطیل رسمی (تاریخ شبیه‌سازی‌شده)"
+        },
+        "source": "dataset/calendar/events_calendar.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "config/escalation_rules.csv",
+    "rows": 8,
+    "unique_exact_rows": 8,
+    "columns": [
+      {
+        "column": "rule_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 8,
+        "examples": [
+          "R1",
+          "R2",
+          "R3"
+        ]
+      },
+      {
+        "column": "rule_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 8,
+        "examples": [
+          "هر سیگنال ابتدا به پایین‌ترین سطحی می‌رسد که مالک شاخص است (owner_manager_id).",
+          "تشدید به سطح بالاتر: عبور از آستانه crit، یا ماندن بالای آستانه warn بیش از escalate_after_days روز، یا بدتر شدن ≥۲۰٪ نسبت به اولین گزارش.",
+          "تشدید بین‌واحدی به مدیر ارشد: وقتی شاخص Workflow یا شاخص سطح سازمان از warn عبور کند."
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "rule_id",
+          "rule_fa"
+        ],
+        "files": [
+          "dataset/config/escalation_rules.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "rule_id": "R1",
+          "rule_fa": "هر سیگنال ابتدا به پایین‌ترین سطحی می‌رسد که مالک شاخص است (owner_manager_id)."
+        },
+        "source": "dataset/config/escalation_rules.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "rule_id": "R2",
+          "rule_fa": "تشدید به سطح بالاتر: عبور از آستانه crit، یا ماندن بالای آستانه warn بیش از escalate_after_days روز، یا بدتر شدن ≥۲۰٪ نسبت به اولین گزارش."
+        },
+        "source": "dataset/config/escalation_rules.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "config/kpi_dictionary.csv",
+    "rows": 55,
+    "unique_exact_rows": 55,
+    "columns": [
+      {
+        "column": "kpi_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 55,
+        "examples": [
+          "K_ORG_NET_REV",
+          "K_ORG_REV_MTD_ATTAIN",
+          "K_ORG_ONTIME"
+        ]
+      },
+      {
+        "column": "name_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 55,
+        "examples": [
+          "درآمد خالص روزانه (فروش آنلاین + قرارداد سازمانی − بازپرداخت)",
+          "تحقق هدف درآمد ماه تا امروز (نسبت به هدف تناسبی) — هشدار فقط از روز ۸ ماه",
+          "تحویل به‌موقع"
+        ]
+      },
+      {
+        "column": "entity_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 11,
+        "examples": [
+          "ORG",
+          "U_SAL",
+          "T_ENT"
+        ]
+      },
+      {
+        "column": "unit",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7,
+        "examples": [
+          "میلیون تومان",
+          "%",
+          "از ۵"
+        ]
+      },
+      {
+        "column": "direction",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "1",
+          "-1"
+        ]
+      },
+      {
+        "column": "rule",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 8,
+        "examples": [
+          "dow_baseline:35",
+          "threshold_from_day8",
+          "threshold"
+        ]
+      },
+      {
+        "column": "target",
+        "absent_from_rows": 0,
+        "empty_cells": 13,
+        "distinct_nonempty": 19,
+        "examples": [
+          "100.0",
+          "95.0",
+          "4.3"
+        ]
+      },
+      {
+        "column": "warn",
+        "absent_from_rows": 0,
+        "empty_cells": 13,
+        "distinct_nonempty": 23,
+        "examples": [
+          "95.0",
+          "90.0",
+          "3.9"
+        ]
+      },
+      {
+        "column": "crit",
+        "absent_from_rows": 0,
+        "empty_cells": 13,
+        "distinct_nonempty": 21,
+        "examples": [
+          "90.0",
+          "85.0",
+          "3.7"
+        ]
+      },
+      {
+        "column": "escalate_after_days",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "2",
+          "3",
+          "1"
+        ]
+      },
+      {
+        "column": "sql",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 48,
+        "examples": [
+          "SELECT d, ROUND((b2c+b2b)/1e6,1) value FROM revenue_daily",
+          "WITH m AS (SELECT c.d, c.jmonth, c.day_in_month, c.mdays, SUM(r.b2c + r.b2b) OVER (PARTITION BY c.jmonth ORDER BY c.d) cum FROM cal c JOIN revenue_daily r USING(d)) SELECT m.d, ROUND(100.0*m.cum/(t.target_million_toman*1e6*m.day_in_month/m.mdays),1) value FROM m JOIN monthly_targets t ON t.jmonth=m.jmonth AND t.scope='ORG'",
+          "SELECT date(delivered_at) d, ROUND(100.0*AVG(delivered_at<=promised_by),1) value FROM order_fact WHERE delivered_at IS NOT NULL GROUP BY 1"
+        ]
+      },
+      {
+        "column": "dim",
+        "absent_from_rows": 0,
+        "empty_cells": 51,
+        "distinct_nonempty": 3,
+        "examples": [
+          "channel",
+          "category",
+          "city"
+        ]
+      },
+      {
+        "column": "owner_manager_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 11,
+        "examples": [
+          "M01",
+          "M02",
+          "M05"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "kpi_id",
+          "name_fa",
+          "entity_id",
+          "unit",
+          "direction",
+          "rule",
+          "target",
+          "warn",
+          "crit",
+          "escalate_after_days",
+          "sql",
+          "dim",
+          "owner_manager_id"
+        ],
+        "files": [
+          "dataset/config/kpi_dictionary.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "kpi_id": "K_ORG_NET_REV",
+          "name_fa": "درآمد خالص روزانه (فروش آنلاین + قرارداد سازمانی − بازپرداخت)",
+          "entity_id": "ORG",
+          "unit": "میلیون تومان",
+          "direction": "1",
+          "rule": "dow_baseline:35",
+          "target": "",
+          "warn": "",
+          "crit": "",
+          "escalate_after_days": "2",
+          "sql": "SELECT d, ROUND((b2c+b2b)/1e6,1) value FROM revenue_daily",
+          "dim": "",
+          "owner_manager_id": "M01"
+        },
+        "source": "dataset/config/kpi_dictionary.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "kpi_id": "K_ORG_REV_MTD_ATTAIN",
+          "name_fa": "تحقق هدف درآمد ماه تا امروز (نسبت به هدف تناسبی) — هشدار فقط از روز ۸ ماه",
+          "entity_id": "ORG",
+          "unit": "%",
+          "direction": "1",
+          "rule": "threshold_from_day8",
+          "target": "100.0",
+          "warn": "95.0",
+          "crit": "90.0",
+          "escalate_after_days": "3",
+          "sql": "WITH m AS (SELECT c.d, c.jmonth, c.day_in_month, c.mdays, SUM(r.b2c + r.b2b) OVER (PARTITION BY c.jmonth ORDER BY c.d) cum FROM cal c JOIN revenue_daily r USING(d)) SELECT m.d, ROUND(100.0*m.cum/(t.target_million_toman*1e6*m.day_in_month/m.mdays),1) value FROM m JOIN monthly_targets t ON t.jmonth=m.jmonth AND t.scope='ORG'",
+          "dim": "",
+          "owner_manager_id": "M01"
+        },
+        "source": "dataset/config/kpi_dictionary.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "config/monthly_targets.csv",
+    "rows": 3,
+    "unique_exact_rows": 3,
+    "columns": [
+      {
+        "column": "jmonth",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "1405-05",
+          "1405-06",
+          "1405-07"
+        ]
+      },
+      {
+        "column": "scope",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 1,
+        "examples": [
+          "ORG"
+        ]
+      },
+      {
+        "column": "target_million_toman",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "18700.0",
+          "19400.0",
+          "19700.0"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "jmonth",
+          "scope",
+          "target_million_toman"
+        ],
+        "files": [
+          "dataset/config/monthly_targets.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "jmonth": "1405-05",
+          "scope": "ORG",
+          "target_million_toman": "18700.0"
+        },
+        "source": "dataset/config/monthly_targets.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "jmonth": "1405-06",
+          "scope": "ORG",
+          "target_million_toman": "19400.0"
+        },
+        "source": "dataset/config/monthly_targets.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "config/workflow_definitions.csv",
+    "rows": 12,
+    "unique_exact_rows": 12,
+    "columns": [
+      {
+        "column": "workflow_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "WF1",
+          "WF2",
+          "WF3"
+        ]
+      },
+      {
+        "column": "name_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "سفارش تا تحویل",
+          "شکایت تا حل",
+          "سرنخ تا قرارداد سازمانی"
+        ]
+      },
+      {
+        "column": "owner",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 1,
+        "examples": [
+          "M01"
+        ]
+      },
+      {
+        "column": "units",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "U_SAL→U_OPS→U_SUP",
+          "U_SUP→U_OPS→U_SUP",
+          "T_DIG→T_ENT"
+        ]
+      },
+      {
+        "column": "stage_order",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 5,
+        "examples": [
+          "1",
+          "2",
+          "3"
+        ]
+      },
+      {
+        "column": "stage",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 12,
+        "examples": [
+          "ثبت تا پرداخت",
+          "پرداخت تا جمع‌آوری",
+          "جمع‌آوری تا تحویل به ارسال"
+        ]
+      },
+      {
+        "column": "from_event",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 10,
+        "examples": [
+          "created_at",
+          "paid",
+          "picked"
+        ]
+      },
+      {
+        "column": "to_event",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 12,
+        "examples": [
+          "paid",
+          "picked",
+          "handed_over"
+        ]
+      },
+      {
+        "column": "sla_hours",
+        "absent_from_rows": 0,
+        "empty_cells": 1,
+        "distinct_nonempty": 10,
+        "examples": [
+          "1",
+          "12",
+          "6"
+        ]
+      },
+      {
+        "column": "stage_target_median_h",
+        "absent_from_rows": 0,
+        "empty_cells": 1,
+        "distinct_nonempty": 9,
+        "examples": [
+          "0.25",
+          "4",
+          "3"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "workflow_id",
+          "name_fa",
+          "owner",
+          "units",
+          "stage_order",
+          "stage",
+          "from_event",
+          "to_event",
+          "sla_hours",
+          "stage_target_median_h"
+        ],
+        "files": [
+          "dataset/config/workflow_definitions.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "workflow_id": "WF1",
+          "name_fa": "سفارش تا تحویل",
+          "owner": "M01",
+          "units": "U_SAL→U_OPS→U_SUP",
+          "stage_order": "1",
+          "stage": "ثبت تا پرداخت",
+          "from_event": "created_at",
+          "to_event": "paid",
+          "sla_hours": "1",
+          "stage_target_median_h": "0.25"
+        },
+        "source": "dataset/config/workflow_definitions.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "workflow_id": "WF1",
+          "name_fa": "سفارش تا تحویل",
+          "owner": "M01",
+          "units": "U_SAL→U_OPS→U_SUP",
+          "stage_order": "2",
+          "stage": "پرداخت تا جمع‌آوری",
+          "from_event": "paid",
+          "to_event": "picked",
+          "sla_hours": "12",
+          "stage_target_median_h": "4"
+        },
+        "source": "dataset/config/workflow_definitions.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "crm_lead_events.csv",
+    "rows": 6208,
+    "unique_exact_rows": 6208,
+    "columns": [
+      {
+        "column": "lead_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2937,
+        "examples": [
+          "L00001",
+          "L00002",
+          "L00003"
+        ]
+      },
+      {
+        "column": "event",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 6,
+        "examples": [
+          "first_contact",
+          "qualified",
+          "proposal_sent"
+        ]
+      },
+      {
+        "column": "at",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 6207,
+        "examples": [
+          "2026-06-14 08:48:33",
+          "2026-06-13 16:02:36",
+          "2026-06-16 08:34:29"
+        ]
+      },
+      {
+        "column": "contract_value_toman",
+        "absent_from_rows": 0,
+        "empty_cells": 5893,
+        "distinct_nonempty": 237,
+        "examples": [
+          "45000000.0",
+          "52800000.0",
+          "58300000.0"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "lead_id",
+          "event",
+          "at",
+          "contract_value_toman"
+        ],
+        "files": [
+          "dataset/drops/day_000/crm_lead_events.csv",
+          "dataset/drops/day_001/crm_lead_events.csv",
+          "dataset/drops/day_002/crm_lead_events.csv",
+          "dataset/drops/day_003/crm_lead_events.csv",
+          "dataset/drops/day_004/crm_lead_events.csv",
+          "dataset/drops/day_005/crm_lead_events.csv",
+          "dataset/drops/day_006/crm_lead_events.csv",
+          "dataset/drops/day_007/crm_lead_events.csv",
+          "dataset/drops/day_008/crm_lead_events.csv",
+          "dataset/drops/day_009/crm_lead_events.csv",
+          "dataset/drops/day_010/crm_lead_events.csv",
+          "dataset/drops/day_011/crm_lead_events.csv",
+          "dataset/drops/day_012/crm_lead_events.csv",
+          "dataset/drops/day_013/crm_lead_events.csv",
+          "dataset/drops/day_014/crm_lead_events.csv",
+          "dataset/drops/day_015/crm_lead_events.csv",
+          "dataset/drops/day_016/crm_lead_events.csv",
+          "dataset/drops/day_017/crm_lead_events.csv",
+          "dataset/drops/day_018/crm_lead_events.csv",
+          "dataset/drops/day_019/crm_lead_events.csv",
+          "dataset/drops/day_020/crm_lead_events.csv",
+          "dataset/drops/day_021/crm_lead_events.csv",
+          "dataset/drops/day_022/crm_lead_events.csv",
+          "dataset/drops/day_023/crm_lead_events.csv",
+          "dataset/drops/day_024/crm_lead_events.csv",
+          "dataset/drops/day_025/crm_lead_events.csv",
+          "dataset/drops/day_026/crm_lead_events.csv",
+          "dataset/drops/day_027/crm_lead_events.csv",
+          "dataset/drops/day_028/crm_lead_events.csv",
+          "dataset/drops/day_029/crm_lead_events.csv",
+          "dataset/drops/day_030/crm_lead_events.csv",
+          "dataset/drops/day_031/crm_lead_events.csv",
+          "dataset/drops/day_032/crm_lead_events.csv",
+          "dataset/drops/day_033/crm_lead_events.csv",
+          "dataset/drops/day_034/crm_lead_events.csv",
+          "dataset/drops/day_035/crm_lead_events.csv",
+          "dataset/drops/day_036/crm_lead_events.csv",
+          "dataset/drops/day_037/crm_lead_events.csv",
+          "dataset/drops/day_038/crm_lead_events.csv",
+          "dataset/drops/day_039/crm_lead_events.csv",
+          "dataset/drops/day_040/crm_lead_events.csv",
+          "dataset/drops/day_041/crm_lead_events.csv",
+          "dataset/drops/day_042/crm_lead_events.csv",
+          "dataset/drops/day_043/crm_lead_events.csv",
+          "dataset/drops/day_044/crm_lead_events.csv",
+          "dataset/drops/day_045/crm_lead_events.csv",
+          "dataset/drops/day_046/crm_lead_events.csv",
+          "dataset/drops/day_047/crm_lead_events.csv",
+          "dataset/drops/day_048/crm_lead_events.csv",
+          "dataset/drops/day_049/crm_lead_events.csv",
+          "dataset/drops/day_050/crm_lead_events.csv",
+          "dataset/drops/day_051/crm_lead_events.csv",
+          "dataset/drops/day_052/crm_lead_events.csv",
+          "dataset/drops/day_053/crm_lead_events.csv",
+          "dataset/drops/day_054/crm_lead_events.csv",
+          "dataset/drops/day_055/crm_lead_events.csv",
+          "dataset/drops/day_056/crm_lead_events.csv",
+          "dataset/drops/day_057/crm_lead_events.csv",
+          "dataset/drops/day_058/crm_lead_events.csv",
+          "dataset/drops/day_059/crm_lead_events.csv",
+          "dataset/drops/day_060/crm_lead_events.csv",
+          "dataset/drops/day_061/crm_lead_events.csv",
+          "dataset/drops/day_062/crm_lead_events.csv",
+          "dataset/drops/day_063/crm_lead_events.csv",
+          "dataset/drops/day_064/crm_lead_events.csv",
+          "dataset/drops/day_065/crm_lead_events.csv",
+          "dataset/drops/day_066/crm_lead_events.csv",
+          "dataset/drops/day_067/crm_lead_events.csv",
+          "dataset/drops/day_068/crm_lead_events.csv",
+          "dataset/drops/day_069/crm_lead_events.csv",
+          "dataset/drops/day_070/crm_lead_events.csv",
+          "dataset/drops/day_071/crm_lead_events.csv",
+          "dataset/drops/day_072/crm_lead_events.csv",
+          "dataset/drops/day_073/crm_lead_events.csv",
+          "dataset/drops/day_074/crm_lead_events.csv",
+          "dataset/drops/day_075/crm_lead_events.csv",
+          "dataset/drops/day_076/crm_lead_events.csv",
+          "dataset/drops/day_077/crm_lead_events.csv",
+          "dataset/drops/day_078/crm_lead_events.csv",
+          "dataset/drops/day_079/crm_lead_events.csv",
+          "dataset/drops/day_080/crm_lead_events.csv",
+          "dataset/drops/day_081/crm_lead_events.csv",
+          "dataset/drops/day_082/crm_lead_events.csv",
+          "dataset/drops/day_083/crm_lead_events.csv",
+          "dataset/drops/day_084/crm_lead_events.csv",
+          "dataset/drops/day_085/crm_lead_events.csv",
+          "dataset/drops/day_086/crm_lead_events.csv",
+          "dataset/drops/day_087/crm_lead_events.csv",
+          "dataset/drops/day_088/crm_lead_events.csv",
+          "dataset/drops/day_089/crm_lead_events.csv",
+          "dataset/drops/day_090/crm_lead_events.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "lead_id": "L00001",
+          "event": "first_contact",
+          "at": "2026-06-14 08:48:33",
+          "contract_value_toman": ""
+        },
+        "source": "dataset/drops/day_000/crm_lead_events.csv",
+        "line": 2,
+        "arrival_day": 0
+      },
+      {
+        "row": {
+          "lead_id": "L00002",
+          "event": "first_contact",
+          "at": "2026-06-13 16:02:36",
+          "contract_value_toman": ""
+        },
+        "source": "dataset/drops/day_000/crm_lead_events.csv",
+        "line": 3,
+        "arrival_day": 0
+      }
+    ]
+  },
+  {
+    "table": "crm_leads.csv",
+    "rows": 2946,
+    "unique_exact_rows": 2946,
+    "columns": [
+      {
+        "column": "lead_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2946,
+        "examples": [
+          "L00001",
+          "L00002",
+          "L00003"
+        ]
+      },
+      {
+        "column": "source",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 4,
+        "examples": [
+          "google_ads",
+          "linkedin",
+          "referral"
+        ]
+      },
+      {
+        "column": "created_at",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2868,
+        "examples": [
+          "2026-06-13 20:30:00",
+          "2026-06-13 14:56:00",
+          "2026-06-13 16:15:00"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "lead_id",
+          "source",
+          "created_at"
+        ],
+        "files": [
+          "dataset/drops/day_000/crm_leads.csv",
+          "dataset/drops/day_001/crm_leads.csv",
+          "dataset/drops/day_002/crm_leads.csv",
+          "dataset/drops/day_003/crm_leads.csv",
+          "dataset/drops/day_004/crm_leads.csv",
+          "dataset/drops/day_005/crm_leads.csv",
+          "dataset/drops/day_006/crm_leads.csv",
+          "dataset/drops/day_007/crm_leads.csv",
+          "dataset/drops/day_008/crm_leads.csv",
+          "dataset/drops/day_009/crm_leads.csv",
+          "dataset/drops/day_010/crm_leads.csv",
+          "dataset/drops/day_011/crm_leads.csv",
+          "dataset/drops/day_012/crm_leads.csv",
+          "dataset/drops/day_013/crm_leads.csv",
+          "dataset/drops/day_014/crm_leads.csv",
+          "dataset/drops/day_015/crm_leads.csv",
+          "dataset/drops/day_016/crm_leads.csv",
+          "dataset/drops/day_017/crm_leads.csv",
+          "dataset/drops/day_018/crm_leads.csv",
+          "dataset/drops/day_019/crm_leads.csv",
+          "dataset/drops/day_020/crm_leads.csv",
+          "dataset/drops/day_021/crm_leads.csv",
+          "dataset/drops/day_022/crm_leads.csv",
+          "dataset/drops/day_023/crm_leads.csv",
+          "dataset/drops/day_024/crm_leads.csv",
+          "dataset/drops/day_025/crm_leads.csv",
+          "dataset/drops/day_026/crm_leads.csv",
+          "dataset/drops/day_027/crm_leads.csv",
+          "dataset/drops/day_028/crm_leads.csv",
+          "dataset/drops/day_029/crm_leads.csv",
+          "dataset/drops/day_030/crm_leads.csv",
+          "dataset/drops/day_031/crm_leads.csv",
+          "dataset/drops/day_032/crm_leads.csv",
+          "dataset/drops/day_033/crm_leads.csv",
+          "dataset/drops/day_034/crm_leads.csv",
+          "dataset/drops/day_035/crm_leads.csv",
+          "dataset/drops/day_036/crm_leads.csv",
+          "dataset/drops/day_037/crm_leads.csv",
+          "dataset/drops/day_038/crm_leads.csv",
+          "dataset/drops/day_039/crm_leads.csv",
+          "dataset/drops/day_040/crm_leads.csv",
+          "dataset/drops/day_041/crm_leads.csv",
+          "dataset/drops/day_042/crm_leads.csv",
+          "dataset/drops/day_043/crm_leads.csv",
+          "dataset/drops/day_044/crm_leads.csv",
+          "dataset/drops/day_045/crm_leads.csv",
+          "dataset/drops/day_046/crm_leads.csv",
+          "dataset/drops/day_047/crm_leads.csv",
+          "dataset/drops/day_048/crm_leads.csv",
+          "dataset/drops/day_049/crm_leads.csv",
+          "dataset/drops/day_050/crm_leads.csv",
+          "dataset/drops/day_051/crm_leads.csv",
+          "dataset/drops/day_052/crm_leads.csv",
+          "dataset/drops/day_053/crm_leads.csv",
+          "dataset/drops/day_054/crm_leads.csv",
+          "dataset/drops/day_055/crm_leads.csv",
+          "dataset/drops/day_056/crm_leads.csv",
+          "dataset/drops/day_057/crm_leads.csv",
+          "dataset/drops/day_058/crm_leads.csv",
+          "dataset/drops/day_059/crm_leads.csv",
+          "dataset/drops/day_060/crm_leads.csv",
+          "dataset/drops/day_061/crm_leads.csv",
+          "dataset/drops/day_062/crm_leads.csv",
+          "dataset/drops/day_063/crm_leads.csv",
+          "dataset/drops/day_064/crm_leads.csv",
+          "dataset/drops/day_065/crm_leads.csv",
+          "dataset/drops/day_066/crm_leads.csv",
+          "dataset/drops/day_067/crm_leads.csv",
+          "dataset/drops/day_068/crm_leads.csv",
+          "dataset/drops/day_069/crm_leads.csv",
+          "dataset/drops/day_070/crm_leads.csv",
+          "dataset/drops/day_071/crm_leads.csv",
+          "dataset/drops/day_072/crm_leads.csv",
+          "dataset/drops/day_073/crm_leads.csv",
+          "dataset/drops/day_074/crm_leads.csv",
+          "dataset/drops/day_075/crm_leads.csv",
+          "dataset/drops/day_076/crm_leads.csv",
+          "dataset/drops/day_077/crm_leads.csv",
+          "dataset/drops/day_078/crm_leads.csv",
+          "dataset/drops/day_079/crm_leads.csv",
+          "dataset/drops/day_080/crm_leads.csv",
+          "dataset/drops/day_081/crm_leads.csv",
+          "dataset/drops/day_082/crm_leads.csv",
+          "dataset/drops/day_083/crm_leads.csv",
+          "dataset/drops/day_084/crm_leads.csv",
+          "dataset/drops/day_085/crm_leads.csv",
+          "dataset/drops/day_086/crm_leads.csv",
+          "dataset/drops/day_087/crm_leads.csv",
+          "dataset/drops/day_088/crm_leads.csv",
+          "dataset/drops/day_089/crm_leads.csv",
+          "dataset/drops/day_090/crm_leads.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "lead_id": "L00001",
+          "source": "google_ads",
+          "created_at": "2026-06-13 20:30:00"
+        },
+        "source": "dataset/drops/day_000/crm_leads.csv",
+        "line": 2,
+        "arrival_day": 0
+      },
+      {
+        "row": {
+          "lead_id": "L00002",
+          "source": "google_ads",
+          "created_at": "2026-06-13 14:56:00"
+        },
+        "source": "dataset/drops/day_000/crm_leads.csv",
+        "line": 3,
+        "arrival_day": 0
+      }
+    ]
+  },
+  {
+    "table": "csat.csv",
+    "rows": 1716,
+    "unique_exact_rows": 1716,
+    "columns": [
+      {
+        "column": "ticket_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 1716,
+        "examples": [
+          "TK000004",
+          "TK000003",
+          "TK000007"
+        ]
+      },
+      {
+        "column": "answered_at",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 1716,
+        "examples": [
+          "2026-07-23 21:48:35",
+          "2026-07-24 01:43:26",
+          "2026-07-24 00:30:01"
+        ]
+      },
+      {
+        "column": "score",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 4,
+        "examples": [
+          "5",
+          "4",
+          "3"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "ticket_id",
+          "answered_at",
+          "score"
+        ],
+        "files": [
+          "dataset/drops/day_001/csat.csv",
+          "dataset/drops/day_002/csat.csv",
+          "dataset/drops/day_003/csat.csv",
+          "dataset/drops/day_004/csat.csv",
+          "dataset/drops/day_005/csat.csv",
+          "dataset/drops/day_006/csat.csv",
+          "dataset/drops/day_007/csat.csv",
+          "dataset/drops/day_008/csat.csv",
+          "dataset/drops/day_009/csat.csv",
+          "dataset/drops/day_010/csat.csv",
+          "dataset/drops/day_011/csat.csv",
+          "dataset/drops/day_012/csat.csv",
+          "dataset/drops/day_013/csat.csv",
+          "dataset/drops/day_014/csat.csv",
+          "dataset/drops/day_015/csat.csv",
+          "dataset/drops/day_016/csat.csv",
+          "dataset/drops/day_017/csat.csv",
+          "dataset/drops/day_018/csat.csv",
+          "dataset/drops/day_019/csat.csv",
+          "dataset/drops/day_020/csat.csv",
+          "dataset/drops/day_021/csat.csv",
+          "dataset/drops/day_022/csat.csv",
+          "dataset/drops/day_023/csat.csv",
+          "dataset/drops/day_024/csat.csv",
+          "dataset/drops/day_025/csat.csv",
+          "dataset/drops/day_026/csat.csv",
+          "dataset/drops/day_027/csat.csv",
+          "dataset/drops/day_028/csat.csv",
+          "dataset/drops/day_029/csat.csv",
+          "dataset/drops/day_030/csat.csv",
+          "dataset/drops/day_031/csat.csv",
+          "dataset/drops/day_032/csat.csv",
+          "dataset/drops/day_033/csat.csv",
+          "dataset/drops/day_034/csat.csv",
+          "dataset/drops/day_035/csat.csv",
+          "dataset/drops/day_036/csat.csv",
+          "dataset/drops/day_037/csat.csv",
+          "dataset/drops/day_038/csat.csv",
+          "dataset/drops/day_039/csat.csv",
+          "dataset/drops/day_040/csat.csv",
+          "dataset/drops/day_041/csat.csv",
+          "dataset/drops/day_042/csat.csv",
+          "dataset/drops/day_043/csat.csv",
+          "dataset/drops/day_044/csat.csv",
+          "dataset/drops/day_045/csat.csv",
+          "dataset/drops/day_046/csat.csv",
+          "dataset/drops/day_047/csat.csv",
+          "dataset/drops/day_048/csat.csv",
+          "dataset/drops/day_049/csat.csv",
+          "dataset/drops/day_050/csat.csv",
+          "dataset/drops/day_051/csat.csv",
+          "dataset/drops/day_052/csat.csv",
+          "dataset/drops/day_053/csat.csv",
+          "dataset/drops/day_054/csat.csv",
+          "dataset/drops/day_055/csat.csv",
+          "dataset/drops/day_056/csat.csv",
+          "dataset/drops/day_057/csat.csv",
+          "dataset/drops/day_058/csat.csv",
+          "dataset/drops/day_059/csat.csv",
+          "dataset/drops/day_060/csat.csv",
+          "dataset/drops/day_061/csat.csv",
+          "dataset/drops/day_062/csat.csv",
+          "dataset/drops/day_063/csat.csv",
+          "dataset/drops/day_064/csat.csv",
+          "dataset/drops/day_065/csat.csv",
+          "dataset/drops/day_067/csat.csv",
+          "dataset/drops/day_068/csat.csv",
+          "dataset/drops/day_069/csat.csv",
+          "dataset/drops/day_070/csat.csv",
+          "dataset/drops/day_071/csat.csv",
+          "dataset/drops/day_072/csat.csv",
+          "dataset/drops/day_073/csat.csv",
+          "dataset/drops/day_074/csat.csv",
+          "dataset/drops/day_075/csat.csv",
+          "dataset/drops/day_076/csat.csv",
+          "dataset/drops/day_077/csat.csv",
+          "dataset/drops/day_078/csat.csv",
+          "dataset/drops/day_079/csat.csv",
+          "dataset/drops/day_080/csat.csv",
+          "dataset/drops/day_081/csat.csv",
+          "dataset/drops/day_082/csat.csv",
+          "dataset/drops/day_083/csat.csv",
+          "dataset/drops/day_084/csat.csv",
+          "dataset/drops/day_085/csat.csv",
+          "dataset/drops/day_086/csat.csv",
+          "dataset/drops/day_087/csat.csv",
+          "dataset/drops/day_088/csat.csv",
+          "dataset/drops/day_089/csat.csv",
+          "dataset/drops/day_090/csat.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "ticket_id": "TK000004",
+          "answered_at": "2026-07-23 21:48:35",
+          "score": "5"
+        },
+        "source": "dataset/drops/day_001/csat.csv",
+        "line": 2,
+        "arrival_day": 1
+      },
+      {
+        "row": {
+          "ticket_id": "TK000003",
+          "answered_at": "2026-07-24 01:43:26",
+          "score": "4"
+        },
+        "source": "dataset/drops/day_002/csat.csv",
+        "line": 2,
+        "arrival_day": 2
+      }
+    ]
+  },
+  {
+    "table": "mkt_daily.csv",
+    "rows": 180,
+    "unique_exact_rows": 180,
+    "columns": [
+      {
+        "column": "date",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 90,
+        "examples": [
+          "2026-07-23",
+          "2026-07-24",
+          "2026-07-25"
+        ]
+      },
+      {
+        "column": "source",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "google_ads",
+          "linkedin"
+        ]
+      },
+      {
+        "column": "spend_toman",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 4,
+        "examples": [
+          "14000000",
+          "9000000",
+          "8400000"
+        ]
+      },
+      {
+        "column": "impressions",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 177,
+        "examples": [
+          "66379",
+          "14022",
+          "33554"
+        ]
+      },
+      {
+        "column": "clicks",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 150,
+        "examples": [
+          "1619",
+          "369",
+          "883"
+        ]
+      },
+      {
+        "column": "leads",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 25,
+        "examples": [
+          "15",
+          "6",
+          "2"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "date",
+          "source",
+          "spend_toman",
+          "impressions",
+          "clicks",
+          "leads"
+        ],
+        "files": [
+          "dataset/drops/day_001/mkt_daily.csv",
+          "dataset/drops/day_002/mkt_daily.csv",
+          "dataset/drops/day_003/mkt_daily.csv",
+          "dataset/drops/day_004/mkt_daily.csv",
+          "dataset/drops/day_005/mkt_daily.csv",
+          "dataset/drops/day_006/mkt_daily.csv",
+          "dataset/drops/day_007/mkt_daily.csv",
+          "dataset/drops/day_008/mkt_daily.csv",
+          "dataset/drops/day_009/mkt_daily.csv",
+          "dataset/drops/day_010/mkt_daily.csv",
+          "dataset/drops/day_011/mkt_daily.csv",
+          "dataset/drops/day_012/mkt_daily.csv",
+          "dataset/drops/day_013/mkt_daily.csv",
+          "dataset/drops/day_014/mkt_daily.csv",
+          "dataset/drops/day_015/mkt_daily.csv",
+          "dataset/drops/day_016/mkt_daily.csv",
+          "dataset/drops/day_017/mkt_daily.csv",
+          "dataset/drops/day_018/mkt_daily.csv",
+          "dataset/drops/day_019/mkt_daily.csv",
+          "dataset/drops/day_020/mkt_daily.csv",
+          "dataset/drops/day_021/mkt_daily.csv",
+          "dataset/drops/day_022/mkt_daily.csv",
+          "dataset/drops/day_023/mkt_daily.csv",
+          "dataset/drops/day_024/mkt_daily.csv",
+          "dataset/drops/day_025/mkt_daily.csv",
+          "dataset/drops/day_026/mkt_daily.csv",
+          "dataset/drops/day_027/mkt_daily.csv",
+          "dataset/drops/day_028/mkt_daily.csv",
+          "dataset/drops/day_029/mkt_daily.csv",
+          "dataset/drops/day_030/mkt_daily.csv",
+          "dataset/drops/day_031/mkt_daily.csv",
+          "dataset/drops/day_032/mkt_daily.csv",
+          "dataset/drops/day_033/mkt_daily.csv",
+          "dataset/drops/day_034/mkt_daily.csv",
+          "dataset/drops/day_035/mkt_daily.csv",
+          "dataset/drops/day_036/mkt_daily.csv",
+          "dataset/drops/day_037/mkt_daily.csv",
+          "dataset/drops/day_038/mkt_daily.csv",
+          "dataset/drops/day_039/mkt_daily.csv",
+          "dataset/drops/day_040/mkt_daily.csv",
+          "dataset/drops/day_041/mkt_daily.csv",
+          "dataset/drops/day_042/mkt_daily.csv",
+          "dataset/drops/day_043/mkt_daily.csv",
+          "dataset/drops/day_044/mkt_daily.csv",
+          "dataset/drops/day_045/mkt_daily.csv",
+          "dataset/drops/day_046/mkt_daily.csv",
+          "dataset/drops/day_047/mkt_daily.csv",
+          "dataset/drops/day_048/mkt_daily.csv",
+          "dataset/drops/day_049/mkt_daily.csv",
+          "dataset/drops/day_050/mkt_daily.csv",
+          "dataset/drops/day_051/mkt_daily.csv",
+          "dataset/drops/day_052/mkt_daily.csv",
+          "dataset/drops/day_053/mkt_daily.csv",
+          "dataset/drops/day_054/mkt_daily.csv",
+          "dataset/drops/day_055/mkt_daily.csv",
+          "dataset/drops/day_056/mkt_daily.csv",
+          "dataset/drops/day_057/mkt_daily.csv",
+          "dataset/drops/day_058/mkt_daily.csv",
+          "dataset/drops/day_059/mkt_daily.csv",
+          "dataset/drops/day_060/mkt_daily.csv",
+          "dataset/drops/day_061/mkt_daily.csv",
+          "dataset/drops/day_062/mkt_daily.csv",
+          "dataset/drops/day_063/mkt_daily.csv",
+          "dataset/drops/day_064/mkt_daily.csv",
+          "dataset/drops/day_065/mkt_daily.csv",
+          "dataset/drops/day_066/mkt_daily.csv",
+          "dataset/drops/day_067/mkt_daily.csv",
+          "dataset/drops/day_068/mkt_daily.csv",
+          "dataset/drops/day_069/mkt_daily.csv",
+          "dataset/drops/day_070/mkt_daily.csv",
+          "dataset/drops/day_071/mkt_daily.csv",
+          "dataset/drops/day_072/mkt_daily.csv",
+          "dataset/drops/day_073/mkt_daily.csv",
+          "dataset/drops/day_074/mkt_daily.csv",
+          "dataset/drops/day_075/mkt_daily.csv",
+          "dataset/drops/day_076/mkt_daily.csv",
+          "dataset/drops/day_077/mkt_daily.csv",
+          "dataset/drops/day_078/mkt_daily.csv",
+          "dataset/drops/day_079/mkt_daily.csv",
+          "dataset/drops/day_080/mkt_daily.csv",
+          "dataset/drops/day_081/mkt_daily.csv",
+          "dataset/drops/day_082/mkt_daily.csv",
+          "dataset/drops/day_083/mkt_daily.csv",
+          "dataset/drops/day_084/mkt_daily.csv",
+          "dataset/drops/day_085/mkt_daily.csv",
+          "dataset/drops/day_086/mkt_daily.csv",
+          "dataset/drops/day_087/mkt_daily.csv",
+          "dataset/drops/day_088/mkt_daily.csv",
+          "dataset/drops/day_089/mkt_daily.csv",
+          "dataset/drops/day_090/mkt_daily.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "date": "2026-07-23",
+          "source": "google_ads",
+          "spend_toman": "14000000",
+          "impressions": "66379",
+          "clicks": "1619",
+          "leads": "15"
+        },
+        "source": "dataset/drops/day_001/mkt_daily.csv",
+        "line": 2,
+        "arrival_day": 1
+      },
+      {
+        "row": {
+          "date": "2026-07-23",
+          "source": "linkedin",
+          "spend_toman": "9000000",
+          "impressions": "14022",
+          "clicks": "369",
+          "leads": "6"
+        },
+        "source": "dataset/drops/day_001/mkt_daily.csv",
+        "line": 3,
+        "arrival_day": 1
+      }
+    ]
+  },
+  {
+    "table": "order_events.csv",
+    "rows": 145022,
+    "unique_exact_rows": 145022,
+    "columns": [
+      {
+        "column": "order_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 37584,
+        "examples": [
+          "O000323",
+          "O000319",
+          "O000151"
+        ]
+      },
+      {
+        "column": "event",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7,
+        "examples": [
+          "paid",
+          "cancelled",
+          "refunded"
+        ]
+      },
+      {
+        "column": "at",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 108481,
+        "examples": [
+          "2026-07-23 00:07:36",
+          "2026-07-23 00:17:30",
+          "2026-07-23 00:27:53"
+        ]
+      },
+      {
+        "column": "actor_team",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 4,
+        "examples": [
+          "U_SAL",
+          "T_WH",
+          "T_SHP"
+        ]
+      },
+      {
+        "column": "amount_toman",
+        "absent_from_rows": 0,
+        "empty_cells": 143345,
+        "distinct_nonempty": 1168,
+        "examples": [
+          "561000",
+          "715000",
+          "674000"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "order_id",
+          "event",
+          "at",
+          "actor_team",
+          "amount_toman"
+        ],
+        "files": [
+          "dataset/drops/day_001/order_events.csv",
+          "dataset/drops/day_002/order_events.csv",
+          "dataset/drops/day_003/order_events.csv",
+          "dataset/drops/day_004/order_events.csv",
+          "dataset/drops/day_005/order_events.csv",
+          "dataset/drops/day_006/order_events.csv",
+          "dataset/drops/day_007/order_events.csv",
+          "dataset/drops/day_008/order_events.csv",
+          "dataset/drops/day_009/order_events.csv",
+          "dataset/drops/day_010/order_events.csv",
+          "dataset/drops/day_011/order_events.csv",
+          "dataset/drops/day_012/order_events.csv",
+          "dataset/drops/day_013/order_events.csv",
+          "dataset/drops/day_014/order_events.csv",
+          "dataset/drops/day_015/order_events.csv",
+          "dataset/drops/day_016/order_events.csv",
+          "dataset/drops/day_017/order_events.csv",
+          "dataset/drops/day_018/order_events.csv",
+          "dataset/drops/day_019/order_events.csv",
+          "dataset/drops/day_020/order_events.csv",
+          "dataset/drops/day_021/order_events.csv",
+          "dataset/drops/day_022/order_events.csv",
+          "dataset/drops/day_023/order_events.csv",
+          "dataset/drops/day_024/order_events.csv",
+          "dataset/drops/day_025/order_events.csv",
+          "dataset/drops/day_026/order_events.csv",
+          "dataset/drops/day_027/order_events.csv",
+          "dataset/drops/day_028/order_events.csv",
+          "dataset/drops/day_029/order_events.csv",
+          "dataset/drops/day_030/order_events.csv",
+          "dataset/drops/day_031/order_events.csv",
+          "dataset/drops/day_032/order_events.csv",
+          "dataset/drops/day_033/order_events.csv",
+          "dataset/drops/day_034/order_events.csv",
+          "dataset/drops/day_035/order_events.csv",
+          "dataset/drops/day_036/order_events.csv",
+          "dataset/drops/day_037/order_events.csv",
+          "dataset/drops/day_038/order_events.csv",
+          "dataset/drops/day_039/order_events.csv",
+          "dataset/drops/day_040/order_events.csv",
+          "dataset/drops/day_041/order_events.csv",
+          "dataset/drops/day_042/order_events.csv",
+          "dataset/drops/day_043/order_events.csv",
+          "dataset/drops/day_044/order_events.csv",
+          "dataset/drops/day_045/order_events.csv",
+          "dataset/drops/day_046/order_events.csv",
+          "dataset/drops/day_047/order_events.csv",
+          "dataset/drops/day_048/order_events.csv",
+          "dataset/drops/day_049/order_events.csv",
+          "dataset/drops/day_050/order_events.csv",
+          "dataset/drops/day_051/order_events.csv",
+          "dataset/drops/day_052/order_events.csv",
+          "dataset/drops/day_053/order_events.csv",
+          "dataset/drops/day_054/order_events.csv",
+          "dataset/drops/day_055/order_events.csv",
+          "dataset/drops/day_056/order_events.csv",
+          "dataset/drops/day_057/order_events.csv",
+          "dataset/drops/day_058/order_events.csv",
+          "dataset/drops/day_059/order_events.csv",
+          "dataset/drops/day_060/order_events.csv",
+          "dataset/drops/day_061/order_events.csv",
+          "dataset/drops/day_062/order_events.csv",
+          "dataset/drops/day_063/order_events.csv",
+          "dataset/drops/day_064/order_events.csv",
+          "dataset/drops/day_065/order_events.csv",
+          "dataset/drops/day_066/order_events.csv",
+          "dataset/drops/day_067/order_events.csv",
+          "dataset/drops/day_068/order_events.csv",
+          "dataset/drops/day_069/order_events.csv",
+          "dataset/drops/day_070/order_events.csv",
+          "dataset/drops/day_071/order_events.csv",
+          "dataset/drops/day_072/order_events.csv",
+          "dataset/drops/day_073/order_events.csv",
+          "dataset/drops/day_074/order_events.csv",
+          "dataset/drops/day_075/order_events.csv",
+          "dataset/drops/day_076/order_events.csv",
+          "dataset/drops/day_077/order_events.csv",
+          "dataset/drops/day_078/order_events.csv",
+          "dataset/drops/day_079/order_events.csv",
+          "dataset/drops/day_080/order_events.csv",
+          "dataset/drops/day_081/order_events.csv",
+          "dataset/drops/day_082/order_events.csv",
+          "dataset/drops/day_083/order_events.csv",
+          "dataset/drops/day_084/order_events.csv",
+          "dataset/drops/day_085/order_events.csv",
+          "dataset/drops/day_086/order_events.csv",
+          "dataset/drops/day_087/order_events.csv",
+          "dataset/drops/day_088/order_events.csv",
+          "dataset/drops/day_089/order_events.csv",
+          "dataset/drops/day_090/order_events.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "order_id": "O000323",
+          "event": "paid",
+          "at": "2026-07-23 00:07:36",
+          "actor_team": "U_SAL",
+          "amount_toman": ""
+        },
+        "source": "dataset/drops/day_001/order_events.csv",
+        "line": 2,
+        "arrival_day": 1
+      },
+      {
+        "row": {
+          "order_id": "O000319",
+          "event": "paid",
+          "at": "2026-07-23 00:17:30",
+          "actor_team": "U_SAL",
+          "amount_toman": ""
+        },
+        "source": "dataset/drops/day_001/order_events.csv",
+        "line": 3,
+        "arrival_day": 1
+      }
+    ]
+  },
+  {
+    "table": "orders.csv",
+    "rows": 37851,
+    "unique_exact_rows": 37589,
+    "columns": [
+      {
+        "column": "order_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 37589,
+        "examples": [
+          "O000001",
+          "O000002",
+          "O000003"
+        ]
+      },
+      {
+        "column": "created_at",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 31153,
+        "examples": [
+          "2026-07-23 23:15:00",
+          "2026-07-23 10:50:00",
+          "2026-07-23 20:29:00"
+        ]
+      },
+      {
+        "column": "channel",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "web",
+          "app",
+          "marketplace"
+        ]
+      },
+      {
+        "column": "city",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 6,
+        "examples": [
+          "کرج",
+          "تهران",
+          "مشهد"
+        ]
+      },
+      {
+        "column": "category",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 6,
+        "examples": [
+          "ظروف شیشه‌ای و آشپزخانه",
+          "موبایل و لوازم جانبی",
+          "پوشاک"
+        ]
+      },
+      {
+        "column": "items",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 4,
+        "examples": [
+          "2",
+          "3",
+          "1"
+        ]
+      },
+      {
+        "column": "order_value_toman",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3932,
+        "examples": [
+          "811000",
+          "1074000",
+          "985000"
+        ]
+      },
+      {
+        "column": "customer_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 27917,
+        "examples": [
+          "C126151",
+          "C101443",
+          "C150749"
+        ]
+      },
+      {
+        "column": "campaign_id",
+        "absent_from_rows": 0,
+        "empty_cells": 31206,
+        "distinct_nonempty": 2,
+        "examples": [
+          "CMP-01",
+          "CMP-02"
+        ]
+      },
+      {
+        "column": "promised_by",
+        "absent_from_rows": 0,
+        "empty_cells": 1475,
+        "distinct_nonempty": 92,
+        "examples": [
+          "2026-07-25 23:59:00",
+          "2026-07-26 23:59:00",
+          "2026-07-27 23:59:00"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "order_id",
+          "created_at",
+          "channel",
+          "city",
+          "category",
+          "items",
+          "order_value_toman",
+          "customer_id",
+          "campaign_id",
+          "promised_by"
+        ],
+        "files": [
+          "dataset/drops/day_001/orders.csv",
+          "dataset/drops/day_002/orders.csv",
+          "dataset/drops/day_003/orders.csv",
+          "dataset/drops/day_004/orders.csv",
+          "dataset/drops/day_005/orders.csv",
+          "dataset/drops/day_006/orders.csv",
+          "dataset/drops/day_007/orders.csv",
+          "dataset/drops/day_008/orders.csv",
+          "dataset/drops/day_009/orders.csv",
+          "dataset/drops/day_010/orders.csv",
+          "dataset/drops/day_011/orders.csv",
+          "dataset/drops/day_012/orders.csv",
+          "dataset/drops/day_013/orders.csv",
+          "dataset/drops/day_014/orders.csv",
+          "dataset/drops/day_015/orders.csv",
+          "dataset/drops/day_016/orders.csv",
+          "dataset/drops/day_017/orders.csv",
+          "dataset/drops/day_018/orders.csv",
+          "dataset/drops/day_019/orders.csv",
+          "dataset/drops/day_020/orders.csv",
+          "dataset/drops/day_021/orders.csv",
+          "dataset/drops/day_022/orders.csv",
+          "dataset/drops/day_023/orders.csv",
+          "dataset/drops/day_024/orders.csv",
+          "dataset/drops/day_025/orders.csv",
+          "dataset/drops/day_026/orders.csv",
+          "dataset/drops/day_027/orders.csv",
+          "dataset/drops/day_028/orders.csv",
+          "dataset/drops/day_029/orders.csv",
+          "dataset/drops/day_030/orders.csv",
+          "dataset/drops/day_031/orders.csv",
+          "dataset/drops/day_032/orders.csv",
+          "dataset/drops/day_033/orders.csv",
+          "dataset/drops/day_034/orders.csv",
+          "dataset/drops/day_035/orders.csv",
+          "dataset/drops/day_036/orders.csv",
+          "dataset/drops/day_037/orders.csv",
+          "dataset/drops/day_038/orders.csv",
+          "dataset/drops/day_039/orders.csv",
+          "dataset/drops/day_040/orders.csv",
+          "dataset/drops/day_041/orders.csv",
+          "dataset/drops/day_042/orders.csv",
+          "dataset/drops/day_043/orders.csv",
+          "dataset/drops/day_044/orders.csv",
+          "dataset/drops/day_045/orders.csv",
+          "dataset/drops/day_046/orders.csv",
+          "dataset/drops/day_047/orders.csv",
+          "dataset/drops/day_048/orders.csv",
+          "dataset/drops/day_049/orders.csv",
+          "dataset/drops/day_050/orders.csv",
+          "dataset/drops/day_051/orders.csv",
+          "dataset/drops/day_052/orders.csv",
+          "dataset/drops/day_053/orders.csv",
+          "dataset/drops/day_054/orders.csv",
+          "dataset/drops/day_055/orders.csv",
+          "dataset/drops/day_056/orders.csv",
+          "dataset/drops/day_057/orders.csv",
+          "dataset/drops/day_058/orders.csv",
+          "dataset/drops/day_059/orders.csv",
+          "dataset/drops/day_060/orders.csv",
+          "dataset/drops/day_061/orders.csv",
+          "dataset/drops/day_062/orders.csv",
+          "dataset/drops/day_063/orders.csv",
+          "dataset/drops/day_064/orders.csv",
+          "dataset/drops/day_065/orders.csv",
+          "dataset/drops/day_066/orders.csv",
+          "dataset/drops/day_067/orders.csv",
+          "dataset/drops/day_068/orders.csv",
+          "dataset/drops/day_069/orders.csv",
+          "dataset/drops/day_070/orders.csv",
+          "dataset/drops/day_071/orders.csv",
+          "dataset/drops/day_072/orders.csv",
+          "dataset/drops/day_073/orders.csv",
+          "dataset/drops/day_074/orders.csv",
+          "dataset/drops/day_075/orders.csv",
+          "dataset/drops/day_076/orders.csv",
+          "dataset/drops/day_077/orders.csv",
+          "dataset/drops/day_078/orders.csv",
+          "dataset/drops/day_079/orders.csv",
+          "dataset/drops/day_080/orders.csv",
+          "dataset/drops/day_081/orders.csv",
+          "dataset/drops/day_082/orders.csv",
+          "dataset/drops/day_083/orders.csv",
+          "dataset/drops/day_084/orders.csv",
+          "dataset/drops/day_085/orders.csv",
+          "dataset/drops/day_086/orders.csv",
+          "dataset/drops/day_087/orders.csv",
+          "dataset/drops/day_088/orders.csv",
+          "dataset/drops/day_089/orders.csv",
+          "dataset/drops/day_090/orders.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "order_id": "O000001",
+          "created_at": "2026-07-23 23:15:00",
+          "channel": "web",
+          "city": "کرج",
+          "category": "ظروف شیشه‌ای و آشپزخانه",
+          "items": "2",
+          "order_value_toman": "811000",
+          "customer_id": "C126151",
+          "campaign_id": "",
+          "promised_by": "2026-07-25 23:59:00"
+        },
+        "source": "dataset/drops/day_001/orders.csv",
+        "line": 2,
+        "arrival_day": 1
+      },
+      {
+        "row": {
+          "order_id": "O000002",
+          "created_at": "2026-07-23 10:50:00",
+          "channel": "web",
+          "city": "تهران",
+          "category": "موبایل و لوازم جانبی",
+          "items": "2",
+          "order_value_toman": "1074000",
+          "customer_id": "C101443",
+          "campaign_id": "",
+          "promised_by": "2026-07-25 23:59:00"
+        },
+        "source": "dataset/drops/day_001/orders.csv",
+        "line": 3,
+        "arrival_day": 1
+      }
+    ]
+  },
+  {
+    "table": "staff_availability.csv",
+    "rows": 2192,
+    "unique_exact_rows": 2192,
+    "columns": [
+      {
+        "column": "date",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 90,
+        "examples": [
+          "2026-07-23",
+          "2026-07-24",
+          "2026-07-25"
+        ]
+      },
+      {
+        "column": "staff_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 26,
+        "examples": [
+          "E01",
+          "E02",
+          "E03"
+        ]
+      },
+      {
+        "column": "team_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7,
+        "examples": [
+          "T_ENT",
+          "T_DIG",
+          "T_WH"
+        ]
+      },
+      {
+        "column": "status",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "available",
+          "leave"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "date",
+          "staff_id",
+          "team_id",
+          "status"
+        ],
+        "files": [
+          "dataset/drops/day_001/staff_availability.csv",
+          "dataset/drops/day_002/staff_availability.csv",
+          "dataset/drops/day_003/staff_availability.csv",
+          "dataset/drops/day_004/staff_availability.csv",
+          "dataset/drops/day_005/staff_availability.csv",
+          "dataset/drops/day_006/staff_availability.csv",
+          "dataset/drops/day_007/staff_availability.csv",
+          "dataset/drops/day_008/staff_availability.csv",
+          "dataset/drops/day_009/staff_availability.csv",
+          "dataset/drops/day_010/staff_availability.csv",
+          "dataset/drops/day_011/staff_availability.csv",
+          "dataset/drops/day_012/staff_availability.csv",
+          "dataset/drops/day_013/staff_availability.csv",
+          "dataset/drops/day_014/staff_availability.csv",
+          "dataset/drops/day_015/staff_availability.csv",
+          "dataset/drops/day_016/staff_availability.csv",
+          "dataset/drops/day_017/staff_availability.csv",
+          "dataset/drops/day_018/staff_availability.csv",
+          "dataset/drops/day_019/staff_availability.csv",
+          "dataset/drops/day_020/staff_availability.csv",
+          "dataset/drops/day_021/staff_availability.csv",
+          "dataset/drops/day_022/staff_availability.csv",
+          "dataset/drops/day_023/staff_availability.csv",
+          "dataset/drops/day_024/staff_availability.csv",
+          "dataset/drops/day_025/staff_availability.csv",
+          "dataset/drops/day_026/staff_availability.csv",
+          "dataset/drops/day_027/staff_availability.csv",
+          "dataset/drops/day_028/staff_availability.csv",
+          "dataset/drops/day_029/staff_availability.csv",
+          "dataset/drops/day_030/staff_availability.csv",
+          "dataset/drops/day_031/staff_availability.csv",
+          "dataset/drops/day_032/staff_availability.csv",
+          "dataset/drops/day_033/staff_availability.csv",
+          "dataset/drops/day_034/staff_availability.csv",
+          "dataset/drops/day_035/staff_availability.csv",
+          "dataset/drops/day_036/staff_availability.csv",
+          "dataset/drops/day_037/staff_availability.csv",
+          "dataset/drops/day_038/staff_availability.csv",
+          "dataset/drops/day_039/staff_availability.csv",
+          "dataset/drops/day_040/staff_availability.csv",
+          "dataset/drops/day_041/staff_availability.csv",
+          "dataset/drops/day_042/staff_availability.csv",
+          "dataset/drops/day_043/staff_availability.csv",
+          "dataset/drops/day_044/staff_availability.csv",
+          "dataset/drops/day_045/staff_availability.csv",
+          "dataset/drops/day_046/staff_availability.csv",
+          "dataset/drops/day_047/staff_availability.csv",
+          "dataset/drops/day_048/staff_availability.csv",
+          "dataset/drops/day_049/staff_availability.csv",
+          "dataset/drops/day_050/staff_availability.csv",
+          "dataset/drops/day_051/staff_availability.csv",
+          "dataset/drops/day_052/staff_availability.csv",
+          "dataset/drops/day_053/staff_availability.csv",
+          "dataset/drops/day_054/staff_availability.csv",
+          "dataset/drops/day_055/staff_availability.csv",
+          "dataset/drops/day_056/staff_availability.csv",
+          "dataset/drops/day_057/staff_availability.csv",
+          "dataset/drops/day_058/staff_availability.csv",
+          "dataset/drops/day_059/staff_availability.csv",
+          "dataset/drops/day_060/staff_availability.csv",
+          "dataset/drops/day_061/staff_availability.csv",
+          "dataset/drops/day_062/staff_availability.csv",
+          "dataset/drops/day_063/staff_availability.csv",
+          "dataset/drops/day_064/staff_availability.csv",
+          "dataset/drops/day_065/staff_availability.csv",
+          "dataset/drops/day_066/staff_availability.csv",
+          "dataset/drops/day_067/staff_availability.csv",
+          "dataset/drops/day_068/staff_availability.csv",
+          "dataset/drops/day_069/staff_availability.csv",
+          "dataset/drops/day_070/staff_availability.csv",
+          "dataset/drops/day_071/staff_availability.csv",
+          "dataset/drops/day_072/staff_availability.csv",
+          "dataset/drops/day_073/staff_availability.csv",
+          "dataset/drops/day_074/staff_availability.csv",
+          "dataset/drops/day_075/staff_availability.csv",
+          "dataset/drops/day_076/staff_availability.csv",
+          "dataset/drops/day_077/staff_availability.csv",
+          "dataset/drops/day_078/staff_availability.csv",
+          "dataset/drops/day_079/staff_availability.csv",
+          "dataset/drops/day_080/staff_availability.csv",
+          "dataset/drops/day_081/staff_availability.csv",
+          "dataset/drops/day_082/staff_availability.csv",
+          "dataset/drops/day_083/staff_availability.csv",
+          "dataset/drops/day_084/staff_availability.csv",
+          "dataset/drops/day_085/staff_availability.csv",
+          "dataset/drops/day_086/staff_availability.csv",
+          "dataset/drops/day_087/staff_availability.csv",
+          "dataset/drops/day_088/staff_availability.csv",
+          "dataset/drops/day_089/staff_availability.csv",
+          "dataset/drops/day_090/staff_availability.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "date": "2026-07-23",
+          "staff_id": "E01",
+          "team_id": "T_ENT",
+          "status": "available"
+        },
+        "source": "dataset/drops/day_001/staff_availability.csv",
+        "line": 2,
+        "arrival_day": 1
+      },
+      {
+        "row": {
+          "date": "2026-07-23",
+          "staff_id": "E02",
+          "team_id": "T_ENT",
+          "status": "available"
+        },
+        "source": "dataset/drops/day_001/staff_availability.csv",
+        "line": 3,
+        "arrival_day": 1
+      }
+    ]
+  },
+  {
+    "table": "task_events.csv",
+    "rows": 3325,
+    "unique_exact_rows": 3325,
+    "columns": [
+      {
+        "column": "task_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 1695,
+        "examples": [
+          "TS00001",
+          "TS00002",
+          "TS00003"
+        ]
+      },
+      {
+        "column": "event",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "created",
+          "done"
+        ]
+      },
+      {
+        "column": "at",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2389,
+        "examples": [
+          "2026-07-23 13:00:00",
+          "2026-07-23 08:00:00",
+          "2026-07-23 14:00:00"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "task_id",
+          "event",
+          "at"
+        ],
+        "files": [
+          "dataset/drops/day_001/task_events.csv",
+          "dataset/drops/day_002/task_events.csv",
+          "dataset/drops/day_003/task_events.csv",
+          "dataset/drops/day_004/task_events.csv",
+          "dataset/drops/day_005/task_events.csv",
+          "dataset/drops/day_006/task_events.csv",
+          "dataset/drops/day_007/task_events.csv",
+          "dataset/drops/day_008/task_events.csv",
+          "dataset/drops/day_009/task_events.csv",
+          "dataset/drops/day_010/task_events.csv",
+          "dataset/drops/day_011/task_events.csv",
+          "dataset/drops/day_012/task_events.csv",
+          "dataset/drops/day_013/task_events.csv",
+          "dataset/drops/day_014/task_events.csv",
+          "dataset/drops/day_015/task_events.csv",
+          "dataset/drops/day_016/task_events.csv",
+          "dataset/drops/day_017/task_events.csv",
+          "dataset/drops/day_018/task_events.csv",
+          "dataset/drops/day_019/task_events.csv",
+          "dataset/drops/day_020/task_events.csv",
+          "dataset/drops/day_021/task_events.csv",
+          "dataset/drops/day_022/task_events.csv",
+          "dataset/drops/day_023/task_events.csv",
+          "dataset/drops/day_024/task_events.csv",
+          "dataset/drops/day_025/task_events.csv",
+          "dataset/drops/day_026/task_events.csv",
+          "dataset/drops/day_027/task_events.csv",
+          "dataset/drops/day_028/task_events.csv",
+          "dataset/drops/day_029/task_events.csv",
+          "dataset/drops/day_030/task_events.csv",
+          "dataset/drops/day_031/task_events.csv",
+          "dataset/drops/day_032/task_events.csv",
+          "dataset/drops/day_033/task_events.csv",
+          "dataset/drops/day_034/task_events.csv",
+          "dataset/drops/day_035/task_events.csv",
+          "dataset/drops/day_036/task_events.csv",
+          "dataset/drops/day_037/task_events.csv",
+          "dataset/drops/day_038/task_events.csv",
+          "dataset/drops/day_039/task_events.csv",
+          "dataset/drops/day_040/task_events.csv",
+          "dataset/drops/day_041/task_events.csv",
+          "dataset/drops/day_042/task_events.csv",
+          "dataset/drops/day_043/task_events.csv",
+          "dataset/drops/day_044/task_events.csv",
+          "dataset/drops/day_045/task_events.csv",
+          "dataset/drops/day_046/task_events.csv",
+          "dataset/drops/day_047/task_events.csv",
+          "dataset/drops/day_048/task_events.csv",
+          "dataset/drops/day_049/task_events.csv",
+          "dataset/drops/day_050/task_events.csv",
+          "dataset/drops/day_051/task_events.csv",
+          "dataset/drops/day_052/task_events.csv",
+          "dataset/drops/day_053/task_events.csv",
+          "dataset/drops/day_054/task_events.csv",
+          "dataset/drops/day_055/task_events.csv",
+          "dataset/drops/day_056/task_events.csv",
+          "dataset/drops/day_057/task_events.csv",
+          "dataset/drops/day_058/task_events.csv",
+          "dataset/drops/day_059/task_events.csv",
+          "dataset/drops/day_060/task_events.csv",
+          "dataset/drops/day_061/task_events.csv",
+          "dataset/drops/day_062/task_events.csv",
+          "dataset/drops/day_063/task_events.csv",
+          "dataset/drops/day_064/task_events.csv",
+          "dataset/drops/day_065/task_events.csv",
+          "dataset/drops/day_066/task_events.csv",
+          "dataset/drops/day_067/task_events.csv",
+          "dataset/drops/day_068/task_events.csv",
+          "dataset/drops/day_069/task_events.csv",
+          "dataset/drops/day_070/task_events.csv",
+          "dataset/drops/day_071/task_events.csv",
+          "dataset/drops/day_072/task_events.csv",
+          "dataset/drops/day_073/task_events.csv",
+          "dataset/drops/day_074/task_events.csv",
+          "dataset/drops/day_075/task_events.csv",
+          "dataset/drops/day_076/task_events.csv",
+          "dataset/drops/day_077/task_events.csv",
+          "dataset/drops/day_078/task_events.csv",
+          "dataset/drops/day_079/task_events.csv",
+          "dataset/drops/day_080/task_events.csv",
+          "dataset/drops/day_081/task_events.csv",
+          "dataset/drops/day_082/task_events.csv",
+          "dataset/drops/day_083/task_events.csv",
+          "dataset/drops/day_084/task_events.csv",
+          "dataset/drops/day_085/task_events.csv",
+          "dataset/drops/day_086/task_events.csv",
+          "dataset/drops/day_087/task_events.csv",
+          "dataset/drops/day_088/task_events.csv",
+          "dataset/drops/day_089/task_events.csv",
+          "dataset/drops/day_090/task_events.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "task_id": "TS00001",
+          "event": "created",
+          "at": "2026-07-23 13:00:00"
+        },
+        "source": "dataset/drops/day_001/task_events.csv",
+        "line": 2,
+        "arrival_day": 1
+      },
+      {
+        "row": {
+          "task_id": "TS00002",
+          "event": "created",
+          "at": "2026-07-23 08:00:00"
+        },
+        "source": "dataset/drops/day_001/task_events.csv",
+        "line": 3,
+        "arrival_day": 1
+      }
+    ]
+  },
+  {
+    "table": "tasks.csv",
+    "rows": 1695,
+    "unique_exact_rows": 1695,
+    "columns": [
+      {
+        "column": "task_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 1695,
+        "examples": [
+          "TS00001",
+          "TS00002",
+          "TS00003"
+        ]
+      },
+      {
+        "column": "team_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7,
+        "examples": [
+          "T_ENT",
+          "T_DIG",
+          "T_WH"
+        ]
+      },
+      {
+        "column": "owner_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 26,
+        "examples": [
+          "E04",
+          "E01",
+          "E03"
+        ]
+      },
+      {
+        "column": "created_at",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 759,
+        "examples": [
+          "2026-07-23 13:00:00",
+          "2026-07-23 08:00:00",
+          "2026-07-23 14:00:00"
+        ]
+      },
+      {
+        "column": "due_date",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 94,
+        "examples": [
+          "2026-07-25",
+          "2026-07-28",
+          "2026-07-26"
+        ]
+      },
+      {
+        "column": "title_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 1695,
+        "examples": [
+          "کار تیمی شماره 1",
+          "کار تیمی شماره 2",
+          "کار تیمی شماره 3"
+        ]
+      },
+      {
+        "column": "blocker_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 1584,
+        "distinct_nonempty": 6,
+        "examples": [
+          "منتظر تأیید واحد مالی",
+          "اطلاعات مشتری ناقص است",
+          "دسترسی به سیستم انبار قطع بود"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "task_id",
+          "team_id",
+          "owner_id",
+          "created_at",
+          "due_date",
+          "title_fa",
+          "blocker_fa"
+        ],
+        "files": [
+          "dataset/drops/day_001/tasks.csv",
+          "dataset/drops/day_002/tasks.csv",
+          "dataset/drops/day_003/tasks.csv",
+          "dataset/drops/day_004/tasks.csv",
+          "dataset/drops/day_005/tasks.csv",
+          "dataset/drops/day_006/tasks.csv",
+          "dataset/drops/day_007/tasks.csv",
+          "dataset/drops/day_008/tasks.csv",
+          "dataset/drops/day_009/tasks.csv",
+          "dataset/drops/day_010/tasks.csv",
+          "dataset/drops/day_011/tasks.csv",
+          "dataset/drops/day_012/tasks.csv",
+          "dataset/drops/day_013/tasks.csv",
+          "dataset/drops/day_014/tasks.csv",
+          "dataset/drops/day_015/tasks.csv",
+          "dataset/drops/day_016/tasks.csv",
+          "dataset/drops/day_017/tasks.csv",
+          "dataset/drops/day_018/tasks.csv",
+          "dataset/drops/day_019/tasks.csv",
+          "dataset/drops/day_020/tasks.csv",
+          "dataset/drops/day_021/tasks.csv",
+          "dataset/drops/day_022/tasks.csv",
+          "dataset/drops/day_023/tasks.csv",
+          "dataset/drops/day_024/tasks.csv",
+          "dataset/drops/day_025/tasks.csv",
+          "dataset/drops/day_026/tasks.csv",
+          "dataset/drops/day_027/tasks.csv",
+          "dataset/drops/day_028/tasks.csv",
+          "dataset/drops/day_029/tasks.csv",
+          "dataset/drops/day_030/tasks.csv",
+          "dataset/drops/day_031/tasks.csv",
+          "dataset/drops/day_032/tasks.csv",
+          "dataset/drops/day_033/tasks.csv",
+          "dataset/drops/day_034/tasks.csv",
+          "dataset/drops/day_035/tasks.csv",
+          "dataset/drops/day_036/tasks.csv",
+          "dataset/drops/day_037/tasks.csv",
+          "dataset/drops/day_038/tasks.csv",
+          "dataset/drops/day_039/tasks.csv",
+          "dataset/drops/day_040/tasks.csv",
+          "dataset/drops/day_041/tasks.csv",
+          "dataset/drops/day_042/tasks.csv",
+          "dataset/drops/day_043/tasks.csv",
+          "dataset/drops/day_044/tasks.csv",
+          "dataset/drops/day_045/tasks.csv",
+          "dataset/drops/day_046/tasks.csv",
+          "dataset/drops/day_047/tasks.csv",
+          "dataset/drops/day_048/tasks.csv",
+          "dataset/drops/day_049/tasks.csv",
+          "dataset/drops/day_050/tasks.csv",
+          "dataset/drops/day_051/tasks.csv",
+          "dataset/drops/day_052/tasks.csv",
+          "dataset/drops/day_053/tasks.csv",
+          "dataset/drops/day_054/tasks.csv",
+          "dataset/drops/day_055/tasks.csv",
+          "dataset/drops/day_056/tasks.csv",
+          "dataset/drops/day_057/tasks.csv",
+          "dataset/drops/day_058/tasks.csv",
+          "dataset/drops/day_059/tasks.csv",
+          "dataset/drops/day_060/tasks.csv",
+          "dataset/drops/day_061/tasks.csv",
+          "dataset/drops/day_062/tasks.csv",
+          "dataset/drops/day_063/tasks.csv",
+          "dataset/drops/day_064/tasks.csv",
+          "dataset/drops/day_065/tasks.csv",
+          "dataset/drops/day_066/tasks.csv",
+          "dataset/drops/day_067/tasks.csv",
+          "dataset/drops/day_068/tasks.csv",
+          "dataset/drops/day_069/tasks.csv",
+          "dataset/drops/day_070/tasks.csv",
+          "dataset/drops/day_071/tasks.csv",
+          "dataset/drops/day_072/tasks.csv",
+          "dataset/drops/day_073/tasks.csv",
+          "dataset/drops/day_074/tasks.csv",
+          "dataset/drops/day_075/tasks.csv",
+          "dataset/drops/day_076/tasks.csv",
+          "dataset/drops/day_077/tasks.csv",
+          "dataset/drops/day_078/tasks.csv",
+          "dataset/drops/day_079/tasks.csv",
+          "dataset/drops/day_080/tasks.csv",
+          "dataset/drops/day_081/tasks.csv",
+          "dataset/drops/day_082/tasks.csv",
+          "dataset/drops/day_083/tasks.csv",
+          "dataset/drops/day_084/tasks.csv",
+          "dataset/drops/day_085/tasks.csv",
+          "dataset/drops/day_086/tasks.csv",
+          "dataset/drops/day_087/tasks.csv",
+          "dataset/drops/day_088/tasks.csv",
+          "dataset/drops/day_089/tasks.csv",
+          "dataset/drops/day_090/tasks.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "task_id": "TS00001",
+          "team_id": "T_ENT",
+          "owner_id": "E04",
+          "created_at": "2026-07-23 13:00:00",
+          "due_date": "2026-07-25",
+          "title_fa": "کار تیمی شماره 1",
+          "blocker_fa": ""
+        },
+        "source": "dataset/drops/day_001/tasks.csv",
+        "line": 2,
+        "arrival_day": 1
+      },
+      {
+        "row": {
+          "task_id": "TS00002",
+          "team_id": "T_ENT",
+          "owner_id": "E01",
+          "created_at": "2026-07-23 08:00:00",
+          "due_date": "2026-07-28",
+          "title_fa": "کار تیمی شماره 2",
+          "blocker_fa": ""
+        },
+        "source": "dataset/drops/day_001/tasks.csv",
+        "line": 3,
+        "arrival_day": 1
+      }
+    ]
+  },
+  {
+    "table": "ticket_events.csv",
+    "rows": 15484,
+    "unique_exact_rows": 15484,
+    "columns": [
+      {
+        "column": "ticket_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 6993,
+        "examples": [
+          "TK000001",
+          "TK000002",
+          "TK000003"
+        ]
+      },
+      {
+        "column": "event",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 4,
+        "examples": [
+          "first_response",
+          "resolved",
+          "reopened"
+        ]
+      },
+      {
+        "column": "at",
+        "absent_from_rows": 1692,
+        "empty_cells": 0,
+        "distinct_nonempty": 12552,
+        "examples": [
+          "2026-07-23 08:08:34",
+          "2026-07-23 08:17:08",
+          "2026-07-23 08:25:42"
+        ]
+      },
+      {
+        "column": "staff_id",
+        "absent_from_rows": 0,
+        "empty_cells": 1539,
+        "distinct_nonempty": 8,
+        "examples": [
+          "E17",
+          "E18",
+          "E19"
+        ]
+      },
+      {
+        "column": "event_time",
+        "absent_from_rows": 13792,
+        "empty_cells": 0,
+        "distinct_nonempty": 1538,
+        "examples": [
+          "2026-10-11 13:30:00",
+          "2026-10-11 15:28:50",
+          "2026-10-11 16:25:42"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "ticket_id",
+          "event",
+          "at",
+          "staff_id"
+        ],
+        "files": [
+          "dataset/drops/day_001/ticket_events.csv",
+          "dataset/drops/day_002/ticket_events.csv",
+          "dataset/drops/day_003/ticket_events.csv",
+          "dataset/drops/day_004/ticket_events.csv",
+          "dataset/drops/day_005/ticket_events.csv",
+          "dataset/drops/day_006/ticket_events.csv",
+          "dataset/drops/day_007/ticket_events.csv",
+          "dataset/drops/day_008/ticket_events.csv",
+          "dataset/drops/day_009/ticket_events.csv",
+          "dataset/drops/day_010/ticket_events.csv",
+          "dataset/drops/day_011/ticket_events.csv",
+          "dataset/drops/day_012/ticket_events.csv",
+          "dataset/drops/day_013/ticket_events.csv",
+          "dataset/drops/day_014/ticket_events.csv",
+          "dataset/drops/day_015/ticket_events.csv",
+          "dataset/drops/day_016/ticket_events.csv",
+          "dataset/drops/day_017/ticket_events.csv",
+          "dataset/drops/day_018/ticket_events.csv",
+          "dataset/drops/day_019/ticket_events.csv",
+          "dataset/drops/day_020/ticket_events.csv",
+          "dataset/drops/day_021/ticket_events.csv",
+          "dataset/drops/day_022/ticket_events.csv",
+          "dataset/drops/day_023/ticket_events.csv",
+          "dataset/drops/day_024/ticket_events.csv",
+          "dataset/drops/day_025/ticket_events.csv",
+          "dataset/drops/day_026/ticket_events.csv",
+          "dataset/drops/day_027/ticket_events.csv",
+          "dataset/drops/day_028/ticket_events.csv",
+          "dataset/drops/day_029/ticket_events.csv",
+          "dataset/drops/day_030/ticket_events.csv",
+          "dataset/drops/day_031/ticket_events.csv",
+          "dataset/drops/day_032/ticket_events.csv",
+          "dataset/drops/day_033/ticket_events.csv",
+          "dataset/drops/day_034/ticket_events.csv",
+          "dataset/drops/day_035/ticket_events.csv",
+          "dataset/drops/day_036/ticket_events.csv",
+          "dataset/drops/day_037/ticket_events.csv",
+          "dataset/drops/day_038/ticket_events.csv",
+          "dataset/drops/day_039/ticket_events.csv",
+          "dataset/drops/day_040/ticket_events.csv",
+          "dataset/drops/day_041/ticket_events.csv",
+          "dataset/drops/day_042/ticket_events.csv",
+          "dataset/drops/day_043/ticket_events.csv",
+          "dataset/drops/day_044/ticket_events.csv",
+          "dataset/drops/day_045/ticket_events.csv",
+          "dataset/drops/day_046/ticket_events.csv",
+          "dataset/drops/day_047/ticket_events.csv",
+          "dataset/drops/day_048/ticket_events.csv",
+          "dataset/drops/day_049/ticket_events.csv",
+          "dataset/drops/day_050/ticket_events.csv",
+          "dataset/drops/day_051/ticket_events.csv",
+          "dataset/drops/day_052/ticket_events.csv",
+          "dataset/drops/day_053/ticket_events.csv",
+          "dataset/drops/day_054/ticket_events.csv",
+          "dataset/drops/day_055/ticket_events.csv",
+          "dataset/drops/day_056/ticket_events.csv",
+          "dataset/drops/day_057/ticket_events.csv",
+          "dataset/drops/day_058/ticket_events.csv",
+          "dataset/drops/day_059/ticket_events.csv",
+          "dataset/drops/day_060/ticket_events.csv",
+          "dataset/drops/day_061/ticket_events.csv",
+          "dataset/drops/day_062/ticket_events.csv",
+          "dataset/drops/day_063/ticket_events.csv",
+          "dataset/drops/day_064/ticket_events.csv",
+          "dataset/drops/day_065/ticket_events.csv",
+          "dataset/drops/day_067/ticket_events.csv",
+          "dataset/drops/day_068/ticket_events.csv",
+          "dataset/drops/day_069/ticket_events.csv",
+          "dataset/drops/day_070/ticket_events.csv",
+          "dataset/drops/day_071/ticket_events.csv",
+          "dataset/drops/day_072/ticket_events.csv",
+          "dataset/drops/day_073/ticket_events.csv",
+          "dataset/drops/day_074/ticket_events.csv",
+          "dataset/drops/day_075/ticket_events.csv",
+          "dataset/drops/day_076/ticket_events.csv",
+          "dataset/drops/day_077/ticket_events.csv",
+          "dataset/drops/day_078/ticket_events.csv",
+          "dataset/drops/day_079/ticket_events.csv",
+          "dataset/drops/day_080/ticket_events.csv",
+          "dataset/drops/day_081/ticket_events.csv"
+        ]
+      },
+      {
+        "columns": [
+          "ticket_id",
+          "event",
+          "event_time",
+          "staff_id"
+        ],
+        "files": [
+          "dataset/drops/day_082/ticket_events.csv",
+          "dataset/drops/day_083/ticket_events.csv",
+          "dataset/drops/day_084/ticket_events.csv",
+          "dataset/drops/day_085/ticket_events.csv",
+          "dataset/drops/day_086/ticket_events.csv",
+          "dataset/drops/day_087/ticket_events.csv",
+          "dataset/drops/day_088/ticket_events.csv",
+          "dataset/drops/day_089/ticket_events.csv",
+          "dataset/drops/day_090/ticket_events.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "ticket_id": "TK000001",
+          "event": "first_response",
+          "at": "2026-07-23 08:08:34",
+          "staff_id": "E17"
+        },
+        "source": "dataset/drops/day_001/ticket_events.csv",
+        "line": 2,
+        "arrival_day": 1
+      },
+      {
+        "row": {
+          "ticket_id": "TK000002",
+          "event": "first_response",
+          "at": "2026-07-23 08:17:08",
+          "staff_id": "E18"
+        },
+        "source": "dataset/drops/day_001/ticket_events.csv",
+        "line": 3,
+        "arrival_day": 1
+      }
+    ]
+  },
+  {
+    "table": "tickets.csv",
+    "rows": 7005,
+    "unique_exact_rows": 7005,
+    "columns": [
+      {
+        "column": "ticket_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7005,
+        "examples": [
+          "TK000001",
+          "TK000002",
+          "TK000003"
+        ]
+      },
+      {
+        "column": "created_at",
+        "absent_from_rows": 745,
+        "empty_cells": 0,
+        "distinct_nonempty": 6151,
+        "examples": [
+          "2026-07-23 00:03:00",
+          "2026-07-23 00:24:00",
+          "2026-07-23 00:30:00"
+        ]
+      },
+      {
+        "column": "category",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7,
+        "examples": [
+          "سؤال عمومی",
+          "شکایت",
+          "پرداخت"
+        ]
+      },
+      {
+        "column": "team_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "T_RSP",
+          "T_CMP"
+        ]
+      },
+      {
+        "column": "order_id",
+        "absent_from_rows": 0,
+        "empty_cells": 5017,
+        "distinct_nonempty": 1969,
+        "examples": [
+          "O000214",
+          "O000290",
+          "O000122"
+        ]
+      },
+      {
+        "column": "channel",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "app",
+          "web",
+          "marketplace"
+        ]
+      },
+      {
+        "column": "text_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 1893,
+        "examples": [
+          "این کالا کی موجود میشه؟",
+          "می‌تونم آدرس تحویل رو عوض کنم؟ ممنون",
+          "گارانتي اين محصول چطوره؟"
+        ]
+      },
+      {
+        "column": "create_time",
+        "absent_from_rows": 6260,
+        "empty_cells": 0,
+        "distinct_nonempty": 730,
+        "examples": [
+          "2026-10-12 00:16:03",
+          "2026-10-12 00:37:17",
+          "2026-10-12 02:01:32"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "ticket_id",
+          "created_at",
+          "category",
+          "team_id",
+          "order_id",
+          "channel",
+          "text_fa"
+        ],
+        "files": [
+          "dataset/drops/day_001/tickets.csv",
+          "dataset/drops/day_002/tickets.csv",
+          "dataset/drops/day_003/tickets.csv",
+          "dataset/drops/day_004/tickets.csv",
+          "dataset/drops/day_005/tickets.csv",
+          "dataset/drops/day_006/tickets.csv",
+          "dataset/drops/day_007/tickets.csv",
+          "dataset/drops/day_008/tickets.csv",
+          "dataset/drops/day_009/tickets.csv",
+          "dataset/drops/day_010/tickets.csv",
+          "dataset/drops/day_011/tickets.csv",
+          "dataset/drops/day_012/tickets.csv",
+          "dataset/drops/day_013/tickets.csv",
+          "dataset/drops/day_014/tickets.csv",
+          "dataset/drops/day_015/tickets.csv",
+          "dataset/drops/day_016/tickets.csv",
+          "dataset/drops/day_017/tickets.csv",
+          "dataset/drops/day_018/tickets.csv",
+          "dataset/drops/day_019/tickets.csv",
+          "dataset/drops/day_020/tickets.csv",
+          "dataset/drops/day_021/tickets.csv",
+          "dataset/drops/day_022/tickets.csv",
+          "dataset/drops/day_023/tickets.csv",
+          "dataset/drops/day_024/tickets.csv",
+          "dataset/drops/day_025/tickets.csv",
+          "dataset/drops/day_026/tickets.csv",
+          "dataset/drops/day_027/tickets.csv",
+          "dataset/drops/day_028/tickets.csv",
+          "dataset/drops/day_029/tickets.csv",
+          "dataset/drops/day_030/tickets.csv",
+          "dataset/drops/day_031/tickets.csv",
+          "dataset/drops/day_032/tickets.csv",
+          "dataset/drops/day_033/tickets.csv",
+          "dataset/drops/day_034/tickets.csv",
+          "dataset/drops/day_035/tickets.csv",
+          "dataset/drops/day_036/tickets.csv",
+          "dataset/drops/day_037/tickets.csv",
+          "dataset/drops/day_038/tickets.csv",
+          "dataset/drops/day_039/tickets.csv",
+          "dataset/drops/day_040/tickets.csv",
+          "dataset/drops/day_041/tickets.csv",
+          "dataset/drops/day_042/tickets.csv",
+          "dataset/drops/day_043/tickets.csv",
+          "dataset/drops/day_044/tickets.csv",
+          "dataset/drops/day_045/tickets.csv",
+          "dataset/drops/day_046/tickets.csv",
+          "dataset/drops/day_047/tickets.csv",
+          "dataset/drops/day_048/tickets.csv",
+          "dataset/drops/day_049/tickets.csv",
+          "dataset/drops/day_050/tickets.csv",
+          "dataset/drops/day_051/tickets.csv",
+          "dataset/drops/day_052/tickets.csv",
+          "dataset/drops/day_053/tickets.csv",
+          "dataset/drops/day_054/tickets.csv",
+          "dataset/drops/day_055/tickets.csv",
+          "dataset/drops/day_056/tickets.csv",
+          "dataset/drops/day_057/tickets.csv",
+          "dataset/drops/day_058/tickets.csv",
+          "dataset/drops/day_059/tickets.csv",
+          "dataset/drops/day_060/tickets.csv",
+          "dataset/drops/day_061/tickets.csv",
+          "dataset/drops/day_062/tickets.csv",
+          "dataset/drops/day_063/tickets.csv",
+          "dataset/drops/day_064/tickets.csv",
+          "dataset/drops/day_065/tickets.csv",
+          "dataset/drops/day_067/tickets.csv",
+          "dataset/drops/day_068/tickets.csv",
+          "dataset/drops/day_069/tickets.csv",
+          "dataset/drops/day_070/tickets.csv",
+          "dataset/drops/day_071/tickets.csv",
+          "dataset/drops/day_072/tickets.csv",
+          "dataset/drops/day_073/tickets.csv",
+          "dataset/drops/day_074/tickets.csv",
+          "dataset/drops/day_075/tickets.csv",
+          "dataset/drops/day_076/tickets.csv",
+          "dataset/drops/day_077/tickets.csv",
+          "dataset/drops/day_078/tickets.csv",
+          "dataset/drops/day_079/tickets.csv",
+          "dataset/drops/day_080/tickets.csv",
+          "dataset/drops/day_081/tickets.csv"
+        ]
+      },
+      {
+        "columns": [
+          "ticket_id",
+          "create_time",
+          "category",
+          "team_id",
+          "order_id",
+          "channel",
+          "text_fa"
+        ],
+        "files": [
+          "dataset/drops/day_082/tickets.csv",
+          "dataset/drops/day_083/tickets.csv",
+          "dataset/drops/day_084/tickets.csv",
+          "dataset/drops/day_085/tickets.csv",
+          "dataset/drops/day_086/tickets.csv",
+          "dataset/drops/day_087/tickets.csv",
+          "dataset/drops/day_088/tickets.csv",
+          "dataset/drops/day_089/tickets.csv",
+          "dataset/drops/day_090/tickets.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "ticket_id": "TK000001",
+          "created_at": "2026-07-23 00:03:00",
+          "category": "سؤال عمومی",
+          "team_id": "T_RSP",
+          "order_id": "",
+          "channel": "app",
+          "text_fa": "این کالا کی موجود میشه؟"
+        },
+        "source": "dataset/drops/day_001/tickets.csv",
+        "line": 2,
+        "arrival_day": 1
+      },
+      {
+        "row": {
+          "ticket_id": "TK000002",
+          "created_at": "2026-07-23 00:24:00",
+          "category": "سؤال عمومی",
+          "team_id": "T_RSP",
+          "order_id": "",
+          "channel": "web",
+          "text_fa": "می‌تونم آدرس تحویل رو عوض کنم؟ ممنون"
+        },
+        "source": "dataset/drops/day_001/tickets.csv",
+        "line": 3,
+        "arrival_day": 1
+      }
+    ]
+  },
+  {
+    "table": "web_sessions.csv",
+    "rows": 196,
+    "unique_exact_rows": 196,
+    "columns": [
+      {
+        "column": "date",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 90,
+        "examples": [
+          "2026-07-23",
+          "2026-07-24",
+          "2026-07-25"
+        ]
+      },
+      {
+        "column": "channel",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "app",
+          "web",
+          "marketplace"
+        ]
+      },
+      {
+        "column": "sessions",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 192,
+        "examples": [
+          "8654",
+          "8589",
+          "6602"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "date",
+          "channel",
+          "sessions"
+        ],
+        "files": [
+          "dataset/drops/day_001/web_sessions.csv",
+          "dataset/drops/day_002/web_sessions.csv",
+          "dataset/drops/day_003/web_sessions.csv",
+          "dataset/drops/day_004/web_sessions.csv",
+          "dataset/drops/day_005/web_sessions.csv",
+          "dataset/drops/day_006/web_sessions.csv",
+          "dataset/drops/day_007/web_sessions.csv",
+          "dataset/drops/day_008/web_sessions.csv",
+          "dataset/drops/day_009/web_sessions.csv",
+          "dataset/drops/day_010/web_sessions.csv",
+          "dataset/drops/day_011/web_sessions.csv",
+          "dataset/drops/day_012/web_sessions.csv",
+          "dataset/drops/day_013/web_sessions.csv",
+          "dataset/drops/day_014/web_sessions.csv",
+          "dataset/drops/day_015/web_sessions.csv",
+          "dataset/drops/day_016/web_sessions.csv",
+          "dataset/drops/day_017/web_sessions.csv",
+          "dataset/drops/day_018/web_sessions.csv",
+          "dataset/drops/day_019/web_sessions.csv",
+          "dataset/drops/day_020/web_sessions.csv",
+          "dataset/drops/day_021/web_sessions.csv",
+          "dataset/drops/day_022/web_sessions.csv",
+          "dataset/drops/day_023/web_sessions.csv",
+          "dataset/drops/day_024/web_sessions.csv",
+          "dataset/drops/day_025/web_sessions.csv",
+          "dataset/drops/day_026/web_sessions.csv",
+          "dataset/drops/day_027/web_sessions.csv",
+          "dataset/drops/day_028/web_sessions.csv",
+          "dataset/drops/day_029/web_sessions.csv",
+          "dataset/drops/day_030/web_sessions.csv",
+          "dataset/drops/day_031/web_sessions.csv",
+          "dataset/drops/day_032/web_sessions.csv",
+          "dataset/drops/day_033/web_sessions.csv",
+          "dataset/drops/day_034/web_sessions.csv",
+          "dataset/drops/day_035/web_sessions.csv",
+          "dataset/drops/day_036/web_sessions.csv",
+          "dataset/drops/day_037/web_sessions.csv",
+          "dataset/drops/day_038/web_sessions.csv",
+          "dataset/drops/day_039/web_sessions.csv",
+          "dataset/drops/day_040/web_sessions.csv",
+          "dataset/drops/day_041/web_sessions.csv",
+          "dataset/drops/day_042/web_sessions.csv",
+          "dataset/drops/day_043/web_sessions.csv",
+          "dataset/drops/day_044/web_sessions.csv",
+          "dataset/drops/day_045/web_sessions.csv",
+          "dataset/drops/day_046/web_sessions.csv",
+          "dataset/drops/day_047/web_sessions.csv",
+          "dataset/drops/day_048/web_sessions.csv",
+          "dataset/drops/day_049/web_sessions.csv",
+          "dataset/drops/day_050/web_sessions.csv",
+          "dataset/drops/day_051/web_sessions.csv",
+          "dataset/drops/day_052/web_sessions.csv",
+          "dataset/drops/day_053/web_sessions.csv",
+          "dataset/drops/day_054/web_sessions.csv",
+          "dataset/drops/day_055/web_sessions.csv",
+          "dataset/drops/day_056/web_sessions.csv",
+          "dataset/drops/day_057/web_sessions.csv",
+          "dataset/drops/day_058/web_sessions.csv",
+          "dataset/drops/day_059/web_sessions.csv",
+          "dataset/drops/day_060/web_sessions.csv",
+          "dataset/drops/day_061/web_sessions.csv",
+          "dataset/drops/day_062/web_sessions.csv",
+          "dataset/drops/day_063/web_sessions.csv",
+          "dataset/drops/day_064/web_sessions.csv",
+          "dataset/drops/day_065/web_sessions.csv",
+          "dataset/drops/day_066/web_sessions.csv",
+          "dataset/drops/day_067/web_sessions.csv",
+          "dataset/drops/day_068/web_sessions.csv",
+          "dataset/drops/day_069/web_sessions.csv",
+          "dataset/drops/day_070/web_sessions.csv",
+          "dataset/drops/day_071/web_sessions.csv",
+          "dataset/drops/day_072/web_sessions.csv",
+          "dataset/drops/day_073/web_sessions.csv",
+          "dataset/drops/day_074/web_sessions.csv",
+          "dataset/drops/day_075/web_sessions.csv",
+          "dataset/drops/day_076/web_sessions.csv",
+          "dataset/drops/day_077/web_sessions.csv",
+          "dataset/drops/day_078/web_sessions.csv",
+          "dataset/drops/day_079/web_sessions.csv",
+          "dataset/drops/day_080/web_sessions.csv",
+          "dataset/drops/day_081/web_sessions.csv",
+          "dataset/drops/day_082/web_sessions.csv",
+          "dataset/drops/day_083/web_sessions.csv",
+          "dataset/drops/day_084/web_sessions.csv",
+          "dataset/drops/day_085/web_sessions.csv",
+          "dataset/drops/day_086/web_sessions.csv",
+          "dataset/drops/day_087/web_sessions.csv",
+          "dataset/drops/day_088/web_sessions.csv",
+          "dataset/drops/day_089/web_sessions.csv",
+          "dataset/drops/day_090/web_sessions.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "date": "2026-07-23",
+          "channel": "app",
+          "sessions": "8654"
+        },
+        "source": "dataset/drops/day_001/web_sessions.csv",
+        "line": 2,
+        "arrival_day": 1
+      },
+      {
+        "row": {
+          "date": "2026-07-23",
+          "channel": "web",
+          "sessions": "8589"
+        },
+        "source": "dataset/drops/day_001/web_sessions.csv",
+        "line": 3,
+        "arrival_day": 1
+      }
+    ]
+  },
+  {
+    "table": "history/decisions_history.csv",
+    "rows": 2,
+    "unique_exact_rows": 2,
+    "columns": [
+      {
+        "column": "decision_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "DH-01",
+          "DH-02"
+        ]
+      },
+      {
+        "column": "decided_day",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "19",
+          "35"
+        ]
+      },
+      {
+        "column": "decided_date",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "2026-08-10",
+          "2026-08-26"
+        ]
+      },
+      {
+        "column": "manager_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "M03",
+          "M06"
+        ]
+      },
+      {
+        "column": "signal_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "پیش‌بینی فشار جمع‌آوری در جشنواره تابستانه",
+          "کاهش سرنخ لینکدین"
+        ]
+      },
+      {
+        "column": "decision_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "افزودن 2 نیروی موقت به انبار در روزهای 20 تا 24",
+          "ثابت نگه داشتن بودجه و تغییر متن آگهی"
+        ]
+      },
+      {
+        "column": "success_criterion_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "میانه زمان جمع‌آوری زیر ۴ ساعت",
+          "سرنخ روزانه ≥ ۵"
+        ]
+      },
+      {
+        "column": "outcome_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "ثبت نشده — اثر را از داده بسنجید",
+          "بدون اثر معنادار"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "decision_id",
+          "decided_day",
+          "decided_date",
+          "manager_id",
+          "signal_fa",
+          "decision_fa",
+          "success_criterion_fa",
+          "outcome_fa"
+        ],
+        "files": [
+          "dataset/history/decisions_history.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "decision_id": "DH-01",
+          "decided_day": "19",
+          "decided_date": "2026-08-10",
+          "manager_id": "M03",
+          "signal_fa": "پیش‌بینی فشار جمع‌آوری در جشنواره تابستانه",
+          "decision_fa": "افزودن 2 نیروی موقت به انبار در روزهای 20 تا 24",
+          "success_criterion_fa": "میانه زمان جمع‌آوری زیر ۴ ساعت",
+          "outcome_fa": "ثبت نشده — اثر را از داده بسنجید"
+        },
+        "source": "dataset/history/decisions_history.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "decision_id": "DH-02",
+          "decided_day": "35",
+          "decided_date": "2026-08-26",
+          "manager_id": "M06",
+          "signal_fa": "کاهش سرنخ لینکدین",
+          "decision_fa": "ثابت نگه داشتن بودجه و تغییر متن آگهی",
+          "success_criterion_fa": "سرنخ روزانه ≥ ۵",
+          "outcome_fa": "بدون اثر معنادار"
+        },
+        "source": "dataset/history/decisions_history.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "history/legacy_weekly_sales_report_by_sales_team.csv",
+    "rows": 9,
+    "unique_exact_rows": 9,
+    "columns": [
+      {
+        "column": "week_no",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 9,
+        "examples": [
+          "1",
+          "2",
+          "3"
+        ]
+      },
+      {
+        "column": "sales_toman",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 9,
+        "examples": [
+          "3459621000",
+          "3567475000",
+          "3405547000"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "week_no",
+          "sales_toman"
+        ],
+        "files": [
+          "dataset/history/legacy_weekly_sales_report_by_sales_team.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "week_no": "1",
+          "sales_toman": "3459621000"
+        },
+        "source": "dataset/history/legacy_weekly_sales_report_by_sales_team.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "week_no": "2",
+          "sales_toman": "3567475000"
+        },
+        "source": "dataset/history/legacy_weekly_sales_report_by_sales_team.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "org/access_matrix.csv",
+    "rows": 11,
+    "unique_exact_rows": 11,
+    "columns": [
+      {
+        "column": "manager_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 11,
+        "examples": [
+          "M01",
+          "M02",
+          "M03"
+        ]
+      },
+      {
+        "column": "visible_entities",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 11,
+        "examples": [
+          "ORG|U_SAL|U_OPS|U_SUP|T_ENT|T_DIG|T_WH|T_SHP|T_RSP|T_CMP|T_MKT",
+          "U_SAL|T_ENT|T_DIG|T_MKT",
+          "U_OPS|T_WH|T_SHP"
+        ]
+      },
+      {
+        "column": "individual_level_data_team",
+        "absent_from_rows": 0,
+        "empty_cells": 4,
+        "distinct_nonempty": 7,
+        "examples": [
+          "T_ENT",
+          "T_DIG",
+          "T_WH"
+        ]
+      },
+      {
+        "column": "note_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "فقط داده تجمیعی زیرمجموعه",
+          "داده فردی فقط برای سرپرست مستقیم"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "manager_id",
+          "visible_entities",
+          "individual_level_data_team",
+          "note_fa"
+        ],
+        "files": [
+          "dataset/org/access_matrix.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "manager_id": "M01",
+          "visible_entities": "ORG|U_SAL|U_OPS|U_SUP|T_ENT|T_DIG|T_WH|T_SHP|T_RSP|T_CMP|T_MKT",
+          "individual_level_data_team": "",
+          "note_fa": "فقط داده تجمیعی زیرمجموعه"
+        },
+        "source": "dataset/org/access_matrix.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "manager_id": "M02",
+          "visible_entities": "U_SAL|T_ENT|T_DIG|T_MKT",
+          "individual_level_data_team": "",
+          "note_fa": "فقط داده تجمیعی زیرمجموعه"
+        },
+        "source": "dataset/org/access_matrix.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "org/managers.csv",
+    "rows": 11,
+    "unique_exact_rows": 11,
+    "columns": [
+      {
+        "column": "manager_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 11,
+        "examples": [
+          "M01",
+          "M02",
+          "M03"
+        ]
+      },
+      {
+        "column": "role_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 11,
+        "examples": [
+          "مدیر ارشد",
+          "مدیر کل فروش",
+          "مدیر کل عملیات"
+        ]
+      },
+      {
+        "column": "scope_entity",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 11,
+        "examples": [
+          "ORG",
+          "U_SAL",
+          "U_OPS"
+        ]
+      },
+      {
+        "column": "name_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 11,
+        "examples": [
+          "سارا توانا",
+          "کیوان مهرآیین",
+          "نسرین پارسا"
+        ]
+      },
+      {
+        "column": "level",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "1",
+          "2",
+          "3"
+        ]
+      },
+      {
+        "column": "effective_from_day",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "1",
+          "75"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "manager_id",
+          "role_fa",
+          "scope_entity",
+          "name_fa",
+          "level",
+          "effective_from_day"
+        ],
+        "files": [
+          "dataset/org/managers.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "manager_id": "M01",
+          "role_fa": "مدیر ارشد",
+          "scope_entity": "ORG",
+          "name_fa": "سارا توانا",
+          "level": "1",
+          "effective_from_day": "1"
+        },
+        "source": "dataset/org/managers.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "manager_id": "M02",
+          "role_fa": "مدیر کل فروش",
+          "scope_entity": "U_SAL",
+          "name_fa": "کیوان مهرآیین",
+          "level": "2",
+          "effective_from_day": "1"
+        },
+        "source": "dataset/org/managers.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "org/staff.csv",
+    "rows": 26,
+    "unique_exact_rows": 26,
+    "columns": [
+      {
+        "column": "staff_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 26,
+        "examples": [
+          "E01",
+          "E02",
+          "E03"
+        ]
+      },
+      {
+        "column": "name_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 26,
+        "examples": [
+          "علی رضایی",
+          "مریم کریمی",
+          "حسین حسینی"
+        ]
+      },
+      {
+        "column": "team_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7,
+        "examples": [
+          "T_ENT",
+          "T_DIG",
+          "T_WH"
+        ]
+      },
+      {
+        "column": "effective_from_day",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "1",
+          "75"
+        ]
+      },
+      {
+        "column": "effective_to_day",
+        "absent_from_rows": 0,
+        "empty_cells": 26,
+        "distinct_nonempty": 0,
+        "examples": []
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "staff_id",
+          "name_fa",
+          "team_id",
+          "effective_from_day",
+          "effective_to_day"
+        ],
+        "files": [
+          "dataset/org/staff.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "staff_id": "E01",
+          "name_fa": "علی رضایی",
+          "team_id": "T_ENT",
+          "effective_from_day": "1",
+          "effective_to_day": ""
+        },
+        "source": "dataset/org/staff.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "staff_id": "E02",
+          "name_fa": "مریم کریمی",
+          "team_id": "T_ENT",
+          "effective_from_day": "1",
+          "effective_to_day": ""
+        },
+        "source": "dataset/org/staff.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "org/teams.csv",
+    "rows": 7,
+    "unique_exact_rows": 7,
+    "columns": [
+      {
+        "column": "team_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7,
+        "examples": [
+          "T_ENT",
+          "T_DIG",
+          "T_WH"
+        ]
+      },
+      {
+        "column": "name_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7,
+        "examples": [
+          "تیم فروش سازمانی",
+          "تیم بازاریابی دیجیتال",
+          "تیم انبار"
+        ]
+      },
+      {
+        "column": "unit_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 3,
+        "examples": [
+          "U_SAL",
+          "U_OPS",
+          "U_SUP"
+        ]
+      },
+      {
+        "column": "supervisor_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 7,
+        "examples": [
+          "M05",
+          "M06",
+          "M07"
+        ]
+      },
+      {
+        "column": "effective_from_day",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "1",
+          "75"
+        ]
+      },
+      {
+        "column": "effective_from_date",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "2026-07-23",
+          "2026-10-05"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "team_id",
+          "name_fa",
+          "unit_id",
+          "supervisor_id",
+          "effective_from_day",
+          "effective_from_date"
+        ],
+        "files": [
+          "dataset/org/teams.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "team_id": "T_ENT",
+          "name_fa": "تیم فروش سازمانی",
+          "unit_id": "U_SAL",
+          "supervisor_id": "M05",
+          "effective_from_day": "1",
+          "effective_from_date": "2026-07-23"
+        },
+        "source": "dataset/org/teams.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "team_id": "T_DIG",
+          "name_fa": "تیم بازاریابی دیجیتال",
+          "unit_id": "U_SAL",
+          "supervisor_id": "M06",
+          "effective_from_day": "1",
+          "effective_from_date": "2026-07-23"
+        },
+        "source": "dataset/org/teams.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "org/units.csv",
+    "rows": 4,
+    "unique_exact_rows": 4,
+    "columns": [
+      {
+        "column": "unit_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 4,
+        "examples": [
+          "ORG",
+          "U_SAL",
+          "U_OPS"
+        ]
+      },
+      {
+        "column": "name_fa",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 4,
+        "examples": [
+          "آرکا (کل سازمان)",
+          "واحد فروش",
+          "واحد عملیات"
+        ]
+      },
+      {
+        "column": "parent_id",
+        "absent_from_rows": 0,
+        "empty_cells": 1,
+        "distinct_nonempty": 1,
+        "examples": [
+          "ORG"
+        ]
+      },
+      {
+        "column": "manager_id",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 4,
+        "examples": [
+          "M01",
+          "M02",
+          "M03"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "unit_id",
+          "name_fa",
+          "parent_id",
+          "manager_id"
+        ],
+        "files": [
+          "dataset/org/units.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "unit_id": "ORG",
+          "name_fa": "آرکا (کل سازمان)",
+          "parent_id": "",
+          "manager_id": "M01"
+        },
+        "source": "dataset/org/units.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "unit_id": "U_SAL",
+          "name_fa": "واحد فروش",
+          "parent_id": "ORG",
+          "manager_id": "M02"
+        },
+        "source": "dataset/org/units.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  },
+  {
+    "table": "uploads/day080_M02_external_sales_report.csv",
+    "rows": 2,
+    "unique_exact_rows": 2,
+    "columns": [
+      {
+        "column": "week",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "هفته اول",
+          "هفته دوم"
+        ]
+      },
+      {
+        "column": "فروش_تومان",
+        "absent_from_rows": 0,
+        "empty_cells": 0,
+        "distinct_nonempty": 2,
+        "examples": [
+          "3702793000",
+          "4034457000"
+        ]
+      }
+    ],
+    "schema_variants": [
+      {
+        "columns": [
+          "week",
+          "فروش_تومان"
+        ],
+        "files": [
+          "dataset/uploads/day080_M02_external_sales_report.csv"
+        ]
+      }
+    ],
+    "sample_records": [
+      {
+        "row": {
+          "week": "هفته اول",
+          "فروش_تومان": "3702793000"
+        },
+        "source": "dataset/uploads/day080_M02_external_sales_report.csv",
+        "line": 2,
+        "arrival_day": null
+      },
+      {
+        "row": {
+          "week": "هفته دوم",
+          "فروش_تومان": "4034457000"
+        },
+        "source": "dataset/uploads/day080_M02_external_sales_report.csv",
+        "line": 3,
+        "arrival_day": null
+      }
+    ]
+  }
+]

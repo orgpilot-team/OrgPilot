@@ -1,0 +1,144 @@
+flowchart LR
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  orders["orders: source relation"]
+  order_events["order_events: source relation"]
+  tickets["tickets: source relation"]
+  ticket_events["ticket_events: source relation"]
+  csat["csat: source relation"]
+  crm_leads["crm_leads: source relation"]
+  crm_lead_events["crm_lead_events: source relation"]
+  tasks["tasks: source relation"]
+  task_events["task_events: source relation"]
+  mkt_daily["mkt_daily: source relation"]
+  web_sessions["web_sessions: source relation"]
+  cal["cal: source relation"]
+  monthly_targets["monthly_targets: source relation"]
+  order_fact["order_fact: reference SQL view"]
+  orders -->|DERIVED computation| order_fact
+  order_events -->|DERIVED computation| order_fact
+  orders -->|"DERIVED join/filter: order_id"| order_fact
+  ticket_fact["ticket_fact: reference SQL view"]
+  tickets -->|DERIVED computation| ticket_fact
+  ticket_events -->|DERIVED computation| ticket_fact
+  tickets -->|"DERIVED join/filter: ticket_id"| ticket_fact
+  lead_fact["lead_fact: reference SQL view"]
+  crm_leads -->|DERIVED computation| lead_fact
+  crm_lead_events -->|DERIVED computation| lead_fact
+  crm_leads -->|"DERIVED join/filter: lead_id; drop_day correction selection"| lead_fact
+  task_fact["task_fact: reference SQL view"]
+  tasks -->|DERIVED computation| task_fact
+  task_events -->|DERIVED computation| task_fact
+  tasks -->|"DERIVED join/filter: task_id"| task_fact
+  revenue_daily["revenue_daily: reference SQL view"]
+  orders -->|DERIVED computation| revenue_daily
+  order_events -->|DERIVED computation| revenue_daily
+  lead_fact -->|DERIVED computation| revenue_daily
+  cal -->|DERIVED computation| revenue_daily
+  orders -->|"DERIVED join/filter: order_id; date; channel and event filters"| revenue_daily
+  K_ORG["9 KPI definitions: ORG"]
+  ORG["ORG: KPI entity"]
+  K_ORG -->|CONFIRMED entity_id| ORG
+  cal -->|DERIVED computation| K_ORG
+  csat -->|DERIVED computation| K_ORG
+  lead_fact -->|DERIVED computation| K_ORG
+  monthly_targets -->|DERIVED computation| K_ORG
+  order_fact -->|DERIVED computation| K_ORG
+  orders -->|DERIVED computation| K_ORG
+  revenue_daily -->|DERIVED computation| K_ORG
+  ticket_fact -->|DERIVED computation| K_ORG
+  ORG -.->|CONFIRMED aggregate display scope| M01
+  K_T_CMP["5 KPI definitions: T_CMP"]
+  T_CMP["T_CMP: KPI entity"]
+  K_T_CMP -->|CONFIRMED entity_id| T_CMP
+  cal -->|DERIVED computation| K_T_CMP
+  task_fact -->|DERIVED computation| K_T_CMP
+  ticket_fact -->|DERIVED computation| K_T_CMP
+  tickets -->|DERIVED computation| K_T_CMP
+  T_CMP -.->|CONFIRMED aggregate display scope| M01
+  T_CMP -.->|CONFIRMED aggregate display scope| M04
+  T_CMP -.->|CONFIRMED aggregate display scope| M10
+  K_T_DIG["4 KPI definitions: T_DIG"]
+  T_DIG["T_DIG: KPI entity"]
+  K_T_DIG -->|CONFIRMED entity_id| T_DIG
+  cal -->|DERIVED computation| K_T_DIG
+  mkt_daily -->|DERIVED computation| K_T_DIG
+  task_fact -->|DERIVED computation| K_T_DIG
+  T_DIG -.->|CONFIRMED aggregate display scope| M01
+  T_DIG -.->|CONFIRMED aggregate display scope| M02
+  T_DIG -.->|CONFIRMED aggregate display scope| M06
+  K_T_ENT["5 KPI definitions: T_ENT"]
+  T_ENT["T_ENT: KPI entity"]
+  K_T_ENT -->|CONFIRMED entity_id| T_ENT
+  cal -->|DERIVED computation| K_T_ENT
+  lead_fact -->|DERIVED computation| K_T_ENT
+  revenue_daily -->|DERIVED computation| K_T_ENT
+  task_fact -->|DERIVED computation| K_T_ENT
+  T_ENT -.->|CONFIRMED aggregate display scope| M01
+  T_ENT -.->|CONFIRMED aggregate display scope| M02
+  T_ENT -.->|CONFIRMED aggregate display scope| M05
+  K_T_MKT["3 KPI definitions: T_MKT"]
+  T_MKT["T_MKT: KPI entity"]
+  K_T_MKT -->|CONFIRMED entity_id| T_MKT
+  cal -->|DERIVED computation| K_T_MKT
+  orders -->|DERIVED computation| K_T_MKT
+  revenue_daily -->|DERIVED computation| K_T_MKT
+  task_fact -->|DERIVED computation| K_T_MKT
+  T_MKT -.->|CONFIRMED aggregate display scope| M01
+  T_MKT -.->|CONFIRMED aggregate display scope| M02
+  T_MKT -.->|CONFIRMED aggregate display scope| M11
+  K_T_RSP["7 KPI definitions: T_RSP"]
+  T_RSP["T_RSP: KPI entity"]
+  K_T_RSP -->|CONFIRMED entity_id| T_RSP
+  cal -->|DERIVED computation| K_T_RSP
+  csat -->|DERIVED computation| K_T_RSP
+  task_fact -->|DERIVED computation| K_T_RSP
+  ticket_fact -->|DERIVED computation| K_T_RSP
+  tickets -->|DERIVED computation| K_T_RSP
+  T_RSP -.->|CONFIRMED aggregate display scope| M01
+  T_RSP -.->|CONFIRMED aggregate display scope| M04
+  T_RSP -.->|CONFIRMED aggregate display scope| M09
+  K_T_SHP["5 KPI definitions: T_SHP"]
+  T_SHP["T_SHP: KPI entity"]
+  K_T_SHP -->|CONFIRMED entity_id| T_SHP
+  cal -->|DERIVED computation| K_T_SHP
+  order_fact -->|DERIVED computation| K_T_SHP
+  task_fact -->|DERIVED computation| K_T_SHP
+  T_SHP -.->|CONFIRMED aggregate display scope| M01
+  T_SHP -.->|CONFIRMED aggregate display scope| M03
+  T_SHP -.->|CONFIRMED aggregate display scope| M08
+  K_T_WH["7 KPI definitions: T_WH"]
+  T_WH["T_WH: KPI entity"]
+  K_T_WH -->|CONFIRMED entity_id| T_WH
+  cal -->|DERIVED computation| K_T_WH
+  order_fact -->|DERIVED computation| K_T_WH
+  orders -->|DERIVED computation| K_T_WH
+  task_fact -->|DERIVED computation| K_T_WH
+  ticket_fact -->|DERIVED computation| K_T_WH
+  tickets -->|DERIVED computation| K_T_WH
+  T_WH -.->|CONFIRMED aggregate display scope| M01
+  T_WH -.->|CONFIRMED aggregate display scope| M03
+  T_WH -.->|CONFIRMED aggregate display scope| M07
+  K_U_OPS["2 KPI definitions: U_OPS"]
+  U_OPS["U_OPS: KPI entity"]
+  K_U_OPS -->|CONFIRMED entity_id| U_OPS
+  order_fact -->|DERIVED computation| K_U_OPS
+  U_OPS -.->|CONFIRMED aggregate display scope| M01
+  U_OPS -.->|CONFIRMED aggregate display scope| M03
+  K_U_SAL["4 KPI definitions: U_SAL"]
+  U_SAL["U_SAL: KPI entity"]
+  K_U_SAL -->|CONFIRMED entity_id| U_SAL
+  order_fact -->|DERIVED computation| K_U_SAL
+  orders -->|DERIVED computation| K_U_SAL
+  revenue_daily -->|DERIVED computation| K_U_SAL
+  web_sessions -->|DERIVED computation| K_U_SAL
+  U_SAL -.->|CONFIRMED aggregate display scope| M01
+  U_SAL -.->|CONFIRMED aggregate display scope| M02
+  K_U_SUP["4 KPI definitions: U_SUP"]
+  U_SUP["U_SUP: KPI entity"]
+  K_U_SUP -->|CONFIRMED entity_id| U_SUP
+  cal -->|DERIVED computation| K_U_SUP
+  csat -->|DERIVED computation| K_U_SUP
+  ticket_fact -->|DERIVED computation| K_U_SUP
+  tickets -->|DERIVED computation| K_U_SUP
+  U_SUP -.->|CONFIRMED aggregate display scope| M01
+  U_SUP -.->|CONFIRMED aggregate display scope| M04

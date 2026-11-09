@@ -1,0 +1,31 @@
+﻿test_id,basis_status,source,mechanism_or_gap,execution_status
+AT-01,Requirement,Brief13-14; README manifest/source rules,Idempotent receipt mechanism Proposed,Planned; not run by this audit
+AT-02,Requirement,KPI dictionary all rows; reference views; brief16,PostgreSQL translation strategy Proposed; engine Accepted,Planned; not run by this audit
+AT-03,Requirement,README replay/input cutoff; brief14,Snapshot/commit implementation Proposed,Planned; not run by this audit
+AT-04,Requirement,"README unavailable values; brief13-14,17",Closure/publication policy Open,Planned; not run by this audit
+AT-05,Requirement,"Brief14,17; observed aliases/correction; README",RAW/DEDUP and correction tie Open,Planned; not run by this audit
+AT-06,Requirement,"Access matrix; brief5,10,12-13",Physical roles/projections Proposed; exact fields Open,Planned; not run by this audit
+AT-07,Requirement,"Brief13,17; README; IN05/IN06",M11 precedence/activation authority Open,Planned; not run by this audit
+AT-08,Requirement,R1-R8; brief7-8,Ranking/grouping/reset mechanism Proposed/Open,Planned; not run by this audit
+AT-09,Requirement,Brief16 discovery definition,Official hidden labels unavailable,Planned; not run by this audit
+AT-10,Requirement,"Brief9-10,13,16",Independence/scoring algorithm Proposed,Planned; not run by this audit
+AT-11,Requirement,"Brief10-12,15; output schemas",Internal complete content mapping Open,Planned; not run by this audit
+AT-12,Requirement,"Workflow stages; canonical workflow SQL; brief5-6,16",Stage owner mapping Open,Planned; not run by this audit
+AT-13,Requirement,"Brief13,17; injected operational upload",Enforcement mechanism Proposed,Planned; not run by this audit
+AT-14,Requirement,"Brief11-12,15; scripted decisions",Execution confirmation fields Open,Planned; not run by this audit
+AT-15,Requirement,README active roster; brief16,Independent publication Accepted; M11 precedence Open,Planned; not run by this audit
+AT-16,Requirement,Brief17; scripted questions,16 fixtures are not about60 official questions,Planned; not run by this audit
+AT-17,Requirement,"Brief14,19",Hardware/final profile missing; no benchmark,Planned; not run by this audit
+AT-18,Requirement,"Brief16,19",Reservation/rates/retry mechanism Proposed,Planned; not run by this audit
+AT-19,Requirement,"Brief14,18","Restore/restart engineering gate Proposed, not a supplied specific backup policy",Planned; not run by this audit
+AT-20,Accepted,User request1; S16 Q01; S17 agent,Exact tool/time/token/step limits Open,Planned; not run by this audit
+AT-21,Accepted,User request1; S16 Q16; S17 PartialPublication,Atomic package mechanism and fallback Proposed,Planned; not run by this audit
+AT-22,Requirement,"Brief3,12-14; README uploads; IN04/IN07",Exact format/readiness policy Open,Planned; not run by this audit
+AT-23,Proposed,S16 Q06 summary; existing S17 dated-value boundary,Historical display mapping/age Open; never replace current null,Planned; not run by this audit
+AT-24,Requirement,escalation_rules.csv R1-R8; brief8 three checks,Only unspecified comparisons/samples/reset remain Open,Planned; not run by this audit
+AT-25,Requirement,workflow_definitions.csv12 stages and canonical workflow SQL,Owner/projection details Open,Planned; not run by this audit
+AT-26,Requirement,"Brief5,9-12,15",Internal/wire content mapping Open,Planned; not run by this audit
+AT-27,Requirement,Brief13; README KPI extension,Inactive-candidate approval mechanism Proposed,Planned; not run by this audit
+AT-28,Proposed,Existing S17 F02/F05; user bounded-Agent boundary,Exact controller limits and cancellation product behavior Open,Planned; not run by this audit
+AT-29,Requirement,"Scripted inputs23; brief3,11-14",Write authority and same-day receipt precedence Open,Planned; not run by this audit
+AT-30,Requirement,brief_schema.json; qa_answer_schema.json; README,Stronger semantic validators separate from permissive schema,Planned; not run by this audit

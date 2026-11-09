@@ -1,0 +1,77 @@
+﻿path,change,purpose,diff_scope,added_lines,removed_lines
+docs/architecture/001-system-blueprint.md,Modified,Complete R1-R8 and Workflow contracts; report content; source authority; parent execution and input contracts; Proposed mechanisms; Structurizr references.,Unified text,120,64
+docs/architecture/002-data-architecture.md,Modified,"Source grains and clocks; exact reference-view semantics; Proposed internal entities; privacy, priority, and output mapping; preserve the KPI catalog.",Unified text,61,53
+docs/architecture/003-decisions-and-roadmap.md,Modified,Preserve ADR-01 through ADR-17; add AT-24 through AT-30; keep every gate planned; expand the Decision Log to 19 source-backed Open rows.,Unified text,78,29
+docs/architecture/004-reconciliation-review.md,Modified,"Keep the Q01-Q17 mapping and stable anchors; reconcile evidence status, gates, independent publication, and current audit links.",Unified text,36,47
+docs/architecture/visualizations/README.md,Modified,Use the 16 actual Structurizr view keys; state missing views; retire legacy preview navigation.,Unified text,19,66
+docs/architecture/visualizations/open-questions.md,Modified,Preserve VQ identifiers and unresolved policy; align status and Decision Log references.,Unified text,13,11
+docs/architecture/visualizations/previews/01-source-calendar-history-detail.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,38
+docs/architecture/visualizations/previews/01-source-configuration-detail.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,39
+docs/architecture/visualizations/previews/01-source-crm-detail.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,15
+docs/architecture/visualizations/previews/01-source-data-erd.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,55
+docs/architecture/visualizations/previews/01-source-marketing-detail.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,16
+docs/architecture/visualizations/previews/01-source-orders-detail.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,23
+docs/architecture/visualizations/previews/01-source-organization-detail.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,44
+docs/architecture/visualizations/previews/01-source-support-detail.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,27
+docs/architecture/visualizations/previews/01-source-workload-detail.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,24
+docs/architecture/visualizations/previews/02-proposed-database-erd.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,27
+docs/architecture/visualizations/previews/02-proposed-layers.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,22
+docs/architecture/visualizations/previews/03-organization-hierarchy.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,59
+docs/architecture/visualizations/previews/04-management-access-graph.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,42
+docs/architecture/visualizations/previews/05-column-access-overview.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,20
+docs/architecture/visualizations/previews/06-kpi-data-lineage.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,146
+docs/architecture/visualizations/previews/06-lineage-ORG.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,83
+docs/architecture/visualizations/previews/06-lineage-T_CMP.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,46
+docs/architecture/visualizations/previews/06-lineage-T_DIG.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,31
+docs/architecture/visualizations/previews/06-lineage-T_ENT.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,58
+docs/architecture/visualizations/previews/06-lineage-T_MKT.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,43
+docs/architecture/visualizations/previews/06-lineage-T_RSP.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,56
+docs/architecture/visualizations/previews/06-lineage-T_SHP.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,46
+docs/architecture/visualizations/previews/06-lineage-T_WH.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,69
+docs/architecture/visualizations/previews/06-lineage-U_OPS.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,22
+docs/architecture/visualizations/previews/06-lineage-U_SAL.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,46
+docs/architecture/visualizations/previews/06-lineage-U_SUP.md,Modified,Retire legacy preview; preserve original in the backup.,Unified text,6,32
+docs/architecture/visualizations/proposed-entity-contracts.md,Modified,Align Proposed entity contracts with document 002; do not claim an existing ERD.,Unified text,3,1
+docs/architecture/visualizations/security-examples.md,Modified,Keep useful examples; state evidence and approval limits.,Unified text,2,0
+docs/architecture/audit-2026-11-09/README.md,Added,"Audit index, evidence limits, and check command.",Unified text,30,0
+docs/architecture/audit-2026-11-09/acceptance-basis.csv,Added,Requirement or decision basis for all 30 planned gates.,Unified text,31,0
+docs/architecture/audit-2026-11-09/audit-report.md,Added,"Full issue records, source evidence, corrections, and limits.",Unified text,560,0
+docs/architecture/audit-2026-11-09/audit-summary.json,Added,Finding counts and document review unit counts.,Unified text,21,0
+docs/architecture/audit-2026-11-09/audit_support.py,Added,Documentation authoring helpers and duplicate-finding guards.,Unified text,37,0
+docs/architecture/audit-2026-11-09/brief-content-check.json,Added,PDF content checks; a resaved hash does not imply changed requirements.,Unified text,20,0
+docs/architecture/audit-2026-11-09/build_audit_report.py,Added,"Build findings tables, detailed report, and review-unit ledger.",Unified text,174,0
+docs/architecture/audit-2026-11-09/build_traceability.py,Added,Build source contracts and the traceability matrix.,Unified text,357,0
+docs/architecture/audit-2026-11-09/change-report.md,Added,"File-by-file changes, checks, and implementation blockers.",Unified text,129,0
+docs/architecture/audit-2026-11-09/cross_document_fixes.py,Added,Cross-document contract and reference corrections.,Unified text,27,0
+docs/architecture/audit-2026-11-09/diff-summary.json,Added,"Diff scope, line counts, exclusions, and SHA-256.",Derived index; excluded,,
+docs/architecture/audit-2026-11-09/document-review-ledger.csv,Added,"All 911 pre-edit review units, source context, and dispositions.",Unified text,943,0
+docs/architecture/audit-2026-11-09/file-changes.csv,Added,"Complete file index with change kind, purpose, and line counts.",Derived index; excluded,,
+docs/architecture/audit-2026-11-09/finalize_audit.py,Added,Build this report and the backup-based diff; does not restore files.,Unified text,193,0
+docs/architecture/audit-2026-11-09/findings.csv,Added,Full findings in table form; original claims and pre-edit locations.,Unified text,60,0
+docs/architecture/audit-2026-11-09/findings.json,Added,Structured findings; includes the retained source observation.,Unified text,710,0
+docs/architecture/audit-2026-11-09/kpi-contracts.csv,Added,"All 55 source definitions, SQL hashes, and calculation semantics.",Unified text,56,0
+docs/architecture/audit-2026-11-09/manager-input-contracts.csv,Added,"All 23 supplied inputs, effects, timing, and access limits.",Unified text,24,0
+docs/architecture/audit-2026-11-09/model_audit.py,Added,Read-only model inventory and proposed gap report.,Unified text,106,0
+docs/architecture/audit-2026-11-09/output-schema-contracts.csv,Added,Exact property constraints and status enums from both schemas.,Unified text,62,0
+docs/architecture/audit-2026-11-09/phase1.py,Added,Source-backed changes to document 001.,Unified text,139,0
+docs/architecture/audit-2026-11-09/phase2.py,Added,Source-backed changes to document 002.,Unified text,92,0
+docs/architecture/audit-2026-11-09/phase3.py,Added,Source-backed changes to document 003.,Unified text,132,0
+docs/architecture/audit-2026-11-09/phase4.py,Added,Source-backed changes to document 004 and dependent documentation.,Unified text,156,0
+docs/architecture/audit-2026-11-09/pre-edit-manifest.json,Added,"SHA-256 baseline for all 1,452 initial workspace files.",Unified text,1454,0
+docs/architecture/audit-2026-11-09/pre-edit.zip,Added,Verified backup of all 79 pre-existing architecture and model files.,Binary notice,,
+docs/architecture/audit-2026-11-09/reconciliation.diff,Added,Current unified text diff and binary backup notice.,Derived index; excluded,,
+docs/architecture/audit-2026-11-09/request.txt,Added,Verbatim task supplied by the user.,Unified text,268,0
+docs/architecture/audit-2026-11-09/requirements-traceability.csv,Added,"339 granular source-to-component, ADR, and gate records.",Unified text,340,0
+docs/architecture/audit-2026-11-09/requirements-traceability.md,Added,"Traceability scope, coverage, and remaining evidence gaps.",Unified text,20,0
+docs/architecture/audit-2026-11-09/rule-contracts.csv,Added,Exact R1-R8 source text and rule-specific behavior.,Unified text,9,0
+docs/architecture/audit-2026-11-09/source-checks.json,Added,"Read-only manifests, headers, row counts, calendar, and source fixtures.",Unified text,3376,0
+docs/architecture/audit-2026-11-09/source_audit.py,Added,Read-only source extraction and fixture checks.,Unified text,255,0
+docs/architecture/audit-2026-11-09/structurizr-elements.csv,Added,46 existing model elements with source locations.,Unified text,47,0
+docs/architecture/audit-2026-11-09/structurizr-gap-report.md,Added,14 proposed model follow-ups with existing element and view mappings.,Unified text,53,0
+docs/architecture/audit-2026-11-09/structurizr-inventory.json,Added,Model text inventory and protected DSL hash.,Unified text,1161,0
+docs/architecture/audit-2026-11-09/structurizr-relationships.csv,Added,127 existing model relationships with source locations.,Unified text,128,0
+docs/architecture/audit-2026-11-09/structurizr-views.csv,Added,16 existing view declarations with exact keys and locations.,Unified text,17,0
+docs/architecture/audit-2026-11-09/traceability-summary.json,Added,Traceability counts by source and classification.,Unified text,62,0
+docs/architecture/audit-2026-11-09/verification.json,Added,Results of documentation checks; no product acceptance asserted.,Unified text,76,0
+docs/architecture/audit-2026-11-09/verify_audit.py,Added,Repeatable standard-library documentation and source checks.,Unified text,185,0
+docs/architecture/audit-2026-11-09/workflow-contracts.csv,Added,"All 12 source stages, clocks, deadlines, and ownership gaps.",Unified text,13,0

@@ -1,0 +1,32 @@
+check,result,evidence
+Task-start broken links accounted for,PASS,1077 task-start links; 64 existing failures
+Sequential Persian Roadmap headings,PASS,"['۱. اولویت پاسخ\u200cهای لازم', '۲. مسیر مرحله\u200cای پیاده\u200cسازی پس از بازبینی', '۳. اندازه\u200cگیری عملکرد و هزینه', '۴. شرایط شروع اجرای محصول', '۵. مراجع حاکمیت و تحویل']"
+Legacy Roadmap section IDs removed,PASS,Descriptive roadmap-* IDs replace legacy section IDs
+Roadmap full body preserved,PASS,"Full body lines compared; only heading, list-digit style and link destinations normalized; missing []"
+001-system-blueprint.md source body,PASS,Only navigation and the moved measurement section label may change
+002-data-architecture.md source body,PASS,Only navigation and the moved measurement section label may change
+004-reconciliation-review.md source body,PASS,Only navigation and the moved measurement section label may change
+decisions-registry.md full content,PASS,"Complete body, original source extracts, all criteria and supplements unchanged after URL normalization"
+open-issues-registry.md full content,PASS,"Complete body, original source extracts, all criteria and supplements unchanged after URL normalization"
+risk-register.md full content,PASS,"Complete body, original source extracts, all criteria and supplements unchanged after URL normalization"
+acceptance-register.md full content,PASS,"Complete body, original source extracts, all criteria and supplements unchanged after URL normalization"
+Matrix full semantic identity,PASS,4586 rows; only source file/anchor navigation may change
+ADR/DL/AT/risk IDs,PASS,"{'ADR': 17, 'Decision Statement': 69, 'DL': 19, 'Registry Issue': 10, 'Risk': 20, 'AT': 30, 'Source': 19, 'Requirement': 334, 'Decision Boundary': 5, 'Roadmap Phase': 6, 'Architecture Component': 29, 'Acceptance Supplement': 7}"
+Open and AT states,PASS,29 Open issues; 30 Planned / Not Executed ATs
+Unconfirmed relationships,PASS,2470 remain unapproved; semantic fields compared in full
+Accepted boundaries,PASS,All five boundary records and all status fields unchanged
+Registry draft status,PASS,Location approval does not approve proposed architecture or product tests
+Original combined-source content,PASS,297 substantive source lines checked against readable canonical documents before deletion; heading map retained separately
+Obsolete file removed,PASS,The one obsolete file was deleted after migration gates passed; no stub remains
+All local Markdown paths and anchors,PASS,"1013 links; states {'Resolved': 1009, 'External or host URL': 4}; exact path spelling checked"
+No active Markdown link to removed file,PASS,0 remaining; includes code-fence exclusion for source quotations
+95 original anchors have exact destinations,PASS,Mapping retained as evidence; no redirect document
+Audit and supporting findings preserved,PASS,All repaired supporting documents compared after URL and one navigation-label normalization; failures []
+Historical broken references reconciled,PASS,"All 64 occurrences individually matched by source file, line and original URL"
+Repair targets resolve,PASS,"88 URL replacements, including quoted source URLs"
+Live matrix source paths and anchors,PASS,4586 source locations checked; failures []
+Reference-style definitions,PASS,[]
+Only authorized documentation changed,PASS,1416 task-start files; 21 navigation/format changes; removed ['Docs/architecture/003-decisions-and-roadmap.md']; unexpected []
+Dataset SQL PDF DSL unchanged,PASS,All task-start hashes compared; DSL historical comment retained
+Git HEAD unchanged,PASS,0a42950d1ce9734433d961540af9ab4be21573b2
+No staged changes,PASS,"No commit, push or staging action"

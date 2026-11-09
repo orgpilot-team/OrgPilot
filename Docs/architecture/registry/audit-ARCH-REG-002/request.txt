@@ -1,0 +1,269 @@
+# Task: ARCH-REG-002 — Registry Semantic Audit & Traceability Validation
+
+## Objective
+
+Audit the newly created Architecture Registry against its original sources, verify all Traceability Matrix relationships, and establish the current official brief PDF as the S01 source of record.
+
+Work directly in the current Repository:
+
+`D:\Projects\Arka`
+
+This task is a verification and narrowly scoped correction pass. It is NOT a redesign, implementation, or document restructuring task.
+
+## 1. Official PDF — S01 Provenance
+
+The official brief is the existing file:
+
+`Docs/بریف پروژه بوتکمپ _ دستیار ایجنتیک مدیران سازمانی _ دیدراه.pdf`
+
+The user explicitly confirms that this file is the authoritative PDF for the current Repository.
+
+Perform the following:
+
+1. Verify the file exists at its actual path.
+2. Compute its SHA-256 directly from bytes.
+3. Compare it with the SHA-256 currently recorded in documents 001 and 004 and Registry source records.
+4. Record the actual SHA-256 as the current S01 source identity.
+5. Preserve the previously recorded hash as historical provenance, if different.
+6. Update outdated references that incorrectly identify the current PDF by the old hash.
+
+You are authorized to change the S01 hash/provenance metadata in 001 and 004 if necessary, but nothing else in those documents.
+
+Do not assume that different hashes mean different requirements.
+
+Do not claim the two PDF versions are semantically identical without a source-content comparison.
+
+Review `REG-ISS-010`. Distinguish resolved source identification from any still-unverified historical content comparison. Do not close the issue without sufficient evidence.
+
+## 2. Registry Files
+
+Audit the following files:
+
+```text
+Docs/architecture/registry/
+├── README.md
+├── decisions-registry.md
+├── open-issues-registry.md
+├── risk-register.md
+├── acceptance-register.md
+├── traceability-matrix.csv
+└── validation-report.md
+```
+
+Also inspect any supporting Registry files generated during ARCH-REG-001, including source inventories, relationship ledgers, deduplication evidence and validation scripts.
+
+Compare Registry records against the four source documents:
+
+- `001-system-blueprint.md`
+- `002-data-architecture.md`
+- `003-decisions-and-roadmap.md`
+- `004-reconciliation-review.md`
+
+Use the actual dataset contracts, source files and audit evidence where required.
+
+## 3. Traceability Matrix Audit
+
+The previous extraction reported:
+
+- 339 existing requirement IDs indexed
+- 4,191 record/evidence/relationship rows
+- 17 ADRs
+- 19 DLs
+- 30 ATs
+- 29 Open issues
+- 20 risks
+
+Treat these as previous reported counts, not guaranteed correct values.
+
+Validate the actual CSV.
+
+### A. Structural Validation
+
+Check:
+
+- CSV parses correctly.
+- Headers and column values match the declared schema.
+- Each record has a valid and stable identifier.
+- Every relationship endpoint exists.
+- Every source file exists or is explicitly marked missing.
+- Every referenced Anchor resolves.
+- No unintended duplicate relationship rows exist.
+- No malformed or circular relationships are silently accepted.
+- Multi-target relationships follow the documented representation.
+- No records or edges have been lost during extraction.
+
+Report actual counts and differences from the previous report.
+
+### B. Semantic Validation
+
+Verify the meaning of every relationship type.
+
+For example:
+
+- Requirement → ADR means the ADR addresses that requirement.
+- ADR → DL means a related issue remains unresolved.
+- ADR/DL → AT means the test exercises the stated decision or issue.
+- Risk → AT means the test provides relevant risk-control evidence.
+- Source → Record means the original source actually supports that record.
+- Roadmap → Record means the phase assignment is explicitly supported or marked proposed.
+
+Do not treat mere co-occurrence of two IDs as evidence that they have a substantive dependency.
+
+Distinguish:
+
+- Explicit Source Relationship
+- Proposed / Inferred Relationship
+- Unsupported Relationship
+- Missing Relationship
+
+Review every relationship deterministically for structural correctness.
+
+For semantic correctness, systematically inspect all high-impact relationships and source-backed descriptions, particularly the 17 ADRs, 29 issues, 20 risks, 30 ATs and Accepted statements. For the remaining high-volume edges, use source-aware checks and a documented review methodology. Report precisely which checks are exhaustive and which are sampled or inference-based.
+
+Never claim exhaustive semantic verification based only on successful scripts.
+
+## 4. Decisions Registry Audit
+
+Verify:
+
+- All ADR-01 through ADR-17 exist.
+- All Accepted statements are backed by actual source approval.
+- Proposed items have not been promoted to Accepted.
+- Open issues remain Open.
+- Requirement and architectural choice are not conflated.
+- The original source meaning, exceptions and constraints are preserved.
+- Technical mechanisms suggested by Codex are still clearly labeled Proposed.
+
+Specifically recheck the five previously accepted architectural boundaries:
+
+1. One bounded AI Agent
+2. PostgreSQL as the only product execution database
+3. Independent publication of valid manager reports
+4. Deterministic calculations, signals, access control and final validation
+5. Human-controlled organizational actions
+
+Do not reopen these boundaries without new evidence.
+
+## 5. Open Issues Audit
+
+Verify all 19 original DLs and the additional REG-ISS records.
+
+For each issue, confirm:
+
+- Genuine unresolved question
+- Correct supporting source
+- Correct Open status
+- Accurate alternatives
+- Accurate closure criteria
+- Correct dependencies
+- Appropriate classification of required work
+
+Do not classify an issue as requiring an organizer response unless the actual missing contract or source authority supports that classification.
+
+Do not incorrectly transform missing engineering evidence into an unresolved architectural choice.
+
+Pay particular attention to:
+
+- RAW / DEDUP
+- M11 activation
+- Source Closure
+- suppressed / ongoing
+- P2 / P3 scope
+- Existing KPI modification
+- QA context and Workflow stage calculation
+- REG-ISS-010
+
+Identify duplicates and false-positive issues, but do not delete or close records automatically. Report recommendations for review.
+
+## 6. Acceptance & Risk Audit
+
+Verify:
+
+- All AT-01 through AT-30 are present.
+- All original and supplemental acceptance criteria are preserved.
+- All tests remain Planned / Not Executed without actual product evidence.
+- The three-management-level content matrix is intact.
+- R1–R8 test conditions remain intact.
+- No new acceptance requirement was invented during extraction.
+- Risk controls are not presented as implemented.
+- Risk severity remains Not Assessed unless an authorized scoring method exists.
+
+Validate Risk ↔ Issue ↔ Test relationships against real source meaning.
+
+## 7. Corrections Allowed
+
+You may correct clearly demonstrated Registry extraction defects, including:
+
+- Broken or incorrect links
+- Invalid source references
+- Incorrect relationship endpoints
+- Duplicated relationship rows
+- Wrong classifications directly contradicted by source evidence
+- Missing cross-references
+- Incorrect source provenance metadata
+- Incorrect verification counts
+
+Every substantive correction must include a before/after record, reason and source evidence.
+
+If a correction would require an architectural decision, do not make that decision. Report it as Pending Review.
+
+Do not rewrite or simplify the full original extracts.
+
+Do not change ADR/DL/AT IDs.
+
+Do not redesign the Registry schema unless an actual data-loss defect makes a minimal repair necessary and the repair is fully documented.
+
+## 8. Git & Preservation
+
+Current architecture baseline:
+
+`0a42950d1ce9734433d961540af9ab4be21573b2`
+
+The Registry was created after this local baseline and has not been committed.
+
+- Preserve all existing tracked and untracked files.
+- Never use `git clean` or destructive reset.
+- Do not overwrite source datasets.
+- Do not modify the original architecture contents except the explicitly authorized S01 provenance correction.
+- Do not rename `003`.
+- Do not extract or move the original ADR/DL/AT sections yet.
+- No commit.
+- No push.
+
+Because the Registry files are untracked, do not rely on ordinary `git diff` alone. Verify untracked file contents and provide a reliable before/after comparison.
+
+## 9. Final Deliverables
+
+Create or update a Registry audit report:
+
+`Docs/architecture/registry/semantic-audit-report.md`
+
+Include:
+
+1. Current official S01 PDF path and SHA-256
+2. Previous recorded SHA-256 and provenance disposition
+3. Actual Registry record and relationship counts
+4. Structural validation results
+5. Semantic verification methodology and coverage
+6. Incorrect relationships found and corrected
+7. Unsupported or inferred relationships still needing review
+8. ADR/DL/AT/Risk coverage and status consistency
+9. Potential duplicates or false-positive issues
+10. Missing dependencies and orphan records
+11. Files changed
+12. Git status and exact scope of modifications
+13. Remaining blockers before Registry approval
+
+Keep the overall Registry status:
+
+**Draft / Pending Review**
+
+Do not claim the Registry is approved merely because automated checks passed.
+
+Provide the final summary in Persian.
+
+No implementation.
+No architectural redesign.
+No rename.
+No commit.
+No push.

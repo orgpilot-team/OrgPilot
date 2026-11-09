@@ -1,0 +1,57 @@
+flowchart TB
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  M01["M01: Executive Manager / ORG<br/>level 1; effective day 1"]
+  M02["M02: Sales Unit Manager / U_SAL<br/>level 2; effective day 1"]
+  M03["M03: Operations Unit Manager / U_OPS<br/>level 2; effective day 1"]
+  M04["M04: Support Unit Manager / U_SUP<br/>level 2; effective day 1"]
+  M05["M05: Enterprise Sales Supervisor / T_ENT<br/>level 3; effective day 1"]
+  M06["M06: Digital Marketing Supervisor / T_DIG<br/>level 3; effective day 1"]
+  M07["M07: Warehouse Supervisor / T_WH<br/>level 3; effective day 1"]
+  M08["M08: Shipping Supervisor / T_SHP<br/>level 3; effective day 1"]
+  M09["M09: Response Supervisor / T_RSP<br/>level 3; effective day 1"]
+  M10["M10: Complaints Supervisor / T_CMP<br/>level 3; effective day 1"]
+  M11["M11: Marketplace Supervisor / T_MKT<br/>level 3; effective day 75"]
+  ORG["ORG"]
+  M01 -->|CONFIRMED manages| ORG
+  U_SAL["U_SAL"]
+  M02 -->|CONFIRMED manages| U_SAL
+  ORG -->|CONFIRMED parent_id| U_SAL
+  M01 -.->|DERIVED reporting chain| M02
+  U_OPS["U_OPS"]
+  M03 -->|CONFIRMED manages| U_OPS
+  ORG -->|CONFIRMED parent_id| U_OPS
+  M01 -.->|DERIVED reporting chain| M03
+  U_SUP["U_SUP"]
+  M04 -->|CONFIRMED manages| U_SUP
+  ORG -->|CONFIRMED parent_id| U_SUP
+  M01 -.->|DERIVED reporting chain| M04
+  T_ENT["T_ENT<br/>day 1; 2026-07-23"]
+  U_SAL -->|CONFIRMED contains| T_ENT
+  M05 -->|CONFIRMED direct supervisor| T_ENT
+  M02 -.->|DERIVED reporting chain| M05
+  T_DIG["T_DIG<br/>day 1; 2026-07-23"]
+  U_SAL -->|CONFIRMED contains| T_DIG
+  M06 -->|CONFIRMED direct supervisor| T_DIG
+  M02 -.->|DERIVED reporting chain| M06
+  T_WH["T_WH<br/>day 1; 2026-07-23"]
+  U_OPS -->|CONFIRMED contains| T_WH
+  M07 -->|CONFIRMED direct supervisor| T_WH
+  M03 -.->|DERIVED reporting chain| M07
+  T_SHP["T_SHP<br/>day 1; 2026-07-23"]
+  U_OPS -->|CONFIRMED contains| T_SHP
+  M08 -->|CONFIRMED direct supervisor| T_SHP
+  M03 -.->|DERIVED reporting chain| M08
+  T_RSP["T_RSP<br/>day 1; 2026-07-23"]
+  U_SUP -->|CONFIRMED contains| T_RSP
+  M09 -->|CONFIRMED direct supervisor| T_RSP
+  M04 -.->|DERIVED reporting chain| M09
+  T_CMP["T_CMP<br/>day 1; 2026-07-23"]
+  U_SUP -->|CONFIRMED contains| T_CMP
+  M10 -->|CONFIRMED direct supervisor| T_CMP
+  M04 -.->|DERIVED reporting chain| M10
+  T_MKT["T_MKT<br/>day 75; 2026-10-05"]
+  U_SAL -->|CONFIRMED contains| T_MKT
+  M11 -->|CONFIRMED direct supervisor| T_MKT
+  M02 -.->|DERIVED reporting chain| M11
+  DATES["UNRESOLVED: first M11 report morning 75 or 76<br/>Staff E25/E26 effective day 75<br/>Validate staff effective_to_day; hierarchy is not a data grant"]
+  DATES -.-> M11

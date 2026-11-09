@@ -1,0 +1,27 @@
+﻿table,files,rows,columns,header_variants,record_kind,candidate_key,candidate_key_duplicate_rows,exact_repeat_rows,key_status,physical_constraints,evidence,status
+calendar__calendar_days,1,90,8,1,entity_or_configuration_records,date,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/calendar/calendar_days.csv,CONFIRMED
+calendar__events_calendar,1,7,5,1,entity_or_configuration_records,UNRESOLVED,,0,Not a reliable raw primary key; preserve file occurrence and CSV record ordinal,NONE: CSV files,dataset/calendar/events_calendar.csv,CONFIRMED
+config__escalation_rules,1,8,2,1,entity_or_configuration_records,rule_id,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/config/escalation_rules.csv,CONFIRMED
+config__kpi_dictionary,1,55,13,1,entity_or_configuration_records,kpi_id,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/config/kpi_dictionary.csv,CONFIRMED
+config__monthly_targets,1,3,3,1,entity_or_configuration_records,jmonth|scope,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/config/monthly_targets.csv,CONFIRMED
+config__workflow_definitions,1,12,10,1,entity_or_configuration_records,workflow_id|stage_order,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/config/workflow_definitions.csv,CONFIRMED
+crm_lead_events,91,6208,4,1,event_history,UNRESOLVED,,0,Not a reliable raw primary key; preserve file occurrence and CSV record ordinal,NONE: CSV files,dataset/drops/day_000/crm_lead_events.csv,CONFIRMED
+crm_leads,91,2946,3,1,entity_or_configuration_records,lead_id,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/drops/day_000/crm_leads.csv,CONFIRMED
+csat,89,1716,3,1,entity_or_configuration_records,UNRESOLVED,,0,Not a reliable raw primary key; preserve file occurrence and CSV record ordinal,NONE: CSV files,dataset/drops/day_001/csat.csv,CONFIRMED
+mkt_daily,90,180,6,1,daily_observation,date|source,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/drops/day_001/mkt_daily.csv,CONFIRMED
+order_events,90,145022,5,1,event_history,UNRESOLVED,,0,Not a reliable raw primary key; preserve file occurrence and CSV record ordinal,NONE: CSV files,dataset/drops/day_001/order_events.csv,CONFIRMED
+orders,90,37851,10,1,entity_or_configuration_records,order_id,262,262,Not a reliable raw primary key; preserve file occurrence and CSV record ordinal,NONE: CSV files,dataset/drops/day_001/orders.csv,CONFIRMED
+staff_availability,90,2192,4,1,daily_observation,date|staff_id,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/drops/day_001/staff_availability.csv,CONFIRMED
+task_events,90,3325,3,1,event_history,UNRESOLVED,,0,Not a reliable raw primary key; preserve file occurrence and CSV record ordinal,NONE: CSV files,dataset/drops/day_001/task_events.csv,CONFIRMED
+tasks,90,1695,7,1,entity_or_configuration_records,task_id,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/drops/day_001/tasks.csv,CONFIRMED
+ticket_events,89,15484,5,2,event_history,UNRESOLVED,,0,Not a reliable raw primary key; preserve file occurrence and CSV record ordinal,NONE: CSV files,dataset/drops/day_001/ticket_events.csv,CONFIRMED
+tickets,89,7005,8,2,entity_or_configuration_records,ticket_id,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/drops/day_001/tickets.csv,CONFIRMED
+web_sessions,90,196,3,1,daily_observation,date|channel,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/drops/day_001/web_sessions.csv,CONFIRMED
+history__decisions_history,1,2,8,1,entity_or_configuration_records,UNRESOLVED,,0,Not a reliable raw primary key; preserve file occurrence and CSV record ordinal,NONE: CSV files,dataset/history/decisions_history.csv,CONFIRMED
+history__legacy_weekly_sales_report_by_sales_team,1,9,2,1,entity_or_configuration_records,UNRESOLVED,,0,Not a reliable raw primary key; preserve file occurrence and CSV record ordinal,NONE: CSV files,dataset/history/legacy_weekly_sales_report_by_sales_team.csv,CONFIRMED
+org__access_matrix,1,11,4,1,entity_or_configuration_records,manager_id,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/org/access_matrix.csv,CONFIRMED
+org__managers,1,11,6,1,entity_or_configuration_records,manager_id,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/org/managers.csv,CONFIRMED
+org__staff,1,26,5,1,entity_or_configuration_records,staff_id,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/org/staff.csv,CONFIRMED
+org__teams,1,7,6,1,entity_or_configuration_records,team_id,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/org/teams.csv,CONFIRMED
+org__units,1,4,4,1,entity_or_configuration_records,unit_id,0,0,Candidate only; unique in supplied records,NONE: CSV files,dataset/org/units.csv,CONFIRMED
+uploads__day080_M02_external_sales_report,1,2,2,1,entity_or_configuration_records,UNRESOLVED,,0,Not a reliable raw primary key; preserve file occurrence and CSV record ordinal,NONE: CSV files,dataset/uploads/day080_M02_external_sales_report.csv,CONFIRMED

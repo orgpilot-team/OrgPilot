@@ -1,0 +1,23 @@
+file,sha256,baseline_state
+Docs/architecture/003-roadmap.md,77e58f4d7774ffa3ee6f291c3cb07877b8eb4dcfde3ea70689179ce2f28a06f0,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/after-links.csv,80358fa022116244fc85adc81c5ed0b5b7a670541b45ffeee1eeba9dec124819,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/baseline-all-files.csv,a64994722b9e1356133e22c8b160a4368c63e5791b22bee5d552493997043f76,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/baseline-tracked.diff,d2a81ac8d33e346c3c6196c4c64a85bb53e9fab673a97fdb28e376006f6ee8c2,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/before-after.diff,ea469d63337b02f0358910ade27b4f9af6f0290743f84216871da86a29fb4701,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/before-documents.zip,b8e265dec178ff79d58c3ac6d735f5047766303aa23dae26c1c2a6c97d04a3c6,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/before-links.csv,f426eaa18872a6accc55849e2311b9deb6cb454b21bd0e4747808728ec76658c,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/before-manifest.json,63a4003afa36e52ba65812c380b06e449313576a65efdee6681e36a3f3e6c64b,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/content-location-map.csv,cdaeb3b525f65cb14d5f46fcb0e7c765f47d009b764cd5197179c556dc2af958,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/doc_links.py,64fc80addd77677c7589cce97d5d2cb5a8d254d6a36d5e300fc69d26104da016,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/existing-file-changes.csv,9eb9ece4415ea54600e8cd69137f423c1222324cb64f40a7c8febd08be7edfc9,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/git-status.txt,d90a1aadfab012b6f0c6042e6dfbac37d7b70bd588d0ccfc84565174a2db96be,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/historical-reference-catalog.csv,4014ed63b6b45bf46ac8182362fd40950afbdd7b0ae941c8216a49c6415bfa3d,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/historical-reference-catalog.md,dd7fd797415a636763d9489f142582b8ccd9503694dd48fd5c922d1742cee38f,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/legacy-anchor-map.csv,4e4c7bf2fefed0e584cc6cf67cad681d5fd226c11cbf62fd942166f19e62dc2a,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/matrix-navigation-changes.csv,c6956327a0fc745ecbdf6548745fdeb1a4b4c7f0ffa9c00d27b689f470a15a54,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/report.md,269fb414c20fc294a81f149f9a4105e568413e92e2548eb7541fb5d2e685f377,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/restructure.py,029c7c8dfb213e158fd42e5129fda24f78b5b6ab83ec7b0473c9df089ad6097a,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/source-extract-promotion.csv,dfa68668a3273c489437eeaa1a01c5bd78ab0ab1b1bd83797f705be54dd3c489,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/validate_restructure.py,7affae0efba63a6970fb404c68fa8aaea8aa86851dcae1e3c7acfb4e42e36272,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/validation-results.csv,9f945c6fcb63393ad33040719a080d9365e9a10b8449a6356482c57e5df5fe9e,Absent at task start and baseline; new untracked file
+Docs/architecture/restructure-ARCH-DOC-004/validation-results.json,57f766f6e02bf7eccdc0b9da4ec70ea60a23b3e737463d6e802501192c782d5c,Absent at task start and baseline; new untracked file

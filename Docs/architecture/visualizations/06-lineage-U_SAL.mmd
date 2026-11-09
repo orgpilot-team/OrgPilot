@@ -1,0 +1,44 @@
+flowchart LR
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  cal["cal: calculation input"]
+  crm_lead_events["crm_lead_events: calculation input"]
+  crm_leads["crm_leads: calculation input"]
+  order_events["order_events: calculation input"]
+  orders["orders: calculation input"]
+  web_sessions["web_sessions: calculation input"]
+  lead_fact["lead_fact: SQL view"]
+  crm_leads -->|DERIVED execution input| lead_fact
+  crm_lead_events -->|DERIVED execution input| lead_fact
+  crm_leads -->|"DERIVED join/filter: lead_id; drop_day correction selection"| lead_fact
+  order_fact["order_fact: SQL view"]
+  orders -->|DERIVED execution input| order_fact
+  order_events -->|DERIVED execution input| order_fact
+  orders -->|"DERIVED join/filter: order_id"| order_fact
+  revenue_daily["revenue_daily: SQL view"]
+  orders -->|DERIVED execution input| revenue_daily
+  order_events -->|DERIVED execution input| revenue_daily
+  lead_fact -->|DERIVED execution input| revenue_daily
+  cal -->|DERIVED execution input| revenue_daily
+  orders -->|"DERIVED join/filter: order_id; date; channel and event filters"| revenue_daily
+  K_SAL_B2C_REV["K_SAL_B2C_REV"]
+  revenue_daily -->|DERIVED computation| K_SAL_B2C_REV
+  cal -->|"DERIVED join/population: d"| K_SAL_B2C_REV
+  order_events -->|"DERIVED join/population: order_id"| K_SAL_B2C_REV
+  orders -->|"DERIVED join/population: order_id"| K_SAL_B2C_REV
+  K_SAL_B2C_REV -->|CONFIRMED entity_id| U_SAL
+  K_SAL_CONV["K_SAL_CONV"]
+  orders -->|DERIVED computation| K_SAL_CONV
+  web_sessions -->|DERIVED computation| K_SAL_CONV
+  K_SAL_CONV -->|CONFIRMED entity_id| U_SAL
+  K_SAL_PAYFAIL["K_SAL_PAYFAIL"]
+  order_fact -->|DERIVED computation| K_SAL_PAYFAIL
+  order_events -->|"DERIVED join/population: order_id"| K_SAL_PAYFAIL
+  orders -->|"DERIVED join/population: order_id"| K_SAL_PAYFAIL
+  K_SAL_PAYFAIL -->|CONFIRMED entity_id| U_SAL
+  K_SAL_PAYFAIL_BY_CH["K_SAL_PAYFAIL_BY_CH"]
+  order_fact -->|DERIVED computation| K_SAL_PAYFAIL_BY_CH
+  order_events -->|"DERIVED join/population: order_id"| K_SAL_PAYFAIL_BY_CH
+  orders -->|"DERIVED join/population: order_id"| K_SAL_PAYFAIL_BY_CH
+  K_SAL_PAYFAIL_BY_CH -->|CONFIRMED entity_id| U_SAL
+  U_SAL -.->|CONFIRMED aggregate display; active dates apply| M01
+  U_SAL -.->|CONFIRMED aggregate display; active dates apply| M02

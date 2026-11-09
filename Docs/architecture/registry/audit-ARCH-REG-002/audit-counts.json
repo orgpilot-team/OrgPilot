@@ -1,0 +1,51 @@
+{
+  "before": {
+    "rows": 4191,
+    "kinds": {
+      "record": 548,
+      "relationship": 3134,
+      "evidence": 509
+    },
+    "records": {
+      "ADR": 17,
+      "Decision Statement": 69,
+      "DL": 19,
+      "Registry Issue": 10,
+      "Risk": 20,
+      "AT": 30,
+      "Source": 19,
+      "Requirement": 339,
+      "Roadmap Phase": 6,
+      "Architecture Component": 19
+    }
+  },
+  "after": {
+    "rows": 4586,
+    "kinds": {
+      "record": 565,
+      "relationship": 3169,
+      "evidence": 852
+    },
+    "records": {
+      "ADR": 17,
+      "Decision Statement": 69,
+      "DL": 19,
+      "Registry Issue": 10,
+      "Risk": 20,
+      "AT": 30,
+      "Source": 19,
+      "Requirement": 334,
+      "Decision Boundary": 5,
+      "Roadmap Phase": 6,
+      "Architecture Component": 29,
+      "Acceptance Supplement": 7
+    }
+  },
+  "unsupported_removed": 5,
+  "review_categories": {
+    "Explicit Source Relationship": 699,
+    "Proposed / Inferred Relationship": 2470,
+    "Unsupported Relationship": 5
+  },
+  "corrections": 2831
+}

@@ -1,0 +1,21 @@
+{
+  "audit_records": 59,
+  "material_findings": 58,
+  "severity": {
+    "High": 23,
+    "Medium": 26,
+    "Low": 9
+  },
+  "correction_states": {
+    "Corrected": 56,
+    "Verified; retained": 1,
+    "Deferred to model phase": 2
+  },
+  "review_units": 911,
+  "units_by_document": {
+    "docs/architecture/001-system-blueprint.md": 217,
+    "docs/architecture/002-data-architecture.md": 292,
+    "docs/architecture/003-decisions-and-roadmap.md": 313,
+    "docs/architecture/004-reconciliation-review.md": 89
+  }
+}

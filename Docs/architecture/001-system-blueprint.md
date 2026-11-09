@@ -1,16 +1,19 @@
 # ARCH-001: طرح معماری سیستم ARKA
 
+مسئولیت مستندسازی در ARCH-DOC-004: معماری سیستم، ماژول‌ها، Workflowها، رابط‌ها و امنیت در همین سند باقی می‌مانند. برای سوابق حاکمیت به [Registry](registry/README.md#current-document-responsibilities) و برای مراحل اجرا به [نقشه راه 003](003-roadmap.md#roadmap-phases) مراجعه کنید. این تغییر در مسیرهای ناوبری، هیچ قرارداد یا وضعیتی را تغییر نمی‌دهد.
+
+
 کلید سند: `001-system-blueprint`. عبارت `ARCH-001` برچسب حفظ‌شده خانواده معماری است. این عبارت شناسه یکتای سند نیست.
 
 تاریخ بازبینی: 2026-11-09. منطقه زمانی: `Asia/Tehran`.
 
-وضعیت: requirements، تصمیم‌های Accepted تیم، جزئیات Proposed و مسائل Open. هیچ ادعایی درباره پیاده‌سازی محصول یا نتیجه پذیرش وجود ندارد. [بازبینی Q01-Q17](004-reconciliation-review.md) و [Decision Log](003-decisions-and-roadmap.md#decision-log) را ببینید.
+وضعیت: Requirementها، تصمیم‌های Accepted تیم، جزئیات Proposed و مسائل Open. هیچ ادعایی دربارهٔ پیاده‌سازی محصول یا نتیجهٔ پذیرش وجود ندارد. [بازبینی Q01-Q17](004-reconciliation-review.md#question-map) و [Decision Log](registry/open-issues-registry.md#decision-log) را ببینید.
 
 <a id="system-1"></a>
 
 ## 1. معماری Accepted و جزئیات Proposed
 
-ARKA از یک AI Agent محدود و ماژول‌های deterministic استفاده می‌کند. PostgreSQL تنها موتور پایگاه داده محصول است. این موارد تصمیم‌های `Accepted` تیم در S16 Q01/Q03 هستند. S17 نیز همین هدف را بیان می‌کند. [ADR-13](003-decisions-and-roadmap.md#adr-13) و [ADR-01](003-decisions-and-roadmap.md#adr-01) را ببینید.
+ARKA از یک AI Agent محدود و ماژول‌های deterministic استفاده می‌کند. PostgreSQL تنها موتور پایگاه داده محصول است. این موارد تصمیم‌های `Accepted` تیم در S16 Q01/Q03 هستند. S17 نیز همین هدف را بیان می‌کند. [ADR-13](registry/decisions-registry.md#adr-13) و [ADR-01](registry/decisions-registry.md#adr-01) را ببینید.
 
 برنامه modular در یک codebase شامل API، رابط فارسی RTL و background worker است. فایل‌های اصلی را همراه با hashهای SHA-256 در file storage محافظت‌شده نگه دارید. File storage پایگاه داده دوم نیست. Queue و وضعیت اجرا می‌توانند از PostgreSQL استفاده کنند. جزئیات Framework و استقرار فیزیکی همچنان Proposed هستند.
 
@@ -18,7 +21,7 @@ ARKA از یک AI Agent محدود و ماژول‌های deterministic استف
 
 Agent برای تحلیل و نگارش از Evidence مجاز استفاده می‌کند. محاسبه، تشخیص Signal، کنترل Authorization و بررسی خروجی deterministic هستند. Agent هیچ credential پایگاه داده یا ابزار اقدام سازمانی ندارد. همان Agent می‌تواند از تحلیل و نگارش ویژه نقش پشتیبانی کند. ماژول‌های جداگانه Writer و Validator، AI Agent اضافی ایجاد نمی‌کنند.
 
-هر گزارش معتبر مدیر به‌صورت مستقل منتشر می‌شود. هر نتیجه و وضعیت روز را ثبت کنید. روزی که گزارش الزامی آن ناموفق باشد، ناقص است. Template fallback، تعداد retry و timeout همچنان Proposed هستند. [ADR-14](003-decisions-and-roadmap.md#adr-14) را ببینید.
+هر گزارش معتبر مدیر به‌صورت مستقل منتشر می‌شود. هر نتیجه و وضعیت روز را ثبت کنید. روزی که گزارش الزامی آن ناموفق باشد، ناقص است. Template fallback، تعداد retry و timeout همچنان Proposed هستند. [ADR-14](registry/decisions-registry.md#adr-14) را ببینید.
 
 استفاده از Python برای API/worker و TypeScript برای رابط همچنان در حد پیشنهاد است. تحویل Docker با یک دستور یک Requirement است. Model، provider، framework و محصول gateway انتخاب نشده‌اند.
 
@@ -35,7 +38,7 @@ Agent برای تحلیل و نگارش از Evidence مجاز استفاده م
 | `Proposed` | یک گزینه طراحی بدون Evidence تأیید. | پیشنهاد، گزینه‌ها و مسئول بازبینی. |
 | `Open` | یک قانون، تعارض یا انتخاب حل‌نشده. | منابع، اثرها، مسئول و Evidence مربوط به بسته‌شدن. |
 
-`Observation` یک دسته Evidence است، نه وضعیت پنجم تصمیم. توصیه Codex تأیید تیم نیست. S16 تصمیم‌ها را ثبت می‌کند و جایگزین Requirementهای S01-S07 نمی‌شود. S17 مدل هدف موجود را تأیید می‌کند. جزئیات طراحی آن، تأیید یا پیاده‌سازی را اثبات نمی‌کنند. تعارض‌های حل‌نشده منابع را در [Decision Log](003-decisions-and-roadmap.md#decision-log) نگه دارید.
+`Observation` یک دسته Evidence است، نه وضعیت پنجم تصمیم. توصیه Codex تأیید تیم نیست. S16 تصمیم‌ها را ثبت می‌کند و جایگزین Requirementهای S01-S07 نمی‌شود. S17 مدل هدف موجود را تأیید می‌کند. جزئیات طراحی آن، تأیید یا پیاده‌سازی را اثبات نمی‌کنند. تعارض‌های حل‌نشده منابع را در [Decision Log](registry/open-issues-registry.md#decision-log) نگه دارید.
 
 ### ۲.۱. فهرست منابع بررسی‌شده
 
@@ -67,7 +70,7 @@ S16 در دسترس است. Data Dictionary رسمی و کامل برای ستو
 
 یافته‌های audit قبلی، Evidence تاریخی هستند. این بازبینی 55 query مربوط به SQL را دوباره اجرا نکرد و همه ادعاهای audit قبلی را تأیید نکرد. رکورد Verification کنونی را در سند 004 ببینید.
 
-hash منشأ S01: `6d68d3fcc285f6908af0d97c0429dfefb489f00b7f6538ed03573552ed6955f8`. PDF کنونی و S18 درباره Requirementهای بررسی‌شده هم‌خوان هستند. تفاوت قبلی file-hash هیچ تعارضی در Requirement را اثبات نمی‌کند.
+SHA-256 فایل PDF رسمی کنونی S01 برابر `f6761b4fc37145d152f2b9793b298e35f48db666d5205c4d02be0f5f13e4863b` است. در ARCH-REG-002، کاربر تأیید می‌کند که PDF محلی موجود منبع مرجع است. SHA-256 ثبت‌شدهٔ تاریخی برابر `6d68d3fcc285f6908af0d97c0429dfefb489f00b7f6538ed03573552ed6955f8` است. بازبینی پیشین، تطابق محتوا را به PDF بررسی‌شده و S18 نسبت داد. آن مقایسهٔ تاریخی برای همین بایت‌های کنونی تأیید نشده است. تفاوت hashها، تغییر Requirementها را اثبات نمی‌کند. REG-ISS-010 شکاف شواهد مربوط به مقایسهٔ تاریخی را حفظ می‌کند.
 
 ### ۲.۲. مشاهده‌هایی که طراحی را محدود می‌کنند
 
@@ -112,7 +115,7 @@ hash منشأ S01: `6d68d3fcc285f6908af0d97c0429dfefb489f00b7f6538ed03573552ed69
 
 ## ۴. نمای ماژول‌ها و مرز اعتماد
 
-از [workspace موجود Structurizr](../../architecture/structurizr/workspace.dsl) و کلیدهای view شامل `IntegratedOverview`، `Containers`، `DataIntake`، `DeterministicAnalytics` و `EvidenceAndAnalysis` استفاده کنید. این کلیدها در DSL وجود دارند. آن‌ها viewهای هدف را مشخص می‌کنند، نه componentهای نصب‌شده را. [فهرست viewها و شکاف‌ها](audit-2026-11-09/structurizr-gap-report.md) را ببینید.
+از [workspace موجود Structurizr](../../architecture/structurizr/workspace.dsl) و کلیدهای view شامل `IntegratedOverview`، `Containers`، `DataIntake`، `DeterministicAnalytics` و `EvidenceAndAnalysis` استفاده کنید. این کلیدها در DSL وجود دارند. آن‌ها viewهای هدف را مشخص می‌کنند، نه componentهای نصب‌شده را. [فهرست viewها و شکاف‌ها](audit-2026-11-09/structurizr-gap-report.md#structurizr-gap-report) را ببینید.
 
 منابع، متن آزاد و LLM قابل اعتماد اجرایی نیستند. worker محاسبهٔ ثبت‌شده و Query Gateway مرزهای مجزا دارند. worker می‌تواند با هویت خدماتی، snapshot سازمان را برای KPIهای ثبت‌شده محاسبه کند. این مجوز به LLM، مدیر یا مسیر Text-to-SQL منتقل نمی‌شود. دادهٔ خروجی worker نیز قبل از هر استفادهٔ کاربری، کنترل دسترسی می‌شود.
 
@@ -160,7 +163,7 @@ controller مربوط به DSL `requests` مالک کل ExecutionGrant است. �
 
 ### مرز ورودی و سند
 
-`Requirement`: منابع شبانه و ورودی‌های مدیر، از جمله uploadها، را بپذیرید. brief، Excel را به‌عنوان نمونه upload ذکر می‌کند. S07 پیوست‌های CSV و Markdown را فراهم می‌کند. مجموعه fixture، Requirement مربوط به upload را حذف نمی‌کند. formatهای دقیق، Validation مربوط به Excel، پشتیبانی PDF، بازیابی متن و RAG طبق [ADR-16](003-decisions-and-roadmap.md#adr-16) همچنان Open یا Proposed هستند. اسناد developer، فایل‌های معماری، auditها یا labelهای پنهان را به‌عنوان Evidence محصول دریافت نکنید. upload عملیاتی Markdown همچنان داده غیرقابل‌اعتماد است.
+`Requirement`: منابع شبانه و ورودی‌های مدیر، از جمله uploadها، را بپذیرید. brief، Excel را به‌عنوان نمونه upload ذکر می‌کند. S07 پیوست‌های CSV و Markdown را فراهم می‌کند. مجموعه fixture، Requirement مربوط به upload را حذف نمی‌کند. formatهای دقیق، Validation مربوط به Excel، پشتیبانی PDF، بازیابی متن و RAG طبق [ADR-16](registry/decisions-registry.md#adr-16) همچنان Open یا Proposed هستند. اسناد developer، فایل‌های معماری، auditها یا labelهای پنهان را به‌عنوان Evidence محصول دریافت نکنید. upload عملیاتی Markdown همچنان داده غیرقابل‌اعتماد است.
 
 ### ۴.۲. قرارداد مشترک پیام‌ها
 
@@ -186,7 +189,7 @@ controller مربوط به DSL `requests` مالک کل ExecutionGrant است. �
 
 ## ۵. جریان اجرای شبانه و replay
 
-viewهای موجود Structurizr شامل `NightlyReporting`، `NightlyData` و `NightlyBrief` مسیر زمان‌بندی‌شده را نشان می‌دهند. `InteractiveAssistant` و `ManagerUpload` مسیر تعاملی را نشان می‌دهند. `PartialPublication` نتایج مستقل failure را نشان می‌دهد. برای یافتن هر declaration از [فهرست viewها](audit-2026-11-09/structurizr-gap-report.md) استفاده کنید.
+viewهای موجود Structurizr شامل `NightlyReporting`، `NightlyData` و `NightlyBrief` مسیر زمان‌بندی‌شده را نشان می‌دهند. `InteractiveAssistant` و `ManagerUpload` مسیر تعاملی را نشان می‌دهند. `PartialPublication` نتایج مستقل failure را نشان می‌دهد. برای یافتن هر declaration از [فهرست viewها](audit-2026-11-09/structurizr-gap-report.md#structurizr-gap-report) استفاده کنید.
 
 ۱. `day_000` بار اولیهٔ CRM است. نبود سایر منابع در آن روز حادثه نیست. روزهای ۱ تا ۶۰ برای تاریخچه و baseline وارد می‌شوند.
 
@@ -385,7 +388,7 @@ Fieldهای داخلی Insight باید هر هشت بخش brief را پوشش �
 
 ### آخرین مقدار معتبر و failure گزارش
 
-S16 Q06 نمایش آخرین مقدار معتبر را با تاریخ واقعی آن ثبت می‌کند. S17 این رفتار را حفظ می‌کند. این context تاریخی را حفظ کنید. هرگز مقدار قبلی را در Field مربوط به KPI با تاریخ کنونی قرار ندهید. مقدار کنونی ناموجود همراه با مسئله داده به‌صورت `null` باقی می‌ماند. عدد تاریخی به تاریخ واقعی KPI، query، Snapshot و بررسی دسترسی کنونی نیاز دارد. Eligibility، حداکثر عمر و نگاشت دقیق خروجی در [ADR-04](003-decisions-and-roadmap.md#adr-04) همچنان Open هستند.
+S16 Q06 نمایش آخرین مقدار معتبر را با تاریخ واقعی آن ثبت می‌کند. S17 این رفتار را حفظ می‌کند. این context تاریخی را حفظ کنید. هرگز مقدار قبلی را در Field مربوط به KPI با تاریخ کنونی قرار ندهید. مقدار کنونی ناموجود همراه با مسئله داده به‌صورت `null` باقی می‌ماند. عدد تاریخی به تاریخ واقعی KPI، query، Snapshot و بررسی دسترسی کنونی نیاز دارد. Eligibility، حداکثر عمر و نگاشت دقیق خروجی در [ADR-04](registry/decisions-registry.md#adr-04) همچنان Open هستند.
 
 انتشار مستقل Accepted است. package الزامی ناموفق یا مفقود را حتی در صورت نبود draft ثبت کنید. تا زمانی که آن failure باقی است، روز نمی‌تواند بررسی coverage را بگذراند. fallback باید همه بررسی‌ها را بگذراند و نباید علت بسازد. policy تفصیلی آن طبق ADR-14 همچنان Proposed است.
 
@@ -428,4 +431,4 @@ SQL تعاملی فقط در PostgreSQL و از طریق QueryGateway اجرا �
 
 مرز توقف این تحویل، همین طراحی است. پیاده‌سازی، نصب package، تغییر dataset، تغییر SQL، تغییر ممیزی، commit و push در این کار انجام نمی‌شود.
 
-Audit trail: [یافته‌های تفصیلی](audit-2026-11-09/audit-report.md)، [ماتریس ردیابی](audit-2026-11-09/requirements-traceability.csv) و [شکاف‌های Structurizr](audit-2026-11-09/structurizr-gap-report.md). همه gateهای پذیرش محصول همچنان برنامه‌ریزی‌شده هستند.
+مسیر Audit: [یافته‌های تفصیلی](audit-2026-11-09/audit-report.md#findings-and-the-retained-source-observation)، [ماتریس ردیابی](audit-2026-11-09/requirements-traceability.csv) و [شکاف‌های Structurizr](audit-2026-11-09/structurizr-gap-report.md#requirement-to-model-review). همهٔ gateهای پذیرش محصول همچنان برنامه‌ریزی‌شده هستند.

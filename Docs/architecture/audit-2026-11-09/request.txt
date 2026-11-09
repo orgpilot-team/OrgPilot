@@ -1,0 +1,268 @@
+# Task: ARKA — Source-Driven Architecture Documentation Audit & Reconciliation
+
+## Role
+
+You are acting as a Principal Software Architect, Data Architect, and Technical Documentation Auditor.
+
+Your responsibility is to audit and correct the existing ARKA architecture documentation against the actual project source files, official brief, recorded team decisions, and existing Structurizr architecture model.
+
+**This is a source-driven architecture audit, not a request to redesign the system from scratch.**
+
+## 1. Project Context
+
+Project root:
+
+`D:/Projects/assigment/arka_dataset`
+
+Project: DIDRAH — ARKA Agentic Executive Decision Intelligence Assistant.
+
+The project already has substantial architecture documentation, dataset audits, ADRs, and Structurizr models.
+
+Important accepted decisions:
+
+- One bounded AI Agent with deterministic supporting modules.
+- PostgreSQL as the only product database engine.
+- Independent publication of valid manager reports.
+- Deterministic KPI calculation, signal detection, authorization, and final validation.
+- Human-controlled organizational decisions.
+
+Do not reopen these accepted decisions without documented conflicting evidence.
+
+## 2. Source Discovery — Mandatory
+
+Before editing anything, inspect the actual project directory structure.
+
+Discover and read all relevant authoritative files, including:
+
+1. The official project brief in PDF.
+2. The Markdown conversion of the same brief, located beside the PDF in the brief directory.
+3. `dataset/README_FA.md`.
+4. All relevant files under `dataset/config/`.
+5. `dataset/org/` and the access matrix.
+6. `dataset/output_contract/`.
+7. `dataset/manager_inputs/`.
+8. Relevant dataset manifests and representative source data.
+9. Existing investigation and audit reports under `review/`.
+10. The recorded Q01–Q17 architecture discussion in `docs/architecture/sources/Adr.md`.
+11. All existing architecture documents.
+12. Existing Structurizr DSL files, particularly `architecture/structurizr/workspace.dsl`, and associated documentation.
+
+Use the Markdown brief for efficient textual analysis and the PDF to verify important or ambiguous passages.
+
+The PDF has been highlighted and resaved. A different file hash does not establish changed requirements. Compare content before reporting a source-version conflict.
+
+Do not assume a file exists solely because a previous document references it. Verify actual locations.
+
+## 3. Source Authority and Classification
+
+Distinguish:
+
+- `Requirement`: explicitly required by the official brief or dataset contracts.
+- `Accepted`: recorded team architecture decision.
+- `Proposed`: an unapproved engineering recommendation.
+- `Open`: unresolved decision or genuine conflict.
+- `Observation`: verified evidence from project data or audit results.
+
+Observation is an evidence category, not an approval status.
+
+Previous Codex outputs, architectural proposals, and audit interpretations are not automatically authoritative.
+
+When sources conflict, preserve the conflict and identify the exact source locations. Do not invent a resolution.
+
+## 4. Audit Every Architecture Document
+
+Review these files sequentially:
+
+1. `docs/architecture/001-system-blueprint.md`
+2. `docs/architecture/002-data-architecture.md`
+3. `docs/architecture/003-decisions-and-roadmap.md`
+4. `docs/architecture/004-reconciliation-review.md`
+
+Inspect additional architecture documentation when dependencies require it.
+
+For every section, paragraph, table, architectural contract, and rule:
+
+- Verify correctness against actual sources.
+- Check completeness and missing requirements.
+- Detect omissions and incomplete enumerations.
+- Identify contradictions between documents.
+- Verify technical consistency and terminology.
+- Check whether statements are supported by evidence.
+- Detect unsupported assumptions.
+- Confirm that Accepted, Proposed, and Open statuses are accurate.
+- Check that interfaces, modules, data models, and acceptance criteria are consistent.
+- Verify cross-references and identifiers.
+- Identify duplicated or ambiguous documentation.
+
+Do not treat a syntactically valid document or successful Markdown link check as proof of semantic correctness.
+
+### Known Example: R1–R8
+
+`001-system-blueprint.md` references eight escalation rules but explicitly lists only R1, R2, R3, R4, and R6.
+
+Inspect the actual:
+
+`dataset/config/escalation_rules.csv`
+
+Verify R1 through R8 individually.
+
+For each rule document its exact source meaning, trigger, inputs, output, ownership, state transitions, and applicable acceptance tests.
+
+Identify additional ambiguity only where the original source genuinely leaves behavior unspecified.
+
+This is one known example. Search systematically for similar omissions throughout every document.
+
+Do not limit the audit to this example.
+
+## 5. Requirements Traceability
+
+Build a comprehensive source-backed Requirement Traceability Matrix:
+
+`Source → Requirement → Architecture Component → Contract/Rule → ADR → Acceptance Test`
+
+Use granular requirements rather than combining unrelated obligations into a single vague requirement.
+
+Verify completeness for:
+
+- All supplied escalation rules.
+- All 55 KPI definitions.
+- All Workflow definitions and stages.
+- Organization and access restrictions.
+- Source and schema contracts.
+- Input and replay timing.
+- Manager questions and inputs.
+- Output JSON schemas and status enumerations.
+- Failure and publication behavior.
+- Data lineage and numerical correctness.
+- Agent boundaries and tool permissions.
+- Security and privacy.
+- Performance, cost, and delivery requirements.
+
+A correct count alone is not sufficient. Verify semantic coverage.
+
+## 6. Structurizr Is the Architecture Visualization Standard
+
+**Do not use Mermaid for architecture visualization.**
+
+The project already contains an advanced Structurizr architecture model.
+
+Treat the existing Structurizr workspace as the baseline architecture model.
+
+Before making changes:
+
+- Inspect its current elements, relationships, views, identifiers, and documentation.
+- Preserve its existing design work.
+- Compare the model with the corrected architectural requirements.
+- Identify missing elements, inconsistent relationships, obsolete assumptions, and unsupported claims.
+
+Do not recreate the model from scratch.
+
+Do not automatically replace existing views or restructure the workspace.
+
+For this task, first complete the documentation audit and report the proposed Structurizr changes separately.
+
+Do not introduce new Mermaid diagrams. Replace Mermaid-based documentation references with references to appropriate existing Structurizr views wherever valid.
+
+If a matching Structurizr view does not exist, record a visualization gap rather than inventing a link.
+
+Detailed Structurizr visualization improvements will follow after the architecture documentation is verified.
+
+## 7. Documentation Correction Rules
+
+Make evidence-backed corrections to the architecture documentation.
+
+- Preserve correct and useful existing content.
+- Correct omissions, contradictions, inaccurate claims, and misleading terminology.
+- Avoid unnecessary large-scale rewriting.
+- Preserve original source files and accepted decisions.
+- Never silently promote Proposed details to Accepted.
+- Never mark an acceptance test as passed without execution evidence.
+- Do not invent missing business rules, owners, thresholds, or formulas.
+- Preserve stable ADR, REQ, and AT identifiers unless a justified migration is necessary.
+- Review the repeated `ARCH-001` identifiers and establish whether they are document IDs or a shared architecture-family identifier before changing them.
+- Separate project requirements from implementation recommendations.
+
+Do not modify the official brief, original dataset, reference SQL, original KPI dictionary, or source contracts.
+
+No product implementation is authorized in this task.
+
+## 8. Audit Deliverables
+
+Produce the following:
+
+### A. Detailed Audit Report
+
+For every detected issue record:
+
+- Unique issue ID.
+- Document and exact location.
+- Original claim.
+- Problem category.
+- Source evidence.
+- Severity: Critical, High, Medium, Low.
+- Recommended correction.
+- Correction status.
+- Remaining uncertainty, if any.
+
+### B. Corrected Architecture Documentation
+
+Update the existing Markdown architecture documents based on verified evidence.
+
+### C. Requirements Traceability Matrix
+
+Demonstrate complete requirement and rule coverage, with explicit gaps where source evidence is unavailable.
+
+### D. Updated Decision Log
+
+Keep unresolved matters visible with their source, owner, options, consequences, and acceptance requirements.
+
+### E. Structurizr Gap Report
+
+Map corrected architecture requirements to existing Structurizr elements and views.
+
+Identify what must be added, revised, or preserved during the subsequent visualization phase.
+
+Do not edit the Structurizr model yet.
+
+### F. Change Report
+
+Provide a file-by-file summary, unified diff, checks performed, and any remaining blockers.
+
+## 9. Verification
+
+Before completion:
+
+- Verify local links and references.
+- Verify ADR, REQ, AT, and rule ID coverage.
+- Verify R1–R8 coverage against the actual CSV.
+- Verify 55-KPI catalog consistency.
+- Verify all Workflow stages against their source file.
+- Verify output enum references against the real schemas.
+- Check for obsolete dual-database assumptions.
+- Check for obsolete Mermaid references.
+- Ensure all accepted architecture decisions remain consistent.
+- Confirm original project data and source contracts were not modified.
+
+If Git is available, inspect the status and show the diff.
+
+If Git is unavailable, create a reproducible pre-edit backup and unified diff.
+
+Do not commit or push without explicit authorization.
+
+## 10. Execution Order
+
+Work sequentially, not as a broad uncontrolled rewrite.
+
+Phase 1: Audit and correct `001-system-blueprint.md`.
+
+Phase 2: Audit and correct `002-data-architecture.md`.
+
+Phase 3: Audit and correct `003-decisions-and-roadmap.md`.
+
+Phase 4: Reconcile `004-reconciliation-review.md` and additional related documentation.
+
+Phase 5: Run cross-document consistency checks and create the Structurizr gap report.
+
+Maintain an audit log so every material correction is traceable to its supporting source.
+
+The final objective is a coherent, source-verified architecture documentation baseline that can safely drive the existing Structurizr visualization and subsequent engineering implementation.

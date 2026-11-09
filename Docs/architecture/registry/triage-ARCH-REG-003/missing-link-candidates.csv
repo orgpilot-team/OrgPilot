@@ -1,0 +1,3 @@
+source_id,target_id,source_file,source_anchor,reason
+REQ-INPUT-IN05,AT-15,Docs/architecture/003-decisions-and-roadmap.md,manager-question-map,"The per-input source table names this AT, but this requirement has no such active inferred AT link."
+REQ-INPUT-IN07,AT-03,Docs/architecture/003-decisions-and-roadmap.md,manager-question-map,"The per-input source table names this AT, but this requirement has no such active inferred AT link."

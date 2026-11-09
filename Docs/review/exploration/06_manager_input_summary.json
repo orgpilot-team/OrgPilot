@@ -1,0 +1,151 @@
+{
+  "count": 23,
+  "by_type": {
+    "priority": 1,
+    "question": 16,
+    "decision": 2,
+    "upload": 2,
+    "org_change": 1,
+    "threshold_change": 1
+  },
+  "inputs": [
+    {
+      "input_id": "IN01",
+      "day": 62,
+      "type": "priority",
+      "manager_id": "M01"
+    },
+    {
+      "input_id": "Q01",
+      "day": 66,
+      "type": "question",
+      "manager_id": "M09"
+    },
+    {
+      "input_id": "Q02",
+      "day": 67,
+      "type": "question",
+      "manager_id": "M04"
+    },
+    {
+      "input_id": "IN02",
+      "day": 68,
+      "type": "decision",
+      "manager_id": "M04"
+    },
+    {
+      "input_id": "IN03",
+      "day": 69,
+      "type": "decision",
+      "manager_id": "M04"
+    },
+    {
+      "input_id": "Q03",
+      "day": 70,
+      "type": "question",
+      "manager_id": "M02"
+    },
+    {
+      "input_id": "Q04",
+      "day": 72,
+      "type": "question",
+      "manager_id": "M01"
+    },
+    {
+      "input_id": "IN04",
+      "day": 73,
+      "type": "upload",
+      "manager_id": "M01"
+    },
+    {
+      "input_id": "IN05",
+      "day": 75,
+      "type": "org_change",
+      "manager_id": "M01"
+    },
+    {
+      "input_id": "Q05",
+      "day": 78,
+      "type": "question",
+      "manager_id": "M11"
+    },
+    {
+      "input_id": "Q06",
+      "day": 79,
+      "type": "question",
+      "manager_id": "M11"
+    },
+    {
+      "input_id": "Q07",
+      "day": 76,
+      "type": "question",
+      "manager_id": "M01"
+    },
+    {
+      "input_id": "Q08",
+      "day": 77,
+      "type": "question",
+      "manager_id": "M03"
+    },
+    {
+      "input_id": "IN06",
+      "day": 78,
+      "type": "threshold_change",
+      "manager_id": "M04"
+    },
+    {
+      "input_id": "Q09",
+      "day": 80,
+      "type": "question",
+      "manager_id": "M02"
+    },
+    {
+      "input_id": "IN07",
+      "day": 80,
+      "type": "upload",
+      "manager_id": "M02"
+    },
+    {
+      "input_id": "Q10",
+      "day": 83,
+      "type": "question",
+      "manager_id": "M07"
+    },
+    {
+      "input_id": "Q11",
+      "day": 84,
+      "type": "question",
+      "manager_id": "M03"
+    },
+    {
+      "input_id": "Q12",
+      "day": 86,
+      "type": "question",
+      "manager_id": "M05"
+    },
+    {
+      "input_id": "Q13",
+      "day": 87,
+      "type": "question",
+      "manager_id": "M09"
+    },
+    {
+      "input_id": "Q14",
+      "day": 90,
+      "type": "question",
+      "manager_id": "M08"
+    },
+    {
+      "input_id": "Q15",
+      "day": 88,
+      "type": "question",
+      "manager_id": "M01"
+    },
+    {
+      "input_id": "Q16",
+      "day": 89,
+      "type": "question",
+      "manager_id": "M06"
+    }
+  ]
+}

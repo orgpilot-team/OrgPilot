@@ -1,0 +1,44 @@
+flowchart LR
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  cal["cal: calculation input"]
+  order_events["order_events: calculation input"]
+  orders["orders: calculation input"]
+  task_events["task_events: calculation input"]
+  tasks["tasks: calculation input"]
+  order_fact["order_fact: SQL view"]
+  orders -->|DERIVED execution input| order_fact
+  order_events -->|DERIVED execution input| order_fact
+  orders -->|"DERIVED join/filter: order_id"| order_fact
+  task_fact["task_fact: SQL view"]
+  tasks -->|DERIVED execution input| task_fact
+  task_events -->|DERIVED execution input| task_fact
+  tasks -->|"DERIVED join/filter: task_id"| task_fact
+  K_SHP_HANDOVER_MED["K_SHP_HANDOVER_MED"]
+  order_fact -->|DERIVED computation| K_SHP_HANDOVER_MED
+  order_events -->|"DERIVED join/population: order_id"| K_SHP_HANDOVER_MED
+  orders -->|"DERIVED join/population: order_id"| K_SHP_HANDOVER_MED
+  K_SHP_HANDOVER_MED -->|CONFIRMED entity_id| T_SHP
+  K_SHP_ONTIME["K_SHP_ONTIME"]
+  order_fact -->|DERIVED computation| K_SHP_ONTIME
+  order_events -->|"DERIVED join/population: order_id"| K_SHP_ONTIME
+  orders -->|"DERIVED join/population: order_id"| K_SHP_ONTIME
+  K_SHP_ONTIME -->|CONFIRMED entity_id| T_SHP
+  K_SHP_ONTIME_BY_CITY["K_SHP_ONTIME_BY_CITY"]
+  order_fact -->|DERIVED computation| K_SHP_ONTIME_BY_CITY
+  order_events -->|"DERIVED join/population: order_id"| K_SHP_ONTIME_BY_CITY
+  orders -->|"DERIVED join/population: order_id"| K_SHP_ONTIME_BY_CITY
+  K_SHP_ONTIME_BY_CITY -->|CONFIRMED entity_id| T_SHP
+  K_SHP_DELIV_DAYS_MED["K_SHP_DELIV_DAYS_MED"]
+  order_fact -->|DERIVED computation| K_SHP_DELIV_DAYS_MED
+  order_events -->|"DERIVED join/population: order_id"| K_SHP_DELIV_DAYS_MED
+  orders -->|"DERIVED join/population: order_id"| K_SHP_DELIV_DAYS_MED
+  K_SHP_DELIV_DAYS_MED -->|CONFIRMED entity_id| T_SHP
+  K_TASK_OVERDUE_T_SHP["K_TASK_OVERDUE_T_SHP"]
+  cal -->|DERIVED computation| K_TASK_OVERDUE_T_SHP
+  task_fact -->|DERIVED computation| K_TASK_OVERDUE_T_SHP
+  task_events -->|"DERIVED join/population: task_id"| K_TASK_OVERDUE_T_SHP
+  tasks -->|"DERIVED join/population: task_id"| K_TASK_OVERDUE_T_SHP
+  K_TASK_OVERDUE_T_SHP -->|CONFIRMED entity_id| T_SHP
+  T_SHP -.->|CONFIRMED aggregate display; active dates apply| M01
+  T_SHP -.->|CONFIRMED aggregate display; active dates apply| M03
+  T_SHP -.->|CONFIRMED aggregate display; active dates apply| M08

@@ -1,0 +1,23 @@
+{
+  "decision_status_statements": {
+    "Accepted": 5,
+    "Requirement": 16,
+    "Proposed": 24,
+    "Open": 24
+  },
+  "adrs": 17,
+  "dls": 19,
+  "ats": 30,
+  "open_issues": 29,
+  "team_required": 24,
+  "organizer_source_required": 8,
+  "engineering_evidence_required": 29,
+  "risks": 20,
+  "deduplicated_placements": 42,
+  "requirements": 334,
+  "matrix_rows": 4586,
+  "task": "ARCH-REG-002",
+  "accepted_boundary_records": 5,
+  "indexed_source_matrix_ids": 339,
+  "conditional_organizer_source_required": 2
+}

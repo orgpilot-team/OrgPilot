@@ -1,0 +1,25 @@
+check,result,detail
+Every nonempty source line located,PASS,346 lines mapped; unmatched lines: []
+001-system-blueprint.md content,PASS,Only navigation destinations and one responsibility note may change
+002-data-architecture.md content,PASS,Only navigation destinations and one responsibility note may change
+004 historical body preserved,PASS,Original review text is retained; former 003 verification text is appended
+Matrix identity and semantic fields,PASS,4586 rows; only source navigation fields may change
+Governance statuses unchanged,PASS,"Five Accepted boundaries, 29 Open issues and 30 unexecuted tests retain their source statuses"
+Inferred relationships unchanged,PASS,2470 Proposed Relationship rows; no approvals or dependency changes
+Open issues and AT execution,PASS,29 Open; 30 Planned / Not Executed
+Matrix source paths and anchors,PASS,4586 rows checked; failures []
+All legacy anchors,PASS,95 original explicit and heading anchors
+Compatibility target anchors,PASS,All 95 canonical targets checked
+ADR IDs,PASS,17 IDs in readable Markdown
+DL IDs,PASS,19 IDs in readable Markdown
+AT IDs,PASS,30 IDs in readable Markdown
+Risk IDs,PASS,20 risk records
+decisions-registry.md full source extracts,PASS,17 extracts; non-active quoted extracts []; four data-model quotes stay evidence in open issues
+open-issues-registry.md full source extracts,PASS,"23 extracts; non-active quoted extracts [20, 21, 22, 23]; four data-model quotes stay evidence in open issues"
+risk-register.md full source extracts,PASS,12 extracts; non-active quoted extracts []; four data-model quotes stay evidence in open issues
+acceptance-register.md full source extracts,PASS,37 extracts; non-active quoted extracts []; four data-model quotes stay evidence in open issues
+Diagram navigation,PASS,29 diagram files; 0 navigation links; SVG internal targets checked; failures []
+Unrelated files unchanged,PASS,1393 original files hashed; 10 allowed changes; removed []; unexpected []
+HEAD baseline unchanged,PASS,0a42950d1ce9734433d961540af9ab4be21573b2
+Index unchanged,PASS,No staged changes
+No new broken Markdown links,PASS,1077 links; 64 retained historical broken references; new failures 0

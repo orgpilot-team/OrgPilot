@@ -1,0 +1,27 @@
+---
+title: PROPOSED - NOT IMPLEMENTED
+---
+%% All entities and edges are conceptual.
+erDiagram
+    DATASET ||--o{ INGEST_BATCH : contains
+    INGEST_BATCH ||--o{ SOURCE_FILE : receives
+    SOURCE_FILE ||--o{ SOURCE_ROW : preserves
+    SOURCE_ROW ||--o{ ENTITY_OBSERVATION : maps
+    SOURCE_ROW ||--o{ EVENT_RECORD : maps
+    EVENT_RECORD ||--o{ CORRECTION_LINK : explains
+    SNAPSHOT ||--o{ SNAPSHOT_INPUT : selects
+    SOURCE_FILE ||--o{ SNAPSHOT_INPUT : eligible
+    SNAPSHOT ||--o{ FACT_VERSION : builds
+    KPI_DEFINITION ||--o{ KPI_DEPENDENCY : declares
+    SNAPSHOT ||--o{ QUERY_RUN : fixes
+    KPI_DEFINITION ||--o{ KPI_OBSERVATION : defines
+    QUERY_RUN ||--o{ KPI_OBSERVATION : produces
+    KPI_OBSERVATION ||--o{ EVIDENCE_REF : supports
+    SIGNAL_EPISODE ||--o{ SIGNAL_OCCURRENCE : evolves
+    EVIDENCE_REF }o--o{ INSIGHT_VERSION : supports
+    INSIGHT_VERSION }o--o{ REPORT_VERSION : presents
+    REPORT_VERSION ||--o{ DECISION_EVENT : informs
+    DECISION_EVENT ||--o{ ACTION_DRAFT : proposes
+    ORG_NODE ||--o{ ORG_EDGE_VERSION : relates
+    ORG_NODE ||--o{ ACCESS_GRANT_VERSION : scopes
+    SOURCE_FILE ||--o{ DQ_INCIDENT : evidences

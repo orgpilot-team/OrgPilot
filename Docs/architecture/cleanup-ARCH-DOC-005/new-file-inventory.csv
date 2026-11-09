@@ -1,0 +1,23 @@
+file,sha256,state
+Docs/architecture/cleanup-ARCH-DOC-005/baseline-tracked.diff,f945b1167ac9d05cad6938787bab95212e4335194cb0ba6a3c509ccd75291f47,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/before-after.diff,2d0ae1d2c955890f0a9075ac74b1220661886e108b2be50c1fc45a37b1b432dd,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/before-documents.zip,656f13b76f618c2da28b1c892c5e67c825371f1e29fb014cd25cdd4193a06020,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/before-links.csv,8c0ce80ff80c43d59c7a28e29f50e78f68b835cf55458ee47f40e6b357f09d4e,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/before-manifest.json,6144cdee935e2a746fa833c644bfd855fc8adc5d387ee47e169b5510069d5772,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/cleanup.py,c6286639bbc2718637d9832a6753664890ebcb612f7a04591b922fbfcfe95931,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/file-preservation.csv,e0bb1553d85ce87e4bfe13ffd40d0007082c7b611acfcf064d1617ce54977050,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/git-after.txt,998489f9b4009dc6d00b5b77fffb68b9ce76c1a1f0529d931a52910746179f69,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/git-before.txt,06b91450155b1c68ce1c4c0cdc00d918351188810b5412cc9139837246893887,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/historical-64-reconciliation.csv,51351ba985c53825ea05385bbd30234049cddb43d26793e9cbdcc95ecc535e05,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/legacy-destinations.csv,501d0c500ee7d08fa792042eaf1cfb2ab99d35891240700cf4b6c3107a33dd9e,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/link-repairs.csv,e2611eddf9fb8e0df13453744dc3b885ade247d346a96a885986079f2dc69903,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/link-validation.csv,a0d06f4c9389ca4ae8fa0e286a40519074f47bdaf652874ac73ce9d0aecbbe11,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/matrix-navigation-changes.csv,8a8073bf917c7d19cd18d46a7f6909f2af2850cd554d21f098283134a54092a4,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/original-content-check.csv,3dc19dedb4cfa1c84a087bd2631484cda093baec528cdb6c2de25bf4341919d4,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/report.md,aebdc4922eb5a312f1ad63802a3a34e8b5706b4108e245d124f983bfe8837d9b,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/retained-historical-identifiers.csv,b558be94abbb7f393a32fcefabaac3b7525ec70a0e69a9eba9bc889ad79d5b78,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/roadmap-section-map.csv,b1fc8b3e746466852ace7c90baa576450e73c56f530a53534705a5a85f1d0861,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/unresolved-links.csv,6f24cbed998dff0fdec110da1d2dc8f73cc910d7c5101bea7ffacda9f6ed089a,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/validate_cleanup.py,8a9173b2890ab6612fbaa33d77e5c9b50859a8edc8c51c229d4ed4227496a01f,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/validation-results.csv,d080ac96ba4143bf731eb738c15ab39306d6dcb96fe0f59779f0193854632c01,New; untracked
+Docs/architecture/cleanup-ARCH-DOC-005/validation-results.json,499e7214a7bf62e569e04b63636bc1896015fb2706aa44915007506525d920c4,New; untracked

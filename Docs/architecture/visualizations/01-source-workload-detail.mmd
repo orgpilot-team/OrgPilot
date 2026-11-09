@@ -1,0 +1,22 @@
+erDiagram
+  tasks {
+    string task_id "text; observed CSV"
+    string team_id "text; observed CSV"
+    string owner_id "text; observed CSV"
+    string created_at "timestamp_lexeme; observed CSV"
+    string due_date "date_lexeme; observed CSV"
+    string title_fa "text; observed CSV"
+    string blocker_fa "text; observed CSV"
+  }
+  task_events {
+    string task_id "text; observed CSV"
+    string event "text; observed CSV"
+    string at "timestamp_lexeme; observed CSV"
+  }
+  staff_availability {
+    string date "date_lexeme; observed CSV"
+    string staff_id "text; observed CSV"
+    string team_id "text; observed CSV"
+    string status "text; observed CSV"
+  }
+  tasks |o..o{ task_events : "DERIVED task_id; not enforced"
