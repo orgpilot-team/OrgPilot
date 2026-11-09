@@ -1,0 +1,29 @@
+diff --git a/Docs/architecture/001-system-blueprint.md b/Docs/architecture/001-system-blueprint.md
+index 2f91ac4..0752b54 100644
+--- a/Docs/architecture/001-system-blueprint.md
++++ b/Docs/architecture/001-system-blueprint.md
+@@ -67,7 +67,7 @@ S16 در دسترس است. Data Dictionary رسمی و کامل برای ستو
+ 
+ یافته‌های audit قبلی، Evidence تاریخی هستند. این بازبینی 55 query مربوط به SQL را دوباره اجرا نکرد و همه ادعاهای audit قبلی را تأیید نکرد. رکورد Verification کنونی را در سند 004 ببینید.
+ 
+-hash منشأ S01: `6d68d3fcc285f6908af0d97c0429dfefb489f00b7f6538ed03573552ed6955f8`. PDF کنونی و S18 درباره Requirementهای بررسی‌شده هم‌خوان هستند. تفاوت قبلی file-hash هیچ تعارضی در Requirement را اثبات نمی‌کند.
++S01 current official PDF SHA-256: `f6761b4fc37145d152f2b9793b298e35f48db666d5205c4d02be0f5f13e4863b`. ARCH-REG-002: the user confirms the existing local PDF as the source of record. Historical recorded SHA-256: `6d68d3fcc285f6908af0d97c0429dfefb489f00b7f6538ed03573552ed6955f8`. The earlier review attributed content agreement to its reviewed PDF and S18. That historical comparison has not been verified for these exact current bytes. Different hashes do not establish changed requirements. REG-ISS-010 retains the historical comparison evidence gap.
+ 
+ ### ۲.۲. مشاهده‌هایی که طراحی را محدود می‌کنند
+ 
+diff --git a/Docs/architecture/004-reconciliation-review.md b/Docs/architecture/004-reconciliation-review.md
+index ce0ac1a..c61cf57 100644
+--- a/Docs/architecture/004-reconciliation-review.md
++++ b/Docs/architecture/004-reconciliation-review.md
+@@ -19,7 +19,10 @@ The [existing Structurizr model](../../architecture/structurizr/workspace.dsl) s
+ | Source | SHA-256 at this review |
+ |---|---|
+ | S16 review record and exact source copy | `0c7cea554016930366100cb1138ada6ace7f05e918e274ee24f0a89e465639df` |
+-| S01 current brief PDF | `6d68d3fcc285f6908af0d97c0429dfefb489f00b7f6538ed03573552ed6955f8` |
++| S01 current official brief PDF, confirmed in ARCH-REG-002 | `f6761b4fc37145d152f2b9793b298e35f48db666d5205c4d02be0f5f13e4863b` |
++| S01 historical hash recorded by the prior review | `6d68d3fcc285f6908af0d97c0429dfefb489f00b7f6538ed03573552ed6955f8` |
++
++S01 provenance metadata, ARCH-REG-002: the user confirms the existing local PDF as the current source of record. The PDF review statements below describe historical review work. They are not a fresh content comparison for the current byte identity. The historical PDF version has not been recovered for comparison. A hash difference alone does not establish a requirement change. REG-ISS-010 remains Open for that evidence gap.
+ 
+ S01 was highlighted and resaved. S18 is its Markdown conversion. The current PDF content on pages 8, 10, and 15 was checked visually against the corresponding text. These checks confirm the recurrence controls, required report content, and suppressed-status wording. Pages 13 and 16 were also checked in the earlier review of the same current PDF. No changed requirement was established from the former hash difference. Earlier numerical audits remain attributed historical evidence.
+ 

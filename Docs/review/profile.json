@@ -1,0 +1,252 @@
+{
+  "drop_count": 91,
+  "rows": {
+    "crm_lead_events.csv": 6208,
+    "crm_leads.csv": 2946,
+    "csat.csv": 1716,
+    "mkt_daily.csv": 180,
+    "order_events.csv": 145022,
+    "orders.csv": 37851,
+    "staff_availability.csv": 2192,
+    "task_events.csv": 3325,
+    "tasks.csv": 1695,
+    "ticket_events.csv": 15484,
+    "tickets.csv": 7005,
+    "web_sessions.csv": 196
+  },
+  "exact_repeated_rows": {
+    "orders.csv": 262
+  },
+  "missing_files": [
+    [
+      "day_066",
+      [
+        "csat.csv",
+        "ticket_events.csv",
+        "tickets.csv"
+      ]
+    ]
+  ],
+  "manifest_mismatches": [],
+  "schema_variants": {
+    "crm_lead_events.csv": [
+      {
+        "columns": [
+          "lead_id",
+          "event",
+          "at",
+          "contract_value_toman"
+        ],
+        "days": [
+          "day_000",
+          "day_090"
+        ]
+      }
+    ],
+    "crm_leads.csv": [
+      {
+        "columns": [
+          "lead_id",
+          "source",
+          "created_at"
+        ],
+        "days": [
+          "day_000",
+          "day_090"
+        ]
+      }
+    ],
+    "csat.csv": [
+      {
+        "columns": [
+          "ticket_id",
+          "answered_at",
+          "score"
+        ],
+        "days": [
+          "day_001",
+          "day_090"
+        ]
+      }
+    ],
+    "mkt_daily.csv": [
+      {
+        "columns": [
+          "date",
+          "source",
+          "spend_toman",
+          "impressions",
+          "clicks",
+          "leads"
+        ],
+        "days": [
+          "day_001",
+          "day_090"
+        ]
+      }
+    ],
+    "order_events.csv": [
+      {
+        "columns": [
+          "order_id",
+          "event",
+          "at",
+          "actor_team",
+          "amount_toman"
+        ],
+        "days": [
+          "day_001",
+          "day_090"
+        ]
+      }
+    ],
+    "orders.csv": [
+      {
+        "columns": [
+          "order_id",
+          "created_at",
+          "channel",
+          "city",
+          "category",
+          "items",
+          "order_value_toman",
+          "customer_id",
+          "campaign_id",
+          "promised_by"
+        ],
+        "days": [
+          "day_001",
+          "day_090"
+        ]
+      }
+    ],
+    "staff_availability.csv": [
+      {
+        "columns": [
+          "date",
+          "staff_id",
+          "team_id",
+          "status"
+        ],
+        "days": [
+          "day_001",
+          "day_090"
+        ]
+      }
+    ],
+    "task_events.csv": [
+      {
+        "columns": [
+          "task_id",
+          "event",
+          "at"
+        ],
+        "days": [
+          "day_001",
+          "day_090"
+        ]
+      }
+    ],
+    "tasks.csv": [
+      {
+        "columns": [
+          "task_id",
+          "team_id",
+          "owner_id",
+          "created_at",
+          "due_date",
+          "title_fa",
+          "blocker_fa"
+        ],
+        "days": [
+          "day_001",
+          "day_090"
+        ]
+      }
+    ],
+    "ticket_events.csv": [
+      {
+        "columns": [
+          "ticket_id",
+          "event",
+          "at",
+          "staff_id"
+        ],
+        "days": [
+          "day_001",
+          "day_081"
+        ]
+      },
+      {
+        "columns": [
+          "ticket_id",
+          "event",
+          "event_time",
+          "staff_id"
+        ],
+        "days": [
+          "day_082",
+          "day_090"
+        ]
+      }
+    ],
+    "tickets.csv": [
+      {
+        "columns": [
+          "ticket_id",
+          "created_at",
+          "category",
+          "team_id",
+          "order_id",
+          "channel",
+          "text_fa"
+        ],
+        "days": [
+          "day_001",
+          "day_081"
+        ]
+      },
+      {
+        "columns": [
+          "ticket_id",
+          "create_time",
+          "category",
+          "team_id",
+          "order_id",
+          "channel",
+          "text_fa"
+        ],
+        "days": [
+          "day_082",
+          "day_090"
+        ]
+      }
+    ],
+    "web_sessions.csv": [
+      {
+        "columns": [
+          "date",
+          "channel",
+          "sessions"
+        ],
+        "days": [
+          "day_001",
+          "day_090"
+        ]
+      }
+    ]
+  },
+  "org_rows": {
+    "access_matrix.csv": 11,
+    "managers.csv": 11,
+    "staff.csv": 26,
+    "teams.csv": 7,
+    "units.csv": 4
+  },
+  "config_rows": {
+    "escalation_rules.csv": 8,
+    "kpi_dictionary.csv": 55,
+    "monthly_targets.csv": 3,
+    "workflow_definitions.csv": 12
+  }
+}

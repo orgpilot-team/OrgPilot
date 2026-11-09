@@ -1,0 +1,330 @@
+{
+  "state": "Draft / Pending Review",
+  "checks": [
+    {
+      "name": "Exactly 2470 inferred relationships in the input",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Exactly one member per inferred row",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Unique stable triage relationship IDs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Every member matches its actual matrix pair/type/class",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Every endpoint remains a declared Registry record",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "All members remain Pending Review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "All queue items remain Pending Review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Only declared priorities used",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "No inferred link treated as an execution dependency",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "All rows have a substantive reason, impact, action, route and evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Queue group IDs are unique",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Every existing edge belongs to an existing-edge queue batch",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Queue counts and homogeneous semantic batches match exact members",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "Existing-edge queue counts sum to 2470",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Detailed classification partitions are retained",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Queue totals match summary",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Priority counts match summary",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Questionable count is precise",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Questionable batches are counted without missing candidates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Every one of 55 canonical KPIs has evidence and exactly one orders link",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Canonical SQL hashes agree with source bytes as parsed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Orders cases separate selected value from declared relations",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "The shared-view-only KPI is specifically K_ENT_CONTRACT_MTD",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Eight historical sensitive KPIs remain attributed observations",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "All source info KPIs remain no-alert gates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Only the two exact source-backed missing candidates are listed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Missing candidates do not inflate 2470 membership",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Twenty non-question test extras are flagged for review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "All high-impact sets are covered, including zero-inferred records",
+      "ok": true,
+      "detail": {
+        "ADR": 17,
+        "DL": 19,
+        "Registry Issue": 10,
+        "Risk": 20,
+        "AT": 30,
+        "Decision Boundary": 5,
+        "Canonical KPI": 55,
+        "Workflow Stage": 12,
+        "Manager Input": 23,
+        "Manager Access Scope": 11
+      }
+    },
+    {
+      "name": "All 33 boundary mappings remain P0 inferred candidates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Actual S19 still supplies the five Accepted confirmations",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Actual upper-manager grants are aggregate-only",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "All 12 Workflow stages retain M01 end-to-end owner",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Deadline and missing SLA remain distinct",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "All 38 risk-to-AT links have exact criterion/control notes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Risk-control notes retain pending execution and unassessed severity",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "All 29 issues remain Open in unchanged matrix",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "All 30 ATs remain Planned / Not Executed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "All triage evidence files and anchors exist",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "All readiness links and anchors resolve",
+      "ok": true,
+      "detail": {
+        "links": 12,
+        "errors": []
+      }
+    },
+    {
+      "name": "Every one of 1380 task-start files remains byte-identical",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "Existing tracked baseline diff is unchanged",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "HEAD remains baseline",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "No staged changes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "All 177 existing untracked files remain untracked",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Only the two deliverables and triage support files are new",
+      "ok": true,
+      "detail": [
+        "Docs/architecture/registry/approval-readiness.md",
+        "Docs/architecture/registry/traceability-review-queue.csv",
+        "Docs/architecture/registry/triage-ARCH-REG-003/before-manifest.json",
+        "Docs/architecture/registry/triage-ARCH-REG-003/file-comparison.csv",
+        "Docs/architecture/registry/triage-ARCH-REG-003/high-impact-coverage.csv",
+        "Docs/architecture/registry/triage-ARCH-REG-003/kpi-policy-evidence.csv",
+        "Docs/architecture/registry/triage-ARCH-REG-003/missing-link-candidates.csv",
+        "Docs/architecture/registry/triage-ARCH-REG-003/relationship-classification.csv",
+        "Docs/architecture/registry/triage-ARCH-REG-003/risk-control-coverage.csv",
+        "Docs/architecture/registry/triage-ARCH-REG-003/summary.json",
+        "Docs/architecture/registry/triage-ARCH-REG-003/triage.py",
+        "Docs/architecture/registry/triage-ARCH-REG-003/validate_triage.py",
+        "Docs/architecture/registry/triage-ARCH-REG-003/validation-results.json"
+      ]
+    },
+    {
+      "name": "Matrix is unchanged; no relationship was deleted or promoted",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "state": "Draft / Pending Review",
+    "inferred_classified": 2470,
+    "source_specific_classification_groups": 180,
+    "existing_edge_groups": 108,
+    "queue_groups": 109,
+    "questionable_relationships": 274,
+    "questionable_existing_groups": 47,
+    "missing_candidate_pairs": 2,
+    "missing_candidate_groups": 1,
+    "priorities_relationships": {
+      "P0": 1830,
+      "P1": 620,
+      "P2": 20
+    },
+    "priorities_queue_groups": {
+      "P0": 75,
+      "P1": 30,
+      "P2": 4
+    },
+    "dispositions_relationships": {
+      "Questionable": 274,
+      "Defensible / Pending Confirmation": 2186,
+      "Navigation / Pending Confirmation": 10
+    },
+    "kpi_orders_cases": {
+      "value-orders": 22,
+      "no-orders-relation": 32,
+      "declared-execution-only": 1
+    },
+    "kpis_historical_sensitive": 8,
+    "all_kpi_to_orders_edges": 55,
+    "input_test_template_mismatches": 20,
+    "matrix_modified": false,
+    "source_documents_modified": false,
+    "product_tests_executed": false
+  },
+  "all_source_locations_checked": 128,
+  "existing_files_changed": [],
+  "new_files": [
+    "Docs/architecture/registry/approval-readiness.md",
+    "Docs/architecture/registry/traceability-review-queue.csv",
+    "Docs/architecture/registry/triage-ARCH-REG-003/before-manifest.json",
+    "Docs/architecture/registry/triage-ARCH-REG-003/file-comparison.csv",
+    "Docs/architecture/registry/triage-ARCH-REG-003/high-impact-coverage.csv",
+    "Docs/architecture/registry/triage-ARCH-REG-003/kpi-policy-evidence.csv",
+    "Docs/architecture/registry/triage-ARCH-REG-003/missing-link-candidates.csv",
+    "Docs/architecture/registry/triage-ARCH-REG-003/relationship-classification.csv",
+    "Docs/architecture/registry/triage-ARCH-REG-003/risk-control-coverage.csv",
+    "Docs/architecture/registry/triage-ARCH-REG-003/summary.json",
+    "Docs/architecture/registry/triage-ARCH-REG-003/triage.py",
+    "Docs/architecture/registry/triage-ARCH-REG-003/validate_triage.py",
+    "Docs/architecture/registry/triage-ARCH-REG-003/validation-results.json"
+  ],
+  "git_status": {
+    "code": 0,
+    "out": " M Docs/architecture/001-system-blueprint.md\n M Docs/architecture/004-reconciliation-review.md\n?? Docs/architecture/audit-2026-11-09/README.md\n?? Docs/architecture/audit-2026-11-09/acceptance-basis.csv\n?? Docs/architecture/audit-2026-11-09/audit-report.md\n?? Docs/architecture/audit-2026-11-09/audit-summary.json\n?? Docs/architecture/audit-2026-11-09/audit_support.py\n?? Docs/architecture/audit-2026-11-09/brief-content-check.json\n?? Docs/architecture/audit-2026-11-09/build_audit_report.py\n?? Docs/architecture/audit-2026-11-09/build_traceability.py\n?? Docs/architecture/audit-2026-11-09/change-report.md\n?? Docs/architecture/audit-2026-11-09/cross_document_fixes.py\n?? Docs/architecture/audit-2026-11-09/diff-summary.json\n?? Docs/architecture/audit-2026-11-09/document-review-ledger.csv\n?? Docs/architecture/audit-2026-11-09/file-changes.csv\n?? Docs/architecture/audit-2026-11-09/finalize_audit.py\n?? Docs/architecture/audit-2026-11-09/findings.csv\n?? Docs/architecture/audit-2026-11-09/findings.json\n?? Docs/architecture/audit-2026-11-09/kpi-contracts.csv\n?? Docs/architecture/audit-2026-11-09/manager-input-contracts.csv\n?? Docs/architecture/audit-2026-11-09/model_audit.py\n?? Docs/architecture/audit-2026-11-09/output-schema-contracts.csv\n?? Docs/architecture/audit-2026-11-09/phase1.py\n?? Docs/architecture/audit-2026-11-09/phase2.py\n?? Docs/architecture/audit-2026-11-09/phase3.py\n?? Docs/architecture/audit-2026-11-09/phase4.py\n?? Docs/architecture/audit-2026-11-09/pre-edit-manifest.json\n?? Docs/architecture/audit-2026-11-09/pre-edit.zip\n?? Docs/architecture/audit-2026-11-09/reconciliation.diff\n?? Docs/architecture/audit-2026-11-09/request.txt\n?? Docs/architecture/audit-2026-11-09/requirements-traceability.csv\n?? Docs/architecture/audit-2026-11-09/requirements-traceability.md\n?? Docs/architecture/audit-2026-11-09/rule-contracts.csv\n?? Docs/architecture/audit-2026-11-09/source-checks.json\n?? Docs/architecture/audit-2026-11-09/source_audit.py\n?? Docs/architecture/audit-2026-11-09/structurizr-elements.csv\n?? Docs/architecture/audit-2026-11-09/structurizr-gap-report.md\n?? Docs/architecture/audit-2026-11-09/structurizr-inventory.json\n?? Docs/architecture/audit-2026-11-09/structurizr-relationships.csv\n?? Docs/architecture/audit-2026-11-09/structurizr-views.csv\n?? Docs/architecture/audit-2026-11-09/traceability-summary.json\n?? Docs/architecture/audit-2026-11-09/verification.json\n?? Docs/architecture/audit-2026-11-09/verify_audit.py\n?? Docs/architecture/audit-2026-11-09/workflow-contracts.csv\n?? Docs/architecture/registry/README.md\n?? Docs/architecture/registry/acceptance-register.md\n?? Docs/architecture/registry/approval-readiness.md\n?? Docs/architecture/registry/audit-ARCH-REG-002/audit-counts.json\n?? Docs/architecture/registry/audit-ARCH-REG-002/audit_registry.py\n?? Docs/architecture/registry/audit-ARCH-REG-002/baseline-tracked.diff\n?? Docs/architecture/registry/audit-ARCH-REG-002/before-after.diff\n?? Docs/architecture/registry/audit-ARCH-REG-002/before-files.zip\n?? Docs/architecture/registry/audit-ARCH-REG-002/before-manifest.json\n?? Docs/architecture/registry/audit-ARCH-REG-002/changed-files.csv\n?? Docs/architecture/registry/audit-ARCH-REG-002/corrections.csv\n?? Docs/architecture/registry/audit-ARCH-REG-002/final-file-manifest.csv\n?? Docs/architecture/registry/audit-ARCH-REG-002/orphan-records.csv\n?? Docs/architecture/registry/audit-ARCH-REG-002/record-review.csv\n?? Docs/architecture/registry/audit-ARCH-REG-002/reference-cycles.csv\n?? Docs/architecture/registry/audit-ARCH-REG-002/relationship-review.csv\n?? Docs/architecture/registry/audit-ARCH-REG-002/repeated-edge-provenance.csv\n?? Docs/architecture/registry/audit-ARCH-REG-002/request.txt\n?? Docs/architecture/registry/audit-ARCH-REG-002/source-locator-checks.csv\n?? Docs/architecture/registry/audit-ARCH-REG-002/validate_semantic_audit.py\n?? Docs/architecture/registry/audit-ARCH-REG-002/validation-results.json\n?? Docs/architecture/registry/baseline-comparison.csv\n?? Docs/architecture/registry/build_registry.py\n?? Docs/architecture/registry/capture_preflight.py\n?? Docs/architecture/registry/decisions-registry.md\n?? Docs/architecture/registry/deduplication-ledger.md\n?? Docs/architecture/registry/extraction-summary.json\n?? Docs/architecture/registry/open-issues-registry.md\n?? Docs/architecture/registry/preflight.json\n?? Docs/architecture/registry/risk-register.md\n?? Docs/architecture/registry/semantic-audit-report.md\n?? Docs/architecture/registry/source-inventory.md\n?? Docs/architecture/registry/traceability-matrix.csv\n?? Docs/architecture/registry/traceability-review-queue.csv\n?? Docs/architecture/registry/triage-ARCH-REG-003/before-manifest.json\n?? Docs/architecture/registry/triage-ARCH-REG-003/file-comparison.csv\n?? Docs/architecture/registry/triage-ARCH-REG-003/high-impact-coverage.csv\n?? Docs/architecture/registry/triage-ARCH-REG-003/kpi-policy-evidence.csv\n?? Docs/architecture/registry/triage-ARCH-REG-003/missing-link-candidates.csv\n?? Docs/architecture/registry/triage-ARCH-REG-003/relationship-classification.csv\n?? Docs/architecture/registry/triage-ARCH-REG-003/risk-control-coverage.csv\n?? Docs/architecture/registry/triage-ARCH-REG-003/summary.json\n?? Docs/architecture/registry/triage-ARCH-REG-003/triage.py\n?? Docs/architecture/registry/triage-ARCH-REG-003/validate_triage.py\n?? Docs/architecture/registry/triage-ARCH-REG-003/validation-results.json\n?? Docs/architecture/registry/untracked-source-dependencies.csv\n?? Docs/architecture/registry/validate_registry.py\n?? Docs/architecture/registry/validation-report.md\n?? Docs/architecture/registry/validation-results.json\n?? Docs/architecture/sources/Adr.md\n?? Docs/architecture/visualizations/01-source-calendar-history-detail.mmd\n?? Docs/architecture/visualizations/01-source-configuration-detail.mmd\n?? Docs/architecture/visualizations/01-source-crm-detail.mmd\n?? Docs/architecture/visualizations/01-source-data-erd.mmd\n?? Docs/architecture/visualizations/01-source-marketing-detail.mmd\n?? Docs/architecture/visualizations/01-source-orders-detail.mmd\n?? Docs/architecture/visualizations/01-source-organization-detail.mmd\n?? Docs/architecture/visualizations/01-source-support-detail.mmd\n?? Docs/architecture/visualizations/01-source-workload-detail.mmd\n?? Docs/architecture/visualizations/02-proposed-database-erd.mmd\n?? Docs/architecture/visualizations/02-proposed-layers.mmd\n?? Docs/architecture/visualizations/03-organization-hierarchy.mmd\n?? Docs/architecture/visualizations/04-management-access-graph.mmd\n?? Docs/architecture/visualizations/05-column-access-overview.mmd\n?? Docs/architecture/visualizations/06-kpi-data-lineage.mmd\n?? Docs/architecture/visualizations/06-lineage-ORG.mmd\n?? Docs/architecture/visualizations/06-lineage-T_CMP.mmd\n?? Docs/architecture/visualizations/06-lineage-T_DIG.mmd\n?? Docs/architecture/visualizations/06-lineage-T_ENT.mmd\n?? Docs/architecture/visualizations/06-lineage-T_MKT.mmd\n?? Docs/architecture/visualizations/06-lineage-T_RSP.mmd\n?? Docs/architecture/visualizations/06-lineage-T_SHP.mmd\n?? Docs/architecture/visualizations/06-lineage-T_WH.mmd\n?? Docs/architecture/visualizations/06-lineage-U_OPS.mmd\n?? Docs/architecture/visualizations/06-lineage-U_SAL.mmd\n?? Docs/architecture/visualizations/06-lineage-U_SUP.mmd\n?? Docs/architecture/visualizations/README.md\n?? Docs/architecture/visualizations/access-matrix-detailed.csv\n?? Docs/architecture/visualizations/build_documentation.py\n?? Docs/architecture/visualizations/diagram-validation.csv\n?? Docs/architecture/visualizations/independent-validation.json\n?? Docs/architecture/visualizations/json-inventory.csv\n?? Docs/architecture/visualizations/kpi-source-manager-mapping.csv\n?? Docs/architecture/visualizations/manager-access-summary.csv\n?? Docs/architecture/visualizations/open-questions.md\n?? Docs/architecture/visualizations/organization-scope-evidence.csv\n?? Docs/architecture/visualizations/previews/01-source-calendar-history-detail.md\n?? Docs/architecture/visualizations/previews/01-source-configuration-detail.md\n?? Docs/architecture/visualizations/previews/01-source-crm-detail.md\n?? Docs/architecture/visualizations/previews/01-source-data-erd.md\n?? Docs/architecture/visualizations/previews/01-source-marketing-detail.md\n?? Docs/architecture/visualizations/previews/01-source-orders-detail.md\n?? Docs/architecture/visualizations/previews/01-source-organization-detail.md\n?? Docs/architecture/visualizations/previews/01-source-support-detail.md\n?? Docs/architecture/visualizations/previews/01-source-workload-detail.md\n?? Docs/architecture/visualizations/previews/02-proposed-database-erd.md\n?? Docs/architecture/visualizations/previews/02-proposed-layers.md\n?? Docs/architecture/visualizations/previews/03-organization-hierarchy.md\n?? Docs/architecture/visualizations/previews/04-management-access-graph.md\n?? Docs/architecture/visualizations/previews/05-column-access-overview.md\n?? Docs/architecture/visualizations/previews/06-kpi-data-lineage.md\n?? Docs/architecture/visualizations/previews/06-lineage-ORG.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_CMP.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_DIG.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_ENT.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_MKT.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_RSP.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_SHP.md\n?? Docs/architecture/visualizations/previews/06-lineage-T_WH.md\n?? Docs/architecture/visualizations/previews/06-lineage-U_OPS.md\n?? Docs/architecture/visualizations/previews/06-lineage-U_SAL.md\n?? Docs/architecture/visualizations/previews/06-lineage-U_SUP.md\n?? Docs/architecture/visualizations/proposed-entity-contracts.md\n?? Docs/architecture/visualizations/protected-file-hashes.csv\n?? Docs/architecture/visualizations/relationship-evidence.csv\n?? Docs/architecture/visualizations/security-examples.md\n?? Docs/architecture/visualizations/source-inventory.csv\n?? Docs/architecture/visualizations/sql-execution-column-reads.csv\n?? Docs/architecture/visualizations/table-column-catalog.csv\n?? Docs/architecture/visualizations/table-profiles.csv\n?? Docs/architecture/visualizations/validate_documentation.py\n?? Docs/architecture/visualizations/validation-summary.json\n?? Docs/review/check_types_and_missing.py\n?? Docs/review/dq-001-evidence.json\n?? Docs/review/dq-001-kpi-impact.csv\n?? Docs/review/dq-001-report.md\n?? Docs/review/exploration/01_file_inventory.json\n?? Docs/review/exploration/02_table_profiles.json\n?? Docs/review/exploration/03_exact_duplicate_locations.json\n?? Docs/review/exploration/04_daily_delivery_checks.json\n?? Docs/review/exploration/05_candidate_relationships.json\n?? Docs/review/exploration/06_manager_input_summary.json\n?? Docs/review/exploration/DATA_MAP_FA.md\n?? Docs/review/exploration/README_FA.md\n?? Docs/review/explore_data.py\n?? Docs/review/kpi-val-001-evidence.json\n?? Docs/review/kpi-val-001-report.md\n?? Docs/review/kpi-val-001-results.csv\n?? Docs/review/profile.json\n?? Docs/review/profile_data.py\n?? Docs/review/rca-001-evidence.json\n?? Docs/review/rca-001-report.md\n?? Docs/review/team-guide-technical-review.md\n?? Docs/review/types-and-missing/column-checks.csv\n?? Docs/review/types-and-missing/evidence.json\n?? Docs/review/types-and-missing/report.md\n?? Docs/دیدراه-بریف-دستیار-ایجنتیک-مدیران.md\n?? architecture/structurizr/workspace.dsl\n",
+    "err": "warning: unable to access 'C:\\Users\\ashkriz/.config/git/ignore': Permission denied\nwarning: unable to access 'C:\\Users\\ashkriz/.config/git/ignore': Permission denied\n"
+  },
+  "note": "All original bytes and inferred classes are preserved. Output self-hashes for file-comparison/validation-results are omitted to avoid a cycle. Checks establish full-set classification/preservation, not exhaustive human semantics or team approval.",
+  "product_tests_executed": false
+}

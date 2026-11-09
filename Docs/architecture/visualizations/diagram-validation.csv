@@ -1,0 +1,27 @@
+﻿file,structural_check,mermaid_parser,svg
+01-source-calendar-history-detail.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+01-source-configuration-detail.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+01-source-crm-detail.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+01-source-data-erd.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+01-source-marketing-detail.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+01-source-orders-detail.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+01-source-organization-detail.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+01-source-support-detail.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+01-source-workload-detail.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+02-proposed-database-erd.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+02-proposed-layers.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+03-organization-hierarchy.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+04-management-access-graph.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+05-column-access-overview.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-kpi-data-lineage.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-lineage-ORG.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-lineage-T_CMP.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-lineage-T_DIG.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-lineage-T_ENT.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-lineage-T_MKT.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-lineage-T_RSP.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-lineage-T_SHP.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-lineage-T_WH.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-lineage-U_OPS.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-lineage-U_SAL.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED
+06-lineage-U_SUP.mmd,PASS,NOT RUN: no local Mermaid package or CLI found,NOT CREATED

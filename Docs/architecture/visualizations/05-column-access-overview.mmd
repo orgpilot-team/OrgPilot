@@ -1,0 +1,18 @@
+flowchart TB
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  C["Observed source column"]
+  I["REQUIRED_INTERNAL<br/>Ingestion, join, filter, or computation<br/>This is a use classification, not a display grant"]
+  A["VISIBLE_AGGREGATED<br/>Only authorized KPI output or team capacity"]
+  W["VISIBLE_DIRECT_TEAM<br/>Direct supervisor; minimum workload fields"]
+  R["RESTRICTED<br/>Document purpose, scope, and redaction first"]
+  D["DENIED<br/>Upper-manager employee details<br/>Individual attendance at all levels"]
+  U["UNRESOLVED<br/>No precise source-column grant"]
+  C --> I
+  C -->|DERIVED authorized output mapping| A
+  C -->|DERIVED direct workload mapping| W
+  C --> R
+  C -->|CONFIRMED privacy rule| D
+  C --> U
+  S["M01-M04: aggregates only<br/>M05-M11: direct-team workload exception<br/>All: no raw grant inferred; no attendance monitoring"]
+  S -.-> A
+  S -.-> W

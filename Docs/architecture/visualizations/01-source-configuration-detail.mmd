@@ -1,0 +1,37 @@
+erDiagram
+  config__kpi_dictionary {
+    string kpi_id "text; observed CSV"
+    string name_fa "text; observed CSV"
+    string entity_id "text; observed CSV"
+    string unit "text; observed CSV"
+    string direction "integer_lexeme; observed CSV"
+    string rule "text; observed CSV"
+    string target "decimal_lexeme; observed CSV"
+    string warn "decimal_lexeme; observed CSV"
+    string crit "decimal_lexeme; observed CSV"
+    string escalate_after_days "integer_lexeme; observed CSV"
+    string sql "text; observed CSV"
+    string dim "text; observed CSV"
+    string owner_manager_id "text; observed CSV"
+  }
+  config__workflow_definitions {
+    string workflow_id "text; observed CSV"
+    string name_fa "text; observed CSV"
+    string owner "text; observed CSV"
+    string units "text; observed CSV"
+    string stage_order "integer_lexeme; observed CSV"
+    string stage "text; observed CSV"
+    string from_event "text; observed CSV"
+    string to_event "text; observed CSV"
+    string sla_hours "integer_lexeme|text; observed CSV"
+    string stage_target_median_h "decimal_lexeme|integer_lexeme; observed CSV"
+  }
+  config__monthly_targets {
+    string jmonth "text; observed CSV"
+    string scope "text; observed CSV"
+    string target_million_toman "decimal_lexeme; observed CSV"
+  }
+  config__escalation_rules {
+    string rule_id "text; observed CSV"
+    string rule_fa "text; observed CSV"
+  }

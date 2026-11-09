@@ -1,0 +1,769 @@
+--- before/Docs/architecture/002-data-architecture.md
++++ after/Docs/architecture/002-data-architecture.md
+@@ -481,7 +481,7 @@
+ 
+ ## ۱۱. عملیات، کارایی و بازیابی
+ 
+-ExecutionGrant حدود درخواست والد را تعیین می‌کند؛ BudgetLedger هزینه روزانه را ثبت می‌کند؛ DayRunOutcome پوشش الزامی گزارش‌ها را نگه می‌دارد. برای رکوردهای موجود Token، قیمت و Retry، تطبیق روزانه و زمان‌بندی سرتاسری مراحل مطابق بریف صفحات 14,16، از [سند 003، بخش 8](003-roadmap.md#decisions-8) استفاده کنید. حدود دقیق و انتخاب مدل در ADR-10/ADR-13/DL-14 و سیاست Retry و شکست در ADR-14/DL-13 باز می‌مانند. قرارداد اندازه‌گیری قبلاً ثبت شده و شکاف جدید نیست.
++ExecutionGrant حدود درخواست والد را تعیین می‌کند؛ BudgetLedger هزینه روزانه را ثبت می‌کند؛ DayRunOutcome پوشش الزامی گزارش‌ها را نگه می‌دارد. برای رکوردهای موجود Token، قیمت و Retry، تطبیق روزانه و زمان‌بندی سرتاسری مراحل مطابق بریف صفحات 14,16، از [سند 003، بخش ۳](003-roadmap.md#roadmap-measurement) استفاده کنید. حدود دقیق و انتخاب مدل در ADR-10/ADR-13/DL-14 و سیاست Retry و شکست در ADR-14/DL-13 باز می‌مانند. قرارداد اندازه‌گیری قبلاً ثبت شده و شکاف جدید نیست.
+ 
+ ایندکس‌های اولیهٔ پیشنهادی: source/drop/commit، entity/event/time، business_id، KPI/snapshot/date/dim، org edge interval و signal/recipient. ایندکس نهایی پس از query plan و benchmark انتخاب شود؛ ادعای سرعت در این سند وجود ندارد.
+ 
+--- before/Docs/architecture/003-decisions-and-roadmap.md
++++ after/Docs/architecture/003-decisions-and-roadmap.md
+@@ -1,105 +0,0 @@
+-# 003 compatibility navigation
+-
+-This file preserves historical file and anchor links. It contains no active ADR, issue, risk, test or phase record. Use the designated locations below.
+-
+-Former document key: `003-decisions-and-roadmap`. Architecture family: `ARCH-001`.
+-
+-The team approves documentation locations only. All Open/Proposed limitations remain. See the [roadmap](003-roadmap.md) and [Registry](registry/README.md).
+-
+-| Legacy anchor | Designated documentation location |
+-|---|---|
+-| <a id="1-تصمیم‌های-ثبت‌شده-و-طراحی-باقی‌مانده"></a>`1-تصمیم‌های-ثبت‌شده-و-طراحی-باقی‌مانده` | [Open current location](registry/README.md#decisions-1) |
+-| <a id="10-decision-log"></a>`10-decision-log` | [Open current location](registry/open-issues-registry.md#decisions-10) |
+-| <a id="3-سوابق-تصمیم-معماری"></a>`3-سوابق-تصمیم-معماری` | [Open current location](registry/decisions-registry.md#decisions-3) |
+-| <a id="72-پرسش‌های-عرضه‌شده-مدیران"></a>`72-پرسش‌های-عرضه‌شده-مدیران` | [Open current location](registry/acceptance-register.md#manager-question-map) |
+-| <a id="72a-ورودی‌های-غیرپرسشی-مدیران"></a>`72a-ورودی‌های-غیرپرسشی-مدیران` | [Open current location](registry/acceptance-register.md#manager-question-map) |
+-| <a id="9-تحویل-مستندات-و-راستی‌آزمایی"></a>`9-تحویل-مستندات-و-راستی‌آزمایی` | [Open current location](004-reconciliation-review.md#decisions-9) |
+-| <a id="adr-01"></a>`adr-01` | [Open current location](registry/decisions-registry.md#adr-01) |
+-| <a id="adr-01-اجرای-postgresql-و-هم‌ارزی-canonical-kpi"></a>`adr-01-اجرای-postgresql-و-هم‌ارزی-canonical-kpi` | [Open current location](registry/decisions-registry.md#adr-01) |
+-| <a id="adr-02"></a>`adr-02` | [Open current location](registry/decisions-registry.md#adr-02) |
+-| <a id="adr-02-ورودی-پذیرفته‌شدهٔ-orders"></a>`adr-02-ورودی-پذیرفته‌شدهٔ-orders` | [Open current location](registry/decisions-registry.md#adr-02) |
+-| <a id="adr-03"></a>`adr-03` | [Open current location](registry/decisions-registry.md#adr-03) |
+-| <a id="adr-03-dependency-و-selective-recalculation"></a>`adr-03-dependency-و-selective-recalculation` | [Open current location](registry/decisions-registry.md#adr-03) |
+-| <a id="adr-04"></a>`adr-04` | [Open current location](registry/decisions-registry.md#adr-04) |
+-| <a id="adr-04-کامل‌بودن-منبع-و-انتشار-مقدار-ناقص"></a>`adr-04-کامل‌بودن-منبع-و-انتشار-مقدار-ناقص` | [Open current location](registry/decisions-registry.md#adr-04) |
+-| <a id="adr-05"></a>`adr-05` | [Open current location](registry/decisions-registry.md#adr-05) |
+-| <a id="adr-05-restatement-و-نسخهٔ-گزارش"></a>`adr-05-restatement-و-نسخهٔ-گزارش` | [Open current location](registry/decisions-registry.md#adr-05) |
+-| <a id="adr-06"></a>`adr-06` | [Open current location](registry/decisions-registry.md#adr-06) |
+-| <a id="adr-06-اجرای-دسترسی-مصوب-و-امنیت-query"></a>`adr-06-اجرای-دسترسی-مصوب-و-امنیت-query` | [Open current location](registry/decisions-registry.md#adr-06) |
+-| <a id="adr-07"></a>`adr-07` | [Open current location](registry/decisions-registry.md#adr-07) |
+-| <a id="adr-07-جزئیات-مرزی-signal-و-escalation"></a>`adr-07-جزئیات-مرزی-signal-و-escalation` | [Open current location](registry/decisions-registry.md#adr-07) |
+-| <a id="adr-08"></a>`adr-08` | [Open current location](registry/decisions-registry.md#adr-08) |
+-| <a id="adr-08-تقویم-مدیریت-و-تقدم-ورودی‌ها"></a>`adr-08-تقویم-مدیریت-و-تقدم-ورودی‌ها` | [Open current location](registry/decisions-registry.md#adr-08) |
+-| <a id="adr-09"></a>`adr-09` | [Open current location](registry/decisions-registry.md#adr-09) |
+-| <a id="adr-09-وضعیت-خروجی-گردکردن-و-اعداد-ثبت‌شده"></a>`adr-09-وضعیت-خروجی-گردکردن-و-اعداد-ثبت‌شده` | [Open current location](registry/decisions-registry.md#adr-09) |
+-| <a id="adr-10"></a>`adr-10` | [Open current location](registry/decisions-registry.md#adr-10) |
+-| <a id="adr-10-بودجه-مدل-و-محدودیت-اجرا"></a>`adr-10-بودجه-مدل-و-محدودیت-اجرا` | [Open current location](registry/decisions-registry.md#adr-10) |
+-| <a id="adr-11"></a>`adr-11` | [Open current location](registry/decisions-registry.md#adr-11) |
+-| <a id="adr-11-correction-conflict-و-چرخهٔ-موجودیت"></a>`adr-11-correction-conflict-و-چرخهٔ-موجودیت` | [Open current location](registry/decisions-registry.md#adr-11) |
+-| <a id="adr-12"></a>`adr-12` | [Open current location](registry/decisions-registry.md#adr-12) |
+-| <a id="adr-12-نگهداری-backup-و-audit"></a>`adr-12-نگهداری-backup-و-audit` | [Open current location](registry/decisions-registry.md#adr-12) |
+-| <a id="adr-13"></a>`adr-13` | [Open current location](registry/decisions-registry.md#adr-13) |
+-| <a id="adr-13-یک-ai-agent-با-حدود-مشخص"></a>`adr-13-یک-ai-agent-با-حدود-مشخص` | [Open current location](registry/decisions-registry.md#adr-13) |
+-| <a id="adr-14"></a>`adr-14` | [Open current location](registry/decisions-registry.md#adr-14) |
+-| <a id="adr-14-انتشار-مستقل-گزارش"></a>`adr-14-انتشار-مستقل-گزارش` | [Open current location](registry/decisions-registry.md#adr-14) |
+-| <a id="adr-15"></a>`adr-15` | [Open current location](registry/decisions-registry.md#adr-15) |
+-| <a id="adr-15-مالکیت-مراحل-workflow"></a>`adr-15-مالکیت-مراحل-workflow` | [Open current location](registry/decisions-registry.md#adr-15) |
+-| <a id="adr-16"></a>`adr-16` | [Open current location](registry/decisions-registry.md#adr-16) |
+-| <a id="adr-16-فایل‌های-زمان-اجرا-و-اسناد-عملیاتی"></a>`adr-16-فایل‌های-زمان-اجرا-و-اسناد-عملیاتی` | [Open current location](registry/decisions-registry.md#adr-16) |
+-| <a id="adr-17"></a>`adr-17` | [Open current location](registry/decisions-registry.md#adr-17) |
+-| <a id="adr-17-تصمیم-انسانی-و-واقعیت-اجرای-اقدام"></a>`adr-17-تصمیم-انسانی-و-واقعیت-اجرای-اقدام` | [Open current location](registry/decisions-registry.md#adr-17) |
+-| <a id="arch-001-تصمیم‌ها-ریسک‌ها-و-مسیر-پیاده‌سازی"></a>`arch-001-تصمیم‌ها-ریسک‌ها-و-مسیر-پیاده‌سازی` | [Open current location](registry/README.md#source-context) |
+-| <a id="at-01"></a>`at-01` | [Open current location](registry/acceptance-register.md#at-01) |
+-| <a id="at-02"></a>`at-02` | [Open current location](registry/acceptance-register.md#at-02) |
+-| <a id="at-03"></a>`at-03` | [Open current location](registry/acceptance-register.md#at-03) |
+-| <a id="at-04"></a>`at-04` | [Open current location](registry/acceptance-register.md#at-04) |
+-| <a id="at-05"></a>`at-05` | [Open current location](registry/acceptance-register.md#at-05) |
+-| <a id="at-06"></a>`at-06` | [Open current location](registry/acceptance-register.md#at-06) |
+-| <a id="at-07"></a>`at-07` | [Open current location](registry/acceptance-register.md#at-07) |
+-| <a id="at-08"></a>`at-08` | [Open current location](registry/acceptance-register.md#at-08) |
+-| <a id="at-09"></a>`at-09` | [Open current location](registry/acceptance-register.md#at-09) |
+-| <a id="at-10"></a>`at-10` | [Open current location](registry/acceptance-register.md#at-10) |
+-| <a id="at-11"></a>`at-11` | [Open current location](registry/acceptance-register.md#at-11) |
+-| <a id="at-12"></a>`at-12` | [Open current location](registry/acceptance-register.md#at-12) |
+-| <a id="at-13"></a>`at-13` | [Open current location](registry/acceptance-register.md#at-13) |
+-| <a id="at-14"></a>`at-14` | [Open current location](registry/acceptance-register.md#at-14) |
+-| <a id="at-15"></a>`at-15` | [Open current location](registry/acceptance-register.md#at-15) |
+-| <a id="at-16"></a>`at-16` | [Open current location](registry/acceptance-register.md#at-16) |
+-| <a id="at-17"></a>`at-17` | [Open current location](registry/acceptance-register.md#at-17) |
+-| <a id="at-18"></a>`at-18` | [Open current location](registry/acceptance-register.md#at-18) |
+-| <a id="at-19"></a>`at-19` | [Open current location](registry/acceptance-register.md#at-19) |
+-| <a id="at-20"></a>`at-20` | [Open current location](registry/acceptance-register.md#at-20) |
+-| <a id="at-21"></a>`at-21` | [Open current location](registry/acceptance-register.md#at-21) |
+-| <a id="at-22"></a>`at-22` | [Open current location](registry/acceptance-register.md#at-22) |
+-| <a id="at-23"></a>`at-23` | [Open current location](registry/acceptance-register.md#at-23) |
+-| <a id="at-24"></a>`at-24` | [Open current location](registry/acceptance-register.md#at-24) |
+-| <a id="at-25"></a>`at-25` | [Open current location](registry/acceptance-register.md#at-25) |
+-| <a id="at-26"></a>`at-26` | [Open current location](registry/acceptance-register.md#at-26) |
+-| <a id="at-27"></a>`at-27` | [Open current location](registry/acceptance-register.md#at-27) |
+-| <a id="at-28"></a>`at-28` | [Open current location](registry/acceptance-register.md#at-28) |
+-| <a id="at-29"></a>`at-29` | [Open current location](registry/acceptance-register.md#at-29) |
+-| <a id="at-30"></a>`at-30` | [Open current location](registry/acceptance-register.md#at-30) |
+-| <a id="decision-log"></a>`decision-log` | [Open current location](registry/open-issues-registry.md#decision-log) |
+-| <a id="decisions-1"></a>`decisions-1` | [Open current location](registry/README.md#decisions-1) |
+-| <a id="decisions-10"></a>`decisions-10` | [Open current location](registry/open-issues-registry.md#decisions-10) |
+-| <a id="decisions-2"></a>`decisions-2` | [Open current location](registry/README.md#decisions-2) |
+-| <a id="decisions-3"></a>`decisions-3` | [Open current location](registry/decisions-registry.md#decisions-3) |
+-| <a id="decisions-4"></a>`decisions-4` | [Open current location](003-roadmap.md#decisions-4) |
+-| <a id="decisions-5"></a>`decisions-5` | [Open current location](registry/risk-register.md#decisions-5) |
+-| <a id="decisions-6"></a>`decisions-6` | [Open current location](003-roadmap.md#decisions-6) |
+-| <a id="decisions-7"></a>`decisions-7` | [Open current location](registry/acceptance-register.md#decisions-7) |
+-| <a id="decisions-8"></a>`decisions-8` | [Open current location](003-roadmap.md#decisions-8) |
+-| <a id="decisions-9"></a>`decisions-9` | [Open current location](004-reconciliation-review.md#decisions-9) |
+-| <a id="manager-question-map"></a>`manager-question-map` | [Open current location](registry/acceptance-register.md#manager-question-map) |
+-| <a id="تکمیل-معیارهای-آزمون-موجود"></a>`تکمیل-معیارهای-آزمون-موجود` | [Open current location](registry/acceptance-register.md#supplement-tests) |
+-| <a id="ماتریس-محتوای-اختصاصی-سه-سطح-برای-at-26"></a>`ماتریس-محتوای-اختصاصی-سه-سطح-برای-at-26` | [Open current location](registry/acceptance-register.md#role-matrix) |
+-| <a id="موارد-اختصاصی-قواعد-برای-at-24"></a>`موارد-اختصاصی-قواعد-برای-at-24` | [Open current location](registry/acceptance-register.md#rule-matrix) |
+-| <a id="۲-موارد-روشن-که-نیاز-به-اختراع-قاعده-ندارند"></a>`۲-موارد-روشن-که-نیاز-به-اختراع-قاعده-ندارند` | [Open current location](registry/README.md#decisions-2) |
+-| <a id="۴-اولویت-پاسخ‌های-لازم"></a>`۴-اولویت-پاسخ‌های-لازم` | [Open current location](003-roadmap.md#decisions-4) |
+-| <a id="۵-ریسک‌های-عمده-و-اقدام-کنترل"></a>`۵-ریسک‌های-عمده-و-اقدام-کنترل` | [Open current location](registry/risk-register.md#decisions-5) |
+-| <a id="۶-مسیر-مرحله‌ای-پیاده‌سازی-پس-از-بازبینی"></a>`۶-مسیر-مرحله‌ای-پیاده‌سازی-پس-از-بازبینی` | [Open current location](003-roadmap.md#decisions-6) |
+-| <a id="۶۱-کمترین-مسیر-سرتاسری-قابل-بررسی"></a>`۶۱-کمترین-مسیر-سرتاسری-قابل-بررسی` | [Open current location](003-roadmap.md#decisions-6) |
+-| <a id="۷-راهبرد-آزمون-و-پذیرش"></a>`۷-راهبرد-آزمون-و-پذیرش` | [Open current location](registry/acceptance-register.md#decisions-7) |
+-| <a id="۷۱-تفکیک-oracle-محاسبه-کیفیت-و-کشف"></a>`۷۱-تفکیک-oracle-محاسبه-کیفیت-و-کشف` | [Open current location](registry/acceptance-register.md#oracle-boundaries) |
+-| <a id="۷۳-آزمون‌های-مرزی-و-خصمانه"></a>`۷۳-آزمون‌های-مرزی-و-خصمانه` | [Open current location](registry/acceptance-register.md#boundary-cases) |
+-| <a id="۸-اندازه‌گیری-عملکرد-و-هزینه"></a>`۸-اندازه‌گیری-عملکرد-و-هزینه` | [Open current location](003-roadmap.md#decisions-8) |
+--- before/Docs/architecture/003-roadmap.md
++++ after/Docs/architecture/003-roadmap.md
+@@ -1,4 +1,6 @@
+-# ARCH-001: Implementation roadmap
++<a id="roadmap-overview"></a>
++
++# ARCH-001: نقشه راه پیاده‌سازی
+ 
+ Document key: `003-roadmap`. Date: 2026-11-09. Time zone: `Asia/Tehran`.
+ 
+@@ -8,9 +10,9 @@
+ 
+ No phase or execution dependency is inferred from unconfirmed traceability links. The P0 design gates below apply only to affected work. The Accepted Agent, database, publication, deterministic and human-action boundaries are not reopened.
+ 
+-<a id="decisions-4"></a>
++<a id="roadmap-prerequisites"></a>
+ 
+-## ۴. اولویت پاسخ‌های لازم
++## ۱. اولویت پاسخ‌های لازم
+ 
+ پرسش‌ها در این مرحله ثبت می‌شوند؛ این سند هیچ پیام یا درخواستی به شخص دیگری ارسال نمی‌کند.
+ 
+@@ -25,9 +27,9 @@
+ 
+ کارهای طراحی و پیاده‌سازی آینده که مستقل از این پاسخ‌ها هستند، مانند source archive، snapshot و حفظ raw، می‌توانند پس از تأیید معماری جلو بروند. پاسخ‌ندادن به P0 نباید با انتخاب پنهانی business rule جبران شود.
+ 
+-<a id="decisions-6"></a>
++<a id="roadmap-phases"></a>
+ 
+-## ۶. مسیر مرحله‌ای پیاده‌سازی پس از بازبینی
++## ۲. مسیر مرحله‌ای پیاده‌سازی پس از بازبینی
+ 
+ زمان‌ها برآورد تقویمی قطعی نیستند. مراحل با خروجی قابل بررسی و شرط خروج تعریف شده‌اند. برنامهٔ نسبی سه‌هفته‌ای بریف را می‌توان پس از شناخت ظرفیت تیم بر این مراحل منطبق کرد.
+ 
+@@ -48,13 +50,15 @@
+ 
+ در هر مرحله، CSVهای audit به برنامهٔ تولیدی تبدیل یا به‌عنوان lookup پاسخ استفاده نمی‌شوند. fixtureهای آن‌ها فقط oracle آزمون توسعه‌اند. مسیر runtime فقط source، config و ورودی مجاز مدیر را می‌خواند.
+ 
+-### ۶.۱. کمترین مسیر سرتاسری قابل بررسی
++<a id="roadmap-first-slice"></a>
++
++### ۲.۱. کمترین مسیر سرتاسری قابل بررسی
+ 
+ پیش از تکمیل P2، یک slice کوچک چنین ساخته شود:
+ 
+ ۱. ورودی‌های تاریخی لازم تا drop 061 با manifest و lineage دریافت شوند؛ دیگر dropها برای job قابل دسترسی نباشند.
+ 
+-2. مقدار `K_RSP_FRT_MED` و `K_RSP_TICKETS` با تبدیل‌های مصوب PostgreSQL محاسبه شود. اگر FRT واحد یا سازمان نمایش داده می‌شود، از شناسه Canonical و تبدیل مصوب همان سطح استفاده شود. KPI تیم با برچسب دیگر عرضه نشود.
++۲. مقدار `K_RSP_FRT_MED` و `K_RSP_TICKETS` با تبدیل‌های مصوب PostgreSQL محاسبه شود. اگر FRT واحد یا سازمان نمایش داده می‌شود، از شناسه Canonical و تبدیل مصوب همان سطح استفاده شود. KPI تیم با برچسب دیگر عرضه نشود.
+ 
+ ۳. یک rule قطعی، یک evidence query برای شکست دسته و یک گزارش فارسی M09 ساخته شود. اگر شواهد علت کافی نیست، علت اختراع نشود. خروجی با schema، مقدار و scope بررسی شود.
+ 
+@@ -64,9 +68,9 @@
+ 
+ این slice، محصول کامل یا پذیرش ۱۰ گزارش نیست. **نخستین milestone قابل ارائه، پایان P2 است: یک روز کامل با ۵۵ تعریف و ۱۰ گزارش پایه.** سپس همین مسیر روی روز دارای منبع غایب اجرا شود. مقیاس‌دادن UI پیش از این شواهد ارزش کمتری دارد.
+ 
+-<a id="decisions-8"></a>
++<a id="roadmap-measurement"></a>
+ 
+-## ۸. اندازه‌گیری عملکرد و هزینه
++## ۳. اندازه‌گیری عملکرد و هزینه
+ 
+ در هر روز، زمان واقعی سپری‌شده مراحل ingest، snapshot، facts، KPI، signal، workflow، evidence، LLM و validation ثبت شود. زمان bootstrap روزهای۱ تا۶۰ جدا از زمان هر روز ارزیابی گزارش شود. برای روز کامل، تعداد مدیر واقعی، تعداد پرسش و cache state ثبت شوند.
+ 
+@@ -78,13 +82,15 @@
+ 
+ تفکیک شمارش با برچسب `Already Covered`: `KPI Definition` تعریف ثبت‌شده در Dictionary است؛ `KPI Series` سری مشخص با Entity و Dimension؛ `KPI Observation` مقدار آن سری در تاریخ و Snapshot معین است. Grain مشاهده و هویت سری در [سند 002، بخش ۲](002-data-architecture.md#data-2) ثبت شده‌اند. فایل `dataset/config/kpi_dictionary.csv` دارای ۵۵ تعریف با شناسه یکتا است. حدود ۱۵۰ در بریف صفحه ۱ تخمین است، نه Acceptance Threshold. عدد حدود ۷۰ خروجی، گزارش بررسی قبلی تیم در درخواست این بازبینی است و با برچسب `Evidence Pending` ثبت می‌شود؛ خروجی محاسباتی قابل بازرسی برای تأیید آن ارائه نشده است. بسته‌شدن این مورد به فهرست سری‌ها با Definition، Entity، Dimension، تاریخ، Snapshot و Query و روش شمارش بازتولیدپذیر نیاز دارد؛ AT-02 صحت تعریف و AT-10 ردیابی را کنترل می‌کنند. Breakdown شهر، کانال یا محصول فقط با منبع و Dimension و Query پشتیبان معتبر است؛ Ad hoc Query بدون قرارداد، Canonical KPI Definition محسوب نمی‌شود. برای رسیدن به ۱۵۰، KPI یا Dimension ساخته نشود و تعداد هدف جدیدی انتخاب نشود.
+ 
+-<a id="execution-gates"></a>
++<a id="roadmap-execution-gates"></a>
+ 
+-## Execution gate context retained from the former Decision Log
++## ۴. شرایط شروع اجرای محصول
+ 
+ پیاده‌سازی خارج از این Task باقی می‌ماند. پیش از شروع پیاده‌سازی محصول، انتخاب‌های طراحی P0 تحت اختیار تیم بسته شوند یا سیاست‌های موقت نام‌گذاری‌شده صریحاً تصویب شوند. پرسش‌های پذیرش بیرونی می‌توانند حین ایجاد ساختار اولیه مجاز پیگیری شوند، اما نتیجه متأثر را نمی‌توان پذیرفته‌شده نامید. تصمیم‌های Accepted درباره Agent، موتور و انتشار به جلسه انتخاب مجدد نیاز ندارند.
+ 
+-## Governance and delivery navigation
++<a id="roadmap-governance"></a>
++
++## ۵. مراجع حاکمیت و تحویل
+ 
+ - [Architecture decisions](registry/decisions-registry.md).
+ - [Open choices and missing evidence](registry/open-issues-registry.md).
+--- before/Docs/architecture/004-reconciliation-review.md
++++ after/Docs/architecture/004-reconciliation-review.md
+@@ -63,7 +63,7 @@
+ | <a id="review-q14"></a>Q14: role reports and shared analysis | `Requirement`: one Insight Brief as report source and role-specific access; S01 pp.9-10. `Open`: internal schema and suppressed/ongoing mapping. Shared evidence is never a new grant. | [ADR-09](registry/decisions-registry.md#adr-09), ADR-06 | [001: analysis](001-system-blueprint.md#system-8), [output](001-system-blueprint.md#system-9), [002: report versions](002-data-architecture.md#data-8) | AT-06/10/11; DL-11; AT-26, AT-30 |
+ | <a id="review-q15"></a>Q15: decisions and action | `Requirement`: human decision, drafts only, no automatic execution; S01 pp.11-12 and S02. `Proposed`: separate decision, draft, and execution-confirmation states. `Open`: actual execution tracking in MVP. | [ADR-17](registry/decisions-registry.md#adr-17) | [001: modules](001-system-blueprint.md#system-4), [analysis](001-system-blueprint.md#system-8), [002: report history](002-data-architecture.md#data-8) | [AT-14](registry/acceptance-register.md#at-14); DL-12; AT-29 |
+ | <a id="review-q16"></a>Q16: LLM failure | `Accepted`: independent valid-report publication and failed-report records; S16 Q16 result table and S17. `Requirement`: every active manager still needs a valid report. `Proposed`: template fallback. `Open`: retry, timeout, status export, replacement rules. | [ADR-14](registry/decisions-registry.md#adr-14), ADR-10 | [001: replay](001-system-blueprint.md#system-5), [output](001-system-blueprint.md#system-9), [002: operations](002-data-architecture.md#data-11) | [AT-21](registry/acceptance-register.md#at-21), AT-11/15/18; DL-13; AT-28 |
+-| <a id="review-q17"></a>Q17: models and limits | `Requirement`: USD 5 per whole day, 15 minutes, and report deadline; S01 pp.14,16,19. `Proposed`: provider-neutral gateway, reservations, tool/token limits, tracing, and QA share. `Open`: model, provider, products, prices, and exact limits. | [ADR-10](registry/decisions-registry.md#adr-10), ADR-13 | [001: analysis](001-system-blueprint.md#system-8), [003: measurement](003-roadmap.md#decisions-8) | [AT-17](registry/acceptance-register.md#at-17), [AT-18](registry/acceptance-register.md#at-18), AT-20; DL-14/16; AT-28 |
++| <a id="review-q17"></a>Q17: models and limits | `Requirement`: USD 5 per whole day, 15 minutes, and report deadline; S01 pp.14,16,19. `Proposed`: provider-neutral gateway, reservations, tool/token limits, tracing, and QA share. `Open`: model, provider, products, prices, and exact limits. | [ADR-10](registry/decisions-registry.md#adr-10), ADR-13 | [001: analysis](001-system-blueprint.md#system-8), [003: measurement](003-roadmap.md#roadmap-measurement) | [AT-17](registry/acceptance-register.md#at-17), [AT-18](registry/acceptance-register.md#at-18), AT-20; DL-14/16; AT-28 |
+ 
+ ## Important conflicts and disposition
+ 
+--- before/Docs/architecture/audit-2026-11-09/audit-report.md
++++ after/Docs/architecture/audit-2026-11-09/audit-report.md
+@@ -12,7 +12,7 @@
+ 
+ ## Results and limits
+ 
+-There are 59 audit records: 58 material findings and one verified, retained source observation (AUD-028). Material severity: {'High': 23, 'Medium': 26, 'Low': 9}. Record states: {'Corrected': 56, 'Verified; retained': 1, 'Deferred to model phase': 2}. The two deferred findings concern DSL source/count comments. Model work is reserved for the subsequent visualization phase. Open business/source policies remain in the [Decision Log](../003-decisions-and-roadmap.md#decision-log); a corrected document does not close them.
++There are 59 audit records: 58 material findings and one verified, retained source observation (AUD-028). Material severity: {'High': 23, 'Medium': 26, 'Low': 9}. Record states: {'Corrected': 56, 'Verified; retained': 1, 'Deferred to model phase': 2}. The two deferred findings concern DSL source/count comments. Model work is reserved for the subsequent visualization phase. Open business/source policies remain in the [Decision Log](../registry/open-issues-registry.md#decision-log); a corrected document does not close them.
+ 
+ The [unit ledger](document-review-ledger.csv) inventories 911 pre-edit headings, paragraphs/list items, table rows, blocks and anchors. Every nonblank line in the four pre-edit documents belongs to a review unit. Each unit has a hash, exact line span, context and relevant findings. Inherited section evidence is review context, not an independent proof of every sentence. Semantic results rest on the detailed issue analysis and [granular traceability](requirements-traceability.md), not link counts.
+ 
+--- before/Docs/architecture/audit-2026-11-09/change-report.md
++++ after/Docs/architecture/audit-2026-11-09/change-report.md
+@@ -12,7 +12,7 @@
+ |---|---|
+ | [001-system-blueprint.md](../001-system-blueprint.md) | Complete R1-R8 and Workflow contracts; report content; source authority; parent execution and input contracts; Proposed mechanisms; Structurizr references. |
+ | [002-data-architecture.md](../002-data-architecture.md) | Source grains and clocks; exact reference-view semantics; Proposed internal entities; privacy, priority, and output mapping; preserve the KPI catalog. |
+-| [003-decisions-and-roadmap.md](../003-decisions-and-roadmap.md) | Preserve ADR-01 through ADR-17; add AT-24 through AT-30; keep every gate planned; expand the Decision Log to 19 source-backed Open rows. |
++| [Current governance records; former combined source](../registry/README.md#source-context) | Preserve ADR-01 through ADR-17; add AT-24 through AT-30; keep every gate planned; expand the Decision Log to 19 source-backed Open rows. |
+ | [004-reconciliation-review.md](../004-reconciliation-review.md) | Keep the Q01-Q17 mapping and stable anchors; reconcile evidence status, gates, independent publication, and current audit links. |
+ | [visualizations/README.md](../visualizations/README.md) | Use the 16 actual Structurizr view keys; state missing views; retire legacy preview navigation. |
+ | [visualizations/open-questions.md](../visualizations/open-questions.md) | Preserve VQ identifiers and unresolved policy; align status and Decision Log references. |
+@@ -106,7 +106,7 @@
+ 
+ ## Decisions that still constrain implementation
+ 
+-The [Decision Log](../003-decisions-and-roadmap.md#decision-log) records exact evidence, proposed owner roles, options, effects, and closure gates. The roles need team assignment. This report does not invent named owners or approved answers.
++The [Decision Log](../registry/open-issues-registry.md#decision-log) records exact evidence, proposed owner roles, options, effects, and closure gates. The roles need team assignment. This report does not invent named owners or approved answers.
+ 
+ | Open matter | Required decision or evidence | Implementation effect |
+ |---|---|---|
+--- before/Docs/architecture/audit-2026-11-09/requirements-traceability.md
++++ after/Docs/architecture/audit-2026-11-09/requirements-traceability.md
+@@ -15,6 +15,6 @@
+ | Output schemas | [Every property/constraint](output-schema-contracts.csv), exact required sets and enums. Conditional nested requirements are not promoted to unconditional fields. |
+ | Report/Agent/privacy/delivery | Atomic brief-derived obligations and five separately classified Accepted boundaries. Unsupported engineering details remain Proposed/Open. |
+ 
+-Open gaps are explicit: PostgreSQL equivalence/types and input mode; closure/publication; shared-source/privacy/capacity policies; stage owners; unspecified rule boundaries; M11/receipt timing; output mapping and candidate write authority; model limits and final organizer profile. See the [Decision Log](../003-decisions-and-roadmap.md#decision-log).
++Open gaps are explicit: PostgreSQL equivalence/types and input mode; closure/publication; shared-source/privacy/capacity policies; stage owners; unspecified rule boundaries; M11/receipt timing; output mapping and candidate write authority; model limits and final organizer profile. See the [Decision Log](../registry/open-issues-registry.md#decision-log).
+ 
+ Optional monthly board summary, forecasting, what-if, audio, messenger integration and automatic decision-impact evaluation are not mandatory runtime dependencies. Employee ranking/surveillance, autonomous actions, real-system connectors, payroll and budgeting remain outside the brief's scope. Ten base reports do not remove the active-manager requirement.
+--- before/Docs/architecture/registry/acceptance-register.md
++++ after/Docs/architecture/registry/acceptance-register.md
+@@ -1000,7 +1000,7 @@
+ 
+ Related tests: AT-17, AT-18.
+ 
+-Source Evidence: [Source](../003-roadmap.md#decisions-8).
++Source Evidence: [Source](../003-roadmap.md#roadmap-measurement).
+ 
+ 
+ ### Full source record and conditions
+@@ -1027,7 +1027,7 @@
+ 
+ Related tests: AT-11, AT-12, AT-18, AT-19.
+ 
+-Source Evidence: [Source](../003-roadmap.md#decisions-6).
++Source Evidence: [Source](../003-roadmap.md#roadmap-phases).
+ 
+ 
+ ### Full source record and conditions
+--- before/Docs/architecture/registry/approval-readiness.md
++++ after/Docs/architecture/registry/approval-readiness.md
+@@ -37,7 +37,7 @@
+ 
+ The five Accepted boundaries remain fixed: one bounded AI Agent; PostgreSQL as the only product database engine; independent publication of valid manager reports; deterministic KPI calculation, Signal detection, authorization and final validation; human-controlled organizational decisions and actions.
+ 
+-Approval evidence remains [S19](../audit-2026-11-09/request.txt), section 1, and [003 section 1](../003-decisions-and-roadmap.md#decisions-1), with the relevant S16 review results. The 33 inferred boundary-to-ADR/AT/component links are trace candidates. They neither reopen those boundaries nor prove their implementation. Original approver names and dates remain absent.
++Approval evidence remains [S19](../audit-2026-11-09/request.txt), section 1, and [003 section 1](README.md#decisions-1), with the relevant S16 review results. The 33 inferred boundary-to-ADR/AT/component links are trace candidates. They neither reopen those boundaries nor prove their implementation. Original approver names and dates remain absent.
+ 
+ Current S01 identification is already confirmed in ARCH-REG-002. [REG-ISS-010](open-issues-registry.md#reg-iss-010) concerns historical content-comparison evidence. It does not reopen the identity of the current official PDF or prove a changed requirement.
+ 
+--- before/Docs/architecture/registry/deduplication-ledger.md
++++ after/Docs/architecture/registry/deduplication-ledger.md
+@@ -43,8 +43,8 @@
+ | Decision follow-up evidence and actor/time/subject history, separate from actual action execution | [Source](../002-data-architecture.md#data-8) | DL-12 |
+ | Absent event occurrence IDs, customer/campaign registries and full raw dictionary | [Source](../002-data-architecture.md#data-4) | DL-16 |
+ | KPI-specific precision, query-number mapping and actual NULL versus no dimension | [Source](../002-data-architecture.md#data-2) | DL-17 |
+-| Candidate/Open/Published selection and authorized history outside Top 5 | [Source](../003-decisions-and-roadmap.md#decision-log) | DL-18 |
++| Candidate/Open/Published selection and authorized history outside Top 5 | [Source](open-issues-registry.md#decision-log) | DL-18 |
+ | Qualitative cause confidence versus optional numeric 0..1; source-family aliases and complete internal content/wire mapping | [Source](../001-system-blueprint.md#system-9) | DL-18 |
+ | Read/close/refer actor, time and subject history; no implied action execution | [Source](../002-data-architecture.md#data-8) | DL-18 |
+-| Existing KPI formula/owner/target changes versus fixed 55 reference definitions; add and change are separate tests | [Source](../003-decisions-and-roadmap.md#adr-01) | DL-19 |
+-| SQL translation risk and reference-oracle maintenance risk | [Source](../003-decisions-and-roadmap.md#decisions-5) | REG-RSK-004 |
++| Existing KPI formula/owner/target changes versus fixed 55 reference definitions; add and change are separate tests | [Source](decisions-registry.md#adr-01) | DL-19 |
++| SQL translation risk and reference-oracle maintenance risk | [Source](risk-register.md#decisions-5) | REG-RSK-004 |
+--- before/Docs/architecture/registry/open-issues-registry.md
++++ after/Docs/architecture/registry/open-issues-registry.md
+@@ -669,7 +669,7 @@
+ 
+ Closure criterion: Record the team scope and dependency decision, then inspect AT-12/15/25/26 outputs.
+ 
+-Source Evidence: [Source](../003-roadmap.md#decisions-6).
++Source Evidence: [Source](../003-roadmap.md#roadmap-phases).
+ 
+ Dependencies: ADR-15, AT-12, AT-15, AT-25, AT-26, P2, P3.
+ 
+@@ -941,7 +941,7 @@
+ 
+ `calculation_confidence` از اجرای موفق، parity و provenance به دست می‌آید؛ ترجیحاً با وضعیت و دلیل ثبت شود. `source_completeness` از شواهد منبع می‌آید. `cause_confidence` ارزیابی یک فرضیه است. هیچ‌کدام با یک امتیاز ساختگی جای دیگری را نمی‌گیرد.
+ 
+-`Requirement`: خطای داده به‌تنهایی نباید Signal کسب‌وکار ایجاد کند (بریف، صفحه 14، بخش خطاهای داده). `Open`: بخش‌های 4، 5 و 7 وضعیت‌های کیفیت و Invalidation را تعریف می‌کنند، اما رکورد ارزیابی ارتباط DQIncident، KpiObservation متأثر و مجوز ایجاد Signal را مشخص نمی‌کنند. قرارداد داده به نسخه‌های مرتبط مسئله و مشاهده، دلیل ارزیابی و نسخه قاعده و سیاست نیاز دارد. به [ADR-04](003-decisions-and-roadmap.md#adr-04)، [ADR-07](003-decisions-and-roadmap.md#adr-07)، DL-03 و DL-09 مراجعه کنید. بسته‌شدن این مورد به نگاشت مصوب وضعیت به مجوز ایجاد Signal و شواهد ورودی‌های غایب، دیررسیده و اصلاح‌شده نیاز دارد. این یادداشت سیاست انتشار یا قاعده‌ای برای داده نامعلوم انتخاب نمی‌کند.
++`Requirement`: خطای داده به‌تنهایی نباید Signal کسب‌وکار ایجاد کند (بریف، صفحه 14، بخش خطاهای داده). `Open`: بخش‌های 4، 5 و 7 وضعیت‌های کیفیت و Invalidation را تعریف می‌کنند، اما رکورد ارزیابی ارتباط DQIncident، KpiObservation متأثر و مجوز ایجاد Signal را مشخص نمی‌کنند. قرارداد داده به نسخه‌های مرتبط مسئله و مشاهده، دلیل ارزیابی و نسخه قاعده و سیاست نیاز دارد. به [ADR-04](decisions-registry.md#adr-04)، [ADR-07](decisions-registry.md#adr-07)، DL-03 و DL-09 مراجعه کنید. بسته‌شدن این مورد به نگاشت مصوب وضعیت به مجوز ایجاد Signal و شواهد ورودی‌های غایب، دیررسیده و اصلاح‌شده نیاز دارد. این یادداشت سیاست انتشار یا قاعده‌ای برای داده نامعلوم انتخاب نمی‌کند.
+ ```
+ 
+ </details>
+@@ -965,7 +965,7 @@
+ 
+ Closure criterion: Supply Definition/Entity/Dimension/date/snapshot/query inventory and a reproducible count method.
+ 
+-Source Evidence: [Source](../003-roadmap.md#decisions-8).
++Source Evidence: [Source](../003-roadmap.md#roadmap-measurement).
+ 
+ Dependencies: AT-02, AT-10.
+ 
+@@ -1008,7 +1008,7 @@
+ 
+ Closure criterion: Inspect item paths/versions, Docker/replay logs, three-UI evidence and cost reports. This task authorizes no commit or push.
+ 
+-Source Evidence: [Source](../003-roadmap.md#decisions-6).
++Source Evidence: [Source](../003-roadmap.md#roadmap-phases).
+ 
+ Dependencies: AT-11, AT-12, AT-18, AT-19, P5.
+ 
+--- before/Docs/architecture/registry/README.md
++++ after/Docs/architecture/registry/README.md
+@@ -2,7 +2,7 @@
+ 
+ State: **Draft / Pending Review**. Tasks: `ARCH-REG-001` extraction; `ARCH-REG-002` semantic audit. Date: 2026-11-09. Time zone: `Asia/Tehran`.
+ 
+-The team designates this Registry as the documentation location for architecture decisions, unresolved issues, risks, acceptance tests and traceability. ARCH-DOC-004 approves a source-preserving structural reorganization only. This designation approves no Open choice, Proposed mechanism, inferred link, missing contract or product test result. The original 003 filename now serves as a compatibility index.
++The team designates this Registry as the documentation location for architecture decisions, unresolved issues, risks, acceptance tests and traceability. ARCH-DOC-004 approves a source-preserving structural reorganization only. This designation approves no Open choice, Proposed mechanism, inferred link, missing contract or product test result. The former combined file has been removed after its content and references were checked. Use the current roadmap and Registry records.
+ 
+ ## Files and responsibilities
+ 
+@@ -133,3 +133,7 @@
+ | تصمیم اجرایی | مدیر تصمیم می‌گیرد؛ سیستم فقط draft وظیفه/پیام و پیگیری می‌سازد. |
+ 
+ انتخاب روش فنی اجرای این موارد هنوز باید review شود. ولی وجود قاعدهٔ اصلی نباید دوباره به یک پرسش کسب‌وکار تبدیل شود.
++
++## Current navigation maintenance
++
++ARCH-DOC-005 repairs navigation only. Use the [cleanup report](../cleanup-ARCH-DOC-005/report.md) for current link checks and the section map. Earlier audit reports, hashes, source paths and generator scripts describe their historical snapshots. Their findings and status records remain evidence. Do not run an earlier extraction script against the current document layout.
+--- before/Docs/architecture/registry/traceability-matrix.csv
++++ after/Docs/architecture/registry/traceability-matrix.csv
+@@ -344,9 +344,9 @@
+ REG-ISS-004,Registry Issue,DQ-to-Signal eligibility record,Open,Docs/architecture/002-data-architecture.md,data-5,Source section; proposed when no explicit ID is given,,,AT-05,,,Evidence Pending,relationship,AT-05,AT,references,Proposed Relationship,,,,Tracked at baseline
+ REG-ISS-004,Registry Issue,DQ-to-Signal eligibility record,Open,Docs/architecture/002-data-architecture.md,data-5,Source section; proposed when no explicit ID is given,,,AT-08,,,Evidence Pending,relationship,AT-08,AT,references,Proposed Relationship,,,,Tracked at baseline
+ REG-ISS-004,Registry Issue,DQ-to-Signal eligibility record,Open,Docs/architecture/002-data-architecture.md,data-5,Source section; proposed when no explicit ID is given,,,AT-24,,,Evidence Pending,relationship,AT-24,AT,references,Proposed Relationship,,,,Tracked at baseline
+-REG-ISS-005,Registry Issue,Claim of about 70 KPI outputs,Open,Docs/architecture/003-roadmap.md,decisions-8,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; REG-ISS-005,,,,,,Evidence Pending,record,,,,,,open-issues-registry.md,reg-iss-005,Tracked at baseline
+-REG-ISS-005,Registry Issue,Claim of about 70 KPI outputs,Open,Docs/architecture/003-roadmap.md,decisions-8,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Source section; proposed when no explicit ID is given,,,AT-02,,,Evidence Pending,relationship,AT-02,AT,references,Proposed Relationship,,,,Tracked at baseline
+-REG-ISS-005,Registry Issue,Claim of about 70 KPI outputs,Open,Docs/architecture/003-roadmap.md,decisions-8,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Source section; proposed when no explicit ID is given,,,AT-10,,,Evidence Pending,relationship,AT-10,AT,references,Proposed Relationship,,,,Tracked at baseline
++REG-ISS-005,Registry Issue,Claim of about 70 KPI outputs,Open,Docs/architecture/003-roadmap.md,roadmap-measurement,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; REG-ISS-005,,,,,,Evidence Pending,record,,,,,,open-issues-registry.md,reg-iss-005,Tracked at baseline
++REG-ISS-005,Registry Issue,Claim of about 70 KPI outputs,Open,Docs/architecture/003-roadmap.md,roadmap-measurement,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Source section; proposed when no explicit ID is given,,,AT-02,,,Evidence Pending,relationship,AT-02,AT,references,Proposed Relationship,,,,Tracked at baseline
++REG-ISS-005,Registry Issue,Claim of about 70 KPI outputs,Open,Docs/architecture/003-roadmap.md,roadmap-measurement,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Source section; proposed when no explicit ID is given,,,AT-10,,,Evidence Pending,relationship,AT-10,AT,references,Proposed Relationship,,,,Tracked at baseline
+ REG-ISS-006,Registry Issue,P5 delivery evidence gap,Open,Docs/architecture/registry/acceptance-register.md,delivery-checklist,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; REG-ISS-006,,,,,,Evidence Pending,record,,,,,,open-issues-registry.md,reg-iss-006,Tracked at baseline
+ REG-ISS-006,Registry Issue,P5 delivery evidence gap,Open,Docs/architecture/registry/acceptance-register.md,delivery-checklist,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Source section; proposed when no explicit ID is given,,,AT-11,,,Evidence Pending,relationship,AT-11,AT,references,Documented,,,,Tracked at baseline
+ REG-ISS-006,Registry Issue,P5 delivery evidence gap,Open,Docs/architecture/registry/acceptance-register.md,delivery-checklist,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Source section; proposed when no explicit ID is given,,,AT-12,,,Evidence Pending,relationship,AT-12,AT,references,Documented,,,,Tracked at baseline
+@@ -485,7 +485,7 @@
+ AT-02,AT,PostgreSQL equivalence,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-02,,,,Evidence Pending,relationship,DL-02,DL,referenced_by,Documented,,,,Tracked at baseline
+ AT-02,AT,PostgreSQL equivalence,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-16,,,,Evidence Pending,relationship,DL-16,DL,referenced_by,Documented,,,,Tracked at baseline
+ AT-02,AT,PostgreSQL equivalence,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-17,,,,Evidence Pending,relationship,DL-17,DL,referenced_by,Documented,,,,Tracked at baseline
+-AT-02,AT,PostgreSQL equivalence,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-8,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-005,Registry Issue,referenced_by,Proposed Relationship,,,,Tracked at baseline
++AT-02,AT,PostgreSQL equivalence,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-measurement,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-005,Registry Issue,referenced_by,Proposed Relationship,,,,Tracked at baseline
+ AT-03,AT,Cutoff and replay,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,at-03,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#at-03; AT-03,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,at-03,Tracked at baseline
+ AT-03,AT,Cutoff and replay,Planned / Not Executed,Docs/architecture/audit-2026-11-09/acceptance-basis.csv,,AT-03: README replay/input cutoff; brief14,,,,,,Evidence Pending,evidence,,,,,,,,Untracked at preflight
+ AT-03,AT,Cutoff and replay,Planned / Not Executed,Docs/architecture/registry/decisions-registry.md,adr-01,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#adr-01; ADR references this AT,ADR-01,,,,,Evidence Pending,relationship,ADR-01,ADR,referenced_by,Documented,,,,Tracked at baseline
+@@ -530,20 +530,20 @@
+ AT-10,AT,Evidence support,Planned / Not Executed,Docs/architecture/registry/decisions-registry.md,adr-09,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#adr-09; ADR references this AT,ADR-09,,,,,Evidence Pending,relationship,ADR-09,ADR,referenced_by,Documented,,,,Tracked at baseline
+ AT-10,AT,Evidence support,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-07,,,,Evidence Pending,relationship,DL-07,DL,referenced_by,Documented,,,,Tracked at baseline
+ AT-10,AT,Evidence support,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-11,,,,Evidence Pending,relationship,DL-11,DL,referenced_by,Documented,,,,Tracked at baseline
+-AT-10,AT,Evidence support,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-8,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-005,Registry Issue,referenced_by,Proposed Relationship,,,,Tracked at baseline
++AT-10,AT,Evidence support,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-measurement,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-005,Registry Issue,referenced_by,Proposed Relationship,,,,Tracked at baseline
+ AT-11,AT,Output and user interfaces,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,at-11,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#at-11; AT-11,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,at-11,Tracked at baseline
+ AT-11,AT,Output and user interfaces,Planned / Not Executed,Docs/architecture/audit-2026-11-09/acceptance-basis.csv,,"AT-11: Brief10-12,15; output schemas",,,,,,Evidence Pending,evidence,,,,,,,,Untracked at preflight
+ AT-11,AT,Output and user interfaces,Planned / Not Executed,Docs/architecture/registry/decisions-registry.md,adr-09,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#adr-09; ADR references this AT,ADR-09,,,,,Evidence Pending,relationship,ADR-09,ADR,referenced_by,Documented,,,,Tracked at baseline
+ AT-11,AT,Output and user interfaces,Planned / Not Executed,Docs/architecture/registry/decisions-registry.md,adr-14,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#adr-14; ADR references this AT,ADR-14,,,,,Evidence Pending,relationship,ADR-14,ADR,referenced_by,Documented,,,,Tracked at baseline
+ AT-11,AT,Output and user interfaces,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-11,,,,Evidence Pending,relationship,DL-11,DL,referenced_by,Documented,,,,Tracked at baseline
+-AT-11,AT,Output and user interfaces,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-006,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
++AT-11,AT,Output and user interfaces,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-006,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
+ AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,at-12,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#at-12; AT-12,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,at-12,Tracked at baseline
+ AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/audit-2026-11-09/acceptance-basis.csv,,"AT-12: Workflow stages; canonical workflow SQL; brief5-6,16",,,,,,Evidence Pending,evidence,,,,,,,,Untracked at preflight
+ AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/registry/decisions-registry.md,adr-15,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#adr-15; ADR references this AT,ADR-15,,,,,Evidence Pending,relationship,ADR-15,ADR,referenced_by,Documented,,,,Tracked at baseline
+ AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-08,,,,Evidence Pending,relationship,DL-08,DL,referenced_by,Documented,,,,Tracked at baseline
+-AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-001,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
++AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-001,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
+ AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/002-data-architecture.md,data-2,Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-003,Registry Issue,referenced_by,Proposed Relationship,,,,Tracked at baseline
+-AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-006,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
++AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-006,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
+ AT-13,AT,Prompt injection,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,at-13,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#at-13; AT-13,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,at-13,Tracked at baseline
+ AT-13,AT,Prompt injection,Planned / Not Executed,Docs/architecture/audit-2026-11-09/acceptance-basis.csv,,"AT-13: Brief13,17; injected operational upload",,,,,,Evidence Pending,evidence,,,,,,,,Untracked at preflight
+ AT-13,AT,Prompt injection,Planned / Not Executed,Docs/architecture/registry/decisions-registry.md,adr-16,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#adr-16; ADR references this AT,ADR-16,,,,,Evidence Pending,relationship,ADR-16,ADR,referenced_by,Documented,,,,Tracked at baseline
+@@ -557,7 +557,7 @@
+ AT-15,AT,Daily report coverage,Planned / Not Executed,Docs/architecture/registry/decisions-registry.md,adr-14,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#adr-14; ADR references this AT,ADR-14,,,,,Evidence Pending,relationship,ADR-14,ADR,referenced_by,Documented,,,,Tracked at baseline
+ AT-15,AT,Daily report coverage,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-10,,,,Evidence Pending,relationship,DL-10,DL,referenced_by,Documented,,,,Tracked at baseline
+ AT-15,AT,Daily report coverage,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-13,,,,Evidence Pending,relationship,DL-13,DL,referenced_by,Documented,,,,Tracked at baseline
+-AT-15,AT,Daily report coverage,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-001,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
++AT-15,AT,Daily report coverage,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-001,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
+ AT-16,AT,Manager QA,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,at-16,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#at-16; AT-16,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,at-16,Tracked at baseline
+ AT-16,AT,Manager QA,Planned / Not Executed,Docs/architecture/audit-2026-11-09/acceptance-basis.csv,,AT-16: Brief17; scripted questions,,,,,,Evidence Pending,evidence,,,,,,,,Untracked at preflight
+ AT-16,AT,Manager QA,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-16,,,,Evidence Pending,relationship,DL-16,DL,referenced_by,Documented,,,,Tracked at baseline
+@@ -573,12 +573,12 @@
+ AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/registry/decisions-registry.md,adr-14,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#adr-14; ADR references this AT,ADR-14,,,,,Evidence Pending,relationship,ADR-14,ADR,referenced_by,Documented,,,,Tracked at baseline
+ AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-14,,,,Evidence Pending,relationship,DL-14,DL,referenced_by,Documented,,,,Tracked at baseline
+ AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-16,,,,Evidence Pending,relationship,DL-16,DL,referenced_by,Documented,,,,Tracked at baseline
+-AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-006,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
++AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-006,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
+ AT-19,AT,Generalization and delivery,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,at-19,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#at-19; AT-19,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,at-19,Tracked at baseline
+ AT-19,AT,Generalization and delivery,Planned / Not Executed,Docs/architecture/audit-2026-11-09/acceptance-basis.csv,,"AT-19: Brief14,18",,,,,,Evidence Pending,evidence,,,,,,,,Untracked at preflight
+ AT-19,AT,Generalization and delivery,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-15,,,,Evidence Pending,relationship,DL-15,DL,referenced_by,Documented,,,,Tracked at baseline
+ AT-19,AT,Generalization and delivery,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-16,,,,Evidence Pending,relationship,DL-16,DL,referenced_by,Documented,,,,Tracked at baseline
+-AT-19,AT,Generalization and delivery,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-006,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
++AT-19,AT,Generalization and delivery,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-006,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
+ AT-20,AT,One bounded Agent,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,at-20,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#at-20; AT-20,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,at-20,Tracked at baseline
+ AT-20,AT,One bounded Agent,Planned / Not Executed,Docs/architecture/audit-2026-11-09/acceptance-basis.csv,,AT-20: User request1; S16 Q01; S17 agent,,,,,,Evidence Pending,evidence,,,,,,,,Untracked at preflight
+ AT-20,AT,One bounded Agent,Planned / Not Executed,Docs/architecture/registry/decisions-registry.md,adr-13,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#adr-13; ADR references this AT,ADR-13,,,,,Evidence Pending,relationship,ADR-13,ADR,referenced_by,Documented,,,,Tracked at baseline
+@@ -603,12 +603,12 @@
+ AT-25,AT,Every Workflow stage,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,at-25,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#at-25; AT-25,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,at-25,Tracked at baseline
+ AT-25,AT,Every Workflow stage,Planned / Not Executed,Docs/architecture/audit-2026-11-09/acceptance-basis.csv,,AT-25: workflow_definitions.csv12 stages and canonical workflow SQL,,,,,,Evidence Pending,evidence,,,,,,,,Untracked at preflight
+ AT-25,AT,Every Workflow stage,Planned / Not Executed,Docs/architecture/registry/decisions-registry.md,adr-15,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#adr-15; ADR references this AT,ADR-15,,,,,Evidence Pending,relationship,ADR-15,ADR,referenced_by,Documented,,,,Tracked at baseline
+-AT-25,AT,Every Workflow stage,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-001,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
++AT-25,AT,Every Workflow stage,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-001,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
+ AT-25,AT,Every Workflow stage,Planned / Not Executed,Docs/architecture/002-data-architecture.md,data-2,Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-003,Registry Issue,referenced_by,Proposed Relationship,,,,Tracked at baseline
+ AT-26,AT,Complete role report content,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,at-26,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#at-26; AT-26,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,at-26,Tracked at baseline
+ AT-26,AT,Complete role report content,Planned / Not Executed,Docs/architecture/audit-2026-11-09/acceptance-basis.csv,,"AT-26: Brief5,9-12,15",,,,,,Evidence Pending,evidence,,,,,,,,Untracked at preflight
+ AT-26,AT,Complete role report content,Planned / Not Executed,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; Issue test dependency,,DL-18,,,,Evidence Pending,relationship,DL-18,DL,referenced_by,Documented,,,,Tracked at baseline
+-AT-26,AT,Complete role report content,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-001,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
++AT-26,AT,Complete role report content,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Issue test dependency,,,,,,Evidence Pending,relationship,REG-ISS-001,Registry Issue,referenced_by,Documented,,,,Tracked at baseline
+ AT-27,AT,Controlled configuration and KPI extension,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,at-27,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#at-27; AT-27,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,at-27,Tracked at baseline
+ AT-27,AT,Controlled configuration and KPI extension,Planned / Not Executed,Docs/architecture/audit-2026-11-09/acceptance-basis.csv,,AT-27: Brief13; README KPI extension,,,,,,Evidence Pending,evidence,,,,,,,,Untracked at preflight
+ AT-27,AT,Controlled configuration and KPI extension,Planned / Not Executed,Docs/architecture/registry/decisions-registry.md,adr-01,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#adr-01; ADR references this AT,ADR-01,,,,,Evidence Pending,relationship,ADR-01,ADR,referenced_by,Documented,,,,Tracked at baseline
+@@ -692,18 +692,18 @@
+ AT-22,AT,Upload boundary,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,manager-question-map,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#manager-question-map; Full source supplement,,,,,,Evidence Pending,relationship,input-and-negative-cases,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
+ AT-29,AT,Manager-input lifecycle,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,manager-question-map,"ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#manager-question-map; Manager questions, seven other inputs and adversarial cases",,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
+ AT-29,AT,Manager-input lifecycle,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,manager-question-map,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#manager-question-map; Full source supplement,,,,,,Evidence Pending,relationship,input-and-negative-cases,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
+-AT-17,AT,Performance,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-8,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Daily performance and cost measurement,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
+-AT-17,AT,Performance,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-8,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Full source supplement,,,,,,Evidence Pending,relationship,measurement,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
+-AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-8,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Daily performance and cost measurement,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
+-AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-8,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Full source supplement,,,,,,Evidence Pending,relationship,measurement,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
+-AT-11,AT,Output and user interfaces,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; P5 full delivery checklist,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
+-AT-11,AT,Output and user interfaces,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Full source supplement,,,,,,Evidence Pending,relationship,delivery-checklist,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
+-AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; P5 full delivery checklist,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
+-AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Full source supplement,,,,,,Evidence Pending,relationship,delivery-checklist,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
+-AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; P5 full delivery checklist,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
+-AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Full source supplement,,,,,,Evidence Pending,relationship,delivery-checklist,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
+-AT-19,AT,Generalization and delivery,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; P5 full delivery checklist,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
+-AT-19,AT,Generalization and delivery,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Full source supplement,,,,,,Evidence Pending,relationship,delivery-checklist,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
++AT-17,AT,Performance,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-measurement,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Daily performance and cost measurement,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
++AT-17,AT,Performance,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-measurement,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Full source supplement,,,,,,Evidence Pending,relationship,measurement,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
++AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-measurement,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Daily performance and cost measurement,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
++AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-measurement,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Full source supplement,,,,,,Evidence Pending,relationship,measurement,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
++AT-11,AT,Output and user interfaces,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; P5 full delivery checklist,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
++AT-11,AT,Output and user interfaces,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Full source supplement,,,,,,Evidence Pending,relationship,delivery-checklist,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
++AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; P5 full delivery checklist,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
++AT-12,AT,Three Workflows,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Full source supplement,,,,,,Evidence Pending,relationship,delivery-checklist,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
++AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; P5 full delivery checklist,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
++AT-18,AT,Cost,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Full source supplement,,,,,,Evidence Pending,relationship,delivery-checklist,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
++AT-19,AT,Generalization and delivery,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; P5 full delivery checklist,,,,,,Evidence Pending,evidence,,,,,,,,Tracked at baseline
++AT-19,AT,Generalization and delivery,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Full source supplement,,,,,,Evidence Pending,relationship,delivery-checklist,Acceptance Supplement,has_criteria,Documented,,,,Tracked at baseline
+ S01,Source,S01,Source evidence,Docs/architecture/001-system-blueprint.md,system-2,S01,,,,,,Available,record,,,,,,,,Tracked at baseline
+ S01,Source,S01,Source evidence,Docs/بریف پروژه بوتکمپ _ دستیار ایجنتیک مدیران سازمانی _ دیدراه.pdf,,Actual local source member,,,,,,Available,evidence,,,,,,,,Tracked at baseline
+ S02,Source,S02,Source evidence,Docs/architecture/001-system-blueprint.md,system-2,S02,,,,,,Available,record,,,,,,,,Tracked at baseline
+@@ -4102,12 +4102,12 @@
+ DEC-HUMAN,Decision Boundary,Organizational decisions and execution authority remain human-controlled.,Accepted,Docs/architecture/audit-2026-11-09/requirements-traceability.csv,,DEC-HUMAN; docs/architecture/audit-2026-11-09/request.txt; section 1: Important accepted decisions; Accepted target boundary,,,AT-29,,,Evidence Pending,relationship,AT-29,AT,references,Proposed Relationship,,,,Untracked at preflight
+ DEC-HUMAN,Decision Boundary,Organizational decisions and execution authority remain human-controlled.,Accepted,Docs/architecture/audit-2026-11-09/requirements-traceability.csv,,DEC-HUMAN; docs/architecture/audit-2026-11-09/request.txt; section 1: Important accepted decisions; Accepted target boundary,,,,,,Evidence Pending,relationship,decisions,Architecture Component,references,Proposed Relationship,decisions,,,Untracked at preflight
+ DEC-HUMAN,Decision Boundary,Organizational decisions and execution authority remain human-controlled.,Accepted,Docs/architecture/audit-2026-11-09/requirements-traceability.csv,,DEC-HUMAN; docs/architecture/audit-2026-11-09/request.txt; section 1: Important accepted decisions; Accepted target boundary,,,,,,Evidence Pending,relationship,agent,Architecture Component,references,Proposed Relationship,agent,,,Untracked at preflight
+-P0,Roadmap Phase,P0,Proposed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
+-P1,Roadmap Phase,P1,Proposed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
+-P2,Roadmap Phase,P2,Proposed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
+-P3,Roadmap Phase,P3,Proposed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
+-P4,Roadmap Phase,P4,Proposed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
+-P5,Roadmap Phase,P5,Proposed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
++P0,Roadmap Phase,P0,Proposed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
++P1,Roadmap Phase,P1,Proposed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
++P2,Roadmap Phase,P2,Proposed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
++P3,Roadmap Phase,P3,Proposed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
++P4,Roadmap Phase,P4,Proposed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
++P5,Roadmap Phase,P5,Proposed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; Phase table,,,,,,Not implemented,record,,,,,,,,Tracked at baseline
+ ingestion,Architecture Component,ingestion,Target model; not implemented,Docs/architecture/001-system-blueprint.md,system-4,"| SourceAdapter / IngestionCoordinator | `ingestion`, `quality` | دریافت ساخت‌یافته و مسائل داده. |",,,,,,Model documented,record,,,,,,,,Tracked at baseline
+ quality,Architecture Component,quality,Target model; not implemented,Docs/architecture/001-system-blueprint.md,system-4,"| SourceAdapter / IngestionCoordinator | `ingestion`, `quality` | دریافت ساخت‌یافته و مسائل داده. |",,,,,,Model documented,record,,,,,,,,Tracked at baseline
+ snapshots,Architecture Component,snapshots,Target model; not implemented,Docs/architecture/001-system-blueprint.md,system-4,| SnapshotService / ProjectionService | `snapshots` | ورودی‌های واجد شرایط نسخه‌دار و Observationهای مشتق‌شده. |,,,,,,Model documented,record,,,,,,,,Tracked at baseline
+@@ -4200,8 +4200,8 @@
+ rule-matrix,Acceptance Supplement,R1-R8 cases,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,decisions-7,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-7; R1-R8 cases,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,rule-matrix,Tracked baseline
+ oracle-boundaries,Acceptance Supplement,Oracle boundaries,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,decisions-7,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-7; Oracle boundaries,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,oracle-boundaries,Tracked baseline
+ input-and-negative-cases,Acceptance Supplement,Manager inputs and negative cases,Planned / Not Executed,Docs/architecture/registry/acceptance-register.md,manager-question-map,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#manager-question-map; Manager inputs and negative cases,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,input-and-negative-cases,Tracked baseline
+-measurement,Acceptance Supplement,Performance and cost measurement,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-8,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Performance and cost measurement,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,measurement,Tracked baseline
+-delivery-checklist,Acceptance Supplement,P5 delivery checklist,Planned / Not Executed,Docs/architecture/003-roadmap.md,decisions-6,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; P5 delivery checklist,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,delivery-checklist,Tracked baseline
++measurement,Acceptance Supplement,Performance and cost measurement,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-measurement,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-8; Performance and cost measurement,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,measurement,Tracked baseline
++delivery-checklist,Acceptance Supplement,P5 delivery checklist,Planned / Not Executed,Docs/architecture/003-roadmap.md,roadmap-phases,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decisions-6; P5 delivery checklist,,,,,,Evidence Pending,record,,,,,,acceptance-register.md,delivery-checklist,Tracked baseline
+ DL-04,DL,Selective rebuild and restatement,Open,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; DL-04; explicit compressed ADR list,ADR-05,,,,,Evidence Pending,relationship,ADR-05,ADR,references,Documented,,,,Tracked baseline
+ ADR-05,ADR,Restatement and report versions,Mixed; see statements,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; DL-04; explicit compressed ADR list,,DL-04,,,,Evidence Pending,relationship,DL-04,DL,has_open_detail,Documented,,,,Tracked baseline
+ DL-10,DL,"M11, same-day uploads and calendar known-at",Open,Docs/architecture/registry/open-issues-registry.md,decision-log,ARCH-DOC-004 source location; original Docs/architecture/003-decisions-and-roadmap.md#decision-log; DL-10; explicit compressed ADR list,ADR-16,,,,,Evidence Pending,relationship,ADR-16,ADR,references,Documented,,,,Tracked baseline
+--- before/Docs/architecture/restructure-ARCH-DOC-004/report.md
++++ after/Docs/architecture/restructure-ARCH-DOC-004/report.md
+@@ -19,8 +19,8 @@
+ | 003 section 7, AT-01 through AT-30 | [Acceptance register](../registry/acceptance-register.md) | Keep full criteria, seven shared supplements, authority notes, three-level content matrix, R1-R8 and manager-input cases. |
+ | 003 section 9 | [Historical verification](../004-reconciliation-review.md#decisions-9) | Append unchanged historical text. Explain its historical Git context. |
+ | 003 section 10, DL-01 through DL-19 | [Open issue records](../registry/open-issues-registry.md) | Keep original rows, intro, alternatives and qualifications. Keep ten existing Registry issues. |
+-| Final execution-scope paragraph | [Execution gates](../003-roadmap.md#execution-gates) | Keep original conditions. Add no dependency. |
+-| Old 003 file and anchors | [Compatibility document](../003-decisions-and-roadmap.md) | Keep 95 legacy explicit and heading anchors with current navigation. Keep no duplicate decision bodies. |
++| Final execution-scope paragraph | [Execution gates](../003-roadmap.md#roadmap-execution-gates) | Keep original conditions. Add no dependency. |
++| Old 003 file and anchors | [Compatibility document](../registry/README.md#source-context) | Keep 95 legacy explicit and heading anchors with current navigation. Keep no duplicate decision bodies. |
+ | Original 004 reconciliation | [004](../004-reconciliation-review.md) | Keep all original evidence, Q01-Q17, authority and conclusions. Change active navigation only. |
+ 
+ The [complete line map](content-location-map.csv) locates all 346 non-empty original 003 lines in current readable documents. The [source promotion ledger](source-extract-promotion.csv) records 85 source extracts made readable. Four quoted data-model extracts remain evidence in the issue register. Document 002 remains their data-contract location. No unique section was left without a current location.
+--- before/Docs/architecture/visualizations/open-questions.md
++++ after/Docs/architecture/visualizations/open-questions.md
+@@ -1,6 +1,6 @@
+ # Open questions and review points
+ 
+-Review date: 2026-11-09. No item below changes the supplied access matrix or an Accepted architecture decision. These are diagram review IDs, now prefixed VQ. They are not the S16 architecture questions or S07 manager-input questions. Read the [Q01-Q17 map](../004-reconciliation-review.md#question-map) and [central Decision Log](../003-decisions-and-roadmap.md#decision-log).
++Review date: 2026-11-09. No item below changes the supplied access matrix or an Accepted architecture decision. These are diagram review IDs, now prefixed VQ. They are not the S16 architecture questions or S07 manager-input questions. Read the [Q01-Q17 map](../004-reconciliation-review.md#question-map) and [central Decision Log](../registry/open-issues-registry.md#decision-log).
+ 
+ Use Open and Proposed as decision statuses. Observation is evidence, not approval. The earlier CONFIRMED label never establishes team approval.
+ 
+--- before/Docs/architecture/visualizations/proposed-entity-contracts.md
++++ after/Docs/architecture/visualizations/proposed-entity-contracts.md
+@@ -28,6 +28,6 @@
+ | AuthContext / access log / budget ledger | Security context and records | Logical security layer only; no final DDL. |
+ | DQIncident / ExpectedDelivery | Data issue and expected delivery | A missing delivery can have an issue without a SourceFile. |
+ 
+-The conceptual links remain Proposed physical contracts. PostgreSQL is the only product database engine, including KPI and custom-query calculation. This engine boundary is Accepted in [ADR-01](../003-decisions-and-roadmap.md#adr-01). The former SQLite product calculator is superseded. An isolated reference test oracle is outside the product. SQL equivalence, final DDL, indexes, security roles, retention, and join-table keys remain Open or Proposed. These entities are not installed tables.
++The conceptual links remain Proposed physical contracts. PostgreSQL is the only product database engine, including KPI and custom-query calculation. This engine boundary is Accepted in [ADR-01](../registry/decisions-registry.md#adr-01). The former SQLite product calculator is superseded. An isolated reference test oracle is outside the product. SQL equivalence, final DDL, indexes, security roles, retention, and join-table keys remain Open or Proposed. These entities are not installed tables.
+ 
+ Use [document 002](../002-data-architecture.md#data-2) for the current logical grains and additional internal records. Structurizr has component views, but no detailed entity ERD. That is a [recorded visualization gap](../audit-2026-11-09/structurizr-gap-report.md), not a reason to invent a view or physical FK.
+--- before/Docs/architecture/visualizations/README.md
++++ after/Docs/architecture/visualizations/README.md
+@@ -25,4 +25,4 @@
+ 
+ The original 26 raw diagram files remain unchanged as historical material. Their rendered previews are retired. Do not use or regenerate them as architecture views. The old build_documentation.py and its validators target that historical output; they were not run or revised. A later tooling decision must prevent their output from replacing the Structurizr baseline.
+ 
+-Review Q01-Q17 belongs to [S16](../sources/Adr.md). Manager Q01-Q16 belongs to the dataset inputs. VQ01-VQ10 belongs to the [legacy review register](open-questions.md). Keep these namespaces separate. Read the [central Decision Log](../003-decisions-and-roadmap.md#decision-log) for unresolved policies.
++Review Q01-Q17 belongs to [S16](../sources/Adr.md). Manager Q01-Q16 belongs to the dataset inputs. VQ01-VQ10 belongs to the [legacy review register](open-questions.md). Keep these namespaces separate. Read the [central Decision Log](../registry/open-issues-registry.md#decision-log) for unresolved policies.
+--- before/Docs/architecture/visualizations/security-examples.md
++++ after/Docs/architecture/visualizations/security-examples.md
+@@ -1,6 +1,6 @@
+ # Security examples
+ 
+-Status note: source restrictions are Requirements. CONFIRMED/DERIVED are legacy evidence labels, not Accepted decisions. Candidate field projections and enforcement remain Proposed; UNRESOLVED means Open. Q IDs here are manager-input questions. See [ADR-06](../003-decisions-and-roadmap.md#adr-06), the [policy log](../003-decisions-and-roadmap.md#decision-log), and the [Structurizr view catalog](../audit-2026-11-09/structurizr-gap-report.md).
++Status note: source restrictions are Requirements. CONFIRMED/DERIVED are legacy evidence labels, not Accepted decisions. Candidate field projections and enforcement remain Proposed; UNRESOLVED means Open. Q IDs here are manager-input questions. See [ADR-06](../registry/decisions-registry.md#adr-06), the [policy log](../registry/open-issues-registry.md#decision-log), and the [Structurizr view catalog](../audit-2026-11-09/structurizr-gap-report.md).
+ 
+ These examples describe requirements and candidate projections. They do not create grants. Evidence: `dataset/org/access_matrix.csv`, the original brief pages 6, 10, 12, and 13, and each cited KPI SQL. Source paths are relative to the project root.
+ 
+--- before/Docs/review/dq-001-report.md
++++ after/Docs/review/dq-001-report.md
+@@ -18,7 +18,7 @@
+ 
+ ## 2. Source and dependency map
+ 
+-Authorities are [README_FA.md](../dataset/README_FA.md), [kpi_dictionary.csv](../dataset/config/kpi_dictionary.csv), and [reference_views.sql](../dataset/config/reference_views.sql). Relevant manifests and source records were read directly. The [RCA report](rca-001-report.md), [KPI validation report](kpi-val-001-report.md), and [prior results CSV](kpi-val-001-results.csv) supplied the previous findings and masking states. They do not replace the original definitions.
++Authorities are [README_FA.md](../../DataSet/arka_dataset/README_FA.md), [kpi_dictionary.csv](../../DataSet/arka_dataset/config/kpi_dictionary.csv), and [reference_views.sql](../../DataSet/arka_dataset/config/reference_views.sql). Relevant manifests and source records were read directly. The [RCA report](rca-001-report.md), [KPI validation report](kpi-val-001-report.md), and [prior results CSV](kpi-val-001-results.csv) supplied the previous findings and masking states. They do not replace the original definitions.
+ 
+ The analysis executes all 55 original SQL definitions in five isolated scenarios: 275 successful query cases. It uses SQLite memory, the compatible median aggregate, original julianday expressions, and SQLite ROUND. Calendar date is exposed as d. CRM delivery day comes from manifests. Historical ticket aliases are mapped only in memory.
+ 
+@@ -127,7 +127,7 @@
+ 
+ ## 3. Morning 67 availability analysis
+ 
+-Real morning 67 permits only drops 000–066. [Day 066 manifest](../dataset/drops/day_066/manifest.json) and its directory omit tickets.csv, ticket_events.csv, and csat.csv. No support row from day 067 was admitted to the real calculation.
++Real morning 67 permits only drops 000–066. [Day 066 manifest](../../DataSet/arka_dataset/drops/day_066/manifest.json) and its directory omit tickets.csv, ticket_events.csv, and csat.csv. No support row from day 067 was admitted to the real calculation.
+ 
+ The primary comparison domain contains all reference output keys through business day 066. It includes 40 initial CRM history dates where the original KPI returns them. The unit is one KPI/business-date/dimension key. RAW and DEDUP agree at these cutoffs and are counted once. Repeated KPI definitions are separate definitions, as in the dictionary.
+ 
+@@ -147,13 +147,13 @@
+ 
+ Unknown missing rows need not have day 066 event dates. The README permits late arrivals without a maximum delay. The supplied files contain no source-closure watermark or independent expected total. Therefore, a rule such as “all dates before day 066 are complete” is not supported.
+ 
+-Seven older events provide direct evidence against a day-066-only hold. They are dated day 065 and arrive in day 067. Their source coordinates are lines 2–8 of [day 067 ticket_events.csv](../dataset/drops/day_067/ticket_events.csv). They comprise two first responses, four resolutions, and one inspection.
++Seven older events provide direct evidence against a day-066-only hold. They are dated day 065 and arrive in day 067. Their source coordinates are lines 2–8 of [day 067 ticket_events.csv](../../DataSet/arka_dataset/drops/day_067/ticket_events.csv). They comprise two first responses, four resolutions, and one inspection.
+ 
+ These later records show a result change. They do not establish the intended delivery schedule of every record. The files do not independently distinguish outage backfill from ordinary late arrival.
+ 
+ ## 4. Morning 68 recovery analysis
+ 
+-Real morning 68 permits drops 000–067. [Day 067 manifest](../dataset/drops/day_067/manifest.json) matches the actual source file counts.
++Real morning 68 permits drops 000–067. [Day 067 manifest](../../DataSet/arka_dataset/drops/day_067/manifest.json) matches the actual source file counts.
+ 
+ | Day 067 file | Dated day 065 | Dated day 066 | Dated day 067 | Total |
+ | --- | --- | --- | --- | --- |
+--- before/Docs/review/kpi-val-001-report.md
++++ after/Docs/review/kpi-val-001-report.md
+@@ -10,7 +10,7 @@
+ 
+ ## 1. Execution coverage and failed KPI definitions
+ 
+-The controlling sources are [README_FA.md](../dataset/README_FA.md), [kpi_dictionary.csv](../dataset/config/kpi_dictionary.csv), and [reference_views.sql](../dataset/config/reference_views.sql). All SQL strings were executed without formula changes. Targets, warning limits, critical limits, dimensions, and units were retained. This task did not evaluate alert repetition, escalation, or manager brief selection.
++The controlling sources are [README_FA.md](../../DataSet/arka_dataset/README_FA.md), [kpi_dictionary.csv](../../DataSet/arka_dataset/config/kpi_dictionary.csv), and [reference_views.sql](../../DataSet/arka_dataset/config/reference_views.sql). All SQL strings were executed without formula changes. Targets, warning limits, critical limits, dimensions, and units were retained. This task did not evaluate alert repetition, escalation, or manager brief selection.
+ 
+ | Phase | Cutoff | Definitions per mode | Scheduled KPI cases | SQL failures |
+ | --- | --- | --- | --- | --- |
+@@ -238,7 +238,7 @@
+ 
+ ## 5. Data-quality incident: duplicate orders on day 076
+ 
+-Sources: [day 076 orders](../dataset/drops/day_076/orders.csv), [day 076 manifest](../dataset/drops/day_076/manifest.json), and [reference_views.sql](../dataset/config/reference_views.sql).
++Sources: [day 076 orders](../../DataSet/arka_dataset/drops/day_076/orders.csv), [day 076 manifest](../../DataSet/arka_dataset/drops/day_076/manifest.json), and [reference_views.sql](../../DataSet/arka_dataset/config/reference_views.sql).
+ 
+ The complete order input has 37,851 rows. DEDUP retains 37,589 payloads and excludes 262 exact repeated occurrences from the analytical input. All exclusions occur within day 076. Its order file has 699 raw rows and 437 distinct payloads. The manifest correctly declares 699 rows. Manifest agreement does not prove unique order grain.
+ 
+@@ -256,7 +256,7 @@
+ 
+ ### Missing support delivery
+ 
+-[Day 066 manifest](../dataset/drops/day_066/manifest.json) and its directory omit tickets.csv, ticket_events.csv, and csat.csv. At morning 67, support-dependent outputs have status unavailable_missing_support. Raw SQL values remain for audit. Reportable values are empty.
++[Day 066 manifest](../../DataSet/arka_dataset/drops/day_066/manifest.json) and its directory omit tickets.csv, ticket_events.csv, and csat.csv. At morning 67, support-dependent outputs have status unavailable_missing_support. Raw SQL values remain for audit. Reportable values are empty.
+ 
+ This validation uses a conservative source-level mask for all historical outputs of the 20 support-dependent KPIs in that one snapshot. It masks 1,848 comparison keys, or 3,696 mode values. The README requires NULL for unavailable data and a data issue. It does not specify this exact historical invalidation boundary.
+ 
+@@ -285,7 +285,7 @@
+ - K_CMP_TICKETS
+ - K_CMP_BACKLOG
+ 
+-[Day 067](../dataset/drops/day_067/manifest.json) contains 104 tickets, 229 ticket events, and 25 CSAT rows dated 2026-09-26, the day 066 business date. They become available at morning 68. They were not admitted to morning 67.
++[Day 067](../../DataSet/arka_dataset/drops/day_067/manifest.json) contains 104 tickets, 229 ticket events, and 25 CSAT rows dated 2026-09-26, the day 066 business date. They become available at morning 68. They were not admitted to morning 67.
+ 
+ Later delivery is verified. Completeness against an independent source total is not verified. After this observed backfill, the validation calculates on delivered rows. It does not certify source completeness.
+ 
+@@ -304,7 +304,7 @@
+ 
+ ### Schema and date boundaries
+ 
+-The [calendar](../dataset/calendar/calendar_days.csv) is exposed as cal, with date named d. Its other fields and all 90 rows are retained.
++The [calendar](../../DataSet/arka_dataset/calendar/calendar_days.csv) is exposed as cal, with date named d. Its other fields and all 90 rows are retained.
+ 
+ Some calendar joins return future-date zero rows in an early snapshot. The CSV preserves those SQL outputs. It marks 10,407 replay keys as future_business_date. Reportable values and deltas are empty. These keys are excluded from numerical agreement counts.
+ 
+--- before/Docs/review/rca-001-report.md
++++ after/Docs/review/rca-001-report.md
+@@ -19,7 +19,7 @@
+ 
+ ## 2. Sources and methods
+ 
+-The controlling sources are [README_FA.md](../dataset/README_FA.md), [kpi_dictionary.csv](../dataset/config/kpi_dictionary.csv), [reference_views.sql](../dataset/config/reference_views.sql), the calendar, the original drop files, and their manifests. The [project brief](../Project_berif/بریف%20پروژه%20بوتکمپ%20_%20دستیار%20ایجنتیک%20مدیران%20سازمانی%20_%20دیدراه.pdf) was also examined. Its pages 14 and 17 classify late records, historical corrections, repeated exports, and schema changes as data issues. Page 16 requires agreement with reference queries. These pages do not supply an order deduplication rule or a same-drop correction tie rule.
++The controlling sources are [README_FA.md](../../DataSet/arka_dataset/README_FA.md), [kpi_dictionary.csv](../../DataSet/arka_dataset/config/kpi_dictionary.csv), [reference_views.sql](../../DataSet/arka_dataset/config/reference_views.sql), the calendar, the original drop files, and their manifests. The [project brief](../%D8%A8%D8%B1%DB%8C%D9%81%20%D9%BE%D8%B1%D9%88%DA%98%D9%87%20%D8%A8%D9%88%D8%AA%DA%A9%D9%85%D9%BE%20_%20%D8%AF%D8%B3%D8%AA%DB%8C%D8%A7%D8%B1%20%D8%A7%DB%8C%D8%AC%D9%86%D8%AA%DB%8C%DA%A9%20%D9%85%D8%AF%DB%8C%D8%B1%D8%A7%D9%86%20%D8%B3%D8%A7%D8%B2%D9%85%D8%A7%D9%86%DB%8C%20_%20%D8%AF%DB%8C%D8%AF%D8%B1%D8%A7%D9%87.pdf) was also examined. Its pages 14 and 17 classify late records, historical corrections, repeated exports, and schema changes as data issues. Page 16 requires agreement with reference queries. These pages do not supply an order deduplication rule or a same-drop correction tie rule.
+ 
+ The investigation excluded `dataset/explore_data.py` as an authority. It did not use prior audit reports or generated profiles as proof. No web source, package installation, download, persistent database, commit, or push was used.
+ 
+@@ -34,7 +34,7 @@
+ ### CAL-01: The README defines cal and the date alias.
+ 
+ - Status: verified.
+-- Evidence: [dataset/README_FA.md:54-57](../dataset/README_FA.md); [dataset/config/reference_views.sql:45-45](../dataset/config/reference_views.sql); [dataset/calendar/calendar_days.csv:1-2](../dataset/calendar/calendar_days.csv).
++- Evidence: [dataset/README_FA.md:54-57](../../DataSet/arka_dataset/README_FA.md); [dataset/config/reference_views.sql:45-45](../../DataSet/arka_dataset/config/reference_views.sql); [dataset/calendar/calendar_days.csv:1-2](../../DataSet/arka_dataset/calendar/calendar_days.csv).
+ - Reproduction: Search every UTF-8 original dataset file for the word cal. Exclude explore_data.py. Extract c.<column> from each KPI SQL string.
+ - Impact: 23 KPI definitions directly need cal. revenue_daily also needs it. Loading the CSV with its original date name does not meet the SQL interface.
+ - Confidence: High: explicit source rule and complete local search.
+@@ -78,7 +78,7 @@
+ ### CAL-02: Calendar coverage meets the documented 90-day input period.
+ 
+ - Status: verified.
+-- Evidence: [dataset/calendar/calendar_days.csv:1-91](../dataset/calendar/calendar_days.csv); [dataset/README_FA.md:7-16](../dataset/README_FA.md); [dataset/config/monthly_targets.csv](../dataset/config/monthly_targets.csv).
++- Evidence: [dataset/calendar/calendar_days.csv:1-91](../../DataSet/arka_dataset/calendar/calendar_days.csv); [dataset/README_FA.md:7-16](../../DataSet/arka_dataset/README_FA.md); [dataset/config/monthly_targets.csv](../../DataSet/arka_dataset/config/monthly_targets.csv).
+ - Reproduction: Parse ISO dates; compare the set with each date from minimum to maximum; check day_idx sequence and all numbered manifest dates.
+ - Impact: No date gap or duplicate explains the cal failure. Morning 91 uses drop 90. The initial CRM history is outside the calendar by design.
+ - Confidence: High: all 90 calendar rows and 90 dated manifests checked.
+@@ -103,7 +103,7 @@
+ ### CRM-01: The raw CRM event schema omits the delivery field used by lead_fact.
+ 
+ - Status: verified.
+-- Evidence: [dataset/config/reference_views.sql:20-32](../dataset/config/reference_views.sql); [dataset/drops/day_070/crm_lead_events.csv:1-1](../dataset/drops/day_070/crm_lead_events.csv); [dataset/drops/day_070/manifest.json:2-3](../dataset/drops/day_070/manifest.json).
++- Evidence: [dataset/config/reference_views.sql:20-32](../../DataSet/arka_dataset/config/reference_views.sql); [dataset/drops/day_070/crm_lead_events.csv:1-1](../../DataSet/arka_dataset/drops/day_070/crm_lead_events.csv); [dataset/drops/day_070/manifest.json:2-3](../../DataSet/arka_dataset/drops/day_070/manifest.json).
+ - Reproduction: Compare every CRM event header. Execute the original lead_fact definition against the raw event columns in an isolated memory database.
+ - Impact: The view query fails with no such column: x.drop_day. Event time cannot replace delivery time.
+ - Confidence: High: header scan and SQL failure reproduced.
+@@ -117,7 +117,7 @@
+ ### CRM-02: One correction arrives six days late and changes earlier revenue after it becomes available.
+ 
+ - Status: verified.
+-- Evidence: [dataset/drops/day_064/crm_lead_events.csv:8-8](../dataset/drops/day_064/crm_lead_events.csv); [dataset/drops/day_070/crm_lead_events.csv:50-50](../dataset/drops/day_070/crm_lead_events.csv); [dataset/README_FA.md:16-16](../dataset/README_FA.md); [dataset/config/reference_views.sql:28-31](../dataset/config/reference_views.sql); [dataset/config/reference_views.sql:43-45](../dataset/config/reference_views.sql).
++- Evidence: [dataset/drops/day_064/crm_lead_events.csv:8-8](../../DataSet/arka_dataset/drops/day_064/crm_lead_events.csv); [dataset/drops/day_070/crm_lead_events.csv:50-50](../../DataSet/arka_dataset/drops/day_070/crm_lead_events.csv); [dataset/README_FA.md:16-16](../../DataSet/arka_dataset/README_FA.md); [dataset/config/reference_views.sql:28-31](../../DataSet/arka_dataset/config/reference_views.sql); [dataset/config/reference_views.sql:43-45](../../DataSet/arka_dataset/config/reference_views.sql).
+ - Reproduction: Group value_corrected rows by lead; compare delivery date with event date; run the original lead_fact select at event cutoffs 63,64,69,70,90 in memory.
+ - Impact: L02045 changes from 27,300,000 to 15,000,000 toman. Morning reports 65 through 70 must not use this correction. It first becomes available in morning 71. revenue_daily assigns it to the won date, 2026-09-24.
+ - Confidence: High: complete correction scan and target-lead SQL checks.
+@@ -155,7 +155,7 @@
+ ### CRM-03: The supplied rows do not test multiple-correction precedence.
+ 
+ - Status: unknown.
+-- Evidence: [dataset/config/reference_views.sql:28-31](../dataset/config/reference_views.sql); [dataset/drops/day_070/crm_lead_events.csv:50-50](../dataset/drops/day_070/crm_lead_events.csv).
++- Evidence: [dataset/config/reference_views.sql:28-31](../../DataSet/arka_dataset/config/reference_views.sql); [dataset/drops/day_070/crm_lead_events.csv:50-50](../../DataSet/arka_dataset/drops/day_070/crm_lead_events.csv).
+ - Reproduction: Count correction rows per lead and per lead/drop. Inspect all event fields and the ORDER BY clause.
+ - Impact: There is one correction and no observed tie. Same-drop corrections with different values would have no documented secondary order. at is an effective event timestamp, not proof of correction issue order.
+ - Confidence: High for the absence of observed ties; the intended tied-case behavior is unknown.
+@@ -169,7 +169,7 @@
+ ### MED-01: The local SQLite build lacks the required median aggregate.
+ 
+ - Status: verified.
+-- Evidence: [dataset/README_FA.md:54-57](../dataset/README_FA.md); [dataset/config/reference_views.sql:2-2](../dataset/config/reference_views.sql); [dataset/config/kpi_dictionary.csv:6-53](../dataset/config/kpi_dictionary.csv).
++- Evidence: [dataset/README_FA.md:54-57](../../DataSet/arka_dataset/README_FA.md); [dataset/config/reference_views.sql:2-2](../../DataSet/arka_dataset/config/reference_views.sql); [dataset/config/kpi_dictionary.csv:6-53](../../DataSet/arka_dataset/config/kpi_dictionary.csv).
+ - Reproduction: Call median in the unmodified local SQLite connection. Compare an isolated diagnostic aggregate, a ranked SQL middle-row average, and pandas on the same Julian-day samples.
+ - Impact: Nine KPI definitions cannot run in the unmodified connection. All 806 observed KPI/date groups agree after SQLite rounding when their input expressions stay the same.
+ - Confidence: High for the tested SQLite build and supplied data. PostgreSQL equivalence was not executed.
+@@ -209,7 +209,7 @@
+ ### MED-02: Equivalent median selection does not guarantee equivalent timestamp arithmetic or rounding.
+ 
+ - Status: verified.
+-- Evidence: [dataset/config/kpi_dictionary.csv:6-6](../dataset/config/kpi_dictionary.csv); [dataset/config/kpi_dictionary.csv:39-39](../dataset/config/kpi_dictionary.csv); [dataset/config/kpi_dictionary.csv:53-53](../dataset/config/kpi_dictionary.csv).
++- Evidence: [dataset/config/kpi_dictionary.csv:6-6](../../DataSet/arka_dataset/config/kpi_dictionary.csv); [dataset/config/kpi_dictionary.csv:39-39](../../DataSet/arka_dataset/config/kpi_dictionary.csv); [dataset/config/kpi_dictionary.csv:53-53](../../DataSet/arka_dataset/config/kpi_dictionary.csv).
+ - Reproduction: Compare SQLite julianday differences with Python datetime differences; apply final SQLite ROUND in both paths. Test empty, all-NULL, odd, even, mixed-NULL, negative, and fractional samples.
+ - Impact: Native datetime arithmetic changes 8 KPI/date outputs across the repeated FRT definitions and complaint resolution. Rounding with Python can also differ. The final delivery-days formula divides by 24 before final rounding.
+ - Confidence: High: actual rounded differences and boundary experiments retained.
+@@ -234,7 +234,7 @@
+ ### ORD-01: One delivery contains 262 extra exact order rows.
+ 
+ - Status: verified.
+-- Evidence: [dataset/drops/day_076/orders.csv:1-700](../dataset/drops/day_076/orders.csv); [dataset/drops/day_076/manifest.json](../dataset/drops/day_076/manifest.json).
++- Evidence: [dataset/drops/day_076/orders.csv:1-700](../../DataSet/arka_dataset/drops/day_076/orders.csv); [dataset/drops/day_076/manifest.json](../../DataSet/arka_dataset/drops/day_076/manifest.json).
+ - Reproduction: Count full-row tuples and order_id groups across all order deliveries. Record every duplicate row path and line. Compare business-key groups with exact-row groups.
+ - Impact: There are 37,851 raw rows and 37,589 order IDs. All duplicate keys have identical source values. All 262 extra rows occur within day 076; there are no cross-day order duplicates.
+ - Confidence: High: complete scan, row locations, and matching manifest count.
+@@ -262,7 +262,7 @@
+ ### ORD-02: Raw order joins inflate both payments and refund subtraction.
+ 
+ - Status: verified.
+-- Evidence: [dataset/config/reference_views.sql:36-45](../dataset/config/reference_views.sql); [dataset/drops/day_076/orders.csv](../dataset/drops/day_076/orders.csv); [dataset/drops](../dataset/drops) (day_*/order_events.csv); [dataset/README_FA.md:54-57](../dataset/README_FA.md).
++- Evidence: [dataset/config/reference_views.sql:36-45](../../DataSet/arka_dataset/config/reference_views.sql); [dataset/drops/day_076/orders.csv](../../DataSet/arka_dataset/drops/day_076/orders.csv); [dataset/drops](../../DataSet/arka_dataset/drops) (day_*/order_events.csv); [dataset/README_FA.md:54-57](../../DataSet/arka_dataset/README_FA.md).
+ - Reproduction: Compute paid event gross with Python counters and independent SQLite joins. Repeat with full-row DISTINCT only inside the diagnostic query. Repeat the B2C paid-minus-refunded expression.
+ - Impact: Gross rises by 347,454,000 toman with raw order rows. Refund subtraction rises by 15,394,000 toman. The B2C net diagnostic difference is 332,060,000 toman. The input relation to the authoritative SQL needs an acceptance rule.
+ - Confidence: High for the diagnostic sums; accepted deduplication behavior is unknown.
+@@ -301,7 +301,7 @@
+ ### ORD-03: order_fact removes repeated keys after the join, but raw-order KPIs still count them.
+ 
+ - Status: verified.
+-- Evidence: [dataset/config/reference_views.sql:3-12](../dataset/config/reference_views.sql); [dataset/config/kpi_dictionary.csv:7-7](../dataset/config/kpi_dictionary.csv); [dataset/config/kpi_dictionary.csv:12-12](../dataset/config/kpi_dictionary.csv); [dataset/config/kpi_dictionary.csv:24-24](../dataset/config/kpi_dictionary.csv); [dataset/config/kpi_dictionary.csv:33-33](../dataset/config/kpi_dictionary.csv).
++- Evidence: [dataset/config/reference_views.sql:3-12](../../DataSet/arka_dataset/config/reference_views.sql); [dataset/config/kpi_dictionary.csv:7-7](../../DataSet/arka_dataset/config/kpi_dictionary.csv); [dataset/config/kpi_dictionary.csv:12-12](../../DataSet/arka_dataset/config/kpi_dictionary.csv); [dataset/config/kpi_dictionary.csv:24-24](../../DataSet/arka_dataset/config/kpi_dictionary.csv); [dataset/config/kpi_dictionary.csv:33-33](../../DataSet/arka_dataset/config/kpi_dictionary.csv).
+ - Reproduction: Count left-join rows before and after a full-row DISTINCT diagnostic; count grouped order_fact rows. Scan event tuples and order/event keys.
+ - Impact: The raw left join produces 146,054 rows versus 145,027 in the diagnostic. GROUP BY order_id returns 37,589 rows. MAX event timestamps stay the same for current exact duplicates. COUNT on orders and the damage-category ticket/orders join can still be inflated.
+ - Confidence: High for current exact duplicates. Conflicting future order versions are not tested.
+@@ -319,7 +319,7 @@
+ ### CROSS-01: The day 066 support gap is followed by dated records in day 067.
+ 
+ - Status: verified.
+-- Evidence: [dataset/drops/day_066/manifest.json](../dataset/drops/day_066/manifest.json); [dataset/drops/day_067/manifest.json](../dataset/drops/day_067/manifest.json); [dataset/drops/day_067/tickets.csv:2-4](../dataset/drops/day_067/tickets.csv); [dataset/drops/day_067/ticket_events.csv:9-11](../dataset/drops/day_067/ticket_events.csv); [dataset/drops/day_067/csat.csv:2-4](../dataset/drops/day_067/csat.csv); [dataset/README_FA.md:41-51](../dataset/README_FA.md); [dataset/README_FA.md:89-91](../dataset/README_FA.md).
++- Evidence: [dataset/drops/day_066/manifest.json](../../DataSet/arka_dataset/drops/day_066/manifest.json); [dataset/drops/day_067/manifest.json](../../DataSet/arka_dataset/drops/day_067/manifest.json); [dataset/drops/day_067/tickets.csv:2-4](../../DataSet/arka_dataset/drops/day_067/tickets.csv); [dataset/drops/day_067/ticket_events.csv:9-11](../../DataSet/arka_dataset/drops/day_067/ticket_events.csv); [dataset/drops/day_067/csat.csv:2-4](../../DataSet/arka_dataset/drops/day_067/csat.csv); [dataset/README_FA.md:41-51](../../DataSet/arka_dataset/README_FA.md); [dataset/README_FA.md:89-91](../../DataSet/arka_dataset/README_FA.md).
+ - Reproduction: Compare expected source files with each manifest and directory. Group support rows dated 2026-09-26 by their actual delivery drop.
+ - Impact: Day 067 contains 104 tickets, 229 ticket events, and 25 CSAT rows dated day 066. They are unavailable for morning 67 and available for morning 68. Event-date-only reconstruction would leak these rows into morning 67. Completeness against an independent source total is not known.
+ - Confidence: High for missing files and delivered rows; full source completeness is unknown.
+@@ -335,7 +335,7 @@
+ ### CROSS-02: Two support timestamp columns change at day 082.
+ 
+ - Status: verified.
+-- Evidence: [dataset/drops/day_081/tickets.csv:1-1](../dataset/drops/day_081/tickets.csv); [dataset/drops/day_082/tickets.csv:1-1](../dataset/drops/day_082/tickets.csv); [dataset/drops/day_081/ticket_events.csv:1-1](../dataset/drops/day_081/ticket_events.csv); [dataset/drops/day_082/ticket_events.csv:1-1](../dataset/drops/day_082/ticket_events.csv); [dataset/config/reference_views.sql:14-19](../dataset/config/reference_views.sql).
++- Evidence: [dataset/drops/day_081/tickets.csv:1-1](../../DataSet/arka_dataset/drops/day_081/tickets.csv); [dataset/drops/day_082/tickets.csv:1-1](../../DataSet/arka_dataset/drops/day_082/tickets.csv); [dataset/drops/day_081/ticket_events.csv:1-1](../../DataSet/arka_dataset/drops/day_081/ticket_events.csv); [dataset/drops/day_082/ticket_events.csv:1-1](../../DataSet/arka_dataset/drops/day_082/ticket_events.csv); [dataset/config/reference_views.sql:14-19](../../DataSet/arka_dataset/config/reference_views.sql).
+ - Reproduction: Compare every delivered CSV header. Count rows under each changed schema. Use aliases only within the temporary median experiment.
+ - Impact: tickets.created_at becomes create_time for 745 rows. ticket_events.at becomes event_time for 1,692 rows. Ignoring the new fields loses support times and can bias medians, backlog, SLA, and damage-rate metrics.
+ - Confidence: High: all delivered headers checked.
+--- before/Docs/review/team-guide-technical-review.md
++++ after/Docs/review/team-guide-technical-review.md
+@@ -36,7 +36,7 @@
+ | `review/kpi-val-001-report.md`، `kpi-val-001-evidence.json` و `kpi-val-001-results.csv` | گزارش پوشش همه KPIها؛ ساختار شواهد؛ CSV به‌عنوان خروجی قبلی موجود است | بازاجرای کامل انجام نشد |
+ | `review/dq-001-report.md`، `dq-001-evidence.json` و `dq-001-kpi-impact.csv` | وابستگی‌ها، سناریوها و محدودیت‌های بازیابی | شواهد قبلی؛ سیاست تولید مصوب نیست |
+ | `review/exploration/README_FA.md` و فایل‌های JSON اکتشاف | فهرست، پوشش، تغییر ستون و ارتباط‌ها | شواهد اولیه |
+-| `docs/architecture/001-system-blueprint.md`، `002-data-architecture.md`، `003-decisions-and-roadmap.md` | ساختار، تصمیم‌ها، خطرها و معیار خروج | پیشنهاد معماری؛ محصول اجراشده نیست |
++| [001](../architecture/001-system-blueprint.md)، [002](../architecture/002-data-architecture.md)، [Roadmap](../architecture/003-roadmap.md)، [Registry](../architecture/registry/README.md) | ساختار، تصمیم‌ها، خطرها و معیار خروج | پیشنهاد معماری؛ محصول اجراشده نیست |
+ | `audit_report.txt` و گزارش‌های مرحله‌ای موجود | فهرست موجود؛ بخش آغاز گزارش اصلی خوانده شد | جایگزین ممیزی دقیق‌تر نیستند |
+ | `analysis.ipynb`، `test_analysis.py` و اسکریپت‌های اکتشاف | فهرست فایل‌ها؛ محتوای اسکریپت آزمایشی | مدرک pipeline تولیدی نیستند |
+ 

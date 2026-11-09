@@ -1,0 +1,20 @@
+{
+  "tables": 26,
+  "table_column_pairs": 139,
+  "csv_files": 1093,
+  "drop_csv_files": 1079,
+  "json_files": 95,
+  "diagrams": 26,
+  "svg_files": 0,
+  "kpis": 55,
+  "managers": 11,
+  "access_entries": 1529,
+  "relationships": 23,
+  "confirmed_relationships": 11,
+  "derived_relationships": 12,
+  "enforced_foreign_keys": 0,
+  "protected_existing_files": 1222,
+  "protected_hashes_unchanged": true,
+  "mermaid_status": "Structural checks only; parser/render unavailable; no packages installed and no network service used",
+  "sql_status": "All 55 original statements compiled with SQLite EXPLAIN against five original views; no KPI results calculated"
+}

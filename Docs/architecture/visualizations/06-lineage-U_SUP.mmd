@@ -1,0 +1,30 @@
+flowchart LR
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  cal["cal: calculation input"]
+  csat["csat: calculation input"]
+  ticket_events["ticket_events: calculation input"]
+  tickets["tickets: calculation input"]
+  ticket_fact["ticket_fact: SQL view"]
+  tickets -->|DERIVED execution input| ticket_fact
+  ticket_events -->|DERIVED execution input| ticket_fact
+  tickets -->|"DERIVED join/filter: ticket_id"| ticket_fact
+  K_SUP_FRT_MED["K_SUP_FRT_MED"]
+  ticket_fact -->|DERIVED computation| K_SUP_FRT_MED
+  ticket_events -->|"DERIVED join/population: ticket_id"| K_SUP_FRT_MED
+  tickets -->|"DERIVED join/population: ticket_id"| K_SUP_FRT_MED
+  K_SUP_FRT_MED -->|CONFIRMED entity_id| U_SUP
+  K_SUP_CSAT["K_SUP_CSAT"]
+  csat -->|DERIVED computation| K_SUP_CSAT
+  K_SUP_CSAT -->|CONFIRMED entity_id| U_SUP
+  K_SUP_TICKETS["K_SUP_TICKETS"]
+  cal -->|DERIVED computation| K_SUP_TICKETS
+  tickets -->|DERIVED computation| K_SUP_TICKETS
+  K_SUP_TICKETS -->|CONFIRMED entity_id| U_SUP
+  K_SUP_BACKLOG["K_SUP_BACKLOG"]
+  cal -->|DERIVED computation| K_SUP_BACKLOG
+  ticket_fact -->|DERIVED computation| K_SUP_BACKLOG
+  ticket_events -->|"DERIVED join/population: ticket_id"| K_SUP_BACKLOG
+  tickets -->|"DERIVED join/population: ticket_id"| K_SUP_BACKLOG
+  K_SUP_BACKLOG -->|CONFIRMED entity_id| U_SUP
+  U_SUP -.->|CONFIRMED aggregate display; active dates apply| M01
+  U_SUP -.->|CONFIRMED aggregate display; active dates apply| M04

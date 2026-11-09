@@ -1,0 +1,56 @@
+flowchart LR
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  cal["cal: calculation input"]
+  crm_lead_events["crm_lead_events: calculation input"]
+  crm_leads["crm_leads: calculation input"]
+  order_events["order_events: calculation input"]
+  orders["orders: calculation input"]
+  task_events["task_events: calculation input"]
+  tasks["tasks: calculation input"]
+  lead_fact["lead_fact: SQL view"]
+  crm_leads -->|DERIVED execution input| lead_fact
+  crm_lead_events -->|DERIVED execution input| lead_fact
+  crm_leads -->|"DERIVED join/filter: lead_id; drop_day correction selection"| lead_fact
+  revenue_daily["revenue_daily: SQL view"]
+  orders -->|DERIVED execution input| revenue_daily
+  order_events -->|DERIVED execution input| revenue_daily
+  lead_fact -->|DERIVED execution input| revenue_daily
+  cal -->|DERIVED execution input| revenue_daily
+  orders -->|"DERIVED join/filter: order_id; date; channel and event filters"| revenue_daily
+  task_fact["task_fact: SQL view"]
+  tasks -->|DERIVED execution input| task_fact
+  task_events -->|DERIVED execution input| task_fact
+  tasks -->|"DERIVED join/filter: task_id"| task_fact
+  K_ENT_FC_SLA["K_ENT_FC_SLA"]
+  lead_fact -->|DERIVED computation| K_ENT_FC_SLA
+  crm_lead_events -->|"DERIVED join/population: lead_id"| K_ENT_FC_SLA
+  crm_leads -->|"DERIVED join/population: lead_id"| K_ENT_FC_SLA
+  K_ENT_FC_SLA -->|CONFIRMED entity_id| T_ENT
+  K_ENT_WINRATE_30D["K_ENT_WINRATE_30D"]
+  cal -->|DERIVED computation| K_ENT_WINRATE_30D
+  lead_fact -->|DERIVED computation| K_ENT_WINRATE_30D
+  crm_lead_events -->|"DERIVED join/population: lead_id"| K_ENT_WINRATE_30D
+  crm_leads -->|"DERIVED join/population: lead_id"| K_ENT_WINRATE_30D
+  K_ENT_WINRATE_30D -->|CONFIRMED entity_id| T_ENT
+  K_ENT_PIPELINE["K_ENT_PIPELINE"]
+  cal -->|DERIVED computation| K_ENT_PIPELINE
+  lead_fact -->|DERIVED computation| K_ENT_PIPELINE
+  crm_lead_events -->|"DERIVED join/population: lead_id"| K_ENT_PIPELINE
+  crm_leads -->|"DERIVED join/population: lead_id"| K_ENT_PIPELINE
+  K_ENT_PIPELINE -->|CONFIRMED entity_id| T_ENT
+  K_ENT_CONTRACT_MTD["K_ENT_CONTRACT_MTD"]
+  cal -->|DERIVED computation| K_ENT_CONTRACT_MTD
+  revenue_daily -->|DERIVED computation| K_ENT_CONTRACT_MTD
+  cal -->|"DERIVED join/population: d"| K_ENT_CONTRACT_MTD
+  crm_lead_events -->|"DERIVED join/population: drop_day, lead_id"| K_ENT_CONTRACT_MTD
+  crm_leads -->|"DERIVED join/population: lead_id"| K_ENT_CONTRACT_MTD
+  K_ENT_CONTRACT_MTD -->|CONFIRMED entity_id| T_ENT
+  K_TASK_OVERDUE_T_ENT["K_TASK_OVERDUE_T_ENT"]
+  cal -->|DERIVED computation| K_TASK_OVERDUE_T_ENT
+  task_fact -->|DERIVED computation| K_TASK_OVERDUE_T_ENT
+  task_events -->|"DERIVED join/population: task_id"| K_TASK_OVERDUE_T_ENT
+  tasks -->|"DERIVED join/population: task_id"| K_TASK_OVERDUE_T_ENT
+  K_TASK_OVERDUE_T_ENT -->|CONFIRMED entity_id| T_ENT
+  T_ENT -.->|CONFIRMED aggregate display; active dates apply| M01
+  T_ENT -.->|CONFIRMED aggregate display; active dates apply| M02
+  T_ENT -.->|CONFIRMED aggregate display; active dates apply| M05

@@ -1,0 +1,25 @@
+erDiagram
+  tickets {
+    string ticket_id "text; observed CSV"
+    string created_at "timestamp_lexeme; observed CSV"
+    string category "text; observed CSV"
+    string team_id "text; observed CSV"
+    string order_id "text; observed CSV"
+    string channel "text; observed CSV"
+    string text_fa "text; observed CSV"
+    string create_time "timestamp_lexeme; observed CSV"
+  }
+  ticket_events {
+    string ticket_id "text; observed CSV"
+    string event "text; observed CSV"
+    string at "timestamp_lexeme; observed CSV"
+    string staff_id "text; observed CSV"
+    string event_time "timestamp_lexeme; observed CSV"
+  }
+  csat {
+    string ticket_id "text; observed CSV"
+    string answered_at "timestamp_lexeme; observed CSV"
+    string score "integer_lexeme; observed CSV"
+  }
+  tickets |o..o{ ticket_events : "DERIVED ticket_id; not enforced"
+  tickets |o..o{ csat : "DERIVED ticket_id; not enforced"

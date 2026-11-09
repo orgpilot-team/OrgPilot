@@ -1,0 +1,13 @@
+erDiagram
+  crm_leads {
+    string lead_id "text; observed CSV"
+    string source "text; observed CSV"
+    string created_at "timestamp_lexeme; observed CSV"
+  }
+  crm_lead_events {
+    string lead_id "text; observed CSV"
+    string event "text; observed CSV"
+    string at "timestamp_lexeme; observed CSV"
+    string contract_value_toman "decimal_lexeme; observed CSV"
+  }
+  crm_leads |o..o{ crm_lead_events : "DERIVED lead_id; not enforced"

@@ -1,0 +1,36 @@
+erDiagram
+  calendar__calendar_days {
+    string date "date_lexeme; observed CSV"
+    string day_idx "integer_lexeme; observed CSV"
+    string jdate "text; observed CSV"
+    string jmonth "text; observed CSV"
+    string day_in_month "integer_lexeme; observed CSV"
+    string mdays "integer_lexeme; observed CSV"
+    string iwd "integer_lexeme; observed CSV"
+    string is_holiday "integer_lexeme; observed CSV"
+  }
+  calendar__events_calendar {
+    string date "date_lexeme; observed CSV"
+    string end_date "date_lexeme; observed CSV"
+    string type "text; observed CSV"
+    string title_fa "text; observed CSV"
+    string detail_fa "text; observed CSV"
+  }
+  history__decisions_history {
+    string decision_id "text; observed CSV"
+    string decided_day "integer_lexeme; observed CSV"
+    string decided_date "date_lexeme; observed CSV"
+    string manager_id "text; observed CSV"
+    string signal_fa "text; observed CSV"
+    string decision_fa "text; observed CSV"
+    string success_criterion_fa "text; observed CSV"
+    string outcome_fa "text; observed CSV"
+  }
+  history__legacy_weekly_sales_report_by_sales_team {
+    string week_no "integer_lexeme; observed CSV"
+    string sales_toman "integer_lexeme; observed CSV"
+  }
+  uploads__day080_M02_external_sales_report {
+    string week "text; observed CSV"
+    string فروش_تومان "integer_lexeme; observed CSV"
+  }

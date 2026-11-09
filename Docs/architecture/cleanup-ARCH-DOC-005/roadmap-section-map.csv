@@ -1,0 +1,8 @@
+before_file,before_heading,after_file,after_heading,after_anchor,action
+Docs/architecture/003-roadmap.md,# ARCH-001: Implementation roadmap,Docs/architecture/003-roadmap.md,# ARCH-001: نقشه راه پیاده‌سازی,roadmap-overview,Heading and numbering only; body retained
+Docs/architecture/003-roadmap.md,## ۴. اولویت پاسخ‌های لازم,Docs/architecture/003-roadmap.md,## ۱. اولویت پاسخ‌های لازم,roadmap-prerequisites,Heading and numbering only; body retained
+Docs/architecture/003-roadmap.md,## ۶. مسیر مرحله‌ای پیاده‌سازی پس از بازبینی,Docs/architecture/003-roadmap.md,## ۲. مسیر مرحله‌ای پیاده‌سازی پس از بازبینی,roadmap-phases,Heading and numbering only; body retained
+Docs/architecture/003-roadmap.md,### ۶.۱. کمترین مسیر سرتاسری قابل بررسی,Docs/architecture/003-roadmap.md,### ۲.۱. کمترین مسیر سرتاسری قابل بررسی,roadmap-first-slice,Heading and numbering only; body retained
+Docs/architecture/003-roadmap.md,## ۸. اندازه‌گیری عملکرد و هزینه,Docs/architecture/003-roadmap.md,## ۳. اندازه‌گیری عملکرد و هزینه,roadmap-measurement,Heading and numbering only; body retained
+Docs/architecture/003-roadmap.md,## Execution gate context retained from the former Decision Log,Docs/architecture/003-roadmap.md,## ۴. شرایط شروع اجرای محصول,roadmap-execution-gates,Heading and numbering only; body retained
+Docs/architecture/003-roadmap.md,## Governance and delivery navigation,Docs/architecture/003-roadmap.md,## ۵. مراجع حاکمیت و تحویل,roadmap-governance,Heading and numbering only; body retained

@@ -1,0 +1,37 @@
+{
+  "state": "Draft / Pending Review",
+  "inferred_classified": 2470,
+  "source_specific_classification_groups": 180,
+  "existing_edge_groups": 108,
+  "queue_groups": 109,
+  "questionable_relationships": 274,
+  "questionable_existing_groups": 47,
+  "missing_candidate_pairs": 2,
+  "missing_candidate_groups": 1,
+  "priorities_relationships": {
+    "P0": 1830,
+    "P1": 620,
+    "P2": 20
+  },
+  "priorities_queue_groups": {
+    "P0": 75,
+    "P1": 30,
+    "P2": 4
+  },
+  "dispositions_relationships": {
+    "Questionable": 274,
+    "Defensible / Pending Confirmation": 2186,
+    "Navigation / Pending Confirmation": 10
+  },
+  "kpi_orders_cases": {
+    "value-orders": 22,
+    "no-orders-relation": 32,
+    "declared-execution-only": 1
+  },
+  "kpis_historical_sensitive": 8,
+  "all_kpi_to_orders_edges": 55,
+  "input_test_template_mismatches": 20,
+  "matrix_modified": false,
+  "source_documents_modified": false,
+  "product_tests_executed": false
+}

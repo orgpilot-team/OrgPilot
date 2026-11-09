@@ -1,0 +1,67 @@
+flowchart LR
+  LEGEND["CONFIRMED: direct evidence | DERIVED: SQL or measured relation<br/>PROPOSED: review required | UNRESOLVED: evidence gap"]
+  cal["cal: calculation input"]
+  order_events["order_events: calculation input"]
+  orders["orders: calculation input"]
+  task_events["task_events: calculation input"]
+  tasks["tasks: calculation input"]
+  ticket_events["ticket_events: calculation input"]
+  tickets["tickets: calculation input"]
+  order_fact["order_fact: SQL view"]
+  orders -->|DERIVED execution input| order_fact
+  order_events -->|DERIVED execution input| order_fact
+  orders -->|"DERIVED join/filter: order_id"| order_fact
+  task_fact["task_fact: SQL view"]
+  tasks -->|DERIVED execution input| task_fact
+  task_events -->|DERIVED execution input| task_fact
+  tasks -->|"DERIVED join/filter: task_id"| task_fact
+  ticket_fact["ticket_fact: SQL view"]
+  tickets -->|DERIVED execution input| ticket_fact
+  ticket_events -->|DERIVED execution input| ticket_fact
+  tickets -->|"DERIVED join/filter: ticket_id"| ticket_fact
+  K_WH_PICK_MED["K_WH_PICK_MED"]
+  order_fact -->|DERIVED computation| K_WH_PICK_MED
+  order_events -->|"DERIVED join/population: order_id"| K_WH_PICK_MED
+  orders -->|"DERIVED join/population: order_id"| K_WH_PICK_MED
+  K_WH_PICK_MED -->|CONFIRMED entity_id| T_WH
+  K_WH_PICK_12H_PCT["K_WH_PICK_12H_PCT"]
+  order_fact -->|DERIVED computation| K_WH_PICK_12H_PCT
+  order_events -->|"DERIVED join/population: order_id"| K_WH_PICK_12H_PCT
+  orders -->|"DERIVED join/population: order_id"| K_WH_PICK_12H_PCT
+  K_WH_PICK_12H_PCT -->|CONFIRMED entity_id| T_WH
+  K_WH_BACKLOG["K_WH_BACKLOG"]
+  cal -->|DERIVED computation| K_WH_BACKLOG
+  order_fact -->|DERIVED computation| K_WH_BACKLOG
+  order_events -->|"DERIVED join/population: order_id"| K_WH_BACKLOG
+  orders -->|"DERIVED join/population: order_id"| K_WH_BACKLOG
+  K_WH_BACKLOG -->|CONFIRMED entity_id| T_WH
+  K_WH_DAMAGE_RATE["K_WH_DAMAGE_RATE"]
+  cal -->|DERIVED computation| K_WH_DAMAGE_RATE
+  order_fact -->|DERIVED computation| K_WH_DAMAGE_RATE
+  tickets -->|DERIVED computation| K_WH_DAMAGE_RATE
+  order_events -->|"DERIVED join/population: order_id"| K_WH_DAMAGE_RATE
+  orders -->|"DERIVED join/population: order_id"| K_WH_DAMAGE_RATE
+  K_WH_DAMAGE_RATE -->|CONFIRMED entity_id| T_WH
+  K_WH_DAMAGE_BY_CAT_7D["K_WH_DAMAGE_BY_CAT_7D"]
+  cal -->|DERIVED computation| K_WH_DAMAGE_BY_CAT_7D
+  order_fact -->|DERIVED computation| K_WH_DAMAGE_BY_CAT_7D
+  orders -->|DERIVED computation| K_WH_DAMAGE_BY_CAT_7D
+  tickets -->|DERIVED computation| K_WH_DAMAGE_BY_CAT_7D
+  order_events -->|"DERIVED join/population: order_id"| K_WH_DAMAGE_BY_CAT_7D
+  orders -->|"DERIVED join/population: order_id"| K_WH_DAMAGE_BY_CAT_7D
+  tickets -->|"DERIVED join/population: order_id"| K_WH_DAMAGE_BY_CAT_7D
+  K_WH_DAMAGE_BY_CAT_7D -->|CONFIRMED entity_id| T_WH
+  K_WH_INSPECT_MED["K_WH_INSPECT_MED"]
+  ticket_fact -->|DERIVED computation| K_WH_INSPECT_MED
+  ticket_events -->|"DERIVED join/population: ticket_id"| K_WH_INSPECT_MED
+  tickets -->|"DERIVED join/population: ticket_id"| K_WH_INSPECT_MED
+  K_WH_INSPECT_MED -->|CONFIRMED entity_id| T_WH
+  K_TASK_OVERDUE_T_WH["K_TASK_OVERDUE_T_WH"]
+  cal -->|DERIVED computation| K_TASK_OVERDUE_T_WH
+  task_fact -->|DERIVED computation| K_TASK_OVERDUE_T_WH
+  task_events -->|"DERIVED join/population: task_id"| K_TASK_OVERDUE_T_WH
+  tasks -->|"DERIVED join/population: task_id"| K_TASK_OVERDUE_T_WH
+  K_TASK_OVERDUE_T_WH -->|CONFIRMED entity_id| T_WH
+  T_WH -.->|CONFIRMED aggregate display; active dates apply| M01
+  T_WH -.->|CONFIRMED aggregate display; active dates apply| M03
+  T_WH -.->|CONFIRMED aggregate display; active dates apply| M07

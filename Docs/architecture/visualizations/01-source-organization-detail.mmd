@@ -1,0 +1,42 @@
+erDiagram
+  org__units {
+    string unit_id "text; observed CSV"
+    string name_fa "text; observed CSV"
+    string parent_id "text; observed CSV"
+    string manager_id "text; observed CSV"
+  }
+  org__teams {
+    string team_id "text; observed CSV"
+    string name_fa "text; observed CSV"
+    string unit_id "text; observed CSV"
+    string supervisor_id "text; observed CSV"
+    string effective_from_day "integer_lexeme; observed CSV"
+    string effective_from_date "date_lexeme; observed CSV"
+  }
+  org__managers {
+    string manager_id "text; observed CSV"
+    string role_fa "text; observed CSV"
+    string scope_entity "text; observed CSV"
+    string name_fa "text; observed CSV"
+    string level "integer_lexeme; observed CSV"
+    string effective_from_day "integer_lexeme; observed CSV"
+  }
+  org__staff {
+    string staff_id "text; observed CSV"
+    string name_fa "text; observed CSV"
+    string team_id "text; observed CSV"
+    string effective_from_day "integer_lexeme; observed CSV"
+    string effective_to_day "empty_only; observed CSV"
+  }
+  org__access_matrix {
+    string manager_id "text; observed CSV"
+    string visible_entities "text; observed CSV"
+    string individual_level_data_team "text; observed CSV"
+    string note_fa "text; observed CSV"
+  }
+  org__teams |o..o{ org__staff : "CONFIRMED team_id; not enforced"
+  org__units |o..o{ org__teams : "CONFIRMED unit_id; not enforced"
+  org__managers |o..o{ org__teams : "CONFIRMED supervisor_id; not enforced"
+  org__managers |o..o{ org__units : "CONFIRMED manager_id; not enforced"
+  org__units |o..o{ org__units : "CONFIRMED parent_id; not enforced"
+  org__managers |o..o{ org__access_matrix : "CONFIRMED manager_id; not enforced"

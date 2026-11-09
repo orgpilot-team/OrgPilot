@@ -1,0 +1,1161 @@
+{
+  "elements": [
+    {
+      "identifier": "supervisor",
+      "kind": "person",
+      "name": "Team Supervisor",
+      "source_line": 106
+    },
+    {
+      "identifier": "unitManager",
+      "kind": "person",
+      "name": "Unit Manager",
+      "source_line": 107
+    },
+    {
+      "identifier": "executive",
+      "kind": "person",
+      "name": "Senior Executive",
+      "source_line": 108
+    },
+    {
+      "identifier": "sources",
+      "kind": "softwareSystem",
+      "name": "Simulated Organizational Sources",
+      "source_line": 110
+    },
+    {
+      "identifier": "inputDriver",
+      "kind": "softwareSystem",
+      "name": "Scripted Manager Input Driver",
+      "source_line": 115
+    },
+    {
+      "identifier": "providers",
+      "kind": "softwareSystem",
+      "name": "Local or External AI Model Providers",
+      "source_line": 120
+    },
+    {
+      "identifier": "arka",
+      "kind": "softwareSystem",
+      "name": "ARKA Executive Assistant",
+      "source_line": 126
+    },
+    {
+      "identifier": "web",
+      "kind": "container",
+      "name": "Web Frontend",
+      "source_line": 130
+    },
+    {
+      "identifier": "chatUi",
+      "kind": "component",
+      "name": "Conversational Assistant",
+      "source_line": 131
+    },
+    {
+      "identifier": "dashboardUi",
+      "kind": "component",
+      "name": "Role-Based BI Dashboard",
+      "source_line": 132
+    },
+    {
+      "identifier": "controlUi",
+      "kind": "component",
+      "name": "Executive Workflow Control Room",
+      "source_line": 133
+    },
+    {
+      "identifier": "api",
+      "kind": "container",
+      "name": "Backend API",
+      "source_line": 136
+    },
+    {
+      "identifier": "requests",
+      "kind": "component",
+      "name": "Application API",
+      "source_line": 140
+    },
+    {
+      "identifier": "access",
+      "kind": "component",
+      "name": "Identity and Access Policies",
+      "source_line": 145
+    },
+    {
+      "identifier": "managerConfig",
+      "kind": "component",
+      "name": "Manager Configuration",
+      "source_line": 150
+    },
+    {
+      "identifier": "documents",
+      "kind": "component",
+      "name": "Document Intake and Evidence Registration",
+      "source_line": 155
+    },
+    {
+      "identifier": "queryGateway",
+      "kind": "component",
+      "name": "Query Gateway",
+      "source_line": 160
+    },
+    {
+      "identifier": "evidence",
+      "kind": "component",
+      "name": "Evidence Service",
+      "source_line": 165
+    },
+    {
+      "identifier": "agent",
+      "kind": "component",
+      "name": "Bounded AI Agent",
+      "source_line": 170
+    },
+    {
+      "identifier": "insights",
+      "kind": "component",
+      "name": "Shared Insight Brief Management",
+      "source_line": 175
+    },
+    {
+      "identifier": "reportWriter",
+      "kind": "component",
+      "name": "Report Writer",
+      "source_line": 180
+    },
+    {
+      "identifier": "outputValidator",
+      "kind": "component",
+      "name": "Output Validator",
+      "source_line": 185
+    },
+    {
+      "identifier": "publication",
+      "kind": "component",
+      "name": "Publication",
+      "source_line": 190
+    },
+    {
+      "identifier": "audit",
+      "kind": "component",
+      "name": "Audit and Evaluation",
+      "source_line": 195
+    },
+    {
+      "identifier": "decisions",
+      "kind": "component",
+      "name": "Decision and Follow-up",
+      "source_line": 200
+    },
+    {
+      "identifier": "worker",
+      "kind": "container",
+      "name": "Background Processing Worker",
+      "source_line": 207
+    },
+    {
+      "identifier": "jobs",
+      "kind": "component",
+      "name": "Schedule and Replay Control",
+      "source_line": 211
+    },
+    {
+      "identifier": "ingestion",
+      "kind": "component",
+      "name": "Ingestion Adapters",
+      "source_line": 216
+    },
+    {
+      "identifier": "quality",
+      "kind": "component",
+      "name": "Data Quality and Preprocessing",
+      "source_line": 221
+    },
+    {
+      "identifier": "snapshots",
+      "kind": "component",
+      "name": "Snapshot Management",
+      "source_line": 226
+    },
+    {
+      "identifier": "kpi",
+      "kind": "component",
+      "name": "KPI Engine",
+      "source_line": 231
+    },
+    {
+      "identifier": "workflows",
+      "kind": "component",
+      "name": "Workflow Engine",
+      "source_line": 236
+    },
+    {
+      "identifier": "signals",
+      "kind": "component",
+      "name": "Signal Engine",
+      "source_line": 241
+    },
+    {
+      "identifier": "postgres",
+      "kind": "container",
+      "name": "PostgreSQL",
+      "source_line": 248
+    },
+    {
+      "identifier": "rawFiles",
+      "kind": "container",
+      "name": "Protected Raw File Storage",
+      "source_line": 253
+    },
+    {
+      "identifier": "modelGateway",
+      "kind": "container",
+      "name": "LLM Gateway",
+      "source_line": 258
+    },
+    {
+      "identifier": "overviewInputs",
+      "kind": "element",
+      "name": "Sources & Manager Inputs",
+      "source_line": 387
+    },
+    {
+      "identifier": "overviewData",
+      "kind": "element",
+      "name": "Intake & Trusted Data",
+      "source_line": 392
+    },
+    {
+      "identifier": "overviewProcessing",
+      "kind": "element",
+      "name": "Deterministic Analytics",
+      "source_line": 399
+    },
+    {
+      "identifier": "overviewAccess",
+      "kind": "element",
+      "name": "Authorized Evidence",
+      "source_line": 406
+    },
+    {
+      "identifier": "overviewAnalysis",
+      "kind": "element",
+      "name": "AI Analysis & Shared Insight",
+      "source_line": 412
+    },
+    {
+      "identifier": "overviewReports",
+      "kind": "element",
+      "name": "Role-Based Report Generation",
+      "source_line": 419
+    },
+    {
+      "identifier": "overviewDelivery",
+      "kind": "element",
+      "name": "Validation & Daily Brief",
+      "source_line": 426
+    },
+    {
+      "identifier": "overviewInterfaces",
+      "kind": "element",
+      "name": "User-Facing Interfaces",
+      "source_line": 433
+    },
+    {
+      "identifier": "overviewDecisions",
+      "kind": "element",
+      "name": "Human Decision & Follow-up",
+      "source_line": 439
+    },
+    {
+      "identifier": "overviewGoals",
+      "kind": "element",
+      "name": "Manager Goals & Priorities",
+      "source_line": 446
+    }
+  ],
+  "relationships": [
+    {
+      "source": "supervisor",
+      "target": "arka",
+      "meaning": "Reviews team work and records human decisions",
+      "source_line": 266
+    },
+    {
+      "source": "unitManager",
+      "target": "arka",
+      "meaning": "Reviews unit aggregates and records human decisions",
+      "source_line": 267
+    },
+    {
+      "source": "executive",
+      "target": "arka",
+      "meaning": "Reviews organization health and cross-functional workflows",
+      "source_line": 268
+    },
+    {
+      "source": "sources",
+      "target": "arka",
+      "meaning": "Supplies simulated read-only data and operational attachments",
+      "source_line": 269
+    },
+    {
+      "source": "inputDriver",
+      "target": "arka",
+      "meaning": "Submits scripted authorized manager inputs",
+      "source_line": 270
+    },
+    {
+      "source": "arka",
+      "target": "providers",
+      "meaning": "Requests language analysis through controlled model routing",
+      "source_line": 271
+    },
+    {
+      "source": "supervisor",
+      "target": "web",
+      "meaning": "Uses authorized direct-team interfaces",
+      "source_line": 273
+    },
+    {
+      "source": "unitManager",
+      "target": "web",
+      "meaning": "Uses authorized unit interfaces",
+      "source_line": 274
+    },
+    {
+      "source": "executive",
+      "target": "web",
+      "meaning": "Uses executive interfaces and workflow control room",
+      "source_line": 275
+    },
+    {
+      "source": "supervisor",
+      "target": "chatUi",
+      "meaning": "Reads team briefs and asks authorized questions",
+      "source_line": 276
+    },
+    {
+      "source": "unitManager",
+      "target": "chatUi",
+      "meaning": "Reads unit briefs and records authorized decisions",
+      "source_line": 277
+    },
+    {
+      "source": "executive",
+      "target": "chatUi",
+      "meaning": "Reads executive briefs and asks aggregate questions",
+      "source_line": 278
+    },
+    {
+      "source": "supervisor",
+      "target": "dashboardUi",
+      "meaning": "Reviews direct-team workload and indicators",
+      "source_line": 279
+    },
+    {
+      "source": "unitManager",
+      "target": "dashboardUi",
+      "meaning": "Reviews authorized unit and team aggregates",
+      "source_line": 280
+    },
+    {
+      "source": "executive",
+      "target": "dashboardUi",
+      "meaning": "Reviews organization aggregates",
+      "source_line": 281
+    },
+    {
+      "source": "executive",
+      "target": "controlUi",
+      "meaning": "Monitors all three cross-functional workflows",
+      "source_line": 282
+    },
+    {
+      "source": "sources",
+      "target": "worker",
+      "meaning": "Provides scheduled CSV, JSON, organization and history deliveries",
+      "source_line": 283
+    },
+    {
+      "source": "inputDriver",
+      "target": "api",
+      "meaning": "Submits scripted inputs with trusted evaluation identity",
+      "source_line": 284
+    },
+    {
+      "source": "web",
+      "target": "api",
+      "meaning": "Requests authorized reports, analytics and manager operations",
+      "source_line": 285
+    },
+    {
+      "source": "worker",
+      "target": "api",
+      "meaning": "Requests authorized evidence, per-manager generation, validation and publication",
+      "source_line": 286
+    },
+    {
+      "source": "api",
+      "target": "worker",
+      "meaning": "Submits approved structured uploads and configuration intake jobs",
+      "source_line": 287
+    },
+    {
+      "source": "api",
+      "target": "postgres",
+      "meaning": "Reads and writes application state under restricted service and user scopes",
+      "source_line": 288
+    },
+    {
+      "source": "worker",
+      "target": "postgres",
+      "meaning": "Reads committed snapshots and records deterministic job results",
+      "source_line": 289
+    },
+    {
+      "source": "worker",
+      "target": "rawFiles",
+      "meaning": "Archives original deliveries and reads authorized intake files",
+      "source_line": 290
+    },
+    {
+      "source": "api",
+      "target": "rawFiles",
+      "meaning": "Preserves uploads and retrieves approved operational document bytes",
+      "source_line": 291
+    },
+    {
+      "source": "api",
+      "target": "modelGateway",
+      "meaning": "Requests bounded analysis and language drafts with authorized evidence",
+      "source_line": 292
+    },
+    {
+      "source": "modelGateway",
+      "target": "providers",
+      "meaning": "Routes model requests and receives completions",
+      "source_line": 293
+    },
+    {
+      "source": "modelGateway",
+      "target": "postgres",
+      "meaning": "Reserves and settles daily model cost; records usage, retries and traces",
+      "source_line": 294
+    },
+    {
+      "source": "chatUi",
+      "target": "api",
+      "meaning": "Uses conversation, reports, uploads and manager operations",
+      "source_line": 296
+    },
+    {
+      "source": "dashboardUi",
+      "target": "api",
+      "meaning": "Reads authorized KPI, chart, query and action data",
+      "source_line": 297
+    },
+    {
+      "source": "controlUi",
+      "target": "api",
+      "meaning": "Reads executive-only workflow and escalation data",
+      "source_line": 298
+    },
+    {
+      "source": "web",
+      "target": "requests",
+      "meaning": "Submits requests with session credentials",
+      "source_line": 300
+    },
+    {
+      "source": "inputDriver",
+      "target": "requests",
+      "meaning": "Replays manager inputs with explicit receipt order and authorized identity",
+      "source_line": 301
+    },
+    {
+      "source": "worker",
+      "target": "requests",
+      "meaning": "Requests scoped analysis, reports and evaluation outputs",
+      "source_line": 302
+    },
+    {
+      "source": "requests",
+      "target": "access",
+      "meaning": "Authenticates caller and obtains trusted identity and permissions",
+      "source_line": 303
+    },
+    {
+      "source": "access",
+      "target": "postgres",
+      "meaning": "Loads versioned hierarchy and grants; binds server-side scope and RLS",
+      "source_line": 304
+    },
+    {
+      "source": "managerConfig",
+      "target": "access",
+      "meaning": "Checks configuration authority and affected scope",
+      "source_line": 305
+    },
+    {
+      "source": "managerConfig",
+      "target": "postgres",
+      "meaning": "Versions settings and KPI candidates; activates approved validated definitions",
+      "source_line": 306
+    },
+    {
+      "source": "requests",
+      "target": "managerConfig",
+      "meaning": "Reads and records authorized manager context and versioned configuration",
+      "source_line": 307
+    },
+    {
+      "source": "requests",
+      "target": "documents",
+      "meaning": "Submits uploads for validation and evidence registration",
+      "source_line": 308
+    },
+    {
+      "source": "documents",
+      "target": "access",
+      "meaning": "Checks uploader, purpose and evidence audience before use",
+      "source_line": 309
+    },
+    {
+      "source": "documents",
+      "target": "rawFiles",
+      "meaning": "Preserves original upload bytes and reads approved documents",
+      "source_line": 310
+    },
+    {
+      "source": "documents",
+      "target": "postgres",
+      "meaning": "Registers document evidence or completed upload revisions; records failures",
+      "source_line": 311
+    },
+    {
+      "source": "documents",
+      "target": "worker",
+      "meaning": "Queues authorized structured uploads in a separate data namespace",
+      "source_line": 312
+    },
+    {
+      "source": "requests",
+      "target": "insights",
+      "meaning": "Resolves existing common Insight versions before requesting new analysis",
+      "source_line": 313
+    },
+    {
+      "source": "requests",
+      "target": "agent",
+      "meaning": "Requests scoped investigation, report language or conversational analysis",
+      "source_line": 314
+    },
+    {
+      "source": "requests",
+      "target": "publication",
+      "meaning": "Reads packages; publishes reports or exports validated QA",
+      "source_line": 315
+    },
+    {
+      "source": "requests",
+      "target": "decisions",
+      "meaning": "Records explicit human decisions, authorizations and status updates",
+      "source_line": 316
+    },
+    {
+      "source": "requests",
+      "target": "outputValidator",
+      "meaning": "Validates interactive content and QA export",
+      "source_line": 317
+    },
+    {
+      "source": "requests",
+      "target": "audit",
+      "meaning": "Records request outcomes and restricted failure diagnostics",
+      "source_line": 318
+    },
+    {
+      "source": "requests",
+      "target": "postgres",
+      "meaning": "Reserves execution budgets and reads ranked analysis candidates",
+      "source_line": 319
+    },
+    {
+      "source": "agent",
+      "target": "requests",
+      "meaning": "Checks execution grant; reports completion, cancellation or failure",
+      "source_line": 320
+    },
+    {
+      "source": "modelGateway",
+      "target": "agent",
+      "meaning": "Returns explicit provider or call-budget failure",
+      "source_line": 321
+    },
+    {
+      "source": "requests",
+      "target": "worker",
+      "meaning": "Reports manager-job failure to Schedule and Replay Control",
+      "source_line": 322
+    },
+    {
+      "source": "worker",
+      "target": "documents",
+      "meaning": "Reports structured-upload completion or failure",
+      "source_line": 323
+    },
+    {
+      "source": "managerConfig",
+      "target": "worker",
+      "meaning": "Submits inactive KPI candidates for deterministic validation",
+      "source_line": 324
+    },
+    {
+      "source": "worker",
+      "target": "managerConfig",
+      "meaning": "Returns KPI definition validation receipt or failure",
+      "source_line": 325
+    },
+    {
+      "source": "managerConfig",
+      "target": "audit",
+      "meaning": "Records definition registration, approval and activation",
+      "source_line": 326
+    },
+    {
+      "source": "requests",
+      "target": "queryGateway",
+      "meaning": "Cancels active request queries",
+      "source_line": 327
+    },
+    {
+      "source": "requests",
+      "target": "modelGateway",
+      "meaning": "Cancels active model calls under the execution grant",
+      "source_line": 328
+    },
+    {
+      "source": "agent",
+      "target": "evidence",
+      "meaning": "Requests scoped evidence and permitted investigative tools",
+      "source_line": 330
+    },
+    {
+      "source": "agent",
+      "target": "queryGateway",
+      "meaning": "Requests predefined analytical tools or proposes constrained custom SQL",
+      "source_line": 331
+    },
+    {
+      "source": "agent",
+      "target": "modelGateway",
+      "meaning": "Requests bounded analysis with authorized evidence and tool descriptions",
+      "source_line": 332
+    },
+    {
+      "source": "evidence",
+      "target": "access",
+      "meaning": "Checks audience, rows, columns, purpose and derived-claim authorization",
+      "source_line": 333
+    },
+    {
+      "source": "evidence",
+      "target": "managerConfig",
+      "meaning": "Reads authorized, versioned goals and evidence focus",
+      "source_line": 334
+    },
+    {
+      "source": "evidence",
+      "target": "queryGateway",
+      "meaning": "Runs registered evidence queries under the requesting manager scope",
+      "source_line": 335
+    },
+    {
+      "source": "evidence",
+      "target": "postgres",
+      "meaning": "Reads authorized evidence metadata and decision references",
+      "source_line": 336
+    },
+    {
+      "source": "evidence",
+      "target": "rawFiles",
+      "meaning": "Reads only approved document fragments after authorization",
+      "source_line": 337
+    },
+    {
+      "source": "queryGateway",
+      "target": "access",
+      "meaning": "Obtains trusted identity, relation/column allowlists and scope for every tool call",
+      "source_line": 338
+    },
+    {
+      "source": "queryGateway",
+      "target": "postgres",
+      "meaning": "Runs scoped read-only SQL; records query ID, inputs, result and context",
+      "source_line": 339
+    },
+    {
+      "source": "queryGateway",
+      "target": "audit",
+      "meaning": "Logs actual SQL, snapshot, policy, duration, row count, result hash and refusals",
+      "source_line": 340
+    },
+    {
+      "source": "agent",
+      "target": "insights",
+      "meaning": "Submits evidence-linked analytical content and role-scoped revisions",
+      "source_line": 341
+    },
+    {
+      "source": "insights",
+      "target": "access",
+      "meaning": "Checks evidence audience and permissions for every report projection",
+      "source_line": 342
+    },
+    {
+      "source": "insights",
+      "target": "postgres",
+      "meaning": "Stores shared versions and build state with separate evidence audiences",
+      "source_line": 343
+    },
+    {
+      "source": "reportWriter",
+      "target": "insights",
+      "meaning": "Reads an authorized projection of the common analytical source",
+      "source_line": 344
+    },
+    {
+      "source": "reportWriter",
+      "target": "managerConfig",
+      "meaning": "Reads versioned role, goals, preferences and priorities",
+      "source_line": 345
+    },
+    {
+      "source": "reportWriter",
+      "target": "agent",
+      "meaning": "Requests language drafting from the same bounded Agent",
+      "source_line": 346
+    },
+    {
+      "source": "reportWriter",
+      "target": "outputValidator",
+      "meaning": "Submits report text, JSON, chart specification and decision card",
+      "source_line": 347
+    },
+    {
+      "source": "outputValidator",
+      "target": "queryGateway",
+      "meaning": "Re-runs registered SQL with canonical units, rounding and pinned context",
+      "source_line": 348
+    },
+    {
+      "source": "outputValidator",
+      "target": "access",
+      "meaning": "Rechecks recipient scope, staff details and derived evidence",
+      "source_line": 349
+    },
+    {
+      "source": "outputValidator",
+      "target": "evidence",
+      "meaning": "Checks independent evidence groups, alternatives and provenance",
+      "source_line": 350
+    },
+    {
+      "source": "outputValidator",
+      "target": "postgres",
+      "meaning": "Reads rule/recipient history and stores validation receipts and precise failures",
+      "source_line": 351
+    },
+    {
+      "source": "outputValidator",
+      "target": "reportWriter",
+      "meaning": "Returns bounded repair instructions for invalid report drafts",
+      "source_line": 352
+    },
+    {
+      "source": "publication",
+      "target": "reportWriter",
+      "meaning": "Builds one manager package from authorized Insight content",
+      "source_line": 353
+    },
+    {
+      "source": "publication",
+      "target": "outputValidator",
+      "meaning": "Requires valid content, audience, snapshot and report/QA schema receipt",
+      "source_line": 354
+    },
+    {
+      "source": "publication",
+      "target": "access",
+      "meaning": "Rechecks audience for publication and every later read",
+      "source_line": 355
+    },
+    {
+      "source": "publication",
+      "target": "queryGateway",
+      "meaning": "Reads scoped dashboard and workflow observations with registered queries",
+      "source_line": 356
+    },
+    {
+      "source": "publication",
+      "target": "postgres",
+      "meaning": "Commits immutable packages and report/export success or failure",
+      "source_line": 357
+    },
+    {
+      "source": "publication",
+      "target": "audit",
+      "meaning": "Records independent publication outcomes and overall partial failure",
+      "source_line": 358
+    },
+    {
+      "source": "decisions",
+      "target": "access",
+      "meaning": "Checks the human actor, decision authority and delegated scope",
+      "source_line": 360
+    },
+    {
+      "source": "decisions",
+      "target": "postgres",
+      "meaning": "Records decision events, approved draft versions, deadlines, status and later observations",
+      "source_line": 361
+    },
+    {
+      "source": "decisions",
+      "target": "agent",
+      "meaning": "Requests task/message drafts after a recorded human decision",
+      "source_line": 362
+    },
+    {
+      "source": "decisions",
+      "target": "evidence",
+      "meaning": "Reads authorized decision memory and later KPI/workflow evidence for follow-up",
+      "source_line": 363
+    },
+    {
+      "source": "decisions",
+      "target": "audit",
+      "meaning": "Records human authorization and follow-up observations without an execution event",
+      "source_line": 364
+    },
+    {
+      "source": "jobs",
+      "target": "ingestion",
+      "meaning": "Starts idempotent intake for the current simulated cutoff",
+      "source_line": 365
+    },
+    {
+      "source": "ingestion",
+      "target": "sources",
+      "meaning": "Reads deliveries through source-specific adapters",
+      "source_line": 366
+    },
+    {
+      "source": "ingestion",
+      "target": "rawFiles",
+      "meaning": "Archives original bytes with file hashes and delivery occurrence IDs",
+      "source_line": 367
+    },
+    {
+      "source": "ingestion",
+      "target": "quality",
+      "meaning": "Validates parsed sources or isolated structured-upload records",
+      "source_line": 368
+    },
+    {
+      "source": "ingestion",
+      "target": "api",
+      "meaning": "Routes authorized operational Markdown to the document-processing boundary",
+      "source_line": 369
+    },
+    {
+      "source": "quality",
+      "target": "postgres",
+      "meaning": "Stores RAW payloads, normalized observations, lineage and DQ incidents",
+      "source_line": 370
+    },
+    {
+      "source": "jobs",
+      "target": "snapshots",
+      "meaning": "Freezes eligible committed deliveries and policy versions",
+      "source_line": 371
+    },
+    {
+      "source": "snapshots",
+      "target": "postgres",
+      "meaning": "Creates reproducible snapshot manifests and versioned reference relations",
+      "source_line": 372
+    },
+    {
+      "source": "jobs",
+      "target": "kpi",
+      "meaning": "Validates KPI candidates; computes canonical and approved active definitions",
+      "source_line": 373
+    },
+    {
+      "source": "kpi",
+      "target": "postgres",
+      "meaning": "Validates definitions; runs active PostgreSQL SQL and registers results",
+      "source_line": 374
+    },
+    {
+      "source": "jobs",
+      "target": "workflows",
+      "meaning": "Reconstructs all three business workflows for the same snapshot",
+      "source_line": 375
+    },
+    {
+      "source": "workflows",
+      "target": "postgres",
+      "meaning": "Reads events and workflow configuration; writes case/stage/SLA observations",
+      "source_line": 376
+    },
+    {
+      "source": "jobs",
+      "target": "signals",
+      "meaning": "Detects and ranks signals; selects eligible deep-analysis candidates",
+      "source_line": 377
+    },
+    {
+      "source": "signals",
+      "target": "postgres",
+      "meaning": "Stores deterministic signal state, rank, selection reasons and policy version",
+      "source_line": 378
+    },
+    {
+      "source": "jobs",
+      "target": "api",
+      "meaning": "Requests selected shared analysis and independent manager reports",
+      "source_line": 379
+    },
+    {
+      "source": "jobs",
+      "target": "postgres",
+      "meaning": "Reads active roster/configuration; stores leases, per-manager status and run outcome",
+      "source_line": 380
+    },
+    {
+      "source": "audit",
+      "target": "postgres",
+      "meaning": "Registers SQL for cost/replay exports; stores restricted diagnostics",
+      "source_line": 382
+    },
+    {
+      "source": "overviewInputs",
+      "target": "overviewData",
+      "meaning": "Controlled intake",
+      "source_line": 456
+    },
+    {
+      "source": "overviewData",
+      "target": "overviewProcessing",
+      "meaning": "Snapshots",
+      "source_line": 457
+    },
+    {
+      "source": "overviewProcessing",
+      "target": "overviewAccess",
+      "meaning": "Observations",
+      "source_line": 458
+    },
+    {
+      "source": "overviewAccess",
+      "target": "overviewAnalysis",
+      "meaning": "Authorized evidence",
+      "source_line": 459
+    },
+    {
+      "source": "overviewAnalysis",
+      "target": "overviewReports",
+      "meaning": "Shared Insight Brief",
+      "source_line": 460
+    },
+    {
+      "source": "overviewReports",
+      "target": "overviewDelivery",
+      "meaning": "Drafts",
+      "source_line": 461
+    },
+    {
+      "source": "overviewDelivery",
+      "target": "overviewInterfaces",
+      "meaning": "Valid outputs",
+      "source_line": 462
+    },
+    {
+      "source": "overviewInterfaces",
+      "target": "overviewDecisions",
+      "meaning": "Options",
+      "source_line": 463
+    },
+    {
+      "source": "overviewInputs",
+      "target": "overviewGoals",
+      "meaning": "Governed changes",
+      "source_line": 464
+    },
+    {
+      "source": "overviewGoals",
+      "target": "overviewProcessing",
+      "meaning": "Targets / ranking",
+      "source_line": 465
+    },
+    {
+      "source": "overviewGoals",
+      "target": "overviewAccess",
+      "meaning": "Evidence focus",
+      "source_line": 466
+    },
+    {
+      "source": "overviewGoals",
+      "target": "overviewReports",
+      "meaning": "Report emphasis",
+      "source_line": 467
+    },
+    {
+      "source": "overviewInterfaces",
+      "target": "overviewAccess",
+      "meaning": "Manager questions",
+      "source_line": 468
+    },
+    {
+      "source": "overviewAnalysis",
+      "target": "overviewDelivery",
+      "meaning": "Q&A draft",
+      "source_line": 469
+    },
+    {
+      "source": "overviewDelivery",
+      "target": "overviewReports",
+      "meaning": "Bounded rewrite",
+      "source_line": 470
+    },
+    {
+      "source": "overviewDecisions",
+      "target": "overviewData",
+      "meaning": "Decision memory",
+      "source_line": 471
+    }
+  ],
+  "views": [
+    {
+      "key": "IntegratedOverview",
+      "kind": "custom",
+      "scope": "logical summaries",
+      "description": "One-page unified architecture overview for team discussion.",
+      "source_line": 650
+    },
+    {
+      "key": "SystemContext",
+      "kind": "systemContext",
+      "scope": "arka",
+      "description": "Human management roles and external source/model boundaries.",
+      "source_line": 656
+    },
+    {
+      "key": "Containers",
+      "kind": "container",
+      "scope": "arka",
+      "description": "Six runtime containers; one modular codebase and one PostgreSQL database.",
+      "source_line": 663
+    },
+    {
+      "key": "Interfaces",
+      "kind": "component",
+      "scope": "web",
+      "description": "Three Persian RTL interfaces with API access controls.",
+      "source_line": 669
+    },
+    {
+      "key": "DataIntake",
+      "kind": "component",
+      "scope": "worker",
+      "description": "Structured intake, RAW preservation, data quality and snapshots.",
+      "source_line": 675
+    },
+    {
+      "key": "DeterministicAnalytics",
+      "kind": "component",
+      "scope": "worker",
+      "description": "Deterministic KPI/workflow analysis, signal ranking and selection.",
+      "source_line": 681
+    },
+    {
+      "key": "EvidenceAndAnalysis",
+      "kind": "component",
+      "scope": "api",
+      "description": "Authorized evidence, controlled SQL and a bounded investigation.",
+      "source_line": 687
+    },
+    {
+      "key": "ReportDelivery",
+      "kind": "component",
+      "scope": "api",
+      "description": "Role projection, validation and independent report/QA export.",
+      "source_line": 693
+    },
+    {
+      "key": "ManagerGovernance",
+      "kind": "component",
+      "scope": "api",
+      "description": "Authorized manager inputs and the controlled new-KPI lifecycle.",
+      "source_line": 704
+    },
+    {
+      "key": "NightlyReporting",
+      "kind": "dynamic",
+      "scope": "arka",
+      "description": "Scheduled data processing, selected shared analysis and independent morning reports.",
+      "source_line": 718
+    },
+    {
+      "key": "NightlyData",
+      "kind": "dynamic",
+      "scope": "worker",
+      "description": "D-1 intake, canonical calculations and deterministic deep-analysis selection.",
+      "source_line": 737
+    },
+    {
+      "key": "NightlyBrief",
+      "kind": "dynamic",
+      "scope": "api",
+      "description": "Reuse shared authorized analysis. Investigate selected gaps within limits, then validate each package.",
+      "source_line": 758
+    },
+    {
+      "key": "InteractiveAssistant",
+      "kind": "dynamic",
+      "scope": "api",
+      "description": "Scoped questions use D-1 data and approved upload revisions. Validate the answer and export required QA JSON.",
+      "source_line": 785
+    },
+    {
+      "key": "ManagerUpload",
+      "kind": "dynamic",
+      "scope": "api",
+      "description": "Document and structured paths are alternatives. Only successful authorized revisions become evidence.",
+      "source_line": 812
+    },
+    {
+      "key": "HumanDecisionFollowUp",
+      "kind": "dynamic",
+      "scope": "api",
+      "description": "Humans decide, approve and execute. ARKA records drafts, status and later observations.",
+      "source_line": 841
+    },
+    {
+      "key": "PartialPublication",
+      "kind": "dynamic",
+      "scope": "api",
+      "description": "Provider or budget failure may precede a draft. Report failures remain separate from ten-valid-report acceptance.",
+      "source_line": 868
+    }
+  ],
+  "source_sha256": "14f9dd02e7ebb7addba9120b1bd274af3a96ffd23a2035d2f19117af8cfbe2f1",
+  "parser_run": false,
+  "renderer_run": false
+}

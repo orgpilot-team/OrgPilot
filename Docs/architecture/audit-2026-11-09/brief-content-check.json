@@ -1,0 +1,20 @@
+{
+  "pdf_path": "Project_berif/بریف پروژه بوتکمپ _ دستیار ایجنتیک مدیران سازمانی _ دیدراه.pdf",
+  "markdown_path": "Project_berif/دیدراه-بریف-دستیار-ایجنتیک-مدیران.md",
+  "pdf_pages": 19,
+  "pdf_sha256": "6d68d3fcc285f6908af0d97c0429dfefb489f00b7f6538ed03573552ed6955f8",
+  "markdown_sha256": "7719d594816083178f2113a19954665e48c8c98b951d64cc0ee1d6f811b764aa",
+  "annotations": 26,
+  "markdown_page_comments": 19,
+  "current_visual_pages": [
+    8,
+    10,
+    15
+  ],
+  "prior_same_pdf_visual_pages": [
+    13,
+    16
+  ],
+  "content_result": "Checked requirement passages agree. No requirement change inferred from hash differences.",
+  "scope": "Full Markdown text reviewed; important/ambiguous PDF passages checked. This is not a byte-identical text-conversion assertion for every layout item."
+}

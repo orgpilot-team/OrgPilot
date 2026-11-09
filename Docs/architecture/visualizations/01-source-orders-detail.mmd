@@ -1,0 +1,21 @@
+erDiagram
+  orders {
+    string order_id "text; observed CSV"
+    string created_at "timestamp_lexeme; observed CSV"
+    string channel "text; observed CSV"
+    string city "text; observed CSV"
+    string category "text; observed CSV"
+    string items "integer_lexeme; observed CSV"
+    string order_value_toman "integer_lexeme; observed CSV"
+    string customer_id "text; observed CSV"
+    string campaign_id "text; observed CSV"
+    string promised_by "timestamp_lexeme; observed CSV"
+  }
+  order_events {
+    string order_id "text; observed CSV"
+    string event "text; observed CSV"
+    string at "timestamp_lexeme; observed CSV"
+    string actor_team "text; observed CSV"
+    string amount_toman "integer_lexeme; observed CSV"
+  }
+  orders |o..o{ order_events : "DERIVED order_id; not enforced"

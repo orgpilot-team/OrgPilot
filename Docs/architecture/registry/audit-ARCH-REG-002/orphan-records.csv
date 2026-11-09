@@ -1,0 +1,10 @@
+record_id,record_type,title,source_file,disposition
+REG-ISS-008,Registry Issue,Historical workspace and tooling statements,Docs/architecture/004-reconciliation-review.md,Source location exists. No graph edge; retain inventory/phase/maintenance identity. No execution dependency is implied.
+S12,Source,S12,Docs/architecture/001-system-blueprint.md,Source location exists. No graph edge; retain inventory/phase/maintenance identity. No execution dependency is implied.
+S13,Source,S13,Docs/architecture/001-system-blueprint.md,Source location exists. No graph edge; retain inventory/phase/maintenance identity. No execution dependency is implied.
+S14,Source,S14,Docs/architecture/001-system-blueprint.md,Source location exists. No graph edge; retain inventory/phase/maintenance identity. No execution dependency is implied.
+S15,Source,S15,Docs/architecture/001-system-blueprint.md,Source location exists. No graph edge; retain inventory/phase/maintenance identity. No execution dependency is implied.
+S18,Source,S18,Docs/architecture/001-system-blueprint.md,Source location exists. No graph edge; retain inventory/phase/maintenance identity. No execution dependency is implied.
+P0,Roadmap Phase,P0,Docs/architecture/003-decisions-and-roadmap.md,Source location exists. No graph edge; retain inventory/phase/maintenance identity. No execution dependency is implied.
+P1,Roadmap Phase,P1,Docs/architecture/003-decisions-and-roadmap.md,Source location exists. No graph edge; retain inventory/phase/maintenance identity. No execution dependency is implied.
+P4,Roadmap Phase,P4,Docs/architecture/003-decisions-and-roadmap.md,Source location exists. No graph edge; retain inventory/phase/maintenance identity. No execution dependency is implied.
