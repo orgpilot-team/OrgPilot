@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>نقشه تصمیم‌های معماری آرکا</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --paper: #fffdf8;
+      --ink: #17211d;
+      --muted: #64716a;
+      --line: #d8ddd7;
+      --green: #1f6b4f;
+      --green-soft: #dfeee7;
+      --amber: #95620b;
+      --amber-soft: #fff0c7;
+      --blue: #245d78;
+      --blue-soft: #dfedf3;
+      --red: #94443d;
+      --red-soft: #f7e3df;
+      --shadow: 0 18px 50px rgba(30, 46, 38, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 90% 0%, rgba(31,107,79,.11), transparent 30rem),
+        var(--bg);
+      font-family: Tahoma, "Segoe UI", sans-serif;
+      line-height: 1.75;
+    }
+    button, input { font: inherit; }
+    button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid rgba(31,107,79,.28); outline-offset: 3px; }
+    a { color: inherit; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 56px 0 28px; }
+    .eyebrow { margin: 0 0 8px; color: var(--green); font-size: .82rem; font-weight: 800; letter-spacing: .08em; }
+    h1 { margin: 0; max-width: 760px; font-size: clamp(2rem, 5vw, 4.4rem); line-height: 1.15; letter-spacing: -.04em; }
+    .lead { max-width: 780px; margin: 20px 0 0; color: var(--muted); font-size: 1.05rem; }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 32px;
+    }
+    .flow-card { position: relative; padding: 18px; border: 1px solid var(--line); background: rgba(255,253,248,.78); border-radius: 18px; }
+    .flow-card:not(:last-child)::after { content: "←"; position: absolute; left: -20px; top: 50%; transform: translateY(-50%); color: var(--muted); font-weight: 800; }
+    .flow-card strong { display: block; font-size: 1.05rem; }
+    .flow-card span { color: var(--muted); font-size: .88rem; }
+    .review-guide { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; margin-top: 18px; padding: 16px 18px; border: 1px solid #cbd8d0; border-radius: 16px; background: var(--green-soft); }
+    .review-guide svg { width: 24px; height: 24px; color: var(--green); }
+    .review-guide strong { display: block; margin-bottom: 3px; }
+    .review-guide p { margin: 0; color: #43574d; font-size: .9rem; }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 14px 0;
+      background: rgba(244,241,234,.9);
+      backdrop-filter: blur(16px);
+    }
+    .search { width: 100%; padding: 13px 16px; border: 1px solid var(--line); border-radius: 14px; color: var(--ink); background: var(--paper); outline: none; }
+    .search:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(31,107,79,.12); }
+    .actions { display: flex; gap: 8px; }
+    .btn { padding: 11px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); cursor: pointer; }
+    .btn:hover { border-color: var(--green); }
+    .btn.active { color: #fff; border-color: var(--green); background: var(--green); }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 24px; }
+    .stat { padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: rgba(255,255,255,.55); font-size: .88rem; }
+    .stat b { color: var(--ink); }
+    .list { display: grid; gap: 14px; padding-bottom: 64px; }
+    .category-nav { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 12px; scrollbar-width: thin; }
+    .category-btn { min-height: 44px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); background: var(--paper); white-space: nowrap; cursor: pointer; }
+    .category-btn.active { color: #fff; border-color: var(--green); background: var(--green); }
+    .category-section { display: grid; gap: 14px; margin-bottom: 34px; }
+    .category-heading { display: flex; justify-content: space-between; gap: 16px; align-items: end; padding: 0 4px; }
+    .category-heading h2 { margin: 0; font-size: 1.35rem; }
+    .category-heading p { margin: 2px 0 0; color: var(--muted); font-size: .88rem; }
+    .category-count { color: var(--muted); font-size: .82rem; white-space: nowrap; }
+    .decision-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .decision-card { display: grid; gap: 16px; padding: 20px; border: 1px solid var(--line); border-radius: 20px; background: var(--paper); box-shadow: var(--shadow); }
+    .decision-card.reviewed { border-color: #a9cfba; }
+    .decision-top { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+    .decision-title { margin: 0; font-size: 1.13rem; line-height: 1.5; }
+    .decision-code { direction: ltr; flex: 0 0 auto; color: var(--green); font-size: .76rem; font-weight: 800; }
+    .plain-facts { display: grid; gap: 10px; }
+    .plain-fact { display: grid; grid-template-columns: 94px 1fr; gap: 10px; padding-top: 10px; border-top: 1px solid #edf0ec; }
+    .plain-fact:first-child { border-top: 0; padding-top: 0; }
+    .plain-fact strong { font-size: .8rem; }
+    .plain-fact p { margin: 0; color: var(--muted); font-size: .88rem; }
+    .plain-fact.open strong { color: var(--amber); }
+    .plain-fact.next strong { color: var(--blue); }
+    .card-footer { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .card-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+    .card-open { min-height: 44px; padding: 9px 14px; border: 0; border-radius: 11px; color: #fff; background: var(--green); cursor: pointer; }
+    .tech-details { margin-top: 22px; border: 1px solid var(--line); border-radius: 14px; background: #faf9f5; }
+    .tech-details > summary { display: flex; justify-content: space-between; padding: 14px 16px; font-weight: 800; }
+    .tech-content { padding: 0 16px 16px; border-top: 1px solid var(--line); }
+    .human-summary { display: grid; gap: 10px; margin-top: 16px; }
+    .human-row { padding: 13px 14px; border-radius: 12px; background: #fff; border: 1px solid var(--line); }
+    .human-row strong { display: block; margin-bottom: 3px; font-size: .8rem; }
+    .human-row p { margin: 0; color: var(--muted); }
+    details.adr { overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--paper); box-shadow: var(--shadow); }
+    details.adr[open] { border-color: #b8c9bf; }
+    details.adr.reviewed { border-color: #b8d8c7; }
+    summary { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; padding: 20px; cursor: pointer; list-style: none; }
+    summary::-webkit-details-marker { display: none; }
+    .adr-id { min-width: 76px; padding: 7px 10px; border-radius: 10px; color: #fff; background: var(--green); direction: ltr; text-align: center; font-weight: 800; }
+    .adr-title { min-width: 0; }
+    .adr-title strong { display: block; font-size: 1.05rem; }
+    .adr-title small { color: var(--muted); }
+    .counts { display: flex; gap: 6px; }
+    .count { padding: 5px 9px; border-radius: 999px; white-space: nowrap; font-size: .78rem; font-weight: 700; }
+    .count.dl { color: var(--amber); background: var(--amber-soft); }
+    .count.at { color: var(--blue); background: var(--blue-soft); }
+    .count.reviewed { color: var(--green); background: var(--green-soft); }
+    .detail-body { border-top: 1px solid var(--line); padding: 22px; background: #fff; }
+    .meaning { margin: 0 0 20px; padding: 14px 16px; border-right: 4px solid var(--green); border-radius: 10px; background: var(--green-soft); }
+    .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .group { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+    .group-head { display: flex; justify-content: space-between; align-items: center; padding: 13px 15px; background: #faf9f5; border-bottom: 1px solid var(--line); }
+    .group-head h3 { margin: 0; font-size: .95rem; }
+    .group-head span { color: var(--muted); font-size: .78rem; }
+    .items { display: grid; }
+    .item { display: grid; grid-template-columns: auto 1fr; gap: 10px; padding: 14px 15px; text-decoration: none; border-bottom: 1px solid #edf0ec; }
+    button.item { width: 100%; border: 0; color: inherit; background: transparent; text-align: right; cursor: pointer; }
+    .item:last-child { border-bottom: 0; }
+    .item:hover { background: #fbfcfa; }
+    .item-id { direction: ltr; font-weight: 800; font-size: .82rem; }
+    .item.dl .item-id { color: var(--amber); }
+    .item.at .item-id { color: var(--blue); }
+    .item strong { display: block; font-size: .9rem; }
+    .item small { color: var(--muted); font-size: .76rem; }
+    .empty { padding: 18px; color: var(--muted); font-size: .86rem; }
+    .inline-detail { padding: 0; border: 0; border-bottom: 1px dashed currentColor; color: var(--green); background: transparent; cursor: pointer; }
+    dialog {
+      width: min(720px, calc(100% - 28px));
+      max-height: min(82vh, 760px);
+      padding: 0;
+      border: 1px solid #c9d4cd;
+      border-radius: 22px;
+      color: var(--ink);
+      background: var(--paper);
+      box-shadow: 0 28px 90px rgba(15,30,22,.28);
+    }
+    dialog::backdrop { background: rgba(16,25,20,.55); backdrop-filter: blur(5px); }
+    .modal-head { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; padding: 22px 24px; border-bottom: 1px solid var(--line); background: #f8f7f2; }
+    .modal-kicker { display: block; direction: ltr; text-align: right; color: var(--green); font-weight: 800; font-size: .82rem; }
+    .modal-head h2 { margin: 3px 0 0; font-size: 1.3rem; }
+    .modal-close { width: 38px; height: 38px; flex: 0 0 auto; border: 1px solid var(--line); border-radius: 50%; background: #fff; cursor: pointer; font-size: 1.3rem; line-height: 1; }
+    .modal-body { overflow: auto; padding: 24px; }
+    .modal-state { display: inline-flex; margin-bottom: 18px; padding: 6px 10px; border-radius: 999px; color: var(--amber); background: var(--amber-soft); font-size: .8rem; font-weight: 800; }
+    .modal-state.at { color: var(--blue); background: var(--blue-soft); }
+    .modal-state.adr { color: var(--green); background: var(--green-soft); }
+    .modal-section { margin-top: 20px; }
+    .modal-section h3 { margin: 0 0 8px; font-size: .9rem; }
+    .modal-section p { margin: 0; color: var(--muted); }
+    .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fact { padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+    .fact h3 { margin: 0 0 6px; font-size: .82rem; color: var(--ink); }
+    .fact p { margin: 0; color: var(--muted); font-size: .88rem; white-space: pre-line; }
+    .statement-list { display: grid; gap: 8px; }
+    .statement { display: grid; grid-template-columns: auto 1fr; gap: 10px; padding: 11px; border: 1px solid var(--line); border-radius: 12px; }
+    .statement-state { align-self: start; padding: 3px 7px; border-radius: 999px; background: var(--blue-soft); color: var(--blue); font-size: .72rem; font-weight: 800; }
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .chip { direction: ltr; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); background: #fff; font-size: .78rem; font-weight: 700; cursor: pointer; }
+    .chip:hover { color: var(--green); border-color: var(--green); }
+    .modal-actions { position: sticky; bottom: 0; display: flex; justify-content: space-between; gap: 10px; padding: 14px 24px; border-top: 1px solid var(--line); background: rgba(255,253,248,.96); backdrop-filter: blur(10px); }
+    .review-btn { padding: 10px 14px; border: 1px solid var(--green); border-radius: 11px; color: #fff; background: var(--green); cursor: pointer; }
+    .review-btn.done { color: var(--green); background: var(--green-soft); }
+    .record-note { margin: 0; color: var(--muted); font-size: .78rem; }
+    footer { padding: 0 0 44px; color: var(--muted); font-size: .82rem; }
+    .hidden { display: none !important; }
+    @media (max-width: 760px) {
+      .flow, .columns, .decision-grid { grid-template-columns: 1fr; }
+      .modal-grid { grid-template-columns: 1fr; }
+      .flow-card:not(:last-child)::after { content: "↓"; left: 50%; top: auto; bottom: -24px; transform: translateX(-50%); }
+      .toolbar { grid-template-columns: 1fr; position: static; }
+      .actions .btn { flex: 1; }
+      summary { grid-template-columns: auto 1fr; }
+      .counts { grid-column: 1 / -1; }
+      .plain-fact { grid-template-columns: 1fr; gap: 2px; }
+      .card-footer { align-items: stretch; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="toolbar">
+      <input id="search" class="search" type="search" placeholder="جست‌وجوی موضوع، تصمیم، مسئله یا شناسه…" aria-label="جست‌وجو">
+      <div class="actions">
+        <button class="btn" id="unreviewedOnly" type="button" aria-pressed="false">فقط بررسی‌نشده‌ها</button>
+      </div>
+    </div>
+    <nav class="category-nav" id="categoryNav" aria-label="گروه‌های تصمیم"></nav>
+    <div class="stats" id="stats"></div>
+    <section class="list" id="list" aria-live="polite"></section>
+  </main>
+
+  <footer class="shell">
+    همه DLها باز و در انتظار Evidence هستند. همه ATها برنامه‌ریزی شده‌اند، اما هنوز اجرا نشده‌اند. این صفحه تصمیم جدیدی ایجاد نمی‌کند و فقط اطلاعات ثبت‌شده را یک‌جا نشان می‌دهد.
+  </footer>
+
+  <dialog id="recordModal" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <div><span class="modal-kicker" id="modalId"></span><h2 id="modalTitle"></h2></div>
+      <button class="modal-close" id="modalClose" type="button" aria-label="بستن">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-actions"><p class="record-note">وضعیت بررسی فقط در همین مرورگر ذخیره می‌شود.</p><button class="review-btn" id="reviewRecord" type="button">علامت‌گذاری به‌عنوان بررسی‌شده</button></div>
+  </dialog>
+
+  <script src="adr-decision-details.js"></script>
+  <script>
+    const adrTitles = {
+      "ADR-01":"اجرای PostgreSQL و هم‌ارزی KPIهای مرجع",
+      "ADR-02":"ورودی پذیرفته‌شده سفارش‌ها",
+      "ADR-03":"وابستگی‌ها و محاسبه مجدد انتخابی",
+      "ADR-04":"کامل‌بودن منبع و انتشار",
+      "ADR-05":"اصلاح تاریخی و نسخه‌های گزارش",
+      "ADR-06":"کنترل دسترسی و امنیت Query",
+      "ADR-07":"حالت‌های مرزی Signal و Escalation",
+      "ADR-08":"تقویم مدیریت و تقدم ورودی‌ها",
+      "ADR-09":"وضعیت خروجی، دقت و اعداد ثبت‌شده",
+      "ADR-10":"بودجه، مدل‌ها و محدودیت اجرا",
+      "ADR-11":"تعارض اصلاحات و چرخه عمر موجودیت",
+      "ADR-12":"نگهداری، پشتیبان‌گیری و ممیزی",
+      "ADR-13":"یک AI Agent محدود",
+      "ADR-14":"انتشار مستقل گزارش معتبر",
+      "ADR-15":"مالکیت مراحل Workflow",
+      "ADR-16":"فایل‌های زمان اجرا و اسناد عملیاتی",
+      "ADR-17":"تصمیم انسانی و اجرای واقعی"
+    };
+
+    const adrMeaning = {
+      "ADR-01":"PostgreSQL موتور محصول است؛ هم‌ارزی عددی همه ۵۵ KPI هنوز به مدرک نیاز دارد.",
+      "ADR-02":"روش برخورد با سفارش‌های تکراری هنوز باید بین RAW و DEDUP تعیین شود.",
+      "ADR-03":"بازسازی کامل مبنای صحت است؛ محاسبه انتخابی پس از اثبات هم‌ارزی قابل استفاده است.",
+      "ADR-04":"گزارش ادامه دارد، اما مقدار جاری ناموجود باید null بماند و مسئله داده ثبت شود.",
+      "ADR-05":"اصلاح داده تاریخی باید نسخه جدید بسازد و گزارش قبلی را بدون ردپا تغییر ندهد.",
+      "ADR-06":"هر دسترسی و Query باید محدود، ثبت‌شده و مطابق نقش باشد.",
+      "ADR-07":"قواعد Signal قطعی هستند، اما بعضی حالت‌های مرزی هنوز تصمیم لازم دارند.",
+      "ADR-08":"زمان دریافت داده و تقدم ورودی‌ها تعیین می‌کند چه چیزی وارد هر گزارش می‌شود.",
+      "ADR-09":"هر عدد منتشرشده باید تعریف، Query، Snapshot و دامنه قابل ردیابی داشته باشد.",
+      "ADR-10":"هزینه روزانه و زمان اجرا محدود است؛ مدل و حدود دقیق هنوز انتخاب نشده‌اند.",
+      "ADR-11":"رکوردهای اصلاحی متعارض باید قرنطینه شوند تا قاعده تقدم معتبر تعیین شود.",
+      "ADR-12":"مدت نگهداری، Backup، دسترسی Audit و Restore هنوز قرارداد کامل لازم دارند.",
+      "ADR-13":"فقط یک Agent محدود استفاده می‌شود؛ محاسبه و کنترل‌های حساس قطعی می‌مانند.",
+      "ADR-14":"خرابی گزارش یک مدیر نباید مانع انتشار گزارش معتبر مدیر دیگر شود.",
+      "ADR-15":"مالک Workflow با مالک مرحله فرق دارد؛ نگاشت مراحل هنوز باید تأیید شود.",
+      "ADR-16":"دریافت ساختاریافته از اسناد عملیاتی و بازیابی متن آن‌ها جدا نگه داشته می‌شود.",
+      "ADR-17":"تصمیم سازمانی با انسان است؛ سیستم فقط پیش‌نویس می‌سازد و اقدام را اجرا نمی‌کند."
+    };
+
+    const categories = {
+      "all": { title:"همه موضوع‌ها", description:"نمای کامل ۱۷ موضوع تصمیم" },
+      "data": { title:"داده و KPI", description:"محاسبه، کیفیت داده، اصلاحات و خروجی عددی" },
+      "access": { title:"دسترسی و حاکمیت", description:"امنیت، نگهداری و فایل‌های عملیاتی" },
+      "workflow": { title:"Signal، Workflow و اقدام", description:"تشخیص، زمان‌بندی، مالکیت و تصمیم انسانی" },
+      "agent": { title:"Agent و عملیات", description:"مدل، هزینه، محدودیت اجرا و شکست گزارش" }
+    };
+
+    const decisionGuide = {
+      "ADR-01": { category:"data", question:"چطور مطمئن شویم PostgreSQL همان نتیجه مرجع را می‌دهد؟", decided:"PostgreSQL تنها پایگاه داده محصول است و همه ۵۵ KPI و Queryهای سفارشی را اجرا می‌کند.", open:"هم‌ارزی عددی همه ۵۵ KPI، نوع ورودی‌ها، Median، NULL، زمان و گردکردن هنوز کامل اثبات نشده است.", next:"قرارداد تبدیل را ثبت کنید و نتایج همه صبح‌های Replay را با مرجع مقایسه کنید." },
+      "ADR-02": { category:"data", question:"با سفارش‌های تکراری چه کنیم؟", decided:"داده منبع و همه رخدادهای ثبت‌شده باید حفظ شوند. حذف براساس order_id مجاز نیست.", open:"هنوز مشخص نیست محاسبه نهایی با RAW انجام شود یا تکرار دقیق Payload حذف شود. این انتخاب نتیجه ۸ KPI را تغییر می‌دهد.", next:"سیاست رسمی RAW یا DEDUP را دریافت کنید و نتیجه مورد انتظار را با AT-02 و AT-05 آزمایش کنید." },
+      "ADR-03": { category:"data", question:"پس از اصلاح داده، چه مقدار از محاسبات تکرار شود؟", decided:"بازسازی کامل Snapshot مبنای صحت است.", open:"دامنه محاسبه انتخابی و الگوریتم وابستگی هنوز تصویب نشده است.", next:"نتیجه Selective rebuild را برای داده دیررس، اصلاح و رخداد تکراری با Full rebuild مقایسه کنید." },
+      "ADR-04": { category:"data", question:"وقتی داده ناقص است، گزارش چه نشان دهد؟", decided:"گزارش ادامه پیدا می‌کند؛ مقدار جاری ناموجود باید null باشد و Data Issue ثبت شود.", open:"زمان بسته‌شدن Source، شرایط انتشار و حداکثر سن مقدار قبلی هنوز تعیین نشده است.", next:"سیاست Closure و نمایش مقدار قبلی تاریخ‌دار را تصویب و با AT-04 و AT-23 آزمایش کنید." },
+      "ADR-05": { category:"data", question:"اصلاح تاریخی چگونه وارد گزارش شود؟", decided:"اصلاح باید نسخه جدید بسازد؛ نسخه قبلی و ردپای محاسبه نباید بازنویسی شوند.", open:"قاعده Restatement، اعلان تغییر و دامنه بازسازی هنوز کامل نشده است.", next:"نسخه گزارش، دلیل تغییر و مقایسه قبل و بعد را ثبت و آزمون کنید." },
+      "ADR-09": { category:"data", question:"چطور به هر عدد منتشرشده اعتماد کنیم؟", decided:"هر عدد باید به تعریف، Query، Snapshot، Scope و نتیجه واقعی قابل ردیابی باشد.", open:"نگاشت Suppressed/Ongoing، اعداد Query افزوده و Schema داخلی Insight هنوز باز است.", next:"قرارداد خروجی و ردیابی عدد را کامل کنید و AT-02، AT-10، AT-11، AT-23، AT-27 و AT-30 را اجرا کنید." },
+      "ADR-11": { category:"data", question:"با اصلاحات متعارض چه کنیم؟", decided:"رکوردهای متعارض جدا ثبت می‌شوند و خروجی نامطمئن قرنطینه می‌شود.", open:"قاعده معتبر تقدم برای رکوردهای هم‌رتبه وجود ندارد.", next:"قاعده رسمی تقدم Source را دریافت کنید؛ تا آن زمان Last-row-wins استفاده نشود." },
+
+      "ADR-06": { category:"access", question:"چه کسی به کدام داده و Query دسترسی دارد؟", decided:"دسترسی باید محدود به نقش، ثبت‌شده و Deny-by-default باشد. هر Query باید همان Policy را اجرا کند.", open:"Projection ردیف و ستون منابع مشترک، اختیار نوشتن و حفاظت گروه‌های کوچک کامل نشده است.", next:"Policy catalog نسخه‌دار را تصویب و مجوزها را با AT-06، AT-10، AT-27 و AT-29 آزمایش کنید." },
+      "ADR-12": { category:"access", question:"داده و شواهد را تا چه مدت و چگونه نگه داریم؟", decided:"Raw data، Config، Query و Report Evidence باید برای ارزیابی قابل بازیابی باشند.", open:"مدت نگهداری، حجم، دوره Backup، افراد مجاز Audit و سیاست Restore تعیین نشده است.", next:"سیاست Retention و Backup را تصویب و Restore واقعی را با AT-19 آزمایش کنید." },
+      "ADR-16": { category:"access", question:"فایل و سند عملیاتی چگونه وارد سیستم شود؟", decided:"ورودی ساختاریافته از سند غیرقابل‌اعتماد جداست؛ فایل اصلی، زمان دریافت، مخاطب و Lineage حفظ می‌شود.", open:"فرمت دقیق Excel، پشتیبانی PDF، محدودیت فایل و آمادگی ورودی همان روز هنوز مشخص نیست.", next:"قرارداد Upload و Validation را تعیین و AT-03، AT-07، AT-13، AT-15 و AT-22 را اجرا کنید." },
+
+      "ADR-07": { category:"workflow", question:"Signal در حالت‌های مرزی چه رفتاری داشته باشد؟", decided:"تشخیص اصلی قطعی است و Data Issue نباید به‌تنهایی Signal کسب‌وکار بسازد.", open:"Equality، Baseline ناکافی، مخرج صفر، روز نامعلوم و Reset هنوز قاعده نهایی ندارند.", next:"قواعد مرزی R1 تا R8 را تصویب و با AT-08، AT-09 و AT-24 آزمایش کنید." },
+      "ADR-08": { category:"workflow", question:"کدام ورودی وارد گزارش هر روز می‌شود؟", decided:"Cutoff و زمان معلوم‌شدن داده تعیین می‌کند ورودی در کدام گزارش اثر بگذارد.", open:"شروع M11 در صبح ۷۵ یا ۷۶، تقدم سؤال و Upload همان روز و دید تقویم آینده باز است.", next:"قاعده زمان دریافت و Readiness را ثبت و سناریوهای ۳۱۷ و ۳۱۶ گزارش را جدا آزمایش کنید." },
+      "ADR-15": { category:"workflow", question:"مالک هر مرحله Workflow چه کسی است؟", decided:"مالک End-to-end از تنظیمات موجود حفظ می‌شود و رویداد واقعی باید بازسازی شود.", open:"مالک Stage و مسیر ارجاع تأخیر برای همه ۱۲ مرحله هنوز تأیید نشده است.", next:"Stage responsibility catalog را تصویب و هر ۱۲ مرحله را با AT-12 و AT-25 بررسی کنید." },
+      "ADR-17": { category:"workflow", question:"سیستم تا کجا می‌تواند از طرف انسان اقدام کند؟", decided:"تصمیم سازمانی با انسان است. سیستم فقط Draft می‌سازد و پیام ارسال یا نیروی انسانی جابه‌جا نمی‌کند.", open:"ثبت تأیید اجرای واقعی، فرد مجاز و Evidence لازم در MVP هنوز تعیین نشده است.", next:"مرز Decision، Draft، Execution confirmation و Follow-up را تصویب و با AT-14 و AT-29 آزمایش کنید." },
+
+      "ADR-10": { category:"agent", question:"Agent چقدر هزینه و زمان می‌تواند مصرف کند؟", decided:"هزینه کل روز حداکثر ۵ دلار، زمان اجرا حداکثر ۱۵ دقیقه و انتشار شبیه‌سازی‌شده قبل از ۰۷:۳۰ است.", open:"مدل، Provider، Gateway، Tracing و سهم دقیق Budget هنوز انتخاب نشده است.", next:"Benchmark بگیرید و محدودیت Tool، Token، Retry و تخصیص هزینه را تصویب کنید." },
+      "ADR-13": { category:"agent", question:"AI Agent چه کارهایی اجازه دارد انجام دهد؟", decided:"فقط یک Agent محدود استفاده می‌شود. KPI، Signal، Authorization و Validation نهایی قطعی می‌مانند.", open:"تعداد Tool call، Token، زمان، لغو و دورهای بررسی Evidence هنوز نهایی نشده است.", next:"Execution Grant را تعریف و محدودیت‌ها را با AT-20 و آزمون‌های هزینه و عملکرد بررسی کنید." },
+      "ADR-14": { category:"agent", question:"اگر ساخت یک گزارش شکست خورد چه اتفاقی بیفتد؟", decided:"گزارش معتبر هر مدیر مستقل منتشر می‌شود؛ شکست یک مدیر انتشار دیگران را متوقف نمی‌کند.", open:"Timeout، Retry، Fallback، خروجی وضعیت شکست و قاعده جایگزینی نسخه باز است.", next:"سیاست Failure را تصویب و شکست، انتشار جزئی و عدم انتشار تکراری را با AT-21 و AT-28 آزمایش کنید." }
+    };
+
+    const dls = {
+      "DL-01":["هم‌ارزی همه ۵۵ KPI در PostgreSQL",["ADR-01"],["AT-02","AT-03","AT-05","AT-17"]],
+      "DL-02":["RAW در برابر DEDUP دقیق Payload",["ADR-02"],["AT-02","AT-05"]],
+      "DL-03":["بسته‌شدن منبع، انتشار و مقدار قبلی تاریخ‌دار",["ADR-04"],["AT-04","AT-23"]],
+      "DL-04":["بازسازی انتخابی و اصلاح گزارش",["ADR-03","ADR-05"],["AT-03","AT-05"]],
+      "DL-05":["تقدم Payloadهای متعارض",["ADR-11"],["AT-05"]],
+      "DL-06":["نمای دسترسی منابع مشترک",["ADR-06"],["AT-06"]],
+      "DL-07":["فرمول ظرفیت و حریم خصوصی",["ADR-06"],["AT-06","AT-10"]],
+      "DL-08":["مالکیت مرحله و مسیریابی تأخیر",["ADR-15"],["AT-08","AT-12","AT-25"]],
+      "DL-09":["قواعد مرزی و وضعیت Signal",["ADR-07"],["AT-08","AT-09","AT-24"]],
+      "DL-10":["M11، Upload همان روز و زمان معلوم‌شدن تقویم",["ADR-08","ADR-16"],["AT-03","AT-07","AT-15","AT-22"]],
+      "DL-11":["نگاشت Suppressed/Ongoing و Schema داخلی Insight",["ADR-09"],["AT-10","AT-11"]],
+      "DL-12":["پیگیری تصمیم و تأیید اجرای واقعی",["ADR-17"],["AT-14","AT-29"]],
+      "DL-13":["Retry، Timeout، Fallback و خروجی شکست",["ADR-14"],["AT-15","AT-21","AT-28"]],
+      "DL-14":["Agent، مدل، Gateway و حدود بودجه",["ADR-10","ADR-13"],["AT-17","AT-18","AT-20","AT-28"]],
+      "DL-15":["نگهداری، Backup، دسترسی Audit و Restore",["ADR-12"],["AT-06","AT-19"]],
+      "DL-16":["پروفایل ارزیابی نهایی و قراردادهای مفقود",[],["AT-02","AT-09","AT-16","AT-17","AT-18","AT-19"]],
+      "DL-17":["Dimensionهای NULL و اعداد Query افزوده",["ADR-09"],["AT-02","AT-30"]],
+      "DL-18":["محتوای کامل، انتخاب Signal و تاریخچه",["ADR-07","ADR-09","ADR-17"],["AT-08","AT-26","AT-30"]],
+      "DL-19":["تغییر KPI، اختیار فعال‌سازی و Rollback",["ADR-01","ADR-06","ADR-08","ADR-09"],["AT-27","AT-29"]]
+    };
+
+    const ats = {
+      "AT-01":"دریافت و Idempotency", "AT-02":"هم‌ارزی PostgreSQL", "AT-03":"Cutoff و Replay",
+      "AT-04":"Missing، Empty و Backfill", "AT-05":"Duplicate، Schema و Correction", "AT-06":"مجوزسنجی",
+      "AT-07":"تغییرهای سازمان و تنظیمات", "AT-08":"تکرار و تشدید", "AT-09":"کشف رویداد",
+      "AT-10":"اتکا به شواهد", "AT-11":"خروجی و رابط‌های کاربری", "AT-12":"سه Workflow",
+      "AT-13":"Prompt Injection", "AT-14":"تصمیم و اقدام", "AT-15":"پوشش گزارش روزانه",
+      "AT-16":"QA مدیر", "AT-17":"عملکرد", "AT-18":"هزینه", "AT-19":"تعمیم و تحویل",
+      "AT-20":"یک Agent محدود", "AT-21":"شکست و انتشار", "AT-22":"مرز بارگذاری",
+      "AT-23":"زمینه تاریخی تاریخ‌دار", "AT-24":"همه قواعد R1–R8", "AT-25":"همه مراحل Workflow",
+      "AT-26":"محتوای کامل گزارش نقش", "AT-27":"تنظیمات کنترل‌شده و گسترش KPI",
+      "AT-28":"مجوز اجرای والد", "AT-29":"چرخه عمر ورودی مدیر", "AT-30":"قراردادهای دقیق خروجی"
+    };
+
+    const directAt = {
+      "ADR-01":["AT-02","AT-03","AT-05","AT-17","AT-27"], "ADR-02":["AT-02","AT-05"],
+      "ADR-03":["AT-03","AT-05"], "ADR-04":["AT-04","AT-23"], "ADR-05":["AT-03","AT-05"],
+      "ADR-06":["AT-06","AT-10","AT-27","AT-29"], "ADR-07":["AT-08","AT-09","AT-24","AT-26","AT-30"],
+      "ADR-08":["AT-03","AT-07","AT-15","AT-22","AT-27","AT-29"],
+      "ADR-09":["AT-02","AT-10","AT-11","AT-23","AT-27","AT-30"],
+      "ADR-10":["AT-17","AT-18","AT-20","AT-28"], "ADR-11":["AT-05"], "ADR-12":["AT-06","AT-19"],
+      "ADR-13":["AT-17","AT-18","AT-20","AT-28"], "ADR-14":["AT-11","AT-15","AT-18","AT-21","AT-28"],
+      "ADR-15":["AT-08","AT-12","AT-25"], "ADR-16":["AT-03","AT-07","AT-13","AT-15","AT-22"],
+      "ADR-17":["AT-08","AT-14","AT-26","AT-29","AT-30"]
+    };
+
+    const list = document.getElementById("list");
+    const search = document.getElementById("search");
+    const stats = document.getElementById("stats");
+    let onlyUnreviewed = false;
+    let activeCategory = "all";
+    let currentRecord = null;
+    let reviewed = new Set();
+    try { reviewed = new Set(JSON.parse(localStorage.getItem("arka-reviewed-records") || "[]")); } catch (_) {}
+
+    const faDigits = value => Number(value).toLocaleString("fa-IR");
+    const safe = value => String(value || "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+
+    function persistReviewed() {
+      try { localStorage.setItem("arka-reviewed-records", JSON.stringify([...reviewed])); } catch (_) {}
+    }
+
+    function relatedDl(adrId) {
+      return Object.entries(dls).filter(([, value]) => value[1].includes(adrId));
+    }
+
+    function renderItem(kind, id, title) {
+      const state = kind === "DL" ? "باز · در انتظار Evidence" : "برنامه‌ریزی‌شده · اجرا‌نشده";
+      return `<button class="item ${kind.toLowerCase()}" type="button" data-kind="${kind}" data-id="${id}"><span class="item-id">${id}</span><span><strong>${title}</strong><small>${state} · نمایش اطلاعات</small></span></button>`;
+    }
+
+    function chips(ids) {
+      return ids.length ? `<div class="chips">${ids.map(id => `<button class="chip" type="button" data-kind="${id.startsWith("ADR") ? "ADR" : id.slice(0,2)}" data-id="${id}">${id}</button>`).join("")}</div>` : `<p>رابطه مستقیمی ثبت نشده است.</p>`;
+    }
+
+    function atRelations(atId) {
+      const adrIds = Object.entries(directAt).filter(([,ids]) => ids.includes(atId)).map(([id]) => id);
+      const dlIds = Object.entries(dls).filter(([,value]) => value[2].includes(atId)).map(([id]) => id);
+      return { adrIds, dlIds };
+    }
+
+    function fact(title, value) {
+      if (!value) return "";
+      return `<div class="fact"><h3>${title}</h3><p>${safe(value)}</p></div>`;
+    }
+
+    function sourceSectionLabel(label) {
+      const labels = {
+        "Accepted":"تصمیم پذیرفته‌شده (Accepted)",
+        "Requirement":"الزام قطعی (Requirement)",
+        "Proposed":"راهکار پیشنهادی (Proposed)",
+        "Open":"موضوع باز (Open)",
+        "آزمون پذیرش":"آزمون پذیرش"
+      };
+      return labels[label] || label;
+    }
+
+    function dlSourceFacts(row) {
+      if (!row || row.length < 6) return "";
+      return [
+        fact("منبع مسئله", row[1]),
+        fact("مسئله یا تصمیم مفقود", row[2]),
+        fact("گزینه و اثر", row[3]),
+        fact("مالک و آزمون مرتبط", row[4]),
+        fact("مدرک لازم برای بستن", row[5])
+      ].join("");
+    }
+
+    function dlFullFacts(detail) {
+      return [
+        fact("وضعیت", detail.status),
+        fact("کار لازم", detail.requiredWork),
+        fact("مسئله دقیق", detail.conflict),
+        fact("اثر مسئله", detail.effect),
+        fact("گزینه فعلی", detail.options),
+        fact("مالک تصمیم", detail.owner),
+        fact("شرط بسته‌شدن", detail.closure),
+        fact("وابستگی‌ها", detail.dependencies),
+        fact("مدرک تکمیلی", detail.additionalEvidence),
+        dlSourceFacts(detail.sourceRow)
+      ].join("");
+    }
+
+    function openRecord(kind, id) {
+      const modal = document.getElementById("recordModal");
+      const modalId = document.getElementById("modalId");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalBody = document.getElementById("modalBody");
+      currentRecord = { kind, id };
+      modalId.textContent = id;
+      if (kind === "ADR") {
+        const dlRows = relatedDl(id);
+        const atIds = directAt[id] || [];
+        const detail = window.recordDetails?.[id] || {};
+        const guide = decisionGuide[id];
+        modalTitle.textContent = guide.question;
+        const sourceSections = (detail.sourceSections || []).map(row => `<div class="fact"><h3>${safe(sourceSectionLabel(row.label))}</h3><p>${safe(row.text)}</p></div>`).join("");
+        modalBody.innerHTML = `<span class="modal-state adr">تصمیم معماری (ADR)</span>
+          <div class="human-summary">
+            <div class="human-row"><strong>تصمیم فعلی</strong><p>${safe(guide.decided)}</p></div>
+            <div class="human-row"><strong>چه چیزی هنوز باز است؟</strong><p>${safe(guide.open)}</p></div>
+            <div class="human-row"><strong>قدم بعدی</strong><p>${safe(guide.next)}</p></div>
+          </div>
+          <details class="tech-details">
+            <summary>جزئیات فنی و متن Registry <span>نمایش</span></summary>
+            <div class="tech-content">
+              ${sourceSections ? `<div class="modal-section"><h3>متن اصلی تصمیم و وضعیت‌ها</h3><div class="modal-grid">${sourceSections}</div></div>` : ""}
+              <div class="modal-section"><h3>سؤال‌های باز مرتبط (DL)</h3>${chips(dlRows.map(([dlId]) => dlId))}</div>
+              <div class="modal-section"><h3>روش‌های اثبات مرتبط (AT)</h3>${chips(atIds)}</div>
+              <div class="modal-section"><h3>راهنمای وضعیت</h3><p>هر بخش می‌تواند پذیرفته‌شده، الزام قطعی، پیشنهادی یا باز باشد.</p></div>
+            </div>
+          </details>`;
+      } else if (kind === "DL") {
+        const [title, adrIds, atIds] = dls[id];
+        const detail = window.recordDetails?.[id] || {};
+        modalTitle.textContent = title;
+        modalBody.innerHTML = `<span class="modal-state">باز · مدرک کامل نشده</span>
+          <div class="modal-section"><h3>جزئیات کامل مسئله</h3><div class="modal-grid">${dlFullFacts(detail)}</div></div>
+          <div class="modal-section"><h3>ADRهای مرتبط</h3>${chips(adrIds)}</div>
+          <div class="modal-section"><h3>آزمون‌های مرتبط</h3>${chips(atIds)}</div>`;
+      } else {
+        const relations = atRelations(id);
+        const detail = window.recordDetails?.[id] || {};
+        modalTitle.textContent = ats[id];
+        const sourceRow = detail.sourceRow || [];
+        modalBody.innerHTML = `<span class="modal-state at">برنامه‌ریزی‌شده · اجرا‌نشده</span>
+          <div class="modal-section"><h3>معیار اصلی پذیرش</h3><div class="fact"><h3>${safe(sourceRow[1] || ats[id])}</h3><p>${safe(sourceRow[2] || detail.evidence)}</p></div></div>
+          <div class="modal-section"><h3>ADRهای مرتبط</h3>${chips(relations.adrIds)}</div>
+          <div class="modal-section"><h3>DLهای مرتبط</h3>${chips(relations.dlIds)}</div>
+          <div class="modal-section"><h3>وضعیت فعلی</h3><p>این آزمون برنامه‌ریزی شده است، اما هنوز اجرا نشده و Evidence نتیجه ثبت نشده است.</p></div>`;
+      }
+      updateReviewButton();
+      modalBody.scrollTop = 0;
+      if (!modal.open) modal.showModal();
+    }
+
+    function updateReviewButton() {
+      const button = document.getElementById("reviewRecord");
+      const isDone = currentRecord && reviewed.has(currentRecord.id);
+      button.textContent = isDone ? "بررسی‌شده؛ بازگرداندن" : "علامت‌گذاری به‌عنوان بررسی‌شده";
+      button.classList.toggle("done", Boolean(isDone));
+    }
+
+    function renderCategoryNav() {
+      const nav = document.getElementById("categoryNav");
+      nav.innerHTML = Object.entries(categories).map(([id, category]) => {
+        const count = id === "all" ? Object.keys(decisionGuide).length : Object.values(decisionGuide).filter(item => item.category === id).length;
+        return `<button class="category-btn ${activeCategory === id ? "active" : ""}" type="button" data-category="${id}" aria-pressed="${activeCategory === id}">${category.title} · ${faDigits(count)}</button>`;
+      }).join("");
+    }
+
+    function decisionCard(id) {
+      const guide = decisionGuide[id];
+      const dlCount = relatedDl(id).length;
+      const atCount = (directAt[id] || []).length;
+      return `<article class="decision-card ${reviewed.has(id) ? "reviewed" : ""}">
+        <div class="decision-top">
+          <div><span class="decision-code">${id}</span><h3 class="decision-title">${safe(guide.question)}</h3></div>
+          ${reviewed.has(id) ? `<span class="count reviewed">بررسی‌شده</span>` : ""}
+        </div>
+        <div class="plain-facts">
+          <div class="plain-fact"><strong>تصمیم فعلی</strong><p>${safe(guide.decided)}</p></div>
+          <div class="plain-fact open"><strong>موضوع باز</strong><p>${safe(guide.open)}</p></div>
+          <div class="plain-fact next"><strong>قدم بعدی</strong><p>${safe(guide.next)}</p></div>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta"><span class="count dl">${faDigits(dlCount)} سؤال باز</span><span class="count at">${faDigits(atCount)} روش اثبات</span></div>
+          <button class="card-open" type="button" data-kind="ADR" data-id="${id}">بررسی این موضوع</button>
+        </div>
+      </article>`;
+    }
+
+    function render() {
+      const q = search.value.trim().toLowerCase();
+      let shown = 0;
+      const groups = Object.entries(categories).filter(([id]) => id !== "all" && (activeCategory === "all" || activeCategory === id));
+      const sections = groups.map(([categoryId, category]) => {
+        const ids = Object.keys(decisionGuide).filter(id => {
+          const guide = decisionGuide[id];
+          const dlRows = relatedDl(id);
+          const atIds = directAt[id] || [];
+          const haystack = [id, adrTitles[id], guide.question, guide.decided, guide.open, guide.next, ...dlRows.flatMap(([dlId,v]) => [dlId,v[0]]), ...atIds.flatMap(atId => [atId,ats[atId]])].join(" ").toLowerCase();
+          return guide.category === categoryId && (!q || haystack.includes(q)) && (!onlyUnreviewed || !reviewed.has(id));
+        });
+        if (!ids.length) return "";
+        shown += ids.length;
+        return `<section class="category-section">
+          <div class="category-heading"><div><h2>${category.title}</h2><p>${category.description}</p></div><span class="category-count">${faDigits(ids.length)} موضوع</span></div>
+          <div class="decision-grid">${ids.map(decisionCard).join("")}</div>
+        </section>`;
+      }).join("");
+      list.innerHTML = sections || `<div class="empty">موضوعی با این جست‌وجو یا فیلتر پیدا نشد.</div>`;
+      const reviewedAdr = Object.keys(adrTitles).filter(id => reviewed.has(id)).length;
+      stats.innerHTML = `<span class="stat"><b>${faDigits(shown)}</b> موضوع نمایش داده شده</span><span class="stat"><b>${faDigits(reviewedAdr)} از ۱۷</b> موضوع بررسی شده</span><span class="stat"><b>۱۹</b> سؤال باز</span><span class="stat"><b>۳۰</b> روش اثبات برنامه‌ریزی‌شده</span>`;
+      renderCategoryNav();
+    }
+
+    search.addEventListener("input", render);
+    document.getElementById("unreviewedOnly").addEventListener("click", event => {
+      onlyUnreviewed = !onlyUnreviewed;
+      event.currentTarget.classList.toggle("active", onlyUnreviewed);
+      event.currentTarget.setAttribute("aria-pressed", String(onlyUnreviewed));
+      render();
+    });
+    document.getElementById("categoryNav").addEventListener("click", event => {
+      const button = event.target.closest("[data-category]");
+      if (!button) return;
+      activeCategory = button.dataset.category;
+      render();
+    });
+    document.addEventListener("click", event => {
+      const trigger = event.target.closest("[data-kind][data-id]");
+      if (trigger) openRecord(trigger.dataset.kind, trigger.dataset.id);
+    });
+    document.getElementById("modalClose").addEventListener("click", () => document.getElementById("recordModal").close());
+    document.getElementById("reviewRecord").addEventListener("click", () => {
+      if (!currentRecord) return;
+      if (reviewed.has(currentRecord.id)) reviewed.delete(currentRecord.id); else reviewed.add(currentRecord.id);
+      persistReviewed();
+      updateReviewButton();
+      render();
+    });
+    document.getElementById("recordModal").addEventListener("click", event => {
+      if (event.target === event.currentTarget) event.currentTarget.close();
+    });
+    render();
+  </script>
+</body>
+</html>

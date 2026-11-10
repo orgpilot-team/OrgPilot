@@ -23,6 +23,8 @@ Reference contract / authority: **Requirement**. Brief13-14; README manifest/sou
 Unapproved mechanism or gap: Idempotent receipt mechanism Proposed.
 
 Required evidence and acceptance checks: Manifest/actual/expected comparisons, unchanged hashes, retry receipts, independent-source extension diff and regression receipts.
+Open question: Is receipt processing idempotent for retries and new source extensions?
+Proof method: Run the same input twice. Compare manifests, hashes and receipts. Run the independent-source extension. Pass only when no duplicate result appears and all regression checks pass.
 
 Related decisions / issues: See the requirement and source edges in the matrix..
 
@@ -50,6 +52,8 @@ Reference contract / authority: **Requirement**. KPI dictionary all rows; refere
 Unapproved mechanism or gap: PostgreSQL translation strategy Proposed; engine Accepted.
 
 Required evidence and acceptance checks: All 55 source/translated SQL hashes, engine/type/input-policy versions and complete result comparisons for every replay morning and edge case; zero tolerance after canonical rounding.
+Open question: Do all 55 KPI translations produce the same canonical result in PostgreSQL?
+Proof method: Run each source and translated query for every replay morning and edge case. Compare SQL hashes, versions, inputs and results. Pass only when all results match after canonical rounding.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-01](decisions-registry.md#adr-01)، [ADR-09](decisions-registry.md#adr-09)، [DL-01](open-issues-registry.md#dl-01)، [DL-02](open-issues-registry.md#dl-02)، [DL-16](open-issues-registry.md#dl-16)، [DL-17](open-issues-registry.md#dl-17)، [REG-ISS-005](open-issues-registry.md#reg-iss-005).
 
@@ -77,6 +81,8 @@ Reference contract / authority: **Requirement**. README replay/input cutoff; bri
 Unapproved mechanism or gap: Snapshot/commit implementation Proposed.
 
 Required evidence and acceptance checks: Snapshots and query receipts for mornings 62-91, D-1 cutoffs, future-data negative cases and initial CRM history.
+Open question: Does each report use only data available before its cutoff?
+Proof method: Replay mornings 62-91 with D-1 cutoffs. Add future-data negative cases. Inspect snapshots, query receipts and reports. Pass only when future rows never appear.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-01](decisions-registry.md#adr-01)، [ADR-16](decisions-registry.md#adr-16)، [DL-01](open-issues-registry.md#dl-01)، [DL-04](open-issues-registry.md#dl-04)، [DL-10](open-issues-registry.md#dl-10)، [REG-ISS-009](open-issues-registry.md#reg-iss-009).
 
@@ -104,6 +110,8 @@ Reference contract / authority: **Requirement**. README unavailable values; brie
 Unapproved mechanism or gap: Closure/publication policy Open.
 
 Required evidence and acceptance checks: Missing/empty/backfill reports with null and issue links; separate 32 support changes from two payment changes.
+Open question: Are missing, empty and backfill values reported with the correct status?
+Proof method: Run missing, empty and backfill fixtures. Inspect null values, issue links and change groups. Pass only when the 32 support changes and two payment changes stay separate.
 
 تصمیم‌ها / مسائل مرتبط: [DL-03](open-issues-registry.md#dl-03)، [REG-ISS-004](open-issues-registry.md#reg-iss-004).
 
@@ -131,6 +139,8 @@ Reference contract / authority: **Requirement**. Brief14,17; observed aliases/co
 Unapproved mechanism or gap: RAW/DEDUP and correction tie Open.
 
 Required evidence and acceptance checks: Separate RAW/DEDUP outputs, header-alias receipts and L02045 correction eligibility from morning 71; no actual-report counterfactual.
+Open question: Are duplicate, schema-alias and correction cases handled without changing the original report?
+Proof method: Run RAW and DEDUP outputs with alias headers and the L02045 correction fixture. Compare receipts and report outputs. Pass only when the correction is eligible from morning 71 and no counterfactual changes the actual report.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-01](decisions-registry.md#adr-01)، [DL-01](open-issues-registry.md#dl-01)، [DL-02](open-issues-registry.md#dl-02)، [DL-04](open-issues-registry.md#dl-04)، [DL-05](open-issues-registry.md#dl-05)، [REG-ISS-004](open-issues-registry.md#reg-iss-004).
 
@@ -158,6 +168,8 @@ Reference contract / authority: **Requirement**. Access matrix; brief5,10,12-13.
 Unapproved mechanism or gap: Physical roles/projections Proposed; exact fields Open.
 
 Required evidence and acceptance checks: Positive and negative access receipts in all three levels, including result, prompt, cache, export, log, errors and source-row drill-down.
+Open question: Does authorization block every unauthorized path at all three access levels?
+Proof method: Run positive and negative tests for result, prompt, cache, export, log, error and drill-down paths. Pass only when allowed data is visible and every unauthorized path is blocked.
 
 تصمیم‌ها / مسائل مرتبط: [DL-06](open-issues-registry.md#dl-06)، [DL-07](open-issues-registry.md#dl-07)، [DL-15](open-issues-registry.md#dl-15).
 
@@ -185,6 +197,8 @@ Reference contract / authority: **Requirement**. Brief13,17; README; IN05/IN06.
 Unapproved mechanism or gap: M11 precedence/activation authority Open.
 
 Required evidence and acceptance checks: Metadata revisions, approved clock, IN06 report-79 effect, cache/grant revisions and added-team/level tests.
+Open question: Which source has authority when M11 and other organization settings conflict?
+Proof method: Apply organization and configuration changes with controlled timestamps. Inspect revisions, clock, IN06 effect, cache and grants. Pass only when the approved precedence rule gives the expected result.
 
 تصمیم‌ها / مسائل مرتبط: [DL-10](open-issues-registry.md#dl-10).
 
@@ -212,6 +226,8 @@ Reference contract / authority: **Requirement**. R1-R8; brief7-8.
 Unapproved mechanism or gap: Ranking/grouping/reset mechanism Proposed/Open.
 
 Required evidence and acceptance checks: Per-recipient history, rule/owner versions, <10% recurrence cases, escalation reasons, max-five outputs and Candidate/Open/Published mapping.
+Open question: How are repeated signals grouped, ranked, reset and escalated?
+Proof method: Run recurrence fixtures for each recipient and rule version. Inspect history, reasons and state transitions. Pass only when recurrence is below 10% and output count is at most five.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-15](decisions-registry.md#adr-15)، [DL-08](open-issues-registry.md#dl-08)، [DL-09](open-issues-registry.md#dl-09)، [DL-18](open-issues-registry.md#dl-18)، [REG-ISS-004](open-issues-registry.md#reg-iss-004).
 
@@ -239,6 +255,8 @@ Reference contract / authority: **Requirement**. Brief16 discovery definition.
 Unapproved mechanism or gap: Official hidden labels unavailable.
 
 Required evidence and acceptance checks: Official labeled event results: correct owner report, within 24 hours, correct KPI/entity and label-consistent cause; at least 90%. Hidden labels are absent.
+Open question: Can event discovery reach the required accuracy without the hidden labels?
+Proof method: Use an approved labeled evaluation set. Compare owner, time, KPI, entity and cause. Pass only when accuracy is at least 90%; otherwise mark the test unproven.
 
 تصمیم‌ها / مسائل مرتبط: [DL-09](open-issues-registry.md#dl-09)، [DL-16](open-issues-registry.md#dl-16).
 
@@ -266,6 +284,8 @@ Reference contract / authority: **Requirement**. Brief9-10,13,16.
 Unapproved mechanism or gap: Independence/scoring algorithm Proposed.
 
 Required evidence and acceptance checks: Actual QueryRun/Snapshot references for every number and cause; reviewed evidence independence, positive/negative shared-population cases and full number-to-file lineage.
+Open question: Is every number and cause supported by independent, traceable evidence?
+Proof method: Trace every output number and cause to QueryRun, Snapshot and source file. Run positive and negative shared-population cases. Pass only when the lineage is complete and evidence is independent.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-09](decisions-registry.md#adr-09)، [DL-07](open-issues-registry.md#dl-07)، [DL-11](open-issues-registry.md#dl-11)، [REG-ISS-005](open-issues-registry.md#reg-iss-005).
 
@@ -293,6 +313,8 @@ Reference contract / authority: **Requirement**. Brief10-12,15; output schemas.
 Unapproved mechanism or gap: Internal complete content mapping Open.
 
 Required evidence and acceptance checks: Brief/QA schema receipts; authenticated Persian RTL assistant and role-dashboard sessions at three levels; authorized drill-down, decision/referral history and mentioned_staff_ids checks.
+Open question: Does each role receive the correct content and only the allowed drill-down?
+Proof method: Run authenticated Persian RTL sessions for all three levels. Compare output with the brief and QA schema. Test drill-down, decision history, referral history and mentioned_staff_ids. Pass only when content and access match the role.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-09](decisions-registry.md#adr-09)، [ADR-14](decisions-registry.md#adr-14)، [DL-11](open-issues-registry.md#dl-11)، [REG-ISS-006](open-issues-registry.md#reg-iss-006).
 
@@ -320,6 +342,8 @@ Reference contract / authority: **Requirement**. Workflow stages; canonical work
 Unapproved mechanism or gap: Stage owner mapping Open.
 
 Required evidence and acceptance checks: Case/stage evidence for three Workflows, supplied SLA versus canonical KPI checks, repeats/open/unknown cases, M01 ownership, approved routing and executive-only Persian RTL control-room sessions.
+Open question: Are all Workflow stages, owners, SLAs and routes mapped correctly?
+Proof method: Replay cases for all three Workflows. Compare stage evidence, SLA and canonical KPI results. Test repeat, open and unknown cases and M01 ownership. Pass only when routing and executive access match the contract.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-15](decisions-registry.md#adr-15)، [DL-08](open-issues-registry.md#dl-08)، [REG-ISS-001](open-issues-registry.md#reg-iss-001)، [REG-ISS-003](open-issues-registry.md#reg-iss-003)، [REG-ISS-006](open-issues-registry.md#reg-iss-006).
 
@@ -347,6 +371,8 @@ Reference contract / authority: **Requirement**. Brief13,17; injected operationa
 Unapproved mechanism or gap: Enforcement mechanism Proposed.
 
 Required evidence and acceptance checks: Injected tickets/uploads/header/filename cases with unchanged permissions, numbers, recipients and action boundaries.
+Open question: Can prompt injection change permissions, numbers, recipients or actions?
+Proof method: Inject hostile text into tickets, uploads, headers and filenames. Compare results with a clean control case. Pass only when permissions, numbers, recipients and action boundaries remain unchanged.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-16](decisions-registry.md#adr-16)، [REG-ISS-009](open-issues-registry.md#reg-iss-009).
 
@@ -374,6 +400,8 @@ Reference contract / authority: **Requirement**. Brief11-12,15; scripted decisio
 Unapproved mechanism or gap: Execution confirmation fields Open.
 
 Required evidence and acceptance checks: Valid-decision/draft linkage, before/after evidence, valid effect_direction, versioned deadlines/status/reminders and no organizational send/execute call.
+Open question: Does the system keep decisions as drafts until a human approves execution?
+Proof method: Create valid and invalid decisions. Inspect links, before/after evidence, effect_direction, deadlines, status and reminders. Inspect outbound calls. Pass only when no organizational send or execute call occurs automatically.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-17](decisions-registry.md#adr-17)، [DL-12](open-issues-registry.md#dl-12).
 
@@ -401,6 +429,8 @@ Reference contract / authority: **Requirement**. README active roster; brief16.
 Unapproved mechanism or gap: Independent publication Accepted; M11 precedence Open.
 
 Required evidence and acceptance checks: The approved active roster for every morning, one valid package per required manager, no duplicate retry package, incomplete failed days and role-content checks.
+Open question: Does every active manager receive exactly one valid daily package?
+Proof method: Run each morning against the approved roster. Count packages and retries. Inspect failed and incomplete days and role content. Pass only when each required manager has one valid package and no duplicate package exists.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-14](decisions-registry.md#adr-14)، [DL-10](open-issues-registry.md#dl-10)، [DL-13](open-issues-registry.md#dl-13)، [REG-ISS-001](open-issues-registry.md#reg-iss-001).
 
@@ -428,6 +458,8 @@ Reference contract / authority: **Requirement**. Brief17; scripted questions.
 سازوکار تأییدنشده یا شکاف: 16 Fixture، مجموعه حدود 60 پرسش رسمی نیستند.
 
 Required evidence and acceptance checks: All 16 supplied manager questions with clock/scope/definition/refusal receipts, plus official evaluator results of at least 85%; supplied samples alone cannot prove that score.
+Open question: Does the manager QA flow answer valid questions and refuse invalid ones correctly?
+Proof method: Run all 16 official questions. Inspect clock, scope, definition and refusal receipts. Use the official evaluator. Pass only when the score is at least 85%.
 
 تصمیم‌ها / مسائل مرتبط: [DL-16](open-issues-registry.md#dl-16)، [REG-ISS-002](open-issues-registry.md#reg-iss-002).
 
@@ -455,6 +487,8 @@ Reference contract / authority: **Requirement**. Brief14,19.
 Unapproved mechanism or gap: Hardware/final profile missing; no benchmark.
 
 Required evidence and acceptance checks: Every day ingest-to-JSON/validation elapsed time on the declared machine, at most 15 minutes, simulated publication before 07:30; warm/cold recorded separately.
+Open question: Can the complete daily flow finish within 15 minutes and publish before 07:30?
+Proof method: Run the full flow on the declared machine for every day. Record cold and warm times from ingest to validated JSON and simulated publication. Pass only when each limit is met.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-01](decisions-registry.md#adr-01)، [DL-01](open-issues-registry.md#dl-01)، [DL-14](open-issues-registry.md#dl-14)، [DL-16](open-issues-registry.md#dl-16).
 
@@ -482,6 +516,8 @@ Reference contract / authority: **Requirement**. Brief16,19.
 Unapproved mechanism or gap: Reservation/rates/retry mechanism Proposed.
 
 Required evidence and acceptance checks: Every day actual model cost at most USD 5; token, retry, cache, dated rates and reservation ledgers, including QA and repairs; controlled exhaustion outcomes.
+Open question: Does each daily run stay within the USD 5 model-cost limit?
+Proof method: Record tokens, retries, cache use, dated rates, reservations, QA and repair costs. Test controlled budget exhaustion. Pass only when daily actual cost is at most USD 5 and exhaustion is handled safely.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-14](decisions-registry.md#adr-14)، [DL-14](open-issues-registry.md#dl-14)، [DL-16](open-issues-registry.md#dl-16)، [REG-ISS-006](open-issues-registry.md#reg-iss-006).
 
@@ -509,6 +545,8 @@ Reference contract / authority: **Requirement**. Brief14,18.
 Unapproved mechanism or gap: Restore/restart engineering gate Proposed, not a supplied specific backup policy.
 
 Required evidence and acceptance checks: New-root/config run without code edits, one Docker command, restart/restore receipts, no fixed incident/date IDs and the full P5 delivery inventory.
+Open question: Can a new user restore and run the system without code edits?
+Proof method: Start from a new root and configuration. Use one Docker command. Perform restart and restore tests. Inspect receipts and the P5 inventory. Pass only when the run succeeds without fixed incident or date IDs.
 
 تصمیم‌ها / مسائل مرتبط: [DL-15](open-issues-registry.md#dl-15)، [DL-16](open-issues-registry.md#dl-16)، [REG-ISS-006](open-issues-registry.md#reg-iss-006).
 
@@ -536,6 +574,8 @@ Reference contract / authority: **Accepted**. User request1; S16 Q01; S17 agent.
 Unapproved mechanism or gap: Exact tool/time/token/step limits Open.
 
 Required evidence and acceptance checks: One-Agent execution trace, deterministic calculation/Signal/access/final validation receipts and approved tool/token/time/cancel limits.
+Open question: Does one Agent stay inside the approved tool, token, time and cancellation limits?
+Proof method: Run one complete trace. Inspect calculation, Signal, access and final-validation receipts. Trigger each limit. Pass only when the Agent cannot exceed an approved limit.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-13](decisions-registry.md#adr-13)، [DL-14](open-issues-registry.md#dl-14).
 
@@ -563,6 +603,8 @@ Reference contract / authority: **Accepted**. User request1; S16 Q16; S17 Partia
 Unapproved mechanism or gap: Atomic package mechanism and fallback Proposed.
 
 Required evidence and acceptance checks: One pre-draft failure and one validation failure; independent once-only valid publication, paired text/JSON, visible failed required jobs, incomplete day and bounded rewrite/revalidation traces.
+Open question: Does a failure prevent invalid or duplicate publication?
+Proof method: Inject one pre-draft failure and one validation failure. Inspect job status, text/JSON pairing, rewrite and revalidation traces. Pass only when failed days remain incomplete and only one valid package is published.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-14](decisions-registry.md#adr-14)، [DL-13](open-issues-registry.md#dl-13).
 
@@ -590,6 +632,8 @@ Reference contract / authority: **Requirement**. Brief3,12-14; README uploads; I
 Unapproved mechanism or gap: Exact format/readiness policy Open.
 
 Required evidence and acceptance checks: Approved format list, identity/audience/receipt/readiness, parse failure and injection fixtures; no unavailable attachment evidence.
+Open question: Are uploads accepted only when format, identity, audience and readiness are valid?
+Proof method: Test approved and rejected formats, identity, audience, receipt and readiness cases. Add parse-failure and injection fixtures. Pass only when invalid or unavailable attachments are not used as evidence.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-16](decisions-registry.md#adr-16)، [DL-10](open-issues-registry.md#dl-10)، [REG-ISS-009](open-issues-registry.md#reg-iss-009).
 
@@ -617,6 +661,8 @@ Reference contract / authority: **Proposed**. S16 Q06 summary; existing S17 date
 Unapproved mechanism or gap: Historical display mapping/age Open; never replace current null.
 
 Required evidence and acceptance checks: Current null plus issue and historical value with actual date/query/snapshot/unit/current authorization under an approved mapping; no substitution.
+Open question: Can historical context be shown without replacing a current null value?
+Proof method: Run current-missing and historical-value fixtures. Inspect date, query, snapshot, unit and authorization. Pass only when current null stays null and historical context is shown separately.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-09](decisions-registry.md#adr-09)، [DL-03](open-issues-registry.md#dl-03).
 
@@ -644,6 +690,8 @@ Reference contract / authority: **Requirement**. escalation_rules.csv R1-R8; bri
 Unapproved mechanism or gap: Only unspecified comparisons/samples/reset remain Open.
 
 Required evidence and acceptance checks: Separate and combined R1-R8 cases at detection, report construction and final validation; fixed comparison/owner/history/holiday/info/Jalali-day gates and five DQ cases with positive business control.
+Open question: Do all R1-R8 rules work alone and together at every control point?
+Proof method: Run separate and combined positive and negative fixtures at detection, report construction and final validation. Inspect comparison, owner, history, holiday, information, Jalali-day and DQ gates. Pass only when every rule has the expected result.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-07](decisions-registry.md#adr-07)، [REG-ISS-004](open-issues-registry.md#reg-iss-004).
 
@@ -671,6 +719,8 @@ Reference contract / authority: **Requirement**. workflow_definitions.csv12 stag
 Unapproved mechanism or gap: Owner/projection details Open.
 
 Required evidence and acceptance checks: All 12 stages with from/to events, numeric SLA versus deadline versus no-SLA, median targets, WF2 48h and separate canonical WF3 conditions; unresolved owners stay explicit.
+Open question: Are all 12 Workflow stages and owner states represented without hidden assumptions?
+Proof method: Replay cases for all stages. Compare from/to events, SLA, deadline, median target, WF2 48h and WF3 conditions. Inspect unresolved owners. Pass only when every stage is explicit and correct.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-15](decisions-registry.md#adr-15)، [REG-ISS-001](open-issues-registry.md#reg-iss-001)، [REG-ISS-003](open-issues-registry.md#reg-iss-003).
 
@@ -698,6 +748,8 @@ Reference contract / authority: **Requirement**. Brief5,9-12,15.
 Unapproved mechanism or gap: Internal/wire content mapping Open.
 
 Required evidence and acceptance checks: Eight Insight sections, required charts/cards/health/pending decisions/open actions/dashboard/status, plus every role-matrix cell with content/empty/missing/denied cases. Monthly board summary remains optional.
+Open question: Does each role report contain every required section and correct empty, missing and denied states?
+Proof method: Generate reports for every role-matrix cell. Inspect all eight Insight sections, charts, cards, health, decisions, actions, dashboard and status. Pass only when each cell has the correct content state.
 
 تصمیم‌ها / مسائل مرتبط: [DL-18](open-issues-registry.md#dl-18)، [REG-ISS-001](open-issues-registry.md#reg-iss-001).
 
@@ -725,6 +777,8 @@ Reference contract / authority: **Requirement**. Brief13; README KPI extension.
 Unapproved mechanism or gap: Inactive-candidate approval mechanism Proposed.
 
 Required evidence and acceptance checks: Preserved 55 definitions; inactive candidate SQL/type/unit/scope/rollup validation, approval and versioned activation; separate add and change tests, write authorization, effect time, rollback and retained prior results.
+Open question: Can KPI definitions change only through approved, versioned configuration?
+Proof method: Test add, change, approval, activation, rollback and unauthorized write cases. Inspect SQL, type, unit, scope, rollup, effect time and prior results. Pass only when the 55 definitions remain preserved and changes are traceable.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-01](decisions-registry.md#adr-01)، [DL-19](open-issues-registry.md#dl-19).
 
@@ -752,6 +806,8 @@ Reference contract / authority: **Proposed**. Existing S17 F02/F05; user bounded
 Unapproved mechanism or gap: Exact controller limits and cancellation product behavior Open.
 
 Required evidence and acceptance checks: Parent/child request chain for model/tool/query/retry/upload/repair with nonresetting limits; timeout/cancel/budget and before/after-draft failure receipts. Exact limits require approval.
+Open question: Do parent limits remain active across all child model and tool requests?
+Proof method: Run parent/child chains for each request type. Trigger timeout, cancel, budget and draft failures. Inspect limits before and after each child request. Pass only when limits do not reset or bypass.
 
 Related decisions / issues: See the requirement and source edges in the matrix..
 
@@ -779,6 +835,8 @@ Reference contract / authority: **Requirement**. Scripted inputs23; brief3,11-14
 Unapproved mechanism or gap: Write authority and same-day receipt precedence Open.
 
 Required evidence and acceptance checks: All 23 authorized input events, all 16 QA files and seven non-question effects with receipt/effect/idempotency; separate close/referral fixtures, unchanged dataset and upload text not treated as a decision.
+Open question: Are manager inputs recorded with the correct authority, effect and idempotency?
+Proof method: Run all 23 authorized events, 16 QA files and seven non-question effects. Inspect receipt, effect and retry behavior. Test close and referral fixtures. Pass only when the dataset stays unchanged and upload text is not treated as a decision.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-17](decisions-registry.md#adr-17)، [DL-19](open-issues-registry.md#dl-19).
 
@@ -806,6 +864,8 @@ Reference contract / authority: **Requirement**. brief_schema.json; qa_answer_sc
 Unapproved mechanism or gap: Stronger semantic validators separate from permissive schema.
 
 Required evidence and acceptance checks: Every required/nested schema field/type/enum/maxItems/date/value plus all text numbers (Persian, Arabic, Latin and separators) paired with actual JSON/query results; reject unsupported/mismatched/unexecuted SQL numbers.
+Open question: Do output validators reject every unsupported, mismatched or unexecuted value?
+Proof method: Test every required and nested field, type, enum, maxItems, date and value rule. Test Persian, Arabic and Latin numbers with separators. Compare text with JSON and query results. Pass only when invalid output is rejected.
 
 تصمیم‌ها / مسائل مرتبط: [DL-17](open-issues-registry.md#dl-17)، [DL-18](open-issues-registry.md#dl-18)، [REG-ISS-002](open-issues-registry.md#reg-iss-002).
 
