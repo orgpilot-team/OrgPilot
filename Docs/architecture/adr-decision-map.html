@@ -415,6 +415,20 @@
       ].join("");
     }
 
+    function inlineDl(dlId) {
+      const title = dls[dlId]?.[0] || dlId;
+      const detail = window.recordDetails?.[dlId] || {};
+      const tests = dls[dlId]?.[2] || [];
+      return `<div class="linked-record dl-linked"><h3>${safe(dlId)} · ${safe(title)}</h3><div class="modal-grid">${dlFullFacts(detail)}</div><p class="linked-label">آزمون‌های این سؤال</p>${chips(tests)}</div>`;
+    }
+
+    function inlineAt(atId) {
+      const detail = window.recordDetails?.[atId] || {};
+      const title = ats[atId] || atId;
+      const sourceRow = detail.sourceRow || [];
+      return `<div class="linked-record at-linked"><h3>${safe(atId)} · ${safe(title)}</h3>${fact("معیار و مدرک آزمون", sourceRow[2] || detail.evidence)}${fact("روش اثبات", detail.proofMethod || detail.evidence)}</div>`;
+    }
+
     function openRecord(kind, id) {
       const modal = document.getElementById("recordModal");
       const modalId = document.getElementById("modalId");
@@ -429,21 +443,17 @@
         const guide = decisionGuide[id];
         modalTitle.textContent = guide.question;
         const sourceSections = (detail.sourceSections || []).map(row => `<div class="fact"><h3>${safe(sourceSectionLabel(row.label))}</h3><p>${safe(row.text)}</p></div>`).join("");
+        const linkedDls = dlRows.map(([dlId]) => inlineDl(dlId)).join("");
+        const linkedAts = atIds.map(inlineAt).join("");
         modalBody.innerHTML = `<span class="modal-state adr">تصمیم معماری (ADR)</span>
           <div class="human-summary">
             <div class="human-row"><strong>تصمیم فعلی</strong><p>${safe(guide.decided)}</p></div>
             <div class="human-row"><strong>چه چیزی هنوز باز است؟</strong><p>${safe(guide.open)}</p></div>
             <div class="human-row"><strong>قدم بعدی</strong><p>${safe(guide.next)}</p></div>
           </div>
-          <details class="tech-details">
-            <summary>جزئیات فنی و متن Registry <span>نمایش</span></summary>
-            <div class="tech-content">
-              ${sourceSections ? `<div class="modal-section"><h3>متن اصلی تصمیم و وضعیت‌ها</h3><div class="modal-grid">${sourceSections}</div></div>` : ""}
-              <div class="modal-section"><h3>سؤال‌های باز مرتبط (DL)</h3>${chips(dlRows.map(([dlId]) => dlId))}</div>
-              <div class="modal-section"><h3>روش‌های اثبات مرتبط (AT)</h3>${chips(atIds)}</div>
-              <div class="modal-section"><h3>راهنمای وضعیت</h3><p>هر بخش می‌تواند پذیرفته‌شده، الزام قطعی، پیشنهادی یا باز باشد.</p></div>
-            </div>
-          </details>`;
+          ${sourceSections ? `<div class="modal-section"><h3>جزئیات تصمیم</h3><div class="modal-grid">${sourceSections}</div></div>` : ""}
+          <div class="modal-section"><h3>سؤال‌های باز این تصمیم</h3>${linkedDls || "<p>سؤال باز مرتبط ثبت نشده است.</p>"}</div>
+          <div class="modal-section"><h3>آزمون‌های مرتبط</h3>${linkedAts || "<p>آزمون مرتبط ثبت نشده است.</p>"}</div>`;
       } else if (kind === "DL") {
         const [title, adrIds, atIds] = dls[id];
         const detail = window.recordDetails?.[id] || {};
