@@ -1,278 +1,550 @@
 # تصمیم‌های معماری To-Be دیدراه
 
-وضعیت سند: **Draft - Ready for Team Review**  
-تاریخ بازبینی: ۱۴۰۵/۰۸/۱۹ (2026-11-10)  
-مرجع نیازمندی: `Docs/دیدراه-بریف-دستیار-ایجنتیک-مدیران.md`  
+## A. Document Control
 
-این فایل مرجع واحد تصمیم‌های معماری To-Be است. `Accepted` یعنی تصمیم صریح تیم یا الزام قطعی منبع. `Open` یعنی پاسخ نهایی هنوز ثبت نشده است. پیشنهاد فنی در یک تصمیم Open، به‌تنهایی تصمیم تیم نیست.
+| Field | Value |
+|---|---|
+| عنوان | تصمیم‌های معماری To-Be دیدراه |
+| نسخه | 2.0 |
+| تاریخ بازبینی | ۱۴۰۵/۰۸/۱۹ (2026-11-10) |
+| وضعیت | Draft — Ready for Team Review |
+| دامنه | معماری To-Be و قراردادهای تصمیم‌گیری |
+| نسخه پشتیبان | [نسخه پیش از Refactor](architecture-decisions.pre-refactor-2026-11-10.md) |
 
-در فیلد Source، شناسه `DL-xx` به بخش هم‌نام در `Docs/architecture/registry/open-issues-registry.md` و شناسه `ADR-xx` به بخش هم‌نام در `Docs/architecture/registry/decisions-registry.md` ارجاع می‌دهد. ارجاع «بریف خطوط» به شماره خط نسخه فعلی فایل مرجع Markdown مربوط است.
+این سند مرجع واحد تصمیم‌های معماری To-Be است. این سند Requirement، تصمیم Accepted، راهکار Proposed و سؤال Open را از هم جدا می‌کند.
 
-## ۱. تصمیم‌های Accepted
+### منابع مرجع
 
-### ADR-01 - موتور پایگاه داده محصول
+| منبع | وضعیت | کاربرد |
+|---|---|---|
+| [بریف رسمی دیدراه](../دیدراه-بریف-دستیار-ایجنتیک-مدیران.md) و PDF هم‌نام | در دسترس | Requirement، Acceptance، Replay و تحویل |
+| [Decisions Registry](../architecture/registry/decisions-registry.md) | در دسترس | تصمیم‌ها و Evidence |
+| [Open Issues Registry](../architecture/registry/open-issues-registry.md) | در دسترس | Issueهای `DL-01` تا `DL-19` |
+| [Adr.md](../architecture/sources/Adr.md) | در دسترس | سؤال‌های معماری و تصمیم تیم |
+| [Dataset README](../../DataSet/arka_dataset/README_FA.md) | در دسترس | قرارداد Dataset و KPI |
+| [KPI Dictionary](../../DataSet/arka_dataset/config/kpi_dictionary.csv) و [Reference Views](../../DataSet/arka_dataset/config/reference_views.sql) | در دسترس | تعریف و SQL مرجع KPI |
+| [Brief Schema](../../DataSet/arka_dataset/output_contract/brief_schema.json) و [QA Schema](../../DataSet/arka_dataset/output_contract/qa_answer_schema.json) | در دسترس | قرارداد رسمی خروجی |
+| [Acceptance Register](../architecture/registry/acceptance-register.md) | در دسترس | معیار و Evidence پذیرش |
+
+یک فایل مستقل با عنوان Replay پیدا نشد. قرارداد Replay در بریف و Acceptance Register موجود است. این سند فقط به همان قراردادها استناد می‌کند.
+
+### تعریف وضعیت‌ها
+
+- **Requirement:** الزام قطعی منبع رسمی است. Requirement تصمیم تیم نیست.
+- **Accepted:** تصمیم صریح و قابل ردیابی تیم است.
+- **Proposed:** راهکار پیشنهادی است. Proposed به معنی Accepted نیست.
+- **Open:** پاسخ نهایی ثبت نشده است.
+- **External clarification:** فقط برگزارکننده یا مالک رسمی Dataset می‌تواند پاسخ معتبر بدهد.
+- **Closed:** پاسخ، Owner، Evidence و Closure Criteria ثبت و تأیید شده‌اند.
+
+هیچ Issue با متن این سند بسته نمی‌شود. تغییر وضعیت باید در Registry ثبت شود و Evidence داشته باشد.
+
+## B. Executive Decision Summary
+
+| مورد | نتیجه |
+|---|---|
+| تصمیم Accepted | **۶** |
+| Issue Open اولیه | **۲۰** |
+| Issue Open جدید | **۳** (`DL-21` تا `DL-23`) |
+| Issue Open نهایی | **۲۳** |
+| Issue بسته‌شده | **۰** |
+| سؤال Peer در Crosswalk | **۱۵** |
+
+هشت Issue با اولویت `P0` بخش متأثر را مسدود می‌کنند: `DL-02`، `DL-03`، `DL-06`، `DL-07`، `DL-09`، `DL-11`، `DL-18` و `DL-20`.
+
+- پاسخ برگزارکننده یا مالک Dataset لازم است: `DL-02`، بخش‌های منبع‌محور `DL-03` و `DL-09`، `DL-11`، `DL-16`، `DL-21` و بخش Expected output در `DL-23`.
+- تصمیم تیم لازم است: `DL-01`، `DL-04`، `DL-06` تا `DL-08`، بخش اجرایی `DL-09`، `DL-12` تا `DL-15`، `DL-17` تا `DL-20`، `DL-22` و بخش Policy در `DL-23`.
+- `DL-05` و `DL-10` ابتدا به Evidence منبع و سپس به تصمیم پیاده‌سازی نیاز دارند.
+
+## C. Accepted Architecture Decisions
+
+### ADR-01 — موتور پایگاه داده محصول
 
 - **Question:** موتور پایگاه داده محصول چیست؟
-- **Status:** Accepted
-- **Decision:** PostgreSQL تنها موتور پایگاه داده محصول است. همه ۵۵ KPI مرجع و Queryهای تعاملی باید در مسیر محصول روی PostgreSQL اجرا شوند. SQL و نتیجه مرجع Dataset باید برای آزمون هم‌ارزی حفظ شوند.
-- **Impact:** مسیر محاسبه و Query یک موتور دارد. SQLite فقط می‌تواند Oracle آزمون خارج از محصول باشد.
-- **Priority:** Critical
-- **Source:** تصمیم تیم در `Docs/architecture/sources/Adr.md`، Q03 و جدول خلاصه خطوط 208-224؛ قرارداد Dataset در `DataSet/arka_dataset/README_FA.md`، بخش «شاخص‌ها»؛ بریف خطوط 378-387 و 487-491.
+- **Status:** Accepted.
+- **Requirement:** SQL، تعریف و نتیجه مرجع Dataset برای آزمون حفظ شوند.
+- **Accepted Team Decision:** PostgreSQL تنها موتور پایگاه داده محصول است. همه ۵۵ KPI و Queryهای تعاملی در مسیر محصول روی PostgreSQL اجرا می‌شوند.
+- **Boundary:** SQLite فقط می‌تواند Oracle آزمون مستقل و خارج از مسیر محصول باشد.
+- **Impact:** روش ترجمه و اثبات هم‌ارزی در `DL-01` Open است.
+- **Evidence / Sources:** [ADR-01](../architecture/registry/decisions-registry.md#adr-01)، [Adr.md، Q03](../architecture/sources/Adr.md)، Dataset README و بریف.
 
-### ADR-13-S01 - یک Agent محدود
+### ADR-13-S01 — یک Agent محدود
 
 - **Question:** سیستم چند AI Agent دارد؟
-- **Status:** Accepted
-- **Decision:** سیستم یک AI Agent محدود دارد. ماژول‌های قطعی می‌توانند مستقل باشند، اما Agent مستقل دیگری ایجاد نمی‌شود.
-- **Impact:** معماری از Multi-Agent، delegation و هماهنگی غیرضروری پرهیز می‌کند.
-- **Priority:** Critical
-- **Source:** تصمیم تیم در `Docs/architecture/sources/Adr.md`، Q01؛ تصمیم ثبت‌شده در `Docs/architecture/registry/decisions-registry.md`، ADR-13-S01.
+- **Status:** Accepted.
+- **Accepted Team Decision:** سیستم یک AI Agent محدود دارد. ماژول‌های قطعی مستقل Agent نیستند.
+- **Boundary:** Multi-Agent و delegation پذیرفته نشده‌اند.
+- **Impact:** کنترل هزینه، Trace و ارزیابی در یک Agent runtime انجام می‌شود.
+- **Evidence / Sources:** [ADR-13](../architecture/registry/decisions-registry.md#adr-13)، [Adr.md، Q01](../architecture/sources/Adr.md).
 
-### ADR-13-S02 - مرز منطق قطعی
+### ADR-13-S02 — مرز منطق قطعی
 
-- **Question:** کدام تصمیم‌ها نباید به LLM واگذار شوند؟
-- **Status:** Accepted
-- **Decision:** محاسبه KPI، تشخیص Signal، Authorization و Validation نهایی قطعی هستند. LLM فقط از Evidence مجاز برای تحلیل و نگارش استفاده می‌کند.
-- **Impact:** عدد، مجوز، Signal و پذیرش خروجی از نتیجه احتمالی مدل مستقل می‌مانند.
-- **Priority:** Critical
-- **Source:** تصمیم تیم در `Docs/architecture/sources/Adr.md`، Q01، Q04 و Q12؛ بریف خطوط 183-188، 312-318 و 378-387.
+- **Question:** کدام منطق نباید به LLM واگذار شود؟
+- **Status:** Accepted.
+- **Accepted Team Decision:** محاسبه KPI، تشخیص Signal، Authorization و Validation نهایی قطعی هستند.
+- **Boundary:** LLM فقط Evidence مجاز را تحلیل می‌کند و متن می‌نویسد.
+- **Impact:** عدد، مجوز، Signal و پذیرش خروجی به نتیجه احتمالی مدل وابسته نیستند.
+- **Evidence / Sources:** [ADR-13](../architecture/registry/decisions-registry.md#adr-13)، [Adr.md، Q01، Q04 و Q12](../architecture/sources/Adr.md)، بریف.
 
-### ADR-14 - انتشار مستقل گزارش معتبر
+### ADR-14-S01 — انتشار مستقل گزارش معتبر
 
-- **Question:** شکست گزارش یک مدیر چه اثری بر گزارش مدیران دیگر دارد؟
-- **Status:** Accepted
-- **Decision:** هر گزارش معتبر مدیر مستقل منتشر می‌شود. شکست یک گزارش مانع انتشار گزارش معتبر مدیر دیگر نیست. شکست و پوشش ناقص روز باید ثبت شود.
-- **Impact:** واحد انتشار، بسته متن و JSON یک مدیر است. وضعیت کل روز جدا ثبت می‌شود.
-- **Priority:** Critical
-- **Source:** تصمیم تیم در `Docs/architecture/sources/Adr.md`، Q16؛ تصمیم ثبت‌شده در `Docs/architecture/registry/decisions-registry.md`، ADR-14-S01.
+- **Question:** شکست یک گزارش چه اثری بر گزارش‌های دیگر دارد؟
+- **Status:** Accepted.
+- **Accepted Team Decision:** هر گزارش معتبر مدیر مستقل منتشر می‌شود. شکست یک گزارش مانع انتشار گزارش معتبر دیگر نیست.
+- **Requirement:** شکست و پوشش ناقص روز ثبت شوند.
+- **Impact:** Policy مربوط به Retry و Fallback در `DL-13` Open است.
+- **Evidence / Sources:** [ADR-14](../architecture/registry/decisions-registry.md#adr-14)، [Adr.md، Q16](../architecture/sources/Adr.md).
 
-### ADR-17 - کنترل انسانی تصمیم و اقدام
+### ADR-17 — کنترل انسانی تصمیم و اقدام
 
-- **Question:** آیا سیستم می‌تواند اقدام سازمانی را اجرا کند؟
-- **Status:** Accepted
-- **Decision:** مدیر تصمیم می‌گیرد. سیستم فقط گزینه، پیش‌نویس وظیفه یا پیام و پیگیری اثر را تولید می‌کند. سیستم نیرو جابه‌جا نمی‌کند، هدف را خودکار تغییر نمی‌دهد و پیام را خودکار ارسال نمی‌کند.
-- **Impact:** همه اقدام‌های سازمانی به Actor انسانی و تأیید قابل ردیابی نیاز دارند.
-- **Priority:** Critical
-- **Source:** بریف خطوط 339-366؛ قرارداد Dataset در `DataSet/arka_dataset/README_FA.md`، بخش «ورودی‌های مدیران»؛ تصمیم تیم در `Docs/architecture/sources/Adr.md`، Q15.
+- **Question:** آیا سیستم اقدام سازمانی را اجرا می‌کند؟
+- **Status:** Accepted.
+- **Accepted Team Decision:** مدیر تصمیم می‌گیرد. سیستم فقط گزینه، Draft و پیگیری اثر را تولید می‌کند.
+- **Boundary:** سیستم نیرو را جابه‌جا نمی‌کند، هدف را خودکار تغییر نمی‌دهد و پیام را خودکار ارسال نمی‌کند.
+- **Impact:** اثبات اجرای واقعی در `DL-12` Open است.
+- **Evidence / Sources:** [ADR-17](../architecture/registry/decisions-registry.md#adr-17)، بریف بخش ۸ و Dataset README.
 
-### ADR-18 - LangGraph برای Orchestration Agent
+### ADR-18 — LangGraph برای Orchestration Agent
 
-- **Question:** هماهنگی جریان Agent با چه Framework انجام می‌شود؟
-- **Status:** Accepted
-- **Decision:** LangGraph برای Orchestration جریان‌های مربوط به Agent استفاده می‌شود. LangGraph مرجع محاسبه، Signal، مجوز یا Validation نهایی نیست.
-- **Impact:** State، Checkpoint، Retry و Human-in-the-Loop جریان Agent در LangGraph طراحی می‌شوند. منطق قطعی در ماژول‌های مستقل باقی می‌ماند.
-- **Priority:** Critical
-- **Source:** دستور صریح تیم در درخواست «DIDRAH - Execute To-Be Architecture Finalization»، بخش تصمیم‌های تأییدشده. این تصمیم از بریف استخراج نشده است.
+- **Question:** Orchestration جریان Agent با چه Framework انجام می‌شود؟
+- **Status:** Accepted.
+- **Accepted Team Decision:** LangGraph برای Orchestration جریان‌های Agent استفاده می‌شود.
+- **Boundary:** LangGraph مرجع KPI، Signal، Authorization یا Validation نهایی نیست.
+- **Impact:** مرز اجرایی دقیق در `DL-20` Open است.
+- **Evidence / Sources:** تصمیم صریح تیم در درخواست «DIDRAH — Execute To-Be Architecture Finalization». نسخه پیش از Refactor نیز این Evidence را ثبت کرده است.
 
-## ۲. تصمیم‌های Open ضروری برای تأیید معماری
+## D. Open Decision Register
 
-پاسخ این تصمیم‌ها باید در جلسه تیم ثبت شود. معماری فعلی مرز امن پیشنهادی را نشان می‌دهد، اما پیشنهاد، Accepted نیست.
+ترتیب Register بر اساس `P0`، سپس `P1` و سپس `P2` است. شناسه‌های قبلی تغییر نکرده‌اند. Ownerها پیشنهادی هستند.
 
-### DL-02 - سیاست RAW یا DEDUP برای محاسبه
+### P0
 
-- **Question:** رخدادهای تکراری Payload در ورودی KPI به‌صورت RAW محاسبه شوند یا با exact-payload DEDUP؟
-- **Status:** Open
-- **Options:** ۱) RAW مطابق همه رخدادهای پذیرفته‌شده؛ ۲) exact-payload DEDUP؛ ۳) سیاست رسمی جدا برای هر Source.
-- **Recommendation:** تا پاسخ رسمی، هر دو نتیجه با `input_policy_id` جدا قابل محاسبه باشند و هیچ‌کدام «مقدار پذیرفته‌شده» نامیده نشود. Idempotency دریافت از DEDUP کسب‌وکار جدا بماند.
-- **Impact:** نتیجه ۸ KPI و پذیرش «صفر عدد نادرست» تغییر می‌کند.
-- **Priority:** P0 - تصمیم منبع؛ فقط پذیرش عدد و خروجی متأثر را مسدود می‌کند.
-- **Source:** `Docs/architecture/registry/open-issues-registry.md`، DL-02؛ شواهد S09؛ بریف خطوط 406-420 و 493-507.
+#### DL-02 — سیاست RAW یا DEDUP
 
-### DL-03 - انتشار هنگام داده ناقص
+- **ID:** `DL-02`
+- **Question:** Payloadهای تکراری سفارش RAW محاسبه شوند یا exact-payload DEDUP؟
+- **Status:** Open.
+- **What We Know:** RAW باید حفظ شود. Policy روی ۸ KPI اثر دارد. Idempotency دریافت با DEDUP کسب‌وکار یکسان نیست.
+- **Unresolved Gap:** Policy رسمی و مقدار Canonical مشخص نیست.
+- **Options:** RAW؛ DEDUP؛ Policy جدا برای هر Source.
+- **Recommended Approach:** هر دو نتیجه با `input_policy_id` جدا بمانند. هیچ نتیجه‌ای Canonical نامیده نشود.
+- **Decision Owner:** برگزارکننده یا مالک Dataset.
+- **Impact:** درستی عدد و Acceptance.
+- **Priority:** P0؛ بدون تغییر.
+- **Evidence / Sources:** [DL-02](../architecture/registry/open-issues-registry.md#dl-02)، بریف و ممیزی Dataset.
+- **Closure Criteria:** پاسخ رسمی، Fixture مرجع و آزمون ۸ KPI ثبت شوند.
 
-- **Question:** چه زمانی Source بسته تلقی می‌شود و مقدار KPI ناقص چه زمانی قابل انتشار است؟
-- **Status:** Open
-- **Options:** ۱) مقدار جاری `null` و Data Issue؛ ۲) انتشار Snapshot ناقص با برچسب؛ ۳) انتشار فقط پس از closure رسمی Source.
-- **Recommendation:** مقدار جاری نامعتبر `null` بماند. آخرین مقدار معتبر فقط با تاریخ واقعی نمایش داده شود. Eligibility و حداکثر سن مقدار قبلی باید از برگزارکننده دریافت شود.
-- **Impact:** محتوای گزارش، Signal eligibility و ادعای سلامت حوزه را محدود می‌کند.
-- **Priority:** P0 - پاسخ منبع؛ معماری را متوقف نمی‌کند، اما انتشار مقدار متأثر را متوقف می‌کند.
-- **Source:** DL-03؛ بریف خطوط 382-387، 416-420، 499-507؛ تصمیم نسبی Q06 در `Docs/architecture/sources/Adr.md`.
+#### DL-03 — Missing Source و انتشار
 
-### DL-06 - Projection دسترسی منابع مشترک
+- **ID:** `DL-03`
+- **Question:** Source چه زمانی بسته است و مقدار وابسته به داده ناقص چه زمانی منتشر می‌شود؟
+- **Status:** Open.
+- **What We Know:** Pipeline نباید کامل متوقف شود. Missing یک Data Issue است. مقدار جاری نامعتبر با مقدار قبلی جایگزین نمی‌شود.
+- **Unresolved Gap:** مدت Incident، Closure، حداکثر سن Context و Eligibility مشخص نیستند. Q06 در این Issue ادغام شد.
+- **Options:** `null` و Data Issue؛ Snapshot ناقص؛ انتظار تا Closure.
+- **Recommended Approach:** خروجی مستقل ادامه یابد. مقدار متأثر `null` بماند. مقدار قبلی فقط با تاریخ واقعی نمایش داده شود.
+- **Decision Owner:** برگزارکننده یا محصول.
+- **Impact:** گزارش و Signal eligibility.
+- **Priority:** P0؛ بدون تغییر.
+- **Evidence / Sources:** [DL-03](../architecture/registry/open-issues-registry.md#dl-03)، [Adr.md، Q06](../architecture/sources/Adr.md)، بریف.
+- **Closure Criteria:** Closure event، Wire mapping، حداکثر سن و Fixture چندروزه تأیید شوند.
 
-- **Question:** ردیف، ستون و Purpose مجاز هر نقش برای Sourceهای مشترک چیست؟
-- **Status:** Open
-- **Options:** ۱) Policy catalog صریح برای هر Source؛ ۲) رد دسترسی تعریف‌نشده؛ ۳) Viewهای جدا برای هر Scope.
-- **Recommendation:** Policy catalog نسخه‌دار با deny-by-default، RLS، allowlist ستون و حذف متن حساس. Query تعاملی و Evidence retrieval باید همان Policy را اجرا کنند.
-- **Impact:** مرز Query Gateway، Evidence و امکان اثبات «صفر نشت» را تعیین می‌کند.
-- **Priority:** P0 - تصمیم تیم امنیت و داده.
-- **Source:** DL-06؛ `DataSet/arka_dataset/org/access_matrix.csv`؛ بریف خطوط 120-149، 378-387 و 493-505.
+#### DL-06 — Projection دسترسی
 
-### DL-07 - تعریف ظرفیت و حریم خصوصی
+- **ID:** `DL-06`
+- **Question:** ردیف، ستون، Purpose و Predicate مجاز هر نقش چیست؟
+- **Status:** Open.
+- **What We Know:** دسترسی سلسله‌مراتبی و deny-by-default Requirement هستند. سؤال مدیر Grant جدید ایجاد نمی‌کند.
+- **Unresolved Gap:** Projection منابع مشترک، متن حساس، Historical scope و رفتار پاسخ جزئی Q12 مشخص نیستند.
+- **Options:** Policy Catalog؛ View مجزا؛ رد دسترسی تعریف‌نشده.
+- **Recommended Approach:** Policy Catalog نسخه‌دار با RLS، allowlist و Redaction استفاده شود.
+- **Decision Owner:** امنیت و داده.
+- **Impact:** Query، Evidence، QA و صفر نشت.
+- **Priority:** P0؛ بدون تغییر.
+- **Evidence / Sources:** [DL-06](../architecture/registry/open-issues-registry.md#dl-06)، `access_matrix.csv` و بریف.
+- **Closure Criteria:** Matrix کامل و آزمون مثبت و منفی سه سطح تأیید شوند.
 
-- **Question:** ظرفیت تجمیعی تیم چگونه محاسبه و چگونه در گروه کوچک محافظت شود؟
-- **Status:** Open
-- **Options:** ۱) نسبت افراد در دسترس؛ ۲) نسبت ساعت با قرارداد ساعت کاری؛ ۳) فقط مقدار عرضه‌شده بدون استنتاج.
-- **Recommendation:** در MVP از ظرفیت تجمیعی عرضه‌شده استفاده شود. ساعت یا حضور فردی ساخته نشود. برای مدیران بالاتر، گروه کوچک و متن آزاد Redact شود.
-- **Impact:** Evidence تحلیل، نمایش بار کاری و کنترل داده فردی را تعیین می‌کند.
-- **Priority:** P0 - انتخاب تیم؛ پاسخ برگزارکننده فقط برای مدل ساعتی لازم است.
-- **Source:** DL-07؛ بریف خطوط 183-188، 264-272، 378-387؛ Dataset `staff_availability.csv`.
+#### DL-07 — ظرفیت و حریم خصوصی
 
-### DL-09 - حالت‌های مرزی Signal و Episode
+- **ID:** `DL-07`
+- **Question:** ظرفیت تیم چگونه محاسبه و برای گروه کوچک محافظت می‌شود؟
+- **Status:** Open.
+- **What We Know:** مرخصی فقط Context ظرفیت تجمیعی است. رتبه‌بندی فردی ممنوع است. Contract ساعت کامل وجود ندارد.
+- **Unresolved Gap:** Formula، آستانه گروه کوچک و Redaction مشخص نیستند.
+- **Options:** نسبت افراد؛ نسبت ساعت؛ مقدار عرضه‌شده.
+- **Recommended Approach:** در MVP فقط مقدار تجمیعی عرضه‌شده استفاده شود.
+- **Decision Owner:** محصول و امنیت.
+- **Impact:** Evidence و داده فردی.
+- **Priority:** P0؛ بدون تغییر.
+- **Evidence / Sources:** [DL-07](../architecture/registry/open-issues-registry.md#dl-07)، `staff_availability.csv` و بریف.
+- **Closure Criteria:** Formula، Grain، Threshold و Fixture گروه کوچک تأیید شوند.
 
-- **Question:** Equality، baseline ناکافی، مقدار صفر، روز نامعلوم و Reset چگونه ارزیابی شوند؟
-- **Status:** Open
-- **Options:** ۱) قواعد سخت‌گیرانه با Unknown؛ ۲) قواعد ساده با suppression؛ ۳) پاسخ رسمی برای هر Rule.
-- **Recommendation:** Unknown هرگز Normal تلقی نشود. Equality و Reset در Rule version ثبت شوند. تا پاسخ منبع، نتیجه مرزی Signal قابل انتشار نباشد.
-- **Impact:** Detection، recurrence، escalation و هدف کشف ۹۰٪ را تغییر می‌دهد.
-- **Priority:** P0 - پاسخ منبع برای Ruleهای مبهم؛ معماری Engine را متوقف نمی‌کند.
-- **Source:** DL-09؛ `DataSet/arka_dataset/config/escalation_rules.csv`؛ بریف خطوط 206-245 و 474-506.
+#### DL-09 — قواعد مرزی Signal
 
-### DL-11 - نگاشت `suppressed` و `ongoing`
+- **ID:** `DL-09`
+- **Question:** Equality، جهت Baseline، صفر، نمونه ناکافی، Reset و هم‌زمانی `new` و `escalated` چگونه ارزیابی شوند؟
+- **Status:** Open.
+- **What We Know:** Escalation تابع زمان، بدترشدن و اثر بین‌واحدی است. Critical به‌تنهایی Escalation نیست. Unknown نباید Normal شود.
+- **Unresolved Gap:** Q09 و Q10 به Gap موجود اضافه شدند. Direction، Equality، Clock، Recovery و مخاطب هم‌زمان مشخص نیستند.
+- **Options:** Truth table هر Rule؛ تفسیر عمومی؛ توقف نتیجه مرزی.
+- **Recommended Approach:** `direction` هر KPI و Edge behavior هر Rule نسخه‌دار شوند. مورد مرزی `unknown` بماند.
+- **Decision Owner:** محصول یا برگزارکننده.
+- **Impact:** Detection، recurrence و escalation.
+- **Priority:** P0؛ بدون تغییر.
+- **Evidence / Sources:** [DL-09](../architecture/registry/open-issues-registry.md#dl-09)، `escalation_rules.csv` و بریف.
+- **Closure Criteria:** Truth table برای R1 تا R8 و Fixtureهای جهت و مخاطب تأیید شوند.
 
-- **Question:** وضعیت `suppressed` بریف چگونه با Enum رسمی `ongoing` در JSON نگاشت شود؟
-- **Status:** Open
-- **Options:** ۱) suppression فقط در Ledger داخلی و `open_items`؛ ۲) نگاشت رسمی به `ongoing`؛ ۳) اصلاح رسمی Schema.
-- **Recommendation:** Schema تغییر نکند. suppression در Ledger داخلی ثبت شود و فقط با تأیید منبع به `ongoing` نگاشت شود.
-- **Impact:** JSON، history و آزمون recurrence را تعیین می‌کند.
-- **Priority:** P0 - پاسخ منبع؛ طراحی داخلی می‌تواند ادامه یابد.
-- **Source:** DL-11؛ بریف خطوط 438-465؛ `DataSet/arka_dataset/output_contract/brief_schema.json`.
+#### DL-11 — `suppressed` و `ongoing`
 
-### DL-18 - مدل محتوای کامل گزارش
+- **ID:** `DL-11`
+- **Question:** `suppressed` بریف چگونه با Enum رسمی `ongoing` نگاشت می‌شود؟
+- **Status:** Open.
+- **What We Know:** Schema فقط `new`، `escalated` و `ongoing` دارد. بریف Suppression را الزام می‌کند.
+- **Unresolved Gap:** Wire mapping و محل State داخلی مشخص نیستند.
+- **Options:** Ledger داخلی؛ نگاشت به `ongoing`؛ Schema جدید.
+- **Recommended Approach:** Schema تغییر نکند. Suppression در Ledger داخلی ثبت شود.
+- **Decision Owner:** برگزارکننده یا محصول.
+- **Impact:** JSON، History و recurrence.
+- **Priority:** P0؛ بدون تغییر.
+- **Evidence / Sources:** [DL-11](../architecture/registry/open-issues-registry.md#dl-11)، Brief Schema و بریف.
+- **Closure Criteria:** Mapping رسمی، نمونه JSON و آزمون recurrence تأیید شوند.
 
-- **Question:** محتوای الزامی بریف که در Schema رسمی Field مشخص ندارد کجا نگهداری شود؟
-- **Status:** Open
-- **Options:** ۱) مدل محتوای داخلی و projection به Schema؛ ۲) استفاده از Fieldهای آزاد سازگار؛ ۳) درخواست Schema جدید.
-- **Recommendation:** یک مدل داخلی کوچک برای Item، Evidence، ChartSpec و DecisionCard تعریف شود. Schema رسمی بدون تغییر بماند. فقط Fieldهای لازم بریف در مدل داخلی باشند.
-- **Impact:** سازگاری متن و JSON، Validation و محتوای نقش‌ها را تعیین می‌کند.
-- **Priority:** P0 - تصمیم تیم محصول.
-- **Source:** DL-18؛ بریف خطوط 274-337 و 438-465؛ Schema رسمی Brief.
+#### DL-18 — مدل کامل گزارش
 
-### DL-20 - مرز اجرایی LangGraph
+- **ID:** `DL-18`
+- **Question:** محتوای الزامی بریف که Field رسمی ندارد کجا نگه‌داری می‌شود؟
+- **Status:** Open.
+- **What We Know:** Insight Brief مرجع گزارش است. Schema همه مفهوم‌های بریف را Field مجزا نمی‌دهد.
+- **Unresolved Gap:** مدل Item، Evidence، Chart، Decision Card، انتخاب پنج مورد و History مشخص نیست.
+- **Options:** مدل داخلی؛ Field آزاد؛ Schema رسمی جدید.
+- **Recommended Approach:** مدل داخلی کوچک و نسخه‌دار ساخته شود. Schema رسمی تغییر نکند.
+- **Decision Owner:** محصول.
+- **Impact:** متن، JSON و Validation.
+- **Priority:** P0؛ بدون تغییر.
+- **Evidence / Sources:** [DL-18](../architecture/registry/open-issues-registry.md#dl-18)، بریف و Brief Schema.
+- **Closure Criteria:** Content model، Projection و Fixture سه نقش تأیید شوند.
 
-- **Question:** کدام جریان‌ها و Stateها در LangGraph قرار گیرند؟
-- **Status:** Open
-- **Options:** ۱) فقط تحلیل و نگارش؛ ۲) کل Job گزارش با Nodeهای قطعی و Agent؛ ۳) Graphهای جدا برای Nightly و Interactive.
-- **Recommendation:** دو Graph ساده در یک Agent runtime: Graph گزارش هر مدیر و Graph تعامل مدیر. Ingestion، KPI، Signal و Workflow قبل از Graph اجرا شوند. Graph فقط Evidence مجاز، تحلیل، Draft، Validation call، repair محدود و نتیجه انتشار را هماهنگ کند. State شامل ID و reference باشد، نه Raw data یا Credential. Checkpoint پایدار در PostgreSQL باشد. Nightly Graph هیچ Interrupt انسانی نداشته باشد.
-- **Impact:** بازیابی، امنیت State، Retry و استقلال انتشار را تعیین می‌کند.
-- **Priority:** P0 - تصمیم تیم معماری.
-- **Source:** ADR-18؛ ADR-13-S01/S02؛ ADR-14؛ بریف خطوط 83-100، 247-318 و 322-366.
+#### DL-20 — مرز LangGraph
 
-## ۳. تصمیم‌های Open قابل تعویق با Gate
+- **ID:** `DL-20`
+- **Question:** کدام جریان‌ها، Nodeها و Stateها در LangGraph قرار می‌گیرند؟
+- **Status:** Open.
+- **What We Know:** LangGraph Accepted است. منطق قطعی بیرون مرز Agent می‌ماند. یک Agent داریم.
+- **Unresolved Gap:** Graph boundary، Checkpoint، State sensitivity، Retry و Interrupt مشخص نیستند.
+- **Options:** تحلیل و نگارش؛ Job کامل؛ Graphهای Nightly و Interactive جدا.
+- **Recommended Approach:** دو Graph ساده در یک runtime استفاده شوند. State فقط ID و Reference داشته باشد.
+- **Decision Owner:** تیم معماری.
+- **Impact:** بازیابی، امنیت و استقلال انتشار.
+- **Priority:** P0؛ بدون تغییر.
+- **Evidence / Sources:** ADR-13، ADR-14، ADR-18 و نسخه پشتیبان. این ID در Registry خارجی ثبت نشده بود و از نسخه قبل حفظ شد.
+- **Closure Criteria:** Diagram، State schema، Node contracts و Failure path تأیید شوند.
 
-### DL-01 - روش تبدیل و اثبات هم‌ارزی ۵۵ KPI
+### P1
 
-- **Question:** ترجمه SQL مرجع و اثبات هم‌ارزی چگونه انجام شود؟
-- **Status:** Open
-- **Options:** ترجمه دستی نسخه‌دار؛ Translation layer محدود؛ بازنویسی کنترل‌شده همراه Oracle.
-- **Recommendation:** SQL PostgreSQL نسخه‌دار و Oracle مستقل SQLite. مقایسه کل Relation برای همه روزهای Replay.
-- **Impact:** پذیرش عددی. مرز معماری PostgreSQL را تغییر نمی‌دهد.
-- **Priority:** P1 - Gate پیاده‌سازی محاسبه.
-- **Source:** DL-01؛ ADR-01؛ Dataset README بخش شاخص‌ها.
+#### DL-01 — هم‌ارزی ۵۵ KPI
 
-### DL-04 - Full rebuild یا Selective rebuild
+- **ID:** `DL-01`
+- **Question:** موتور ارزیابی و روش اثبات هم‌ارزی KPI چیست؟
+- **Status:** Open.
+- **What We Know:** PostgreSQL موتور محصول است. SQLite فقط می‌تواند Oracle مستقل باشد.
+- **Unresolved Gap:** Engine Evaluator، Translation strategy، نسخه و Comparison مشخص نیستند. Q01 ادغام شد.
+- **Options:** ترجمه دستی؛ Translation layer؛ بازنویسی همراه Oracle.
+- **Recommended Approach:** SQL PostgreSQL نسخه‌دار و مقایسه کل Relation برای همه روزها.
+- **Decision Owner:** مهندسی؛ پاسخ Engine با برگزارکننده.
+- **Impact:** پذیرش عددی.
+- **Priority:** P1؛ بدون تغییر.
+- **Evidence / Sources:** [DL-01](../architecture/registry/open-issues-registry.md#dl-01)، ADR-01 و KPI sources.
+- **Closure Criteria:** Engine اعلام و Receipt همه ۵۵ KPI ثبت شود.
 
-- **Question:** اصلاح تاریخی با بازسازی کامل یا محاسبه انتخابی پردازش شود؟
-- **Status:** Open
-- **Options:** Full rebuild؛ Selective rebuild با dependency proof.
-- **Recommendation:** Full rebuild مبنای صحت MVP باشد. Selective rebuild فقط پس از اثبات هم‌ارزی اضافه شود.
-- **Impact:** کارایی و پیچیدگی، نه قرارداد خروجی.
-- **Priority:** P1 - تصمیم پیاده‌سازی.
-- **Source:** DL-04؛ بریف خطوط 406-420.
+#### DL-04 — Rebuild
 
-### DL-05 - تقدم اصلاح‌های هم‌رتبه
+- **ID:** `DL-04`
+- **Question:** اصلاح تاریخی Full rebuild باشد یا Selective rebuild؟
+- **Status:** Open.
+- **What We Know:** Snapshot و گزارش قبلی حفظ می‌شوند.
+- **Unresolved Gap:** Dependency algorithm و Scope بهینه‌سازی مشخص نیستند.
+- **Options:** Full؛ Selective با Proof.
+- **Recommended Approach:** Full rebuild مبنای MVP باشد.
+- **Decision Owner:** داده و محصول.
+- **Impact:** کارایی و پیچیدگی.
+- **Priority:** P1؛ بدون تغییر.
+- **Evidence / Sources:** [DL-04](../architecture/registry/open-issues-registry.md#dl-04)، بریف.
+- **Closure Criteria:** Benchmark و آزمون Restatement تأیید شوند.
 
-- **Question:** رکوردهای اصلاحی متعارض و هم‌رتبه چگونه حل شوند؟
-- **Status:** Open
-- **Options:** تقدم رسمی Source؛ quarantine؛ انتخاب آخرین رکورد.
-- **Recommendation:** quarantine و Data Issue تا دریافت قاعده رسمی. انتخاب آخرین رکورد ممنوع است.
-- **Impact:** فقط داده و KPI متأثر را مسدود می‌کند.
-- **Priority:** P1 - پاسخ منبع.
-- **Source:** DL-05؛ بریف خطوط 416-420 و 499-507.
+#### DL-05 — تعارض Payload
 
-### DL-08 - مالک Stage و مسیر تأخیر
+- **ID:** `DL-05`
+- **Question:** اصلاح‌های متعارض و هم‌رتبه چگونه حل می‌شوند؟
+- **Status:** Open.
+- **What We Know:** انتخاب بی‌مدرک آخرین رکورد معتبر نیست.
+- **Unresolved Gap:** Source precedence رسمی وجود ندارد.
+- **Options:** تقدم رسمی؛ Quarantine؛ آخرین رکورد.
+- **Recommended Approach:** Quarantine و Data Issue.
+- **Decision Owner:** مالک Source یا داده.
+- **Impact:** KPI متأثر.
+- **Priority:** P1؛ بدون تغییر.
+- **Evidence / Sources:** [DL-05](../architecture/registry/open-issues-registry.md#dl-05)، بریف.
+- **Closure Criteria:** Precedence و Fixture تعارض ثبت شوند.
 
-- **Question:** مالک هر Workflow stage و مسیر ارجاع تأخیر چیست؟
-- **Status:** Open
-- **Options:** mapping رسمی stage-to-team؛ actor event؛ unresolved routing.
-- **Recommendation:** مالک end-to-end از config حفظ شود. مالک Stage فقط از actor معتبر یا mapping تأییدشده تعیین شود.
-- **Impact:** مالک Signal و نمایش گلوگاه.
-- **Priority:** P1 - Gate Workflow attribution.
-- **Source:** DL-08؛ `workflow_definitions.csv`؛ بریف خطوط 151-175.
+#### DL-08 — مالک Stage
 
-### DL-10 - M11، Upload و known-at
+- **ID:** `DL-08`
+- **Question:** مالک Stage و مسیر ارجاع تأخیر چیست؟
+- **Status:** Open.
+- **What We Know:** مالک KPI لزوماً مالک Stage نیست. Actor معتبر یا Mapping لازم است.
+- **Unresolved Gap:** Mapping کامل و Fallback مشخص نیستند. Q11 ادغام شد.
+- **Options:** Mapping رسمی؛ Actor؛ unresolved route.
+- **Recommended Approach:** مالک Stage فقط از Actor معتبر یا Mapping تأییدشده تعیین شود.
+- **Decision Owner:** محصول و داده.
+- **Impact:** مالک Signal و Bottleneck.
+- **Priority:** P1؛ بدون تغییر.
+- **Evidence / Sources:** [DL-08](../architecture/registry/open-issues-registry.md#dl-08)، `workflow_definitions.csv` و بریف.
+- **Closure Criteria:** Mapping همه Stageها و Fixture تأخیر تأیید شوند.
 
-- **Question:** M11 چه صبحی فعال است و ورودی هم‌روز چه زمانی قابل استفاده است؟
-- **Status:** Open
-- **Options:** شروع صبح ۷۵ یا ۷۶؛ receipt/readiness صریح برای Upload؛ تقدم ثبت‌شده ورودی‌ها.
-- **Recommendation:** زمان دریافت و آماده‌شدن جدا ثبت شود. فقط ورودی آماده و مجاز در revision تعاملی استفاده شود. گزارش صبح immutable بماند.
-- **Impact:** Coverage و QA چند روز خاص.
-- **Priority:** P1 - پاسخ منبع.
-- **Source:** DL-10؛ Dataset README بخش زمان و ورودی مدیر.
+#### DL-10 — زمان اثر M11 و Upload
 
-### DL-12 - تأیید اجرای واقعی اقدام
+- **ID:** `DL-10`
+- **Question:** تغییر سازمان و ورودی هم‌روز چه زمانی اثر می‌گذارند؟
+- **Status:** Open.
+- **What We Know:** valid time، received time و ready time جدا هستند.
+- **Unresolved Gap:** صبح شروع M11، تقدم ورودی و readiness پیوست مشخص نیستند.
+- **Options:** صبح ۷۵ یا ۷۶؛ receipt/readiness صریح.
+- **Recommended Approach:** زمان دریافت و آماده‌شدن جدا ثبت شوند. گزارش صبح Immutable بماند.
+- **Decision Owner:** برگزارکننده یا معماری.
+- **Impact:** Coverage و QA.
+- **Priority:** P1؛ بدون تغییر.
+- **Evidence / Sources:** [DL-10](../architecture/registry/open-issues-registry.md#dl-10)، Dataset README.
+- **Closure Criteria:** Fixture روز ۷۵/۷۶ و Upload contract تأیید شوند.
 
-- **Question:** MVP فقط تصمیم و Draft را پیگیری کند یا اجرای واقعی تأییدشده را نیز ثبت کند؟
-- **Status:** Open
-- **Options:** تصمیم و Draft؛ ثبت تأیید انسانی اجرای واقعی.
-- **Recommendation:** MVP تصمیم، Draft و Observation اثر را نگه دارد. اجرای واقعی فقط با Evidence انسانی جدا ثبت شود.
-- **Impact:** مدل Decision history و ادعای اثر.
-- **Priority:** P1 - تصمیم محصول.
-- **Source:** DL-12؛ بریف خطوط 339-366.
+#### DL-12 — اثر تصمیم و اجرای واقعی
 
-### DL-13 - Retry، Timeout و Fallback
+- **ID:** `DL-12`
+- **Question:** اجرای واقعی و اثر تصمیم چگونه ثبت و سنجیده می‌شوند؟
+- **Status:** Open.
+- **What We Know:** اثر در روزهای بعد بررسی می‌شود. تغییر مشاهده‌شده اثر علّی قطعی نیست. قانون عمومی بهبود ۱۰٪ وجود ندارد.
+- **Unresolved Gap:** Window، KPI، Success، Confounder، uncertainty و Evidence اجرا مشخص نیستند. Q14 و Q15 ادغام شدند.
+- **Options:** فقط Draft؛ تأیید انسانی اجرا؛ Observation تصمیم‌ویژه.
+- **Recommended Approach:** هر تصمیم KPI، Window، Threshold و Owner معیار موفقیت داشته باشد.
+- **Decision Owner:** محصول و مدیر تصمیم‌گیر.
+- **Impact:** تاریخچه تصمیم و ادعای اثر.
+- **Priority:** P1؛ بدون تغییر.
+- **Evidence / Sources:** [DL-12](../architecture/registry/open-issues-registry.md#dl-12)، ADR-17 و بریف.
+- **Closure Criteria:** Decision contract، روش مقایسه و Evidence اجرا تأیید شوند.
 
-- **Question:** Failure policy برای LLM و تولید گزارش چیست؟
-- **Status:** Open
-- **Options:** Retry محدود و failure؛ template fallback معتبر؛ repair loop محدود.
-- **Recommendation:** Retry فقط برای خطای موقت، یک repair محدود برای خروجی نامعتبر، سپس failure صریح. Fallback فقط در صورت عبور از تمام Validationها.
-- **Impact:** هزینه، زمان و پوشش گزارش.
-- **Priority:** P1 - عدد دقیق پس از Benchmark.
-- **Source:** DL-13؛ ADR-14؛ بریف خطوط 312-318 و 474-481.
+#### DL-13 — Failure policy
 
-### DL-14 - مدل، Provider و بودجه داخلی
+- **ID:** `DL-13`
+- **Question:** Retry، Timeout و Fallback چیست؟
+- **Status:** Open.
+- **What We Know:** انتشار مستقل Accepted است. Fallback باید Validation شود.
+- **Unresolved Gap:** اعداد Retry، Repair، Timeout و Failure export مشخص نیستند.
+- **Options:** Retry؛ Template؛ Failure صریح.
+- **Recommended Approach:** Retry خطای موقت، یک Repair، سپس Failure.
+- **Decision Owner:** محصول و مهندسی.
+- **Impact:** هزینه، زمان و Coverage.
+- **Priority:** P1؛ بدون تغییر.
+- **Evidence / Sources:** [DL-13](../architecture/registry/open-issues-registry.md#dl-13)، ADR-14 و بریف.
+- **Closure Criteria:** اعداد و Fixtureهای Failure تأیید شوند.
 
-- **Question:** مدل، Provider، Gateway و سهم بودجه چگونه انتخاب شوند؟
-- **Status:** Open
-- **Options:** Provider مستقیم؛ Gateway مستقل؛ چند مدل پشت رابط واحد.
-- **Recommendation:** رابط مستقل از Provider با Ledger هزینه. انتخاب مدل با آزمون کیفیت، زمان و هزینه انجام شود.
-- **Impact:** هزینه و عملیات. مرز Agent را تغییر نمی‌دهد.
-- **Priority:** P1 - Gate Benchmark.
-- **Source:** DL-14؛ بریف خطوط 378-387 و 474-491.
+#### DL-14 — Provider و بودجه
 
-### DL-15 - Retention، Backup و Restore
+- **ID:** `DL-14`
+- **Question:** Provider، Model، API Key و سهم بودجه چگونه تعیین می‌شوند؟
+- **Status:** Open.
+- **What We Know:** سقف ۵ دلار برای کل LLM روز است و از Token log محاسبه می‌شود.
+- **Unresolved Gap:** Provider، Price list، Secret delivery و Limitها مشخص نیستند. Q03 ادغام شد.
+- **Options:** Provider مستقیم؛ Gateway؛ چند Model.
+- **Recommended Approach:** رابط مستقل، Secret injection و Cost ledger استفاده شوند.
+- **Decision Owner:** مهندسی و محصول؛ API Key با برگزارکننده.
+- **Impact:** هزینه، امنیت و عملیات.
+- **Priority:** P1؛ بدون تغییر.
+- **Evidence / Sources:** [DL-14](../architecture/registry/open-issues-registry.md#dl-14)، بریف.
+- **Closure Criteria:** Provider، قیمت، Secret delivery و Benchmark تأیید شوند.
 
-- **Question:** دوره نگهداری و روش Restore چیست؟
-- **Status:** Open
-- **Options:** حفظ کامل Replay؛ دوره عملیاتی محدود؛ archive بلندمدت.
-- **Recommendation:** برای ارزیابی، همه Source، Snapshot metadata، Decision و Report version حفظ شوند. دوره بعدی پس از نیاز عملیاتی تعیین شود.
-- **Impact:** ذخیره‌سازی و عملیات.
-- **Priority:** P2 - قبل از استقرار واقعی.
-- **Source:** DL-15؛ الزام Replay و تحویل در بریف خطوط 406-436 و 521-536.
+#### DL-17 — NULL و اعداد Ad hoc
 
-### DL-16 - پروفایل نهایی ارزیابی
+- **ID:** `DL-17`
+- **Question:** NULL، Dimension ناموجود و عدد Query موردی چگونه Serialize می‌شوند؟
+- **Status:** Open.
+- **What We Know:** Schema رسمی مرجع است. Sentinel نباید معنی داده را تغییر دهد.
+- **Unresolved Gap:** Wire mapping و Pairing عدد مشخص نیستند.
+- **Options:** Mapping صریح؛ Sentinel؛ Schema جدید.
+- **Recommended Approach:** تمایز داخلی حفظ و Wire mapping با Fixture تأیید شود.
+- **Decision Owner:** محصول یا برگزارکننده.
+- **Impact:** JSON و مقایسه عدد.
+- **Priority:** P1؛ بدون تغییر.
+- **Evidence / Sources:** [DL-17](../architecture/registry/open-issues-registry.md#dl-17)، Brief Schema و بریف.
+- **Closure Criteria:** Fixture و Validator رسمی تأیید شوند.
 
-- **Question:** سخت‌افزار مرجع، Dataset پنهان و قراردادهای مفقود چیست؟
-- **Status:** Open
-- **Options:** فقط حدود فعلی بریف؛ دریافت پروفایل رسمی برگزارکننده.
-- **Recommendation:** حدود بریف حفظ شود و پذیرش نهایی تا دریافت پروفایل رسمی ادعا نشود.
-- **Impact:** نتیجه Benchmark و پذیرش نهایی.
-- **Priority:** P2 - پاسخ برگزارکننده.
-- **Source:** DL-16؛ بریف خطوط 422-436، 470-507 و 559.
+#### DL-19 — تغییر KPI و Rollback
 
-### DL-17 - NULL، نبود Dimension و اعداد Ad hoc
-
-- **Question:** NULL، بدون Dimension، رشته خالی و عدد Query موردی چگونه Serialize شوند؟
-- **Status:** Open
-- **Options:** mapping داخلی صریح؛ Sentinel؛ تغییر Schema.
-- **Recommendation:** تمایز داخلی حفظ شود. Sentinel ساختگی و تغییر Schema ممنوع باشد. mapping Wire با Fixture تأیید شود.
-- **Impact:** سازگاری JSON و مقایسه عدد.
-- **Priority:** P1 - Gate خروجی موارد متأثر.
-- **Source:** DL-17؛ Schema Brief؛ بریف خطوط 438-490.
-
-### DL-19 - تغییر KPI و Rollback
-
-- **Question:** چه کسی KPI جدید یا تغییر تنظیم را فعال می‌کند؟
-- **Status:** Open
-- **Options:** candidate نسخه‌دار با تأیید؛ فعال‌سازی مستقیم مدیر مجاز؛ فقط افزودن و بدون تغییر ۵۵ تعریف.
-- **Recommendation:** ۵۵ تعریف مرجع immutable بمانند. KPI جدید یا Threshold جدید candidate نسخه‌دار با Validation، تأیید انسانی، زمان اثر و Rollback باشد.
+- **ID:** `DL-19`
+- **Question:** چه کسی KPI یا تنظیم را فعال می‌کند؟
+- **Status:** Open.
+- **What We Know:** ۵۵ تعریف مرجع بازنویسی نمی‌شوند. تنظیم بدون تغییر کد Requirement است.
+- **Unresolved Gap:** Authority، زمان اثر و Rollback مشخص نیستند.
+- **Options:** Candidate نسخه‌دار؛ فعال‌سازی مستقیم؛ فقط افزودن.
+- **Recommended Approach:** Candidate نسخه‌دار با تأیید انسانی و زمان اثر ثبت شود.
+- **Decision Owner:** محصول، امنیت و داده.
 - **Impact:** Configuration، Audit و Replay.
-- **Priority:** P1 - Gate قابلیت مدیریت تنظیمات.
-- **Source:** DL-19؛ Dataset README بخش شاخص‌ها و ورودی مدیر؛ بریف خطوط 106-116 و 378-387.
+- **Priority:** P1؛ بدون تغییر.
+- **Evidence / Sources:** [DL-19](../architecture/registry/open-issues-registry.md#dl-19)، Dataset README و بریف.
+- **Closure Criteria:** Lifecycle، Authority و Rollback تأیید شوند.
 
-## ۴. نتیجه تصمیم‌ها
+#### DL-21 — GitHub Delivery
 
-- تصمیم‌های Accepted: **۶**
-- تصمیم‌های Open: **۲۰**
-- Open ضروری برای جلسه معماری: **۸** (`DL-02`, `DL-03`, `DL-06`, `DL-07`, `DL-09`, `DL-11`, `DL-18`, `DL-20`؛ DL-02/03/09/11 پاسخ منبع می‌خواهند و می‌توانند با Gate محدود باقی بمانند.)
-- وضعیت: **Ready for Team Review**؛ هیچ Open به‌صورت پنهان Accepted نشده است.
+- **ID:** `DL-21`
+- **Question:** Repository باید Public باشد یا Private با دسترسی Evaluator؟
+- **Status:** Open — New.
+- **What We Know:** کد کامل و Git history Requirement هستند. Visibility تعیین نشده است.
+- **Unresolved Gap:** Visibility، حساب Evaluator، Deadline و LFS/Submodule مشخص نیستند.
+- **Options:** Public؛ Private با Invite؛ Mirror.
+- **Recommended Approach:** Private بماند مگر Public الزام شود. Clone test قبل از Freeze انجام شود.
+- **Decision Owner:** برگزارکننده.
+- **Impact:** دریافت و ارزیابی تحویل.
+- **Priority:** P1؛ قبل از Final Delivery.
+- **Evidence / Sources:** بریف بخش ۱۲ و Q05. پاسخ رسمی دیگری پیدا نشد.
+- **Closure Criteria:** Visibility رسمی و Clone test ثبت شوند.
+
+#### DL-22 — CRM Lead lifecycle
+
+- **ID:** `DL-22`
+- **Question:** Lead بدون `Qualified` یا `Lost`، `Stalled` است یا `Abandoned`؟
+- **Status:** Open — New.
+- **What We Know:** نبود وضعیت نهایی، Abandonment را اثبات نمی‌کند.
+- **Unresolved Gap:** State، Timeout، Terminality و KPI effect مشخص نیستند.
+- **Options:** Stalled با Timeout؛ Abandoned فقط با Event؛ State رسمی جدید.
+- **Recommended Approach:** بدون Contract، `Abandoned` استنتاج نشود.
+- **Decision Owner:** محصول و مالک داده CRM.
+- **Impact:** Funnel KPI، Aging و Signal.
+- **Priority:** P1؛ Gate CRM.
+- **Evidence / Sources:** CRM files، KPI Dictionary و Q08. پاسخ رسمی پیدا نشد.
+- **Closure Criteria:** State machine، Event mapping و Fixture تأیید شوند.
+
+#### DL-23 — QA answer status
+
+- **ID:** `DL-23`
+- **Question:** `data_unavailable`، `refused_out_of_scope` و رد داده غیرمجاز چگونه جدا می‌شوند؟
+- **Status:** Open — New.
+- **What We Know:** Schema پنج Enum دارد. سؤال کاربر Grant جدید نمی‌سازد.
+- **Unresolved Gap:** پاسخ جزئی، Status نهایی Q03 و مرز سه حالت مشخص نیستند.
+- **Options:** Status واحد؛ پاسخ مجاز با Redaction؛ Clarification.
+- **Recommended Approach:** داده مجاز ولی ناموجود `data_unavailable`؛ قابلیت خارج محصول `refused_out_of_scope`؛ داده فردی غیرمجاز `refused_individual_data`.
+- **Decision Owner:** برگزارکننده برای Expected output؛ امنیت و محصول برای Policy.
+- **Impact:** QA Acceptance و امنیت.
+- **Priority:** P1؛ Gate QA.
+- **Evidence / Sources:** [QA Schema](../../DataSet/arka_dataset/output_contract/qa_answer_schema.json)، DL-06، Q12 و Q13.
+- **Closure Criteria:** Truth table، Expected Q03 و Fixture هر Enum تأیید شوند.
+
+### P2
+
+#### DL-15 — Retention و Restore
+
+- **ID:** `DL-15`
+- **Question:** دوره نگه‌داری، Backup، Audit access و Restore چیست؟
+- **Status:** Open.
+- **What We Know:** Evidence ارزیابی و Replay باید بازسازی شود.
+- **Unresolved Gap:** دوره، حجم، RTO و RPO مشخص نیستند.
+- **Options:** حفظ کامل؛ دوره محدود؛ Archive.
+- **Recommended Approach:** برای ارزیابی همه Evidenceها حفظ شوند.
+- **Decision Owner:** عملیات و معماری.
+- **Impact:** ذخیره‌سازی و عملیات.
+- **Priority:** P2؛ بدون تغییر.
+- **Evidence / Sources:** [DL-15](../architecture/registry/open-issues-registry.md#dl-15)، بریف.
+- **Closure Criteria:** Retention matrix و Restore drill تأیید شوند.
+
+#### DL-16 — پروفایل ارزیابی و Docker
+
+- **ID:** `DL-16`
+- **Question:** سخت‌افزار، Network، Docker command، Mountها و `submission` چیست؟
+- **Status:** Open.
+- **What We Know:** اجرای یک‌فرمانی، سقف ۱۵ دقیقه و Dataset پنهان Requirement هستند.
+- **Unresolved Gap:** CPU، RAM، API، Command، Mount، output و Evaluator مشخص نیستند. Q01، Q02 و Q04 ادغام شدند.
+- **Options:** حدود بریف؛ پروفایل رسمی و Harness نمونه.
+- **Recommended Approach:** پذیرش نهایی تا دریافت Profile ادعا نشود. Input و output جدا باشند.
+- **Decision Owner:** برگزارکننده.
+- **Impact:** Benchmark و پذیرش نهایی.
+- **Priority:** P2؛ بدون تغییر.
+- **Evidence / Sources:** [DL-16](../architecture/registry/open-issues-registry.md#dl-16)، بریف بخش‌های ۱۰ تا ۱۲.
+- **Closure Criteria:** Machine، Network، Run command، Mount و output layout اعلام شوند.
+
+## E. External Clarifications
+
+1. Evaluator برای اعداد مرجع از چه Engine و نسخه‌ای استفاده می‌کند؟
+2. ماشین Docker چه CPU و RAM دارد؟ Network و API خارجی مجاز هستند؟
+3. Provider مجاز، روش تحویل API Key و Price list سقف ۵ دلار چیست؟
+4. دستور Run، Mount داده پنهان و Layout `submission` چیست؟
+5. Repository باید Public باشد یا Private؟ حساب Evaluator چیست؟
+6. Policy رسمی Duplicate order، RAW است یا DEDUP؟
+7. Missing Source چه زمانی Closed می‌شود؟ Context قبلی تا چند روز مجاز است؟
+8. Truth table رسمی R1 تا R8 برای Equality، جهت، صفر و Reset چیست؟
+9. `suppressed` چگونه به `ongoing` نگاشت می‌شود؟
+10. پاسخ جزئی QA چه Status دارد؟ Expected status سؤال Q03 چیست؟
+
+## F. Peer Questions Crosswalk
+
+| Question ID | Existing ADR/DL | Known Answer | Remaining Open Point | Action |
+|---|---|---|---|---|
+| Q01 | ADR-01؛ DL-01؛ DL-16 | PostgreSQL موتور محصول است. | Evaluator و Equivalence | ادغام در DL-01/DL-16 |
+| Q02 | DL-16 | Runtime برابر ۱۵ دقیقه است. | CPU، RAM و Network | ادغام در DL-16 |
+| Q03 | DL-14؛ DL-16 | سقف ۵ دلار برای کل روز است. | Provider، قیمت و Key | ادغام در DL-14/DL-16 |
+| Q04 | DL-16 | Docker یک‌فرمانی لازم است. | Command، Mount و output | ادغام در DL-16 |
+| Q05 | DL-21 | کد و Git history لازم است. | Public یا Private | Issue جدید DL-21 |
+| Q06 | DL-03 | Pipeline ادامه دارد؛ Missing یک Data Issue است. | مدت و Closure | ادغام در DL-03 |
+| Q07 | DL-02 | Policy روی ۸ KPI اثر دارد. | RAW یا DEDUP | ادغام در DL-02 |
+| Q08 | DL-22 | نبود وضعیت نهایی Abandonment نیست. | State و Timeout | Issue جدید DL-22 |
+| Q09 | DL-09 | Critical به‌تنهایی Escalation نیست. | مخاطب و Clock | ادغام در DL-09 |
+| Q10 | DL-09 | جهت KPI باید اعمال شود. | Truth table | ادغام در DL-09 |
+| Q11 | DL-08 | مالک KPI مالک Stage نیست. | Mapping و Fallback | ادغام در DL-08 |
+| Q12 | DL-06؛ DL-23 | سؤال Grant نمی‌سازد. | پاسخ جزئی و Status | تفکیک در DL-06/DL-23 |
+| Q13 | DL-23 | Enum رسمی موجود است. | Semantics دقیق | Issue جدید DL-23 |
+| Q14 | DL-12 | اثر در روزهای بعد سنجیده می‌شود. | Window و uncertainty | ادغام در DL-12 |
+| Q15 | DL-12 | قانون عمومی ۱۰٪ وجود ندارد. | معیار تصمیم‌ویژه | ادغام در DL-12 |
+
+هر سؤال Q01 تا Q15 دقیقاً یک‌بار در این جدول آمده است.
+
+## G. Decision Dependencies
+
+| Issue | وابستگی | مرحله مسدودشده |
+|---|---|---|
+| DL-01، DL-02 | ADR-01 و KPI Oracle | درستی عدد |
+| DL-03، DL-05 | قرارداد کیفیت داده | انتشار KPI متأثر |
+| DL-04 | Snapshot | Historical correction |
+| DL-06، DL-07، DL-23 | Authorization | صفر نشت و QA |
+| DL-08، DL-22 | Workflow/CRM semantics | مالک و Funnel KPI |
+| DL-09، DL-11 | Rule و Schema | کشف و Escalation |
+| DL-10 | Temporal contract | Coverage و Upload |
+| DL-12 | ADR-17 | پیگیری و اثر تصمیم |
+| DL-13، DL-14 | ADR-14 و Budget | Runtime و Cost |
+| DL-15 | عملیات | Restore |
+| DL-16، DL-21 | قرارداد برگزارکننده | اجرای نهایی و تحویل |
+| DL-17، DL-18 | Schema | سازگاری متن و JSON |
+| DL-19 | Governance | تغییر تنظیم |
+| DL-20 | ADR-13 و ADR-18 | Agent orchestration |
+
+## H. Change Log
+
+### نسخه 2.0 — 2026-11-10
+
+- ساختار قبلی چهار بخشی به ساختار A تا H تبدیل شد.
+- هر ۶ تصمیم Accepted حفظ شد.
+- هر ۲۰ Issue Open اولیه حفظ شد.
+- `DL-20` در نسخه قبل بود، ولی در Open Issues Registry نبود. این Issue با Provenance روشن حفظ شد.
+- سه Issue مستقل ساخته شد: `DL-21`، `DL-22` و `DL-23`.
+- Q01 تا Q04 در Issueهای موجود ادغام شدند. Q05 به `DL-21` تبدیل شد.
+- Q06 و Q07 در `DL-03` و `DL-02` ادغام شدند. Q08 به `DL-22` تبدیل شد.
+- Q09 و Q10 در `DL-09` و Q11 در `DL-08` ادغام شدند.
+- Q12 بین `DL-06` و `DL-23` تفکیک شد. Q13 به `DL-23` پیوست.
+- Q14 و Q15 در `DL-12` ادغام شدند.
+- هیچ Accepted تغییر نکرد. هیچ Open بسته نشد. هیچ اولویت قبلی تغییر نکرد.
+- تعارض قطعی جدیدی پیدا نشد. تفاوت `suppressed` و `ongoing` در `DL-11` Open ماند.
+
+### نتیجه اعتبارسنجی
+
+- Accepted اولیه: **۶ از ۶ حفظ شد**.
+- Open اولیه: **۲۰ از ۲۰ حفظ شد**.
+- Open نهایی: **۲۳**.
+- Crosswalk: **۱۵ سؤال یکتا**.
+- Issue جدید تکراری: **۰**.
+- Proposed تبدیل‌شده به Accepted: **۰**.
+- تغییر محصول، Dataset، SQL یا Schema رسمی: **۰**.
