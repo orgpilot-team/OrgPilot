@@ -110,6 +110,14 @@
     details.adr.reviewed { border-color: #b8d8c7; }
     summary { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; padding: 20px; cursor: pointer; list-style: none; }
     summary::-webkit-details-marker { display: none; }
+    .linked-record { margin-top: 10px; border: 1px solid var(--line); border-radius: 14px; background: #fff; overflow: hidden; }
+    .linked-record > summary { display: block; padding: 14px 16px; }
+    .linked-record > summary strong, .linked-record > summary span { display: block; }
+    .linked-record > summary strong { color: var(--ink); }
+    .linked-record > summary span { margin-top: 5px; color: var(--muted); font-size: .92rem; line-height: 1.8; }
+    .linked-record > .modal-grid, .linked-record > .fact, .linked-record > .linked-label, .linked-record > .chips { margin-left: 16px; margin-right: 16px; }
+    .linked-record > .modal-grid { margin-top: 0; }
+    .linked-record > .linked-label { font-weight: 800; }
     .adr-id { min-width: 76px; padding: 7px 10px; border-radius: 10px; color: #fff; background: var(--green); direction: ltr; text-align: center; font-weight: 800; }
     .adr-title { min-width: 0; }
     .adr-title strong { display: block; font-size: 1.05rem; }
@@ -419,14 +427,16 @@
       const title = dls[dlId]?.[0] || dlId;
       const detail = window.recordDetails?.[dlId] || {};
       const tests = dls[dlId]?.[2] || [];
-      return `<div class="linked-record dl-linked"><h3>${safe(dlId)} · ${safe(title)}</h3><div class="modal-grid">${dlFullFacts(detail)}</div><p class="linked-label">آزمون‌های این سؤال</p>${chips(tests)}</div>`;
+      const shortText = detail.conflict || detail.sourceRow?.[2] || "این سؤال هنوز باز است.";
+      return `<details class="linked-record dl-linked"><summary><strong>${safe(dlId)} · ${safe(title)}</strong><span>${safe(shortText)}</span></summary><div class="modal-grid">${dlFullFacts(detail)}</div><p class="linked-label">آزمون‌های این سؤال</p>${chips(tests)}</details>`;
     }
 
     function inlineAt(atId) {
       const detail = window.recordDetails?.[atId] || {};
       const title = ats[atId] || atId;
       const sourceRow = detail.sourceRow || [];
-      return `<div class="linked-record at-linked"><h3>${safe(atId)} · ${safe(title)}</h3>${fact("معیار و مدرک آزمون", sourceRow[2] || detail.evidence)}${fact("روش اثبات", detail.proofMethod || detail.evidence)}</div>`;
+      const shortText = detail.evidence || sourceRow[2] || "آزمون برنامه‌ریزی شده است.";
+      return `<details class="linked-record at-linked"><summary><strong>${safe(atId)} · ${safe(title)}</strong><span>${safe(shortText)}</span></summary>${fact("معیار و مدرک آزمون", sourceRow[2] || detail.evidence)}${fact("روش اثبات", detail.proofMethod || detail.evidence)}</details>`;
     }
 
     function openRecord(kind, id) {
