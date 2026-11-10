@@ -461,7 +461,7 @@
             <div class="human-row"><strong>چه چیزی هنوز باز است؟</strong><p>${safe(guide.open)}</p></div>
             <div class="human-row"><strong>قدم بعدی</strong><p>${safe(guide.next)}</p></div>
           </div>
-          ${sourceSections ? `<div class="modal-section"><h3>جزئیات تصمیم</h3><div class="modal-grid">${sourceSections}</div></div>` : ""}
+          ${sourceSections ? `<details class="tech-details"><summary>جزئیات تصمیم <span>نمایش</span></summary><div class="tech-content"><div class="modal-grid">${sourceSections}</div></div></details>` : ""}
           <div class="modal-section"><h3>سؤال‌های باز این تصمیم</h3>${linkedDls || "<p>سؤال باز مرتبط ثبت نشده است.</p>"}</div>
           <div class="modal-section"><h3>آزمون‌های مرتبط</h3>${linkedAts || "<p>آزمون مرتبط ثبت نشده است.</p>"}</div>`;
       } else if (kind === "DL") {
