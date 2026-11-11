@@ -53,7 +53,7 @@ flowchart TB
     UI[Web UI فارسی RTL]
     API[Backend API]
     Worker[Background Worker]
-    DB[(PostgreSQL)]
+    DB[(SQLite)]
     Files[(Protected File Archive)]
     LLM[LLM Provider]
     Inputs[Dataset و Manager Inputs]
@@ -81,12 +81,12 @@ flowchart TB
 | Backend API | احراز هویت، ساخت AuthContext، API ورودی مدیر و خواندن خروجی | درخواست UI یا Replay | Command معتبر، Query response یا refusal | `manager_id` ورودی، هویت معتبر محسوب نمی‌شود. |
 | Source Intake | Archive فایل، بررسی Manifest، Schema mapping و ثبت Data Issue | Drop و Upload | Batch receipt و رکورد استاندارد | DEDUP کسب‌وکار انجام نمی‌دهد. فایل اصلی را تغییر نمی‌دهد. |
 | Deterministic Core | Snapshot، ۵۵ KPI، سه Workflow، Signal و Ruleهای R1-R8 | داده پذیرفته‌شده، Config و Clock | Observation، Signal و Workflow evidence | بدون LLM. Policy حل‌نشده با ID صریح اجرا می‌شود. |
-| Policy and Query | RLS، کنترل ستون و Purpose، Query ثبت‌شده و Evidence retrieval | AuthContext، QuerySpec و Snapshot | نتیجه محدود، Receipt یا refusal | deny-by-default؛ LLM Credential ندارد. |
+| Policy and Query | scoped SQLite views، کنترل ستون و Purpose، Query ثبت‌شده و Evidence retrieval | AuthContext، QuerySpec و Snapshot | نتیجه محدود، Receipt یا refusal | deny-by-default؛ LLM Credential ندارد. |
 | Agent Orchestrator | هماهنگی تحلیل، Draft، QA و repair محدود با LangGraph | Evidence مجاز، Budget و Context نقش | Insight content و Draft | عدد یا مجوز تولید نمی‌کند. یک Agent دارد. |
 | Output Validator and Publisher | کنترل Schema، عدد، Evidence، Scope، لحن و recurrence؛ انتشار مستقل | Draft، JSON candidate و Query receipts | Report version یا failure receipt | Validator قطعی است. خروجی نامعتبر منتشر نمی‌شود. |
 | Decision Tracker | ثبت تصمیم، Draft اقدام و Observation اثر | تصمیم احرازشده مدیر | Decision event و follow-up | اقدام سازمانی اجرا نمی‌کند. |
 | Replay and Evaluation | اجرای ساعت شبیه‌سازی، ثبت زمان و هزینه و بررسی Output | Dataset root و Evaluation profile | Run receipt و نتیجه آزمون | به شناسه رویداد Development وابسته نمی‌شود. |
-| PostgreSQL | داده استاندارد، Snapshot metadata، Config، KPI، Signal، Decision، Report و Checkpoint | تراکنش ماژول‌ها | داده نسخه‌دار و قابل بازیابی | تنها DB محصول است. |
+| SQLite | داده استاندارد، Snapshot metadata، Config، KPI، Signal، Decision، Report و Checkpoint | تراکنش ماژول‌ها | داده نسخه‌دار و قابل بازیابی | تنها DB محصول و مرجع است. |
 | Protected File Archive | نگهداری bytes اصلی و Hash | فایل Source و Upload | pointer و hash | DB دوم نیست؛ فایل غیرقابل‌اعتماد را اجرا نمی‌کند. |
 
 ## ۴. جریان شبانه تا گزارش
@@ -99,7 +99,7 @@ sequenceDiagram
     participant P as Policy and Query
     participant G as LangGraph Agent Flow
     participant V as Validator and Publisher
-    participant DB as PostgreSQL
+    participant DB as SQLite
 
     R->>I: Dropهای مجاز تا R-1
     I->>DB: Archive receipt و Data Issues
@@ -179,6 +179,15 @@ sequenceDiagram
 - **Decision Event:** Actor، انتخاب، زمان، معیار موفقیت و Draft اقدام.
 - **Graph Checkpoint:** thread، State reference، Node، status و revision.
 
+### ۶.۱. تغییر Schema و قرارداد نوع داده
+
+دو موضوع باز و مستقل ثبت شده‌اند:
+
+- [DL-24](open-issues-registry.md#dl-24): نام `tickets.created_at` به `tickets.create_time` و نام `ticket_events.at` به `ticket_events.event_time` تغییر کرده است. روش نگاشت و نام Canonical هنوز باید تصویب و آزمایش شود.
+- [DL-25](open-issues-registry.md#dl-25): نوع، قالب، مقدار خالی مجاز و Parser ستون‌های Dataset هنوز قرارداد کامل و مصوب ندارند.
+
+تا زمان بسته‌شدن این دو مسئله، معماری نباید نام Canonical یا نوع نهایی این ستون‌ها را قطعی اعلام کند.
+
 قواعد محاسبه:
 
 - SQL و metadata مربوط به ۵۵ KPI مرجع حفظ می‌شوند.
@@ -192,8 +201,8 @@ sequenceDiagram
 ## ۷. امنیت و مرزهای اعتماد
 
 - AuthContext فقط در Backend و از هویت معتبر ساخته می‌شود.
-- PostgreSQL RLS روی همه Queryهای کاربری و Drill-down اعمال می‌شود.
-- دسترسی ستون، Purpose و متن آزاد نیز کنترل می‌شود. RLS ردیف به‌تنهایی کافی نیست.
+- محدودیت ردیف و ستون در لایه Policy and Query پیش از اجرای همه Queryهای کاربری و Drill-down اعمال می‌شود. SQLite به‌تنهایی مجوز کاربر را تعیین نمی‌کند.
+- دسترسی ستون، Purpose و متن آزاد نیز کنترل می‌شود. scoped SQLite views و Query Gateway باید هر دو مسیر ردیف و ستون را کنترل کنند؛ کنترل ردیف به‌تنهایی کافی نیست.
 - مدیر ارشد و مدیر واحد داده فردی کارکنان را نمی‌بینند. سرپرست فقط داده کار اعضای مستقیم را برای مدیریت بار کاری می‌بیند.
 - مرخصی و حضور فردی به مدیر بالاتر منتقل نمی‌شود. فقط ظرفیت تجمیعی مجاز است.
 - متن Ticket، Upload و فایل بیرونی Data غیرقابل‌اعتماد است و Instruction محسوب نمی‌شود.
@@ -221,7 +230,7 @@ State فقط این نوع داده را نگه می‌دارد:
 
 Raw row، Credential، SQL privilege و Evidence خارج از Scope در State قرار نمی‌گیرد.
 
-Checkpoint در PostgreSQL ذخیره می‌شود. شناسه thread برای گزارش شبانه بر پایه manager، report day و report version است. Session تعاملی thread جدا دارد. Resume باید Idempotent باشد و انتشار تکراری ایجاد نکند.
+Checkpoint در SQLite ذخیره می‌شود. شناسه thread برای گزارش شبانه بر پایه manager، report day و report version است. Session تعاملی thread جدا دارد. Resume باید Idempotent باشد و انتشار تکراری ایجاد نکند.
 
 Nightly Graph منتظر انسان نمی‌ماند. Interrupt فقط در جریان تعاملی برای Clarification یا تصمیم صریح مدیر مجاز است. تعداد Retry، Timeout و repair در DL-13 پس از Benchmark نهایی می‌شود.
 
@@ -283,7 +292,7 @@ Retry همان Idempotency key را حفظ می‌کند. Publisher روی کل�
 | BR-007 | خط 50 | افزودن واحد، تیم یا سطح بدون بازطراحی | Organization config | DL-19 | آزمون تغییر سازمان | Deferred with Gate: چرخه فعال‌سازی |
 | BR-008 | خطوط 68-81 | فرایند دستی و ناسازگاری عدد با Pipeline مشترک جایگزین شود | کل سیستم | ADR-01 | مقایسه منبع حقیقت | Design Covered |
 | BR-009 | خطوط 83-100 | Pipeline شامل KPI، Signal، هدف، تحلیل، گزارش، کنترل، Package و پیگیری باشد | Deterministic Core، Agent، Publisher | ADR-13-S02 | اجرای end-to-end | Design Covered |
-| BR-010 | خطوط 98-100 | تعریف KPI، حافظه تصمیم و ساختار دسترسی مشترک باشند | PostgreSQL، Config | ADR-01/17 | Version و linkage | Design Covered |
+| BR-010 | خطوط 98-100 | تعریف KPI، حافظه تصمیم و ساختار دسترسی مشترک باشند | SQLite، Config | ADR-01/17 | Version و linkage | Design Covered |
 | BR-011 | خطوط 102-106 | سؤال زبان طبیعی مدیر پشتیبانی شود | Interactive Graph، Query | DL-20 | QA Fixture | Design Covered |
 | BR-012 | خطوط 102-106 | مدیر هدف، Threshold و اولویت را تغییر دهد | API، Config | DL-19 | Input lifecycle | Deferred with Gate: authority و rollback |
 | BR-013 | خطوط 102-106 | Upload، بستن و ارجاع مورد پشتیبانی شود | API، Decision Tracker | ADR-17، DL-10 | Input و Prompt Injection | Open Decision |
@@ -326,7 +335,7 @@ Retry همان Idempotency key را حفظ می‌کند. Publisher روی کل�
 | BR-050 | خطوط 349-366 | پس از تصمیم، Draft ساخته و اثر در روزهای بعد پیگیری شود | Decision Tracker | DL-12 | Decision lifecycle | Deferred with Gate: execution evidence |
 | BR-051 | خطوط 370-375 | تمام قابلیت‌های ستون «الزامی» در Scope MVP باشند | کل سیستم | چند تصمیم | Traceability review | Design Covered |
 | BR-052 | خطوط 378-383 | هر Source ماژول جدا داشته باشد و نبود Source گزارش را متوقف نکند | Source Intake | - | Missing source test | Design Covered |
-| BR-053 | خط 383 | Row-level access روی همه Queryها اعمال شود | Policy and Query | DL-06 | RLS negative test | Open Decision |
+| BR-053 | خط 383 | Row-level access روی همه Queryها اعمال شود | Policy and Query | DL-06 | SQLite scoped-view negative test | Open Decision |
 | BR-054 | خط 383 | متن Ticket و فایل Data باشد، نه Instruction | Source Intake، Agent، Validator | ADR-13-S02 | Prompt Injection test | Design Covered |
 | BR-055 | خط 384 | عدد از SQL اجراشده بیاید؛ Query موردی read-only، ثبت و نمایش داده شود | Query، Deterministic Core | ADR-01 | SQL receipt test | Design Covered |
 | BR-056 | خط 385 | تحلیل عمیق محدود و هزینه روزانه کنترل شود | Agent، Evaluation | DL-14 | Cost ledger | Deferred with Gate: model benchmark |

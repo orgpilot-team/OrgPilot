@@ -12,24 +12,25 @@
 
 <a id="adr-01"></a>
 
-## ADR-01: PostgreSQL execution and canonical KPI equivalence
+## ADR-01: SQLite as the product and reference engine
 
-Problem / Context: SQLite reference functions need controlled translation. A product engine choice does not prove numerical equivalence.
+Problem / Context: The supplied canonical SQL and results use SQLite. The team no longer uses PostgreSQL.
 
-Decision owner: Engineering handles translation. The project owner must confirm missing type or input contracts. No named appointee or original approval date is supplied.
+Decision owner: User decision recorded on 2026-11-11. Engineering verifies the SQLite implementation.
 
-Closure condition: Record the missing contracts and inspect all-55 equivalence receipts. DL-19 separately controls changes to existing KPIs.
+Closure condition: The engine decision is complete. Inspect SQLite receipts for all 55 definitions and replay mornings. DL-19 separately controls changes to existing KPIs.
 
 Source Evidence: [ADR-01](decisions-registry.md#adr-01). [Q01-Q17 status map](../004-reconciliation-review.md#question-map).
 
 | Statement ID | Decision Status | Statement |
 |---|---|---|
-| ADR-01-S01 | Accepted | PostgreSQL is the only product database engine, for all 55 KPIs and custom queries. |
+| ADR-01-S01 | Superseded | The earlier PostgreSQL-only decision is replaced by the user decision dated 2026-11-11. |
+| ADR-01-S01A | Accepted | SQLite is the only product and reference database engine for all 55 KPIs and custom queries. |
 | ADR-01-S02 | Requirement | Preserve the original source data, SQL, views, definitions and canonical results. |
-| ADR-01-S03 | Proposed | Store PostgreSQL translations with separate versions and original hashes. |
-| ADR-01-S04 | Proposed | Use an isolated SQLite reference oracle outside the product path. |
-| ADR-01-S05 | Open | Select the translation strategy, engine version, median implementation and input type profile. |
-| ADR-01-S06 | Open | Prove whole-result equivalence, including keys, dimensions, no-row, NULL, integer division, time, rounding, joins and all replay mornings. |
+| ADR-01-S03 | Rejected | Do not create or maintain PostgreSQL translations. |
+| ADR-01-S04 | Accepted | Run the canonical SQLite SQL in the product path. |
+| ADR-01-S05 | Closed | No cross-engine translation strategy is required. |
+| ADR-01-S06 | Closed | Cross-engine equivalence is not required; SQLite result validation remains in the acceptance tests. |
 
 Accepted decision: See the Accepted statement rows.
 
@@ -42,19 +43,19 @@ Consequences: The source constraints, effects and exceptions below remain in for
 
 ### Full source record and conditions
 
-### ADR-01: اجرای PostgreSQL و هم‌ارزی Canonical KPI
+### ADR-01: اجرای SQLite به‌عنوان موتور محصول و مرجع
 
-**Accepted:** موتور PostgreSQL تنها موتور پایگاه داده محصول است و همه 55 KPI و همه Queryهای سفارشی را اجرا می‌کند. S16 Q03 این انتخاب را نهایی می‌داند. S17 همین مرز را بیان می‌کند. نام تأییدکنندگان و تاریخ تصویب اولیه عرضه نشده‌اند. تاریخ این بازبینی جدا ثبت شود.
+**تصمیم پذیرفته‌شده:** طبق تصمیم کاربر در ۲۰۲۶-۱۱-۱۱، SQLite تنها موتور پایگاه داده محصول و مرجع محاسبه هر ۵۵ KPI و همه Queryهای سفارشی است. تصمیم قدیمی PostgreSQL کنار گذاشته شد.
 
-**Requirement:** تعریف‌ها و نتایج S03-S04 حفظ شوند. SQL اصلی یا داده منبع تغییر نکند. انتخاب PostgreSQL مجوز تفاوت عددی نیست.
+**الزام:** تعریف‌ها و نتایج S03-S04 حفظ شوند. SQL اصلی و داده منبع تغییر نکنند. اجرای محصول باید همان رفتار و نتیجه مرجع SQLite را حفظ کند.
 
-**Proposed:** تبدیل‌های نسخه‌دار PostgreSQL جدا از SQL مرجع ثبت شوند. عبارت‌های دقیق PostgreSQL همچنان انتخاب طراحی هستند و نباید نتیجه مرجع را تغییر دهند. از محیط مرجع مستقل SQLite فقط برای آزمون استفاده شود. ورودی‌های ثابت و سیاست یکسان مقایسه شوند. پیشنهاد قبلی PostgreSQL به‌همراه SQLite برای محصول کنار گذاشته شده است. انتخاب پایگاه داده با عنوان پیش‌فرض پیاده‌سازی دوباره باز نشود.
+**ردشده:** تبدیل SQL به PostgreSQL، نگهداری دو موتور و استفاده از SQLite فقط به‌عنوان محیط آزمون انجام نمی‌شوند.
 
-**Open:** راهبرد دقیق تبدیل، پروفایل نوع مرجع، نسخه موتور، پیاده‌سازی Median و اثبات هم‌ارزی کل رابطه خروجی. NULL و نبود ردیف، تقسیم صحیح، محاسبات زمان، گردکردن، Joinها، Dimensionها و همه صبح‌های Replay پوشش داده شوند. بازنویسی مستقیم همراه با پذیرش اختلاف عددی با الزام صفر عدد نادرست سازگار نیست.
+**آزمون باقی‌مانده:** صحت نتیجه SQLite برای NULL، نبود ردیف، تقسیم صحیح، زمان، گردکردن، Joinها، Dimensionها و همه صبح‌های بازپخش بررسی شود. این آزمون، مقایسه با PostgreSQL نیست.
 
-**آزمون پذیرش:** AT-02، AT-03، AT-05، AT-17. هیچ نتیجه هم‌ارزی PostgreSQL یا Benchmark ادعا نمی‌شود. مهندسی مسئول تبدیل است. مالک پروژه هر قرارداد مفقود نوع مرجع یا سیاست ورودی را تأیید می‌کند.
+**آزمون پذیرش:** AT-02، AT-03، AT-05 و AT-17. تا زمان اجرای این آزمون‌ها، صحت کامل هر ۵۵ شاخص یا کارایی SQLite ادعا نمی‌شود.
 
-برچسب بررسی `Open Decision`: حفظ تعریف مرجع برای ارزیابی، پاسخ کامل به قابلیت ویرایش تعریف، فرمول، مالک و هدف KPI موجود نیست (بریف صفحات ۴ و ۱۳؛ S02، بخش شاخص‌ها). تفکیک این دو قرارداد در DL-19 تکمیل شده است؛ آزمون تغییر KPI موجود و افزودن KPI جدید در AT-27 جدا هستند. این ارجاع، تصمیم Accepted درباره PostgreSQL یا الزام حفظ مرجع را تغییر نمی‌دهد.
+تغییر تعریف، فرمول، مالک و هدف KPI همچنان در DL-19 پیگیری می‌شود. افزودن KPI و تغییر KPI موجود در AT-27 دو آزمون جدا هستند. این موضوع تصمیم SQLite را تغییر نمی‌دهد.
 
 
 
@@ -238,41 +239,32 @@ Consequences: The source constraints, effects and exceptions below remain in for
 
 <a id="adr-06"></a>
 
-## ADR-06: Access control and query security
+## ADR-06: اجرای دسترسی مصوب و امنیت Query
 
-Problem / Context: Shared tables do not supply complete row, column and purpose grants.
+**زمینه:** جدول‌های مشترک، مجوز کامل ردیف، ستون و هدف استفاده را عرضه نمی‌کنند.
 
-Decision owner: Security/architecture roles. The organizer can clarify the meaning of manager Q08 if needed.
+**مالک تصمیم:** تیم امنیت و معماری. ابهام معنای پرسش Q08 مدیر، در صورت نیاز، با برگزارکننده حل می‌شود.
 
-Closure condition: Review projections and pass negative access cases for joins, subqueries, UNION, CTE, errors, exports, logs, cache and role changes. The source hierarchy itself stays fixed.
+**شرط بسته‌شدن:** Projectionهای باقی‌مانده بازبینی شوند. آزمون‌های منفی Join، Subquery، UNION، CTE، خطا، Export، Log، Cache و تغییر نقش اجرا و قبول شوند. سلسله‌مراتب منبع ثابت می‌ماند.
 
-Source Evidence: [ADR-06](decisions-registry.md#adr-06). [Q01-Q17 status map](../004-reconciliation-review.md#question-map).
+**شواهد منبع:** [ADR-06](decisions-registry.md#adr-06) و [نقشه وضعیت Q01 تا Q17](../004-reconciliation-review.md#question-map).
 
-| Statement ID | Decision Status | Statement |
+| شناسه گزاره | وضعیت | گزاره |
 |---|---|---|
-| ADR-06-S01 | Requirement | Apply the supplied hierarchy and row controls to every user query. |
-| ADR-06-S02 | Requirement | Permit individual workload data only to the direct supervisor; leave stays aggregate capacity and cannot support individual ranking. |
-| ADR-06-S03 | Proposed | Use a resource/column/purpose/predicate policy catalog and scoped PostgreSQL views. |
-| ADR-06-S04 | Proposed | Use read-only validated SELECT/CTE queries, function/table allowlists and roles without owner or BYPASSRLS privileges. |
-| ADR-06-S05 | Open | Define shared-source predicates, historical scope, text redaction and derived-evidence projections. |
-| ADR-06-S06 | Open | Define capacity aggregation and controls against small-group identification. |
+| ADR-06-S01 | الزام | سلسله‌مراتب و کنترل ردیف عرضه‌شده باید روی همه Queryهای کاربر اعمال شوند. |
+| ADR-06-S02 | الزام | داده بار کاری فردی فقط برای سرپرست مستقیم مجاز است. مرخصی فقط ظرفیت تجمیعی است و نباید برای رتبه‌بندی فردی استفاده شود. |
+| ADR-06-S03 | پذیرفته‌شده | Policy Catalog مشترک برای منبع، ستون، هدف استفاده و Predicate به‌کار رود. Backend و Query Gateway آن را با scoped viewهای SQLite اجرا کنند. |
+| ADR-06-S04 | پذیرفته‌شده | فقط Queryهای SELECT/CTE خواندنی و معتبر اجرا شوند. allowlist جدول و تابع و default deny اعمال شوند. نقش پایگاه داده و ردیف خام به مدیر نمایش داده نشوند. |
+| ADR-06-S05A | پذیرفته‌شده | `customer_id` فقط برای محاسبه داخلی و KPI مرتبط استفاده شود. مدیر، مدیر کل و سرپرست نباید آن را مستقیم ببینند. |
+| ADR-06-S05B | پذیرفته‌شده | `city` یک بعد مجاز KPI است. نتیجه تجمیعی مانند `K_SHP_ONTIME_BY_CITY` در Scope مجاز نمایش داده شود. Drill-down آماری مجاز است، اما شناسه مشتری نباید نمایش داده شود. |
+| ADR-06-S05C | پذیرفته‌شده | سیاست اطلاعات مشتری در Chatbot، Daily Report، Dashboard، Drill-down، JSON و Export یکسان اعمال شود. فقط سرویس محاسباتی می‌تواند داده خام لازم برای KPI را پردازش کند. |
+| ADR-06-S05D | پذیرفته‌شده | Chatbot و Daily Report از Shared Authorization Policy استفاده کنند. داده غیرمجاز باید قبل از ساخت Prompt و قبل از خروجی قابل مشاهده مدیر حذف شود. |
+| ADR-06-S06 | باز | Predicate منابع مشترک، Scope تاریخی، حذف متن حساس و Projection شواهد مشتق‌شده تعریف شوند. |
+| ADR-06-S07 | باز | روش تجمیع ظرفیت و کنترل بازشناسی افراد در گروه کوچک تعریف شود. |
 
-Accepted decision: No explicit Accepted statement is recorded for this ADR.
+**جمع‌بندی وضعیت:** سیاست اطلاعات مشتری و اجرای آن با SQLite، Backend و Query Gateway پذیرفته شده است. Projection ردیف‌ها و ستون‌های سایر منابع مشترک هنوز باز است.
 
-Proposed options and Open details: See the statement rows and the full extract.
-
-Consequences: The source constraints, effects and exceptions below remain in force. No proposed mechanism is approved by this extraction.
-
-وابستگی‌های DL / AT در ADR: در متن این ADR شناسهٔ صریحی وجود ندارد؛ ارجاع‌های ورودی DL را در ماتریس ببینید.
-
-
-### Full source record and conditions
-
-### ADR-06: اجرای دسترسی مصوب و امنیت query
-
-**وضعیت:** Requirement: سلسله‌مراتب عرضه‌شده و محدودیت داده فردی. Proposed: فهرست سیاست‌ها و کنترل‌های فیزیکی. Open: نگاشت منبع، ستون و هدف استفاده.
-
-**وضعیت اصلاح‌شده، ۲۰۲۶-۱۱-۰۳:** اصل دامنهٔ دسترسی، الزام موجود است و تصمیم باز نیست. بریف ص۱۰ دسترسی را به زیرمجموعهٔ مدیر محدود می‌کند و دادهٔ فردی را فقط برای سرپرست مستقیم مجاز می‌داند. ص۱۳ کنترل ردیفی در لایهٔ داده را برای همهٔ queryها، از جمله گفتگو، الزامی می‌کند. دادهٔ فردی فقط برای مدیریت بار کار است؛ ارزیابی و رتبه‌بندی افراد مجاز نیست. طبق ص۶، ص۱۲ و ص۱۳، مرخصی فقط به شکل ظرفیت تجمیعی تیم وارد تحلیل می‌شود. `dataset/org/access_matrix.csv` دامنهٔ دقیق مدیران را ثبت کرده است:
+**الزامات پایه، ثبت‌شده در ۲۰۲۶-۱۱-۰۳:** اصل دامنهٔ دسترسی، الزام موجود است و تصمیم باز نیست. بریف ص۱۰ دسترسی را به زیرمجموعهٔ مدیر محدود می‌کند و دادهٔ فردی را فقط برای سرپرست مستقیم مجاز می‌داند. ص۱۳ کنترل ردیفی در لایهٔ داده را برای همهٔ Queryها، از جمله گفتگو، الزامی می‌کند. دادهٔ فردی فقط برای مدیریت بار کار است؛ ارزیابی و رتبه‌بندی افراد مجاز نیست. طبق ص۶، ص۱۲ و ص۱۳، مرخصی فقط به شکل ظرفیت تجمیعی تیم وارد تحلیل می‌شود. `dataset/org/access_matrix.csv` دامنهٔ دقیق مدیران را ثبت کرده است:
 
 | مدیر | دامنهٔ دادهٔ تجمیعی مجاز | دادهٔ فردی مجاز برای مدیریت بار کار |
 |---|---|---|
@@ -292,13 +284,15 @@ Consequences: The source constraints, effects and exceptions below remain in for
 
 **مسئله:** access_matrix دامنهٔ entityها را تعیین می‌کند؛ تمام جدول‌ها team_id ندارند. مشترک‌بودن orders میان فروش و عملیات مجوز کل اطلاعات فروش نمی‌سازد.
 
-**پیشنهاد:** policy catalog برای resource، column، purpose و predicate ایجاد شود. scoped views در PostgreSQL پیش از LLM اعمال شوند. نقش کاربر، مالک جدول و دارای BYPASSRLS نباشد. Query Gateway یک SELECT/CTE خواندنی معتبر با function/table allowlist اجرا کند.
+**تصمیم پذیرفته‌شده:** policy catalog مشترک برای resource، column، purpose و predicate ایجاد شود. Backend و Query Gateway با scoped viewهای SQLite محدودیت ردیف و ستون را پیش از LLM اعمال کنند. Query Gateway فقط SELECT/CTE خواندنی معتبر با function/table allowlist اجرا کند و default deny را اعمال کند. SQLite به‌تنهایی مرجع مجوز کاربر نیست.
 
-**جزئیات اجرای باز:** نگاشت دامنهٔ مصوب به ردیف‌ها و ستون‌های منابع مشترک؛ دامنهٔ دادهٔ گذشته برای تیم جدید؛ حذف دادهٔ نامجاز از evidence ارجاع بین‌واحدی؛ روش تجمیع ظرفیت و جلوگیری از بازشناسی افراد در تیم کوچک. این موارد، مجوز بازتعریف سلسله‌مراتب یا گسترش دسترسی نیستند. default برای مجوز تعریف‌نشده deny است.
+**سیاست اطلاعات مشتری:** `customer_id` فقط برای محاسبات داخلی و KPIهای مرتبط مجاز است. هیچ مدیر، مدیر کل یا سرپرست اجازه مشاهده مستقیم آن را ندارد. `city` برای محاسبه و گروه‌بندی KPI مجاز است. KPI تجمیعی شهری، مانند `K_SHP_ONTIME_BY_CITY` در M08، در محدوده مجاز قابل نمایش است. Drill-down فقط جزئیات آماری مجاز را نشان می‌دهد و نباید شناسه مشتری را نشان دهد. این قاعده در Chatbot، Daily Report، Dashboard، Drill-down، JSON و Export یکسان است. سرویس محاسباتی می‌تواند داده خام لازم را پردازش کند؛ این مجوز به مدیر منتقل نمی‌شود. داده نامجاز نباید وارد Prompt مدل یا خروجی مدیر شود.
 
-**شرط تصویب:** آزمون منفی روی join، subquery، UNION، CTE، خطا، export، log، cache و تغییر role. تغییر principal از پارامتر یا prompt نباید scope را عوض کند.
+**جزئیات اجرای باز:** نگاشت دامنهٔ مصوب به ردیف‌ها و ستون‌های سایر منابع مشترک؛ دامنهٔ دادهٔ گذشته برای تیم جدید؛ حذف دادهٔ نامجاز از evidence ارجاع بین‌واحدی؛ روش تجمیع ظرفیت و جلوگیری از بازشناسی افراد در تیم کوچک. این موارد، مجوز بازتعریف سلسله‌مراتب یا گسترش دسترسی نیستند. default برای مجوز تعریف‌نشده deny است.
 
-**مالک تصمیم:** تیم امنیت/معماری؛ ابهام معنای مجاز manager question Q08 در صورت لزوم با برگزارکننده حل شود. وجود KPI `K_ORG_ORDERS` به M03 مجوز سازمان نمی‌دهد. query عملیاتی مجاز باید تعریف و policy مستقل داشته باشد.
+**آزمون‌های لازم:** آزمون منفی روی Join، Subquery، UNION، CTE، خطا، Export، Log، Cache و تغییر نقش اجرا شود. تغییر Principal از پارامتر یا Prompt نباید Scope را عوض کند. موفقیت فقط پس از اجرای واقعی آزمون‌ها ثبت شود.
+
+**نکته دامنه:** وجود KPI `K_ORG_ORDERS` به M03 مجوز سازمان نمی‌دهد. Query عملیاتی مجاز باید تعریف و Policy مستقل داشته باشد.
 
 
 
@@ -722,7 +716,7 @@ Source Evidence: [ADR-16](decisions-registry.md#adr-16). [Q01-Q17 status map](..
 |---|---|---|
 | ADR-16-S01 | Requirement | Support structured nightly sources, authenticated manager input and file upload; the brief names Excel. |
 | ADR-16-S02 | Proposed | Separate structured intake from untrusted document registration and preserve originals, receipt, audience, validation and lineage. |
-| ADR-16-S03 | Proposed | Use PostgreSQL text retrieval for operational documents. |
+| ADR-16-S03 | Proposed | Use SQLite text retrieval for operational documents. |
 | ADR-16-S04 | Open | Define exact Excel formats/validation, extra PDF support, file limits, retrieval and same-day readiness. |
 
 Accepted decision: No explicit Accepted statement is recorded for this ADR.
@@ -742,7 +736,7 @@ Consequences: The source constraints, effects and exceptions below remain in for
 
 **Proposed:** ورود داده ساختاریافته از ثبت سند غیرقابل اعتماد جدا شود. اصل فایل‌ها، زمان دریافت، مخاطب، بررسی Schema و نوع و Data Lineage حفظ شوند. نسخه‌های Upload از Dropهای مرجع جدا بمانند. مستندات توسعه، خروجی‌های Audit، Notebookها یا برچسب‌های پنهان وارد شواهد محصول نشوند.
 
-**Open:** قالب‌های دقیق Excel و Validation آن‌ها، پشتیبانی اضافی PDF، حدود فایل، روش بازیابی و آمادگی Upload همان روز. بازیابی متنی PostgreSQL یک پیشنهاد است. RAG و پایگاه داده برداری وابستگی مصوب نیستند. محدودبودن Fixtureها به CSV/JSON/MD به‌تنهایی قالب‌های الزامی Upload را تعیین نمی‌کند.
+**Open:** قالب‌های دقیق Excel و Validation آن‌ها، پشتیبانی اضافی PDF، حدود فایل، روش بازیابی و آمادگی Upload همان روز. بازیابی متنی SQLite یک پیشنهاد است. RAG و پایگاه داده برداری وابستگی مصوب نیستند. محدودبودن Fixtureها به CSV/JSON/MD به‌تنهایی قالب‌های الزامی Upload را تعیین نمی‌کند.
 
 **آزمون پذیرش:** AT-03، AT-13، AT-22؛ تقدم ورودی همان روز همچنان ADR-08 است. محصول و مهندسی مسئول قرارداد قالب هستند.
 

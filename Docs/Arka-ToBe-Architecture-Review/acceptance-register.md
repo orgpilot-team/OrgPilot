@@ -41,19 +41,19 @@ Source Evidence: [AT-01](acceptance-register.md#at-01); [authority basis](../aud
 
 <a id="at-02"></a>
 
-## AT-02: هم‌ارزی PostgreSQL
+## AT-02: صحت اجرای SQLite
 
-Goal: PostgreSQL equivalence.
+Goal: SQLite canonical result validation.
 
 Execution status: **Planned / Not Executed**. Evidence state: **Evidence Pending**.
 
 Reference contract / authority: **Requirement**. KPI dictionary all rows; reference views; brief16.
 
-Unapproved mechanism or gap: PostgreSQL translation strategy Proposed; engine Accepted.
+Unapproved mechanism or gap: Engine decision is complete; execution evidence is pending.
 
-Required evidence and acceptance checks: All 55 source/translated SQL hashes, engine/type/input-policy versions and complete result comparisons for every replay morning and edge case; zero tolerance after canonical rounding.
-Open question: Do all 55 KPI translations produce the same canonical result in PostgreSQL?
-Proof method: Run each source and translated query for every replay morning and edge case. Compare SQL hashes, versions, inputs and results. Pass only when all results match after canonical rounding.
+Required evidence and acceptance checks: All 55 source SQL hashes, SQLite/type/input-policy versions and complete results for every replay morning and edge case; zero tolerance after canonical rounding.
+Open question: Does SQLite produce the canonical result for all 55 KPIs in every required case?
+Proof method: Run each source query on SQLite for every replay morning and edge case. Record SQL hashes، versions، inputs and results. Pass only when all results match the canonical expected results after canonical rounding.
 
 تصمیم‌ها / مسائل مرتبط: [ADR-01](decisions-registry.md#adr-01)، [ADR-09](decisions-registry.md#adr-09)، [DL-01](open-issues-registry.md#dl-01)، [DL-02](open-issues-registry.md#dl-02)، [DL-16](open-issues-registry.md#dl-16)، [DL-17](open-issues-registry.md#dl-17)، [REG-ISS-005](open-issues-registry.md#reg-iss-005).
 
@@ -64,7 +64,7 @@ Source Evidence: [AT-02](acceptance-register.md#at-02); [authority basis](../aud
 
 | شناسه | آزمون | معیار پذیرش |
 |---|---|---|
-| AT-02 | هم‌ارزی PostgreSQL | همه 55 شناسه؛ Hashهای بدون تغییر SQL و View اصلی به‌همراه Hashهای SQL تبدیل‌شده؛ ورودی‌ها و سیاست یکسان؛ کلیدها، Dimensionها، وجود ردیف، NULL و مقادیر گرد‌شده مطابق مرجع برای همه صبح‌های Replay و حالت‌های مرزی برابر باشند. پس از گردکردن تلرانس وجود ندارد. |
+| AT-02 | صحت اجرای SQLite | همه ۵۵ شناسه؛ Hashهای بدون تغییر SQL و View اصلی، نسخه SQLite، ورودی و سیاست یکسان؛ کلیدها، Dimensionها، وجود ردیف، NULL و مقدارهای گرد‌شده برای همه صبح‌های Replay و حالت‌های مرزی مطابق نتیجه مرجع باشند. پس از گردکردن تلرانس وجود ندارد. |
 
 
 
@@ -171,6 +171,16 @@ Required evidence and acceptance checks: Positive and negative access receipts i
 Open question: Does authorization block every unauthorized path at all three access levels?
 Proof method: Run positive and negative tests for result, prompt, cache, export, log, error and drill-down paths. Pass only when allowed data is visible and every unauthorized path is blocked.
 
+AT-06 additions for the approved customer-data policy:
+
+- `customer_id`: verify that the calculation service can use the field for an approved KPI, but no manager, general manager, or supervisor can see it in a result, prompt, Daily Report, Dashboard, Drill-down, JSON, Export, cache, log, or error.
+- `city`: verify that an allowed KPI can calculate and group by `city`, and that an aggregate such as `K_SHP_ONTIME_BY_CITY` is visible only in the allowed scope.
+- Drill-down: verify that an authorized manager can inspect allowed statistical details, but every customer identifier is removed or blocked.
+- Shared policy: verify the same result for Chatbot and Daily Report, with enforcement in Backend and Query Gateway before prompt construction and manager-visible output.
+- SQLite: verify the policy with SQLite scoped views and Query Gateway controls. Do not use PostgreSQL RLS as an acceptance mechanism.
+
+These additions are **Planned / Not Executed**. No Pass result is recorded until the tests run and evidence is stored.
+
 تصمیم‌ها / مسائل مرتبط: [DL-06](open-issues-registry.md#dl-06)، [DL-07](open-issues-registry.md#dl-07)، [DL-15](open-issues-registry.md#dl-15).
 
 Source Evidence: [AT-06](acceptance-register.md#at-06); [authority basis](../audit-2026-11-09/acceptance-basis.csv).
@@ -180,7 +190,7 @@ Source Evidence: [AT-06](acceptance-register.md#at-06); [authority basis](../aud
 
 | شناسه | آزمون | معیار پذیرش |
 |---|---|---|
-| AT-06 | مجوزسنجی | صفر نشت در سه سطح، در result، prompt، cache، export، logs و خطا؛ دادهٔ فردی فقط با direct-team و purpose مجاز. |
+| AT-06 | مجوزسنجی | صفر نشت در سه سطح، در result، prompt، cache، export، logs و خطا؛ `customer_id` فقط در محاسبه داخلی؛ `city` و KPI تجمیعی شهری مجاز؛ Drill-down آماری بدون شناسه؛ Chatbot و Daily Report همسان؛ دادهٔ فردی فقط با direct-team و purpose مجاز. |
 
 
 

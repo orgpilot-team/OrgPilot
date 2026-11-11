@@ -63,9 +63,9 @@
 - **Question:** موتور پایگاه داده محصول چیست؟
 - **Status:** Accepted.
 - **Requirement:** SQL، تعریف و نتیجه مرجع Dataset برای آزمون حفظ شوند.
-- **Accepted Team Decision:** PostgreSQL تنها موتور پایگاه داده محصول است. همه ۵۵ KPI و Queryهای تعاملی در مسیر محصول روی PostgreSQL اجرا می‌شوند.
-- **Boundary:** SQLite فقط می‌تواند Oracle آزمون مستقل و خارج از مسیر محصول باشد.
-- **Impact:** روش ترجمه و اثبات هم‌ارزی در `DL-01` Open است.
+- **Accepted Team Decision:** SQLite تنها موتور پایگاه داده محصول و مرجع است. همه ۵۵ KPI و Queryهای تعاملی روی SQLite اجرا می‌شوند.
+- **Boundary:** PostgreSQL و ترجمه بین دو موتور در محصول استفاده نمی‌شوند.
+- **Impact:** تصمیم موتور در `DL-01` بسته است. صحت نتیجه SQLite همچنان با آزمون‌های پذیرش بررسی می‌شود.
 - **Evidence / Sources:** [ADR-01](../architecture/registry/decisions-registry.md#adr-01)، [Adr.md، Q03](../architecture/sources/Adr.md)، Dataset README و بریف.
 
 ### ADR-13-S01 — یک Agent محدود
@@ -157,7 +157,7 @@
 - **What We Know:** دسترسی سلسله‌مراتبی و deny-by-default Requirement هستند. سؤال مدیر Grant جدید ایجاد نمی‌کند.
 - **Unresolved Gap:** Projection منابع مشترک، متن حساس، Historical scope و رفتار پاسخ جزئی Q12 مشخص نیستند.
 - **Options:** Policy Catalog؛ View مجزا؛ رد دسترسی تعریف‌نشده.
-- **Recommended Approach:** Policy Catalog نسخه‌دار با RLS، allowlist و Redaction استفاده شود.
+- **Recommended Approach:** Policy Catalog نسخه‌دار با scoped SQLite views، Query Gateway، allowlist و Redaction استفاده شود. RLS مربوط به PostgreSQL نیست.
 - **Decision Owner:** امنیت و داده.
 - **Impact:** Query، Evidence، QA و صفر نشت.
 - **Priority:** P0؛ بدون تغییر.
@@ -241,16 +241,16 @@
 
 ### P1
 
-#### DL-01 — هم‌ارزی ۵۵ KPI
+#### DL-01 — موتور و صحت ۵۵ KPI
 
 - **ID:** `DL-01`
-- **Question:** موتور ارزیابی و روش اثبات هم‌ارزی KPI چیست؟
-- **Status:** Open.
-- **What We Know:** PostgreSQL موتور محصول است. SQLite فقط می‌تواند Oracle مستقل باشد.
-- **Unresolved Gap:** Engine Evaluator، Translation strategy، نسخه و Comparison مشخص نیستند. Q01 ادغام شد.
-- **Options:** ترجمه دستی؛ Translation layer؛ بازنویسی همراه Oracle.
-- **Recommended Approach:** SQL PostgreSQL نسخه‌دار و مقایسه کل Relation برای همه روزها.
-- **Decision Owner:** مهندسی؛ پاسخ Engine با برگزارکننده.
+- **Question:** موتور محصول چیست و صحت KPIها چگونه اثبات می‌شود؟
+- **Status:** Closed for engine decision; tests pending.
+- **What We Know:** SQLite تنها موتور محصول و مرجع است.
+- **Unresolved Gap:** فقط شواهد اجرای صحیح همه ۵۵ KPI و حالت‌های مرزی باقی مانده است.
+- **Options:** تصمیم موتور نهایی است و گزینه موتور دوم وجود ندارد.
+- **Recommended Approach:** SQL مرجع SQLite بدون ترجمه برای همه روزها اجرا و نتیجه آن ثبت شود.
+- **Decision Owner:** تصمیم کاربر؛ اجرای آزمون با مهندسی.
 - **Impact:** پذیرش عددی.
 - **Priority:** P1؛ بدون تغییر.
 - **Evidence / Sources:** [DL-01](../architecture/registry/open-issues-registry.md#dl-01)، ADR-01 و KPI sources.
@@ -436,6 +436,34 @@
 - **Evidence / Sources:** [QA Schema](../../DataSet/arka_dataset/output_contract/qa_answer_schema.json)، DL-06، Q12 و Q13.
 - **Closure Criteria:** Truth table، Expected Q03 و Fixture هر Enum تأیید شوند.
 
+#### DL-24 — تغییر نام ستون‌های زمان
+
+- **ID:** `DL-24`
+- **Question:** دو نسخه نام ستون‌های زمان چگونه به Schema داخلی نگاشت شوند؟
+- **Status:** Open — New.
+- **What We Know:** از روز ۰۸۲، `tickets.created_at` با نام `tickets.create_time` و `ticket_events.at` با نام `ticket_events.event_time` عرضه شده‌اند.
+- **Unresolved Gap:** نام Canonical و رفتار فایل دارای هر دو نام یا نام ناشناخته مشخص نیست.
+- **Recommended Approach:** Adapter هر دو Header شناخته‌شده را بپذیرد و Header اصلی را در رسید حفظ کند. این پیشنهاد هنوز تصویب نشده است.
+- **Decision Owner:** مهندسی داده و معماری.
+- **Impact:** Ingestion، Schema evolution و Dataset پنهان.
+- **Priority:** P1؛ قبل از تثبیت Ingestion.
+- **Evidence / Sources:** [DL-24](open-issues-registry.md#dl-24) و Headerهای Dropهای ۰۸۱ و ۰۸۲.
+- **Closure Criteria:** نگاشت مصوب و آزمون نسخه قدیمی، نسخه جدید و تعارض Header ثبت شوند.
+
+#### DL-25 — قرارداد و نرمال‌سازی نوع داده
+
+- **ID:** `DL-25`
+- **Question:** نوع Canonical، قالب، واحد، NULL و رفتار خطای هر ستون چیست؟
+- **Status:** Open — New.
+- **What We Know:** ورودی CSV نوع صریح ندارد. SQLهای مرجع از زمان، مبلغ، شمارنده، امتیاز و شناسه استفاده می‌کنند.
+- **Unresolved Gap:** Data Dictionary کامل و نتیجه بررسی همه Dropها موجود نیست.
+- **Recommended Approach:** داده خام حفظ شود و Parser نسخه‌دار آن را به نوع Canonical تبدیل کند. مقدار نامعتبر Data Issue باشد. این پیشنهاد هنوز تصویب نشده است.
+- **Decision Owner:** مهندسی داده و مالک Dataset.
+- **Impact:** صحت KPI، Join، Sort، مقایسه زمان و Dataset پنهان.
+- **Priority:** P1؛ قبل از اعلام صحت محاسبات.
+- **Evidence / Sources:** [DL-25](open-issues-registry.md#dl-25)، Dataset و `config/kpi_dictionary.csv`.
+- **Closure Criteria:** Data Dictionary مصوب و آزمون همه Dropها ثبت شوند.
+
 ### P2
 
 #### DL-15 — Retention و Restore
@@ -485,7 +513,7 @@
 
 | Question ID | Existing ADR/DL | Known Answer | Remaining Open Point | Action |
 |---|---|---|---|---|
-| Q01 | ADR-01؛ DL-01؛ DL-16 | PostgreSQL موتور محصول است. | Evaluator و Equivalence | ادغام در DL-01/DL-16 |
+| Q01 | ADR-01؛ DL-01؛ DL-16 | SQLite موتور محصول و مرجع است. | شواهد اجرای صحیح | ادغام در DL-01/DL-16 |
 | Q02 | DL-16 | Runtime برابر ۱۵ دقیقه است. | CPU، RAM و Network | ادغام در DL-16 |
 | Q03 | DL-14؛ DL-16 | سقف ۵ دلار برای کل روز است. | Provider، قیمت و Key | ادغام در DL-14/DL-16 |
 | Q04 | DL-16 | Docker یک‌فرمانی لازم است. | Command، Mount و output | ادغام در DL-16 |
