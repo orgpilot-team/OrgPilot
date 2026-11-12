@@ -1,0 +1,944 @@
+{
+  "configuration" : { },
+  "description" : "Proposed MVP architecture for team review; not a description of an implemented system.",
+  "documentation" : { },
+  "id" : 1,
+  "lastModifiedDate" : "2026-11-12T11:02:44Z",
+  "model" : {
+    "people" : [ {
+      "description" : "Executive, unit manager or team lead with access limited to their authorized scope.",
+      "id" : "1",
+      "name" : "Manager",
+      "properties" : {
+        "structurizr.dsl.identifier" : "manager"
+      },
+      "relationships" : [ {
+        "description" : "Submits questions, configuration and decisions",
+        "destinationId" : "5",
+        "id" : "23",
+        "sourceId" : "1",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Enters requests, questions and decisions",
+        "destinationId" : "6",
+        "id" : "30",
+        "sourceId" : "1",
+        "tags" : "Relationship",
+        "technology" : "HTTPS"
+      } ],
+      "tags" : "Element,Person"
+    }, {
+      "description" : "Runs data replays and reviews outputs and execution receipts.",
+      "id" : "2",
+      "name" : "Evaluator / Replay Operator",
+      "properties" : {
+        "structurizr.dsl.identifier" : "evaluator"
+      },
+      "relationships" : [ {
+        "description" : "Runs replays and evaluations",
+        "destinationId" : "5",
+        "id" : "25",
+        "sourceId" : "2",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Requests replay execution and retrieves results",
+        "destinationId" : "7",
+        "id" : "32",
+        "sourceId" : "2",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Requests replay and output access",
+        "destinationId" : "8",
+        "id" : "47",
+        "sourceId" : "2",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Person"
+    } ],
+    "softwareSystems" : [ {
+      "description" : "Nightly drops, configuration and replayed manager inputs.",
+      "documentation" : { },
+      "id" : "3",
+      "name" : "Dataset and manager input files",
+      "properties" : {
+        "structurizr.dsl.identifier" : "inputs"
+      },
+      "relationships" : [ {
+        "description" : "Supplies nightly files, configuration and replay inputs",
+        "destinationId" : "5",
+        "id" : "27",
+        "sourceId" : "3",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Supplies nightly files, configuration and replay inputs",
+        "destinationId" : "14",
+        "id" : "39",
+        "sourceId" : "3",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Supplies drops and replay inputs",
+        "destinationId" : "16",
+        "id" : "62",
+        "sourceId" : "3",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Software System,External"
+    }, {
+      "description" : "Produces structured drafts from permitted evidence and has no direct data or action access.",
+      "documentation" : { },
+      "id" : "4",
+      "name" : "LLM provider",
+      "properties" : {
+        "structurizr.dsl.identifier" : "llm"
+      },
+      "relationships" : [ {
+        "description" : "Returns a structured analysis draft",
+        "destinationId" : "5",
+        "id" : "29",
+        "sourceId" : "4",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Returns a draft interactive answer",
+        "destinationId" : "7",
+        "id" : "43",
+        "sourceId" : "4",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Returns a structured report draft",
+        "destinationId" : "14",
+        "id" : "45",
+        "sourceId" : "4",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Software System,External"
+    }, {
+      "containers" : [ {
+        "description" : "Persian RTL dashboard, assistant and workflow control room.",
+        "documentation" : { },
+        "id" : "6",
+        "name" : "Web UI",
+        "properties" : {
+          "structurizr.dsl.identifier" : "web"
+        },
+        "relationships" : [ {
+          "description" : "Displays dashboards, reports and answers",
+          "destinationId" : "1",
+          "id" : "31",
+          "sourceId" : "6",
+          "tags" : "Relationship",
+          "technology" : "HTTPS"
+        }, {
+          "description" : "Sends authenticated requests",
+          "destinationId" : "7",
+          "id" : "34",
+          "sourceId" : "6",
+          "tags" : "Relationship",
+          "technology" : "HTTPS / JSON"
+        }, {
+          "description" : "Sends authenticated requests",
+          "destinationId" : "8",
+          "id" : "46",
+          "sourceId" : "6",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Web application"
+      }, {
+        "components" : [ {
+          "description" : "Builds AuthContext from verified identity and handles manager requests.",
+          "documentation" : { },
+          "id" : "8",
+          "name" : "Authentication and request handling",
+          "properties" : {
+            "structurizr.dsl.identifier" : "auth"
+          },
+          "relationships" : [ {
+            "description" : "Passes authenticated manager inputs",
+            "destinationId" : "9",
+            "id" : "48",
+            "sourceId" : "8",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Passes questions and verified context",
+            "destinationId" : "11",
+            "id" : "49",
+            "sourceId" : "8",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Passes authenticated decision commands",
+            "destinationId" : "12",
+            "id" : "50",
+            "sourceId" : "8",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Passes authenticated report requests",
+            "destinationId" : "13",
+            "id" : "51",
+            "sourceId" : "8",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Validates and records questions, uploads, configuration candidates and organization changes.",
+          "documentation" : { },
+          "id" : "9",
+          "name" : "Manager input handling",
+          "properties" : {
+            "structurizr.dsl.identifier" : "managerInput"
+          },
+          "relationships" : [ {
+            "description" : "Records validated input and configuration candidates",
+            "destinationId" : "21",
+            "id" : "52",
+            "sourceId" : "9",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Stores original uploads",
+            "destinationId" : "22",
+            "id" : "53",
+            "sourceId" : "9",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Queues accepted inputs for processing",
+            "destinationId" : "14",
+            "id" : "54",
+            "sourceId" : "9",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Applies row, column and purpose restrictions; runs bounded read-only queries and records receipts.",
+          "documentation" : { },
+          "id" : "10",
+          "name" : "Policy and query gateway",
+          "properties" : {
+            "structurizr.dsl.identifier" : "apiPolicy"
+          },
+          "relationships" : [ {
+            "description" : "Executes bounded read-only queries against permitted data",
+            "destinationId" : "21",
+            "id" : "58",
+            "sourceId" : "10",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Coordinates permitted evidence, clarification and structured answers; cannot grant access or invent numbers.",
+          "documentation" : { },
+          "id" : "11",
+          "name" : "Interactive agent flow",
+          "properties" : {
+            "structurizr.dsl.identifier" : "interactive"
+          },
+          "relationships" : [ {
+            "description" : "Requests scoped evidence and query receipts",
+            "destinationId" : "10",
+            "id" : "55",
+            "sourceId" : "11",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Requests a structured response using permitted evidence",
+            "destinationId" : "4",
+            "id" : "56",
+            "sourceId" : "11",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Persists scoped conversation checkpoints",
+            "destinationId" : "21",
+            "id" : "57",
+            "sourceId" : "11",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "LangGraph"
+        }, {
+          "description" : "Records authenticated decisions, drafts actions and tracks subsequent effects; does not execute organizational actions.",
+          "documentation" : { },
+          "id" : "12",
+          "name" : "Decision tracker",
+          "properties" : {
+            "structurizr.dsl.identifier" : "decisions"
+          },
+          "relationships" : [ {
+            "description" : "Records decisions and follow-up observations",
+            "destinationId" : "21",
+            "id" : "59",
+            "sourceId" : "12",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Serves published manager reports and dashboard data within authorized scope.",
+          "documentation" : { },
+          "id" : "13",
+          "name" : "Report access",
+          "properties" : {
+            "structurizr.dsl.identifier" : "reportAccess"
+          },
+          "relationships" : [ {
+            "description" : "Checks scope and retrieves authorized data",
+            "destinationId" : "10",
+            "id" : "60",
+            "sourceId" : "13",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Reads published reports",
+            "destinationId" : "21",
+            "id" : "61",
+            "sourceId" : "13",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        } ],
+        "description" : "Authenticates managers, accepts inputs and serves authorized data and reports.",
+        "documentation" : { },
+        "id" : "7",
+        "name" : "Backend API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "api"
+        },
+        "relationships" : [ {
+          "description" : "Returns outputs and execution receipts",
+          "destinationId" : "2",
+          "id" : "33",
+          "sourceId" : "7",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Returns results scoped to the user's permissions",
+          "destinationId" : "6",
+          "id" : "35",
+          "sourceId" : "7",
+          "tags" : "Relationship",
+          "technology" : "HTTPS / JSON"
+        }, {
+          "description" : "Reads and writes application data and checkpoints",
+          "destinationId" : "21",
+          "id" : "36",
+          "sourceId" : "7",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Stores and retrieves manager uploads",
+          "destinationId" : "22",
+          "id" : "37",
+          "sourceId" : "7",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Requests background processing through persisted work",
+          "destinationId" : "14",
+          "id" : "38",
+          "sourceId" : "7",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Sends permitted evidence and a structured request for an interactive answer",
+          "destinationId" : "4",
+          "id" : "42",
+          "sourceId" : "7",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Modular monolith API process"
+      }, {
+        "components" : [ {
+          "description" : "Controls simulated time, runs batches and records timing, cost and run receipts.",
+          "documentation" : { },
+          "id" : "15",
+          "name" : "Replay and evaluation",
+          "properties" : {
+            "structurizr.dsl.identifier" : "replay"
+          },
+          "relationships" : [ {
+            "description" : "Starts intake for the simulated cutoff",
+            "destinationId" : "16",
+            "id" : "63",
+            "sourceId" : "15",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Records run state, timing and evaluation receipts",
+            "destinationId" : "21",
+            "id" : "64",
+            "sourceId" : "15",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Archives original files, checks manifest and schema, records issues and accepts valid batches.",
+          "documentation" : { },
+          "id" : "16",
+          "name" : "Source intake",
+          "properties" : {
+            "structurizr.dsl.identifier" : "intake"
+          },
+          "relationships" : [ {
+            "description" : "Archives original files and hashes",
+            "destinationId" : "22",
+            "id" : "65",
+            "sourceId" : "16",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Records batch receipts and data issues",
+            "destinationId" : "21",
+            "id" : "66",
+            "sourceId" : "16",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Supplies accepted batches",
+            "destinationId" : "17",
+            "id" : "67",
+            "sourceId" : "16",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Builds snapshots and computes reference KPIs, workflow observations, signals and rules without an LLM.",
+          "documentation" : { },
+          "id" : "17",
+          "name" : "Deterministic core",
+          "properties" : {
+            "structurizr.dsl.identifier" : "core"
+          },
+          "relationships" : [ {
+            "description" : "Reads configuration and writes snapshots, KPIs, workflows and signals",
+            "destinationId" : "21",
+            "id" : "68",
+            "sourceId" : "17",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Requests evidence for a manager scope",
+            "destinationId" : "18",
+            "id" : "69",
+            "sourceId" : "17",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Retrieves role-scoped evidence with row, column and purpose controls and query receipts.",
+          "documentation" : { },
+          "id" : "18",
+          "name" : "Policy and evidence gateway",
+          "properties" : {
+            "structurizr.dsl.identifier" : "workerPolicy"
+          },
+          "relationships" : [ {
+            "description" : "Retrieves scoped evidence and records query receipts",
+            "destinationId" : "21",
+            "id" : "70",
+            "sourceId" : "18",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Supplies permitted evidence and references",
+            "destinationId" : "19",
+            "id" : "71",
+            "sourceId" : "18",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Coordinates bounded analysis and structured report drafts from permitted evidence.",
+          "documentation" : { },
+          "id" : "19",
+          "name" : "Manager report agent flow",
+          "properties" : {
+            "structurizr.dsl.identifier" : "reportAgent"
+          },
+          "relationships" : [ {
+            "description" : "Requests structured draft from permitted evidence",
+            "destinationId" : "4",
+            "id" : "72",
+            "sourceId" : "19",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Persists scoped graph checkpoints",
+            "destinationId" : "21",
+            "id" : "73",
+            "sourceId" : "19",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Submits report candidate and evidence references",
+            "destinationId" : "20",
+            "id" : "74",
+            "sourceId" : "19",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "LangGraph"
+        }, {
+          "description" : "Checks schema, numbers, evidence, scope and recurrence; atomically publishes valid manager packages or records failure.",
+          "documentation" : { },
+          "id" : "20",
+          "name" : "Output validator and publisher",
+          "properties" : {
+            "structurizr.dsl.identifier" : "validator"
+          },
+          "relationships" : [ {
+            "description" : "Checks deterministic values and rules",
+            "destinationId" : "17",
+            "id" : "75",
+            "sourceId" : "20",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Checks scope and evidence",
+            "destinationId" : "18",
+            "id" : "76",
+            "sourceId" : "20",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Publishes valid text and JSON atomically or records failure",
+            "destinationId" : "21",
+            "id" : "77",
+            "sourceId" : "20",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        } ],
+        "description" : "Processes nightly and replay data, generates reports and evaluates runs.",
+        "documentation" : { },
+        "id" : "14",
+        "name" : "Background Worker",
+        "properties" : {
+          "structurizr.dsl.identifier" : "worker"
+        },
+        "relationships" : [ {
+          "description" : "Reads and writes snapshots, observations, reports and receipts",
+          "destinationId" : "21",
+          "id" : "40",
+          "sourceId" : "14",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Stores original files and retrieves protected inputs",
+          "destinationId" : "22",
+          "id" : "41",
+          "sourceId" : "14",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Sends permitted evidence and an analysis request for a report",
+          "destinationId" : "4",
+          "id" : "44",
+          "sourceId" : "14",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Modular monolith worker process"
+      }, {
+        "description" : "Versioned source records, snapshots, configuration, observations, decisions, reports and checkpoints.",
+        "documentation" : { },
+        "id" : "21",
+        "name" : "SQLite",
+        "properties" : {
+          "structurizr.dsl.identifier" : "db"
+        },
+        "tags" : "Element,Container,Database",
+        "technology" : "SQLite"
+      }, {
+        "description" : "Original source and upload files with hashes and references; not a second database.",
+        "documentation" : { },
+        "id" : "22",
+        "name" : "Protected file archive",
+        "properties" : {
+          "structurizr.dsl.identifier" : "archive"
+        },
+        "tags" : "Element,Container,Database",
+        "technology" : "File storage"
+      } ],
+      "description" : "Managerial assistant for deterministic measurement, permitted evidence analysis, reporting and decision tracking.",
+      "documentation" : { },
+      "id" : "5",
+      "name" : "Didrah",
+      "properties" : {
+        "structurizr.dsl.identifier" : "didrah"
+      },
+      "relationships" : [ {
+        "description" : "Provides scoped reports, dashboards and answers",
+        "destinationId" : "1",
+        "id" : "24",
+        "sourceId" : "5",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Provides outputs and execution receipts",
+        "destinationId" : "2",
+        "id" : "26",
+        "sourceId" : "5",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Sends a structured analysis request with permitted evidence",
+        "destinationId" : "4",
+        "id" : "28",
+        "sourceId" : "5",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Software System"
+    } ]
+  },
+  "name" : "Didrah - To-Be C4",
+  "properties" : {
+    "structurizr.inspection.error" : "54",
+    "structurizr.dsl" : "d29ya3NwYWNlICJEaWRyYWggLSBUby1CZSBDNCIgIlByb3Bvc2VkIE1WUCBhcmNoaXRlY3R1cmUgZm9yIHRlYW0gcmV2aWV3OyBub3QgYSBkZXNjcmlwdGlvbiBvZiBhbiBpbXBsZW1lbnRlZCBzeXN0ZW0uIiB7CiAgICBtb2RlbCB7CiAgICAgICAgbWFuYWdlciA9IHBlcnNvbiAiTWFuYWdlciIgIkV4ZWN1dGl2ZSwgdW5pdCBtYW5hZ2VyIG9yIHRlYW0gbGVhZCB3aXRoIGFjY2VzcyBsaW1pdGVkIHRvIHRoZWlyIGF1dGhvcml6ZWQgc2NvcGUuIgogICAgICAgIGV2YWx1YXRvciA9IHBlcnNvbiAiRXZhbHVhdG9yIC8gUmVwbGF5IE9wZXJhdG9yIiAiUnVucyBkYXRhIHJlcGxheXMgYW5kIHJldmlld3Mgb3V0cHV0cyBhbmQgZXhlY3V0aW9uIHJlY2VpcHRzLiIKICAgICAgICBpbnB1dHMgPSBzb2Z0d2FyZVN5c3RlbSAiRGF0YXNldCBhbmQgbWFuYWdlciBpbnB1dCBmaWxlcyIgIk5pZ2h0bHkgZHJvcHMsIGNvbmZpZ3VyYXRpb24gYW5kIHJlcGxheWVkIG1hbmFnZXIgaW5wdXRzLiIgIkV4dGVybmFsIgogICAgICAgIGxsbSA9IHNvZnR3YXJlU3lzdGVtICJMTE0gcHJvdmlkZXIiICJQcm9kdWNlcyBzdHJ1Y3R1cmVkIGRyYWZ0cyBmcm9tIHBlcm1pdHRlZCBldmlkZW5jZSBhbmQgaGFzIG5vIGRpcmVjdCBkYXRhIG9yIGFjdGlvbiBhY2Nlc3MuIiAiRXh0ZXJuYWwiCgogICAgICAgIGRpZHJhaCA9IHNvZnR3YXJlU3lzdGVtICJEaWRyYWgiICJNYW5hZ2VyaWFsIGFzc2lzdGFudCBmb3IgZGV0ZXJtaW5pc3RpYyBtZWFzdXJlbWVudCwgcGVybWl0dGVkIGV2aWRlbmNlIGFuYWx5c2lzLCByZXBvcnRpbmcgYW5kIGRlY2lzaW9uIHRyYWNraW5nLiIgewogICAgICAgICAgICB3ZWIgPSBjb250YWluZXIgIldlYiBVSSIgIlBlcnNpYW4gUlRMIGRhc2hib2FyZCwgYXNzaXN0YW50IGFuZCB3b3JrZmxvdyBjb250cm9sIHJvb20uIiAiV2ViIGFwcGxpY2F0aW9uIgogICAgICAgICAgICBhcGkgPSBjb250YWluZXIgIkJhY2tlbmQgQVBJIiAiQXV0aGVudGljYXRlcyBtYW5hZ2VycywgYWNjZXB0cyBpbnB1dHMgYW5kIHNlcnZlcyBhdXRob3JpemVkIGRhdGEgYW5kIHJlcG9ydHMuIiAiTW9kdWxhciBtb25vbGl0aCBBUEkgcHJvY2VzcyIgewogICAgICAgICAgICAgICAgYXV0aCA9IGNvbXBvbmVudCAiQXV0aGVudGljYXRpb24gYW5kIHJlcXVlc3QgaGFuZGxpbmciICJCdWlsZHMgQXV0aENvbnRleHQgZnJvbSB2ZXJpZmllZCBpZGVudGl0eSBhbmQgaGFuZGxlcyBtYW5hZ2VyIHJlcXVlc3RzLiIKICAgICAgICAgICAgICAgIG1hbmFnZXJJbnB1dCA9IGNvbXBvbmVudCAiTWFuYWdlciBpbnB1dCBoYW5kbGluZyIgIlZhbGlkYXRlcyBhbmQgcmVjb3JkcyBxdWVzdGlvbnMsIHVwbG9hZHMsIGNvbmZpZ3VyYXRpb24gY2FuZGlkYXRlcyBhbmQgb3JnYW5pemF0aW9uIGNoYW5nZXMuIgogICAgICAgICAgICAgICAgYXBpUG9saWN5ID0gY29tcG9uZW50ICJQb2xpY3kgYW5kIHF1ZXJ5IGdhdGV3YXkiICJBcHBsaWVzIHJvdywgY29sdW1uIGFuZCBwdXJwb3NlIHJlc3RyaWN0aW9uczsgcnVucyBib3VuZGVkIHJlYWQtb25seSBxdWVyaWVzIGFuZCByZWNvcmRzIHJlY2VpcHRzLiIKICAgICAgICAgICAgICAgIGludGVyYWN0aXZlID0gY29tcG9uZW50ICJJbnRlcmFjdGl2ZSBhZ2VudCBmbG93IiAiQ29vcmRpbmF0ZXMgcGVybWl0dGVkIGV2aWRlbmNlLCBjbGFyaWZpY2F0aW9uIGFuZCBzdHJ1Y3R1cmVkIGFuc3dlcnM7IGNhbm5vdCBncmFudCBhY2Nlc3Mgb3IgaW52ZW50IG51bWJlcnMuIiAiTGFuZ0dyYXBoIgogICAgICAgICAgICAgICAgZGVjaXNpb25zID0gY29tcG9uZW50ICJEZWNpc2lvbiB0cmFja2VyIiAiUmVjb3JkcyBhdXRoZW50aWNhdGVkIGRlY2lzaW9ucywgZHJhZnRzIGFjdGlvbnMgYW5kIHRyYWNrcyBzdWJzZXF1ZW50IGVmZmVjdHM7IGRvZXMgbm90IGV4ZWN1dGUgb3JnYW5pemF0aW9uYWwgYWN0aW9ucy4iCiAgICAgICAgICAgICAgICByZXBvcnRBY2Nlc3MgPSBjb21wb25lbnQgIlJlcG9ydCBhY2Nlc3MiICJTZXJ2ZXMgcHVibGlzaGVkIG1hbmFnZXIgcmVwb3J0cyBhbmQgZGFzaGJvYXJkIGRhdGEgd2l0aGluIGF1dGhvcml6ZWQgc2NvcGUuIgogICAgICAgICAgICB9CiAgICAgICAgICAgIHdvcmtlciA9IGNvbnRhaW5lciAiQmFja2dyb3VuZCBXb3JrZXIiICJQcm9jZXNzZXMgbmlnaHRseSBhbmQgcmVwbGF5IGRhdGEsIGdlbmVyYXRlcyByZXBvcnRzIGFuZCBldmFsdWF0ZXMgcnVucy4iICJNb2R1bGFyIG1vbm9saXRoIHdvcmtlciBwcm9jZXNzIiB7CiAgICAgICAgICAgICAgICByZXBsYXkgPSBjb21wb25lbnQgIlJlcGxheSBhbmQgZXZhbHVhdGlvbiIgIkNvbnRyb2xzIHNpbXVsYXRlZCB0aW1lLCBydW5zIGJhdGNoZXMgYW5kIHJlY29yZHMgdGltaW5nLCBjb3N0IGFuZCBydW4gcmVjZWlwdHMuIgogICAgICAgICAgICAgICAgaW50YWtlID0gY29tcG9uZW50ICJTb3VyY2UgaW50YWtlIiAiQXJjaGl2ZXMgb3JpZ2luYWwgZmlsZXMsIGNoZWNrcyBtYW5pZmVzdCBhbmQgc2NoZW1hLCByZWNvcmRzIGlzc3VlcyBhbmQgYWNjZXB0cyB2YWxpZCBiYXRjaGVzLiIKICAgICAgICAgICAgICAgIGNvcmUgPSBjb21wb25lbnQgIkRldGVybWluaXN0aWMgY29yZSIgIkJ1aWxkcyBzbmFwc2hvdHMgYW5kIGNvbXB1dGVzIHJlZmVyZW5jZSBLUElzLCB3b3JrZmxvdyBvYnNlcnZhdGlvbnMsIHNpZ25hbHMgYW5kIHJ1bGVzIHdpdGhvdXQgYW4gTExNLiIKICAgICAgICAgICAgICAgIHdvcmtlclBvbGljeSA9IGNvbXBvbmVudCAiUG9saWN5IGFuZCBldmlkZW5jZSBnYXRld2F5IiAiUmV0cmlldmVzIHJvbGUtc2NvcGVkIGV2aWRlbmNlIHdpdGggcm93LCBjb2x1bW4gYW5kIHB1cnBvc2UgY29udHJvbHMgYW5kIHF1ZXJ5IHJlY2VpcHRzLiIKICAgICAgICAgICAgICAgIHJlcG9ydEFnZW50ID0gY29tcG9uZW50ICJNYW5hZ2VyIHJlcG9ydCBhZ2VudCBmbG93IiAiQ29vcmRpbmF0ZXMgYm91bmRlZCBhbmFseXNpcyBhbmQgc3RydWN0dXJlZCByZXBvcnQgZHJhZnRzIGZyb20gcGVybWl0dGVkIGV2aWRlbmNlLiIgIkxhbmdHcmFwaCIKICAgICAgICAgICAgICAgIHZhbGlkYXRvciA9IGNvbXBvbmVudCAiT3V0cHV0IHZhbGlkYXRvciBhbmQgcHVibGlzaGVyIiAiQ2hlY2tzIHNjaGVtYSwgbnVtYmVycywgZXZpZGVuY2UsIHNjb3BlIGFuZCByZWN1cnJlbmNlOyBhdG9taWNhbGx5IHB1Ymxpc2hlcyB2YWxpZCBtYW5hZ2VyIHBhY2thZ2VzIG9yIHJlY29yZHMgZmFpbHVyZS4iCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZGIgPSBjb250YWluZXIgIlNRTGl0ZSIgIlZlcnNpb25lZCBzb3VyY2UgcmVjb3Jkcywgc25hcHNob3RzLCBjb25maWd1cmF0aW9uLCBvYnNlcnZhdGlvbnMsIGRlY2lzaW9ucywgcmVwb3J0cyBhbmQgY2hlY2twb2ludHMuIiAiU1FMaXRlIiAiRGF0YWJhc2UiCiAgICAgICAgICAgIGFyY2hpdmUgPSBjb250YWluZXIgIlByb3RlY3RlZCBmaWxlIGFyY2hpdmUiICJPcmlnaW5hbCBzb3VyY2UgYW5kIHVwbG9hZCBmaWxlcyB3aXRoIGhhc2hlcyBhbmQgcmVmZXJlbmNlczsgbm90IGEgc2Vjb25kIGRhdGFiYXNlLiIgIkZpbGUgc3RvcmFnZSIgIkRhdGFiYXNlIgogICAgICAgIH0KCiAgICAgICAgbWFuYWdlciAtPiBkaWRyYWggIlN1Ym1pdHMgcXVlc3Rpb25zLCBjb25maWd1cmF0aW9uIGFuZCBkZWNpc2lvbnMiCiAgICAgICAgZGlkcmFoIC0+IG1hbmFnZXIgIlByb3ZpZGVzIHNjb3BlZCByZXBvcnRzLCBkYXNoYm9hcmRzIGFuZCBhbnN3ZXJzIgogICAgICAgIGV2YWx1YXRvciAtPiBkaWRyYWggIlJ1bnMgcmVwbGF5cyBhbmQgZXZhbHVhdGlvbnMiCiAgICAgICAgZGlkcmFoIC0+IGV2YWx1YXRvciAiUHJvdmlkZXMgb3V0cHV0cyBhbmQgZXhlY3V0aW9uIHJlY2VpcHRzIgogICAgICAgIGlucHV0cyAtPiBkaWRyYWggIlN1cHBsaWVzIG5pZ2h0bHkgZmlsZXMsIGNvbmZpZ3VyYXRpb24gYW5kIHJlcGxheSBpbnB1dHMiCiAgICAgICAgZGlkcmFoIC0+IGxsbSAiU2VuZHMgYSBzdHJ1Y3R1cmVkIGFuYWx5c2lzIHJlcXVlc3Qgd2l0aCBwZXJtaXR0ZWQgZXZpZGVuY2UiCiAgICAgICAgbGxtIC0+IGRpZHJhaCAiUmV0dXJucyBhIHN0cnVjdHVyZWQgYW5hbHlzaXMgZHJhZnQiCgogICAgICAgIG1hbmFnZXIgLT4gd2ViICJFbnRlcnMgcmVxdWVzdHMsIHF1ZXN0aW9ucyBhbmQgZGVjaXNpb25zIiAiSFRUUFMiCiAgICAgICAgd2ViIC0+IG1hbmFnZXIgIkRpc3BsYXlzIGRhc2hib2FyZHMsIHJlcG9ydHMgYW5kIGFuc3dlcnMiICJIVFRQUyIKICAgICAgICBldmFsdWF0b3IgLT4gYXBpICJSZXF1ZXN0cyByZXBsYXkgZXhlY3V0aW9uIGFuZCByZXRyaWV2ZXMgcmVzdWx0cyIKICAgICAgICBhcGkgLT4gZXZhbHVhdG9yICJSZXR1cm5zIG91dHB1dHMgYW5kIGV4ZWN1dGlvbiByZWNlaXB0cyIKICAgICAgICB3ZWIgLT4gYXBpICJTZW5kcyBhdXRoZW50aWNhdGVkIHJlcXVlc3RzIiAiSFRUUFMgLyBKU09OIgogICAgICAgIGFwaSAtPiB3ZWIgIlJldHVybnMgcmVzdWx0cyBzY29wZWQgdG8gdGhlIHVzZXIncyBwZXJtaXNzaW9ucyIgIkhUVFBTIC8gSlNPTiIKICAgICAgICBhcGkgLT4gZGIgIlJlYWRzIGFuZCB3cml0ZXMgYXBwbGljYXRpb24gZGF0YSBhbmQgY2hlY2twb2ludHMiCiAgICAgICAgYXBpIC0+IGFyY2hpdmUgIlN0b3JlcyBhbmQgcmV0cmlldmVzIG1hbmFnZXIgdXBsb2FkcyIKICAgICAgICBhcGkgLT4gd29ya2VyICJSZXF1ZXN0cyBiYWNrZ3JvdW5kIHByb2Nlc3NpbmcgdGhyb3VnaCBwZXJzaXN0ZWQgd29yayIKICAgICAgICBpbnB1dHMgLT4gd29ya2VyICJTdXBwbGllcyBuaWdodGx5IGZpbGVzLCBjb25maWd1cmF0aW9uIGFuZCByZXBsYXkgaW5wdXRzIgogICAgICAgIHdvcmtlciAtPiBkYiAiUmVhZHMgYW5kIHdyaXRlcyBzbmFwc2hvdHMsIG9ic2VydmF0aW9ucywgcmVwb3J0cyBhbmQgcmVjZWlwdHMiCiAgICAgICAgd29ya2VyIC0+IGFyY2hpdmUgIlN0b3JlcyBvcmlnaW5hbCBmaWxlcyBhbmQgcmV0cmlldmVzIHByb3RlY3RlZCBpbnB1dHMiCiAgICAgICAgYXBpIC0+IGxsbSAiU2VuZHMgcGVybWl0dGVkIGV2aWRlbmNlIGFuZCBhIHN0cnVjdHVyZWQgcmVxdWVzdCBmb3IgYW4gaW50ZXJhY3RpdmUgYW5zd2VyIgogICAgICAgIGxsbSAtPiBhcGkgIlJldHVybnMgYSBkcmFmdCBpbnRlcmFjdGl2ZSBhbnN3ZXIiCiAgICAgICAgd29ya2VyIC0+IGxsbSAiU2VuZHMgcGVybWl0dGVkIGV2aWRlbmNlIGFuZCBhbiBhbmFseXNpcyByZXF1ZXN0IGZvciBhIHJlcG9ydCIKICAgICAgICBsbG0gLT4gd29ya2VyICJSZXR1cm5zIGEgc3RydWN0dXJlZCByZXBvcnQgZHJhZnQiCgogICAgICAgIHdlYiAtPiBhdXRoICJTZW5kcyBhdXRoZW50aWNhdGVkIHJlcXVlc3RzIgogICAgICAgIGV2YWx1YXRvciAtPiBhdXRoICJSZXF1ZXN0cyByZXBsYXkgYW5kIG91dHB1dCBhY2Nlc3MiCiAgICAgICAgYXV0aCAtPiBtYW5hZ2VySW5wdXQgIlBhc3NlcyBhdXRoZW50aWNhdGVkIG1hbmFnZXIgaW5wdXRzIgogICAgICAgIGF1dGggLT4gaW50ZXJhY3RpdmUgIlBhc3NlcyBxdWVzdGlvbnMgYW5kIHZlcmlmaWVkIGNvbnRleHQiCiAgICAgICAgYXV0aCAtPiBkZWNpc2lvbnMgIlBhc3NlcyBhdXRoZW50aWNhdGVkIGRlY2lzaW9uIGNvbW1hbmRzIgogICAgICAgIGF1dGggLT4gcmVwb3J0QWNjZXNzICJQYXNzZXMgYXV0aGVudGljYXRlZCByZXBvcnQgcmVxdWVzdHMiCiAgICAgICAgbWFuYWdlcklucHV0IC0+IGRiICJSZWNvcmRzIHZhbGlkYXRlZCBpbnB1dCBhbmQgY29uZmlndXJhdGlvbiBjYW5kaWRhdGVzIgogICAgICAgIG1hbmFnZXJJbnB1dCAtPiBhcmNoaXZlICJTdG9yZXMgb3JpZ2luYWwgdXBsb2FkcyIKICAgICAgICBtYW5hZ2VySW5wdXQgLT4gd29ya2VyICJRdWV1ZXMgYWNjZXB0ZWQgaW5wdXRzIGZvciBwcm9jZXNzaW5nIgogICAgICAgIGludGVyYWN0aXZlIC0+IGFwaVBvbGljeSAiUmVxdWVzdHMgc2NvcGVkIGV2aWRlbmNlIGFuZCBxdWVyeSByZWNlaXB0cyIKICAgICAgICBpbnRlcmFjdGl2ZSAtPiBsbG0gIlJlcXVlc3RzIGEgc3RydWN0dXJlZCByZXNwb25zZSB1c2luZyBwZXJtaXR0ZWQgZXZpZGVuY2UiCiAgICAgICAgaW50ZXJhY3RpdmUgLT4gZGIgIlBlcnNpc3RzIHNjb3BlZCBjb252ZXJzYXRpb24gY2hlY2twb2ludHMiCiAgICAgICAgYXBpUG9saWN5IC0+IGRiICJFeGVjdXRlcyBib3VuZGVkIHJlYWQtb25seSBxdWVyaWVzIGFnYWluc3QgcGVybWl0dGVkIGRhdGEiCiAgICAgICAgZGVjaXNpb25zIC0+IGRiICJSZWNvcmRzIGRlY2lzaW9ucyBhbmQgZm9sbG93LXVwIG9ic2VydmF0aW9ucyIKICAgICAgICByZXBvcnRBY2Nlc3MgLT4gYXBpUG9saWN5ICJDaGVja3Mgc2NvcGUgYW5kIHJldHJpZXZlcyBhdXRob3JpemVkIGRhdGEiCiAgICAgICAgcmVwb3J0QWNjZXNzIC0+IGRiICJSZWFkcyBwdWJsaXNoZWQgcmVwb3J0cyIKCiAgICAgICAgaW5wdXRzIC0+IGludGFrZSAiU3VwcGxpZXMgZHJvcHMgYW5kIHJlcGxheSBpbnB1dHMiCiAgICAgICAgcmVwbGF5IC0+IGludGFrZSAiU3RhcnRzIGludGFrZSBmb3IgdGhlIHNpbXVsYXRlZCBjdXRvZmYiCiAgICAgICAgcmVwbGF5IC0+IGRiICJSZWNvcmRzIHJ1biBzdGF0ZSwgdGltaW5nIGFuZCBldmFsdWF0aW9uIHJlY2VpcHRzIgogICAgICAgIGludGFrZSAtPiBhcmNoaXZlICJBcmNoaXZlcyBvcmlnaW5hbCBmaWxlcyBhbmQgaGFzaGVzIgogICAgICAgIGludGFrZSAtPiBkYiAiUmVjb3JkcyBiYXRjaCByZWNlaXB0cyBhbmQgZGF0YSBpc3N1ZXMiCiAgICAgICAgaW50YWtlIC0+IGNvcmUgIlN1cHBsaWVzIGFjY2VwdGVkIGJhdGNoZXMiCiAgICAgICAgY29yZSAtPiBkYiAiUmVhZHMgY29uZmlndXJhdGlvbiBhbmQgd3JpdGVzIHNuYXBzaG90cywgS1BJcywgd29ya2Zsb3dzIGFuZCBzaWduYWxzIgogICAgICAgIGNvcmUgLT4gd29ya2VyUG9saWN5ICJSZXF1ZXN0cyBldmlkZW5jZSBmb3IgYSBtYW5hZ2VyIHNjb3BlIgogICAgICAgIHdvcmtlclBvbGljeSAtPiBkYiAiUmV0cmlldmVzIHNjb3BlZCBldmlkZW5jZSBhbmQgcmVjb3JkcyBxdWVyeSByZWNlaXB0cyIKICAgICAgICB3b3JrZXJQb2xpY3kgLT4gcmVwb3J0QWdlbnQgIlN1cHBsaWVzIHBlcm1pdHRlZCBldmlkZW5jZSBhbmQgcmVmZXJlbmNlcyIKICAgICAgICByZXBvcnRBZ2VudCAtPiBsbG0gIlJlcXVlc3RzIHN0cnVjdHVyZWQgZHJhZnQgZnJvbSBwZXJtaXR0ZWQgZXZpZGVuY2UiCiAgICAgICAgcmVwb3J0QWdlbnQgLT4gZGIgIlBlcnNpc3RzIHNjb3BlZCBncmFwaCBjaGVja3BvaW50cyIKICAgICAgICByZXBvcnRBZ2VudCAtPiB2YWxpZGF0b3IgIlN1Ym1pdHMgcmVwb3J0IGNhbmRpZGF0ZSBhbmQgZXZpZGVuY2UgcmVmZXJlbmNlcyIKICAgICAgICB2YWxpZGF0b3IgLT4gY29yZSAiQ2hlY2tzIGRldGVybWluaXN0aWMgdmFsdWVzIGFuZCBydWxlcyIKICAgICAgICB2YWxpZGF0b3IgLT4gd29ya2VyUG9saWN5ICJDaGVja3Mgc2NvcGUgYW5kIGV2aWRlbmNlIgogICAgICAgIHZhbGlkYXRvciAtPiBkYiAiUHVibGlzaGVzIHZhbGlkIHRleHQgYW5kIEpTT04gYXRvbWljYWxseSBvciByZWNvcmRzIGZhaWx1cmUiCiAgICB9CgogICAgdmlld3MgewogICAgICAgIHN5c3RlbUNvbnRleHQgZGlkcmFoICIxLVN5c3RlbUNvbnRleHQiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9MYXlvdXQgbHIKICAgICAgICAgICAgdGl0bGUgIkM0IExldmVsIDEgLSBTeXN0ZW0gQ29udGV4dCIKICAgICAgICAgICAgZGVzY3JpcHRpb24gItiv24zYr9ix2KfZhyDZiCDYp9ix2KrYqNin2Lcg2KLZhiDYqNinINqp2KfYsdio2LHYp9mG2Iwg2YHYp9uM2YTigIzZh9in24wg2YjYsdmI2K/bjCDZiCDYp9ix2KfYptmH4oCM2K/Zh9mG2K/ZhyDYqNuM2LHZiNmG24wg2YXYr9mEINiy2KjYp9mG24wuIgogICAgICAgIH0KICAgICAgICBjb250YWluZXIgZGlkcmFoICIyLUNvbnRhaW5lcnMiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9MYXlvdXQgbHIKICAgICAgICAgICAgdGl0bGUgIkM0IExldmVsIDIgLSBDb250YWluZXJzIgogICAgICAgICAgICBkZXNjcmlwdGlvbiAi2YXYsdiy2YfYp9uMINin2KzYsdin24zbjCDYtNin2YXZhCDYsdin2KjYtyDZiNio2Iwg2b7Ysdiv2KfYstmH4oCM2YfYp9uMIEFQSSDZiCBXb3JrZXLYjCDZvtin24zar9in2YcgU1FMaXRlINmIINii2LHYtNuM2Ygg2YHYp9uM2YQg2YXYrdin2YHYuNiq4oCM2LTYr9mHLiIKICAgICAgICB9CiAgICAgICAgY29tcG9uZW50IGFwaSAiMy1BUEktQ29tcG9uZW50cyIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b0xheW91dCBscgogICAgICAgICAgICB0aXRsZSAiQzQgTGV2ZWwgMyAtIEJhY2tlbmQgQVBJIENvbXBvbmVudHMiCiAgICAgICAgICAgIGRlc2NyaXB0aW9uICJMb2dpY2FsIG1vZHVsZXMgdXNlZCBieSB0aGUgQVBJIHByb2Nlc3MsIGluY2x1ZGluZyBhdXRob3JpemF0aW9uIGFuZCB0aGUgaW50ZXJhY3RpdmUgZmxvdy4iCiAgICAgICAgfQogICAgICAgIGNvbXBvbmVudCB3b3JrZXIgIjMtV29ya2VyLUNvbXBvbmVudHMiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9MYXlvdXQgbHIKICAgICAgICAgICAgdGl0bGUgIkM0IExldmVsIDMgLSBCYWNrZ3JvdW5kIFdvcmtlciBDb21wb25lbnRzIgogICAgICAgICAgICBkZXNjcmlwdGlvbiAiTG9naWNhbCBtb2R1bGVzIG9mIHRoZSBuaWdodGx5IGFuZCByZXBsYXkgcHJvY2Vzc2luZyBmbG93LiIKICAgICAgICB9CiAgICAgICAgc3R5bGVzIHsKICAgICAgICAgICAgZWxlbWVudCAiUGVyc29uIiB7CiAgICAgICAgICAgICAgICBzaGFwZSBwZXJzb24KICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzA4NDI3YgogICAgICAgICAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlNvZnR3YXJlIFN5c3RlbSIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjMTE2OGJkCiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiRXh0ZXJuYWwiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzc3Nzc3NwogICAgICAgICAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkNvbnRhaW5lciIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjNDM4ZGQ1CiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQ29tcG9uZW50IiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICM4NWJiZjAKICAgICAgICAgICAgICAgIGNvbG9yICMxMTExMTEKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJEYXRhYmFzZSIgewogICAgICAgICAgICAgICAgc2hhcGUgY3lsaW5kZXIKICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0KfQ==",
+    "structurizr.inspection.info" : "0",
+    "structurizr.inspection.ignore" : "0",
+    "structurizr.inspection.warning" : "0"
+  },
+  "views" : {
+    "componentViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "containerId" : "7",
+      "description" : "Logical modules used by the API process, including authorization and the interactive flow.",
+      "elements" : [ {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "10",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "12",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "13",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "14",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "21",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "22",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "key" : "3-API-Components",
+      "name" : "Component View: Didrah - Backend API",
+      "order" : 3,
+      "relationships" : [ {
+        "id" : "40"
+      }, {
+        "id" : "41"
+      }, {
+        "id" : "44"
+      }, {
+        "id" : "45"
+      }, {
+        "id" : "46"
+      }, {
+        "id" : "47"
+      }, {
+        "id" : "48"
+      }, {
+        "id" : "49"
+      }, {
+        "id" : "50"
+      }, {
+        "id" : "51"
+      }, {
+        "id" : "52"
+      }, {
+        "id" : "53"
+      }, {
+        "id" : "54"
+      }, {
+        "id" : "55"
+      }, {
+        "id" : "56"
+      }, {
+        "id" : "57"
+      }, {
+        "id" : "58"
+      }, {
+        "id" : "59"
+      }, {
+        "id" : "60"
+      }, {
+        "id" : "61"
+      } ],
+      "title" : "C4 Level 3 - Backend API Components"
+    }, {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "containerId" : "14",
+      "description" : "Logical modules of the nightly and replay processing flow.",
+      "elements" : [ {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "15",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "17",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "18",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "19",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "20",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "21",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "22",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "key" : "3-Worker-Components",
+      "name" : "Component View: Didrah - Background Worker",
+      "order" : 4,
+      "relationships" : [ {
+        "id" : "62"
+      }, {
+        "id" : "63"
+      }, {
+        "id" : "64"
+      }, {
+        "id" : "65"
+      }, {
+        "id" : "66"
+      }, {
+        "id" : "67"
+      }, {
+        "id" : "68"
+      }, {
+        "id" : "69"
+      }, {
+        "id" : "70"
+      }, {
+        "id" : "71"
+      }, {
+        "id" : "72"
+      }, {
+        "id" : "73"
+      }, {
+        "id" : "74"
+      }, {
+        "id" : "75"
+      }, {
+        "id" : "76"
+      }, {
+        "id" : "77"
+      } ],
+      "title" : "C4 Level 3 - Background Worker Components"
+    } ],
+    "configuration" : {
+      "styles" : {
+        "elements" : [ {
+          "background" : "#85bbf0",
+          "color" : "#111111",
+          "tag" : "Component"
+        }, {
+          "background" : "#438dd5",
+          "color" : "#ffffff",
+          "tag" : "Container"
+        }, {
+          "shape" : "Cylinder",
+          "tag" : "Database"
+        }, {
+          "background" : "#777777",
+          "color" : "#ffffff",
+          "tag" : "External"
+        }, {
+          "background" : "#08427b",
+          "color" : "#ffffff",
+          "shape" : "Person",
+          "tag" : "Person"
+        }, {
+          "background" : "#1168bd",
+          "color" : "#ffffff",
+          "tag" : "Software System"
+        } ]
+      },
+      "terminology" : { }
+    },
+    "containerViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "مرزهای اجرایی شامل رابط وب، پردازه‌های API و Worker، پایگاه SQLite و آرشیو فایل محافظت‌شده.",
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "14",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "21",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "22",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalSoftwareSystemBoundariesVisible" : false,
+      "key" : "2-Containers",
+      "name" : "Container View: Didrah",
+      "order" : 2,
+      "relationships" : [ {
+        "id" : "30"
+      }, {
+        "id" : "31"
+      }, {
+        "id" : "32"
+      }, {
+        "id" : "33"
+      }, {
+        "id" : "34"
+      }, {
+        "id" : "35"
+      }, {
+        "id" : "36"
+      }, {
+        "id" : "37"
+      }, {
+        "id" : "38"
+      }, {
+        "id" : "39"
+      }, {
+        "id" : "40"
+      }, {
+        "id" : "41"
+      }, {
+        "id" : "42"
+      }, {
+        "id" : "43"
+      }, {
+        "id" : "44"
+      }, {
+        "id" : "45"
+      } ],
+      "softwareSystemId" : "5",
+      "title" : "C4 Level 2 - Containers"
+    } ],
+    "systemContextViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "دیدراه و ارتباط آن با کاربران، فایل‌های ورودی و ارائه‌دهنده بیرونی مدل زبانی.",
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "enterpriseBoundaryVisible" : true,
+      "key" : "1-SystemContext",
+      "name" : "System Context View: Didrah",
+      "order" : 1,
+      "relationships" : [ {
+        "id" : "23"
+      }, {
+        "id" : "24"
+      }, {
+        "id" : "25"
+      }, {
+        "id" : "26"
+      }, {
+        "id" : "27"
+      }, {
+        "id" : "28"
+      }, {
+        "id" : "29"
+      } ],
+      "softwareSystemId" : "5",
+      "title" : "C4 Level 1 - System Context"
+    } ]
+  }
+}
