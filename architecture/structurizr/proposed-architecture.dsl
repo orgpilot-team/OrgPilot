@@ -94,7 +94,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         operator -> didrah "Monitors operations and recovery evidence"
         nightlySources -> didrah "Supplies read-only nightly deliveries"
         managerInputFeed -> didrah "Submits scripted manager inputs"
-        identityProvider -> didrah "Supplies trusted identity"
+        didrah -> identityProvider "Validates user identities with"
         didrah -> llmProvider "Requests bounded model completions"
         hiddenDataset -> didrah "Supplies hidden evaluation data"
 
@@ -108,7 +108,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         nightlySources -> worker "Supplies eligible CSV and JSON drops" "File delivery"
         hiddenDataset -> worker "Supplies hidden drops with the same contract" "File delivery"
         managerInputFeed -> backendApi "Submits scripted inputs" "HTTPS or input adapter"
-        identityProvider -> backendApi "Authenticates sessions" "OIDC or internal method; open"
+        backendApi -> identityProvider "Validates sessions and trusted identities" "OIDC or internal method; open"
         webApp -> backendApi "Requests reports, scoped queries, uploads, configuration changes, and decisions" "HTTPS/JSON"
         schedulerReplay -> worker "Dispatches deterministic run stages with a pinned clock" "PostgreSQL-backed jobs"
         schedulerReplay -> backendApi "Requests manager report and QA jobs" "Internal authenticated API"
@@ -235,18 +235,30 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
     views {
         // C4 core view: one software system and its directly connected people and software systems.
-        systemContext didrah SystemContext "C4 system context for DIDRAH and its directly connected people and software systems." {
+        systemContext didrah SystemContext "Business-facing C4 system context for DIDRAH." {
             title "System Context Diagram for DIDRAH"
-            include seniorManager unitManager teamSupervisor evaluator operator didrah nightlySources managerInputFeed identityProvider llmProvider hiddenDataset
-            autoLayout lr
+            include seniorManager unitManager teamSupervisor didrah nightlySources identityProvider llmProvider
+            autoLayout tb
             default
+        }
+
+        systemContext didrah EvaluationContext "Focused C4 system context for evaluation and operations." {
+            title "System Context Diagram for DIDRAH - Evaluation and Operations"
+            include evaluator operator didrah managerInputFeed hiddenDataset
+            autoLayout tb
         }
 
         // C4 core view: deployable applications and data stores inside the DIDRAH boundary.
         container didrah Containers "C4 container view of the DIDRAH applications, data stores, users, and external dependencies." {
             title "Container Diagram for DIDRAH"
-            include seniorManager unitManager teamSupervisor evaluator operator nightlySources managerInputFeed identityProvider llmProvider hiddenDataset webApp backendApi worker schedulerReplay postgres fileArchive
-            autoLayout lr
+            include seniorManager unitManager teamSupervisor nightlySources identityProvider llmProvider webApp backendApi worker schedulerReplay postgres fileArchive
+            autoLayout tb
+        }
+
+        container didrah EvaluationContainers "Focused C4 container view for replay, acceptance tests, and operations." {
+            title "Container Diagram for DIDRAH - Evaluation and Operations"
+            include evaluator operator managerInputFeed hiddenDataset backendApi worker schedulerReplay postgres fileArchive llmProvider
+            autoLayout tb
         }
 
         // C4 component view: one container per view.
@@ -256,21 +268,27 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             autoLayout lr
         }
 
-        component backendApi ApiComponents "C4 component view of authorization, query execution, evidence, bounded agent behavior, validation, and decisions." {
-            title "Component Diagram for DIDRAH Backend API"
-            include webApp worker identityProvider llmProvider postgres fileArchive identityBoundary authorizationService managerInputService configurationService queryGateway sqlGuard reportApi decisionTracker agentOrchestrator evidenceService modelGateway outputValidator auditService
+        component backendApi ApiComponents "Focused C4 component view of access, manager input, configuration, reports, decisions, and audit." {
+            title "Component Diagram for DIDRAH Backend API - Access and Decisions"
+            include webApp worker identityProvider postgres fileArchive identityBoundary authorizationService managerInputService configurationService reportApi decisionTracker auditService
             autoLayout lr
         }
 
-        component worker WorkerComponents "C4 component view of deterministic intake, analytics, signals, publication, and evaluation." {
-            title "Component Diagram for DIDRAH Background Worker"
-            include nightlySources hiddenDataset schedulerReplay backendApi postgres fileArchive ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportJobCoordinator publisher evaluationService
+        component worker WorkerComponents "Focused C4 component view of deterministic intake, snapshots, analytics, workflows, and signals." {
+            title "Component Diagram for DIDRAH Background Worker - Data Processing"
+            include nightlySources hiddenDataset schedulerReplay postgres fileArchive ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine
             autoLayout lr
         }
 
-        component backendApi SecurityAndQuery "Focused C4 component view of defense in depth for interactive queries and report reads." {
-            title "Component Diagram for DIDRAH Backend API - Query Security"
-            include webApp identityProvider identityBoundary authorizationService agentOrchestrator evidenceService queryGateway sqlGuard outputValidator auditService postgres
+        component worker WorkerReporting "Focused C4 component view of manager report jobs, independent publication, and acceptance evaluation." {
+            title "Component Diagram for DIDRAH Background Worker - Reporting"
+            include schedulerReplay backendApi postgres reportJobCoordinator publisher evaluationService
+            autoLayout lr
+        }
+
+        component backendApi SecurityAndQuery "Focused C4 component view of the bounded agent, evidence, query controls, model access, and output validation." {
+            title "Component Diagram for DIDRAH Backend API - Agent and Query"
+            include webApp worker identityProvider llmProvider postgres fileArchive identityBoundary authorizationService agentOrchestrator evidenceService queryGateway sqlGuard modelGateway outputValidator auditService reportApi
             autoLayout lr
         }
 
