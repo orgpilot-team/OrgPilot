@@ -1,0 +1,33 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - link [ref=e6] [cursor=pointer]:
+      - /url: /workspace/1
+      - img "Structurizr" [ref=e7]
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - button "Return to home page" [ref=e13] [cursor=pointer]
+        - button "Workspace summary" [ref=e15] [cursor=pointer]
+      - button "Diagram navigator" [ref=e18] [cursor=pointer]
+      - generic [ref=e20]:
+        - button "Diagram key [i]" [ref=e21] [cursor=pointer]
+        - button "Diagram tooltips on [t]" [ref=e23] [cursor=pointer]
+        - button "Filter" [ref=e25] [cursor=pointer]
+      - button "Export diagram and key/legend to PNG/SVG" [ref=e28] [cursor=pointer]
+  - generic [ref=e30]:
+    - generic [ref=e32]:
+      - link "Light" [ref=e33] [cursor=pointer]:
+        - /url: ""
+      - text: "|"
+      - link "Dark" [ref=e35] [cursor=pointer]:
+        - /url: ""
+      - text: "|"
+      - link "System" [ref=e37] [cursor=pointer]:
+        - /url: ""
+    - generic [ref=e40]:
+      - generic:
+        - paragraph [ref=e42]: Loading workspace...
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - button "Zoom out [-]" [ref=e45] [cursor=pointer]
+            - button "Zoom in [+]" [ref=e47] [cursor=pointer]
+          - button "Enter Full Screen [f]" [ref=e49] [cursor=pointer]

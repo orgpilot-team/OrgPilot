@@ -286,9 +286,15 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             autoLayout lr
         }
 
-        component backendApi SecurityAndQuery "Focused C4 component view of the bounded agent, evidence, query controls, model access, and output validation." {
-            title "Component Diagram for DIDRAH Backend API - Agent and Query"
-            include webApp worker identityProvider llmProvider postgres fileArchive identityBoundary authorizationService agentOrchestrator evidenceService queryGateway sqlGuard modelGateway outputValidator auditService reportApi
+        component backendApi SecurityAndQuery "Focused C4 component view of authentication, authorization, evidence access, and constrained query execution." {
+            title "Component Diagram for DIDRAH Backend API - Query Security"
+            include webApp identityProvider postgres identityBoundary authorizationService agentOrchestrator evidenceService queryGateway sqlGuard auditService
+            autoLayout lr
+        }
+
+        component backendApi AgentResponse "Focused C4 component view of evidence assembly, model access, response validation, and report delivery." {
+            title "Component Diagram for DIDRAH Backend API - Agent Response"
+            include webApp worker llmProvider postgres fileArchive authorizationService agentOrchestrator evidenceService queryGateway modelGateway outputValidator auditService reportApi
             autoLayout lr
         }
 
