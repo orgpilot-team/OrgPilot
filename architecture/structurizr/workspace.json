@@ -5,7 +5,7 @@
   "description" : "Proposed target system. This model does not claim that the application is implemented.",
   "documentation" : { },
   "id" : 1,
-  "lastModifiedDate" : "2026-11-11T18:00:52Z",
+  "lastModifiedDate" : "2026-11-12T19:56:51Z",
   "model" : {
     "customElements" : [ {
       "description" : "Shared, versioned targets, thresholds, priorities, escalation rules and focus.",
