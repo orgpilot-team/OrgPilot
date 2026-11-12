@@ -1,6 +1,6 @@
 workspace "Didrah - To-Be C4" "Proposed MVP architecture for team review; not a description of an implemented system." {
     model {
-        manager = person "Manager" "Executive, unit manager or team lead with access limited to their authorized scope."
+        manager = person "Manager" "Executive,unit manager or team lead with access limited to their authorized scope."
         evaluator = person "Evaluator / Replay Operator" "Runs data replays and reviews outputs and execution receipts."
         inputs = softwareSystem "Dataset and manager input files" "Nightly drops, configuration and replayed manager inputs." "External"
         llm = softwareSystem "LLM provider" "Produces structured drafts from permitted evidence and has no direct data or action access." "External"
@@ -90,25 +90,21 @@ workspace "Didrah - To-Be C4" "Proposed MVP architecture for team review; not a 
     views {
         systemContext didrah "1-SystemContext" {
             include *
-            autoLayout lr
             title "C4 Level 1 - System Context"
             description "دیدراه و ارتباط آن با کاربران، فایل‌های ورودی و ارائه‌دهنده بیرونی مدل زبانی."
         }
         container didrah "2-Containers" {
             include *
-            autoLayout lr
             title "C4 Level 2 - Containers"
             description "مرزهای اجرایی شامل رابط وب، پردازه‌های API و Worker، پایگاه SQLite و آرشیو فایل محافظت‌شده."
         }
         component api "3-API-Components" {
             include *
-            autoLayout lr
             title "C4 Level 3 - Backend API Components"
             description "Logical modules used by the API process, including authorization and the interactive flow."
         }
         component worker "3-Worker-Components" {
             include *
-            autoLayout lr
             title "C4 Level 3 - Background Worker Components"
             description "Logical modules of the nightly and replay processing flow."
         }
