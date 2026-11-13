@@ -1,0 +1,78 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.2 - Supporting Dynamic - Interactive Query"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    3["<div style='font-weight: bold'>Team Supervisor</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Reads team data and<br />authorized direct-member work<br />details for workload<br />management.</div>"]
+    style 3 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+
+    8("<div style='font-weight: bold'>Identity Provider</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Authenticates users and<br />supplies a trusted identity.<br />The product or internal<br />method is open.</div>")
+    style 8 fill:#64748b,stroke:#f59e0b,color:#ffffff
+    9("<div style='font-weight: bold'>Language Model Provider</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Returns bounded<br />language-model completions.<br />The provider and model are<br />open decisions.</div>")
+    style 9 fill:#a21caf,stroke:#f59e0b,color:#ffffff
+
+    subgraph 11 ["DIDRAH"]
+      style 11 fill:#ffffff,stroke:#152860,color:#152860
+
+      subgraph 16 ["Backend API"]
+        style 16 fill:#ffffff,stroke:#143697,color:#143697
+
+        17("<div style='font-weight: bold'>Identity Boundary</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Validates the session and<br />builds a trusted AuthContext.<br />It does not trust manager_id<br />from the client or model.</div>")
+        style 17 fill:#92400e,stroke:#662c09,color:#ffffff
+        18("<div style='font-weight: bold'>Authorization Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Builds row, column, role,<br />purpose, and policy scope<br />from trusted identity and<br />versioned grants.</div>")
+        style 18 fill:#92400e,stroke:#662c09,color:#ffffff
+        19("<div style='font-weight: bold'>Manager Input Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Receives questions,<br />priorities, configuration<br />changes, uploads, decisions,<br />and organization changes.</div>")
+        style 19 fill:#1d4ed8,stroke:#143697,color:#ffffff
+        21("<div style='font-weight: bold'>Query Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic query execution]</div><div style='font-size: 80%; margin-top:10px'>Executes registered tools and<br />constrained read-only SQL<br />with RLS, timeout, row<br />limits, and audit.</div>")
+        style 21 fill:#92400e,stroke:#662c09,color:#ffffff
+        22("<div style='font-weight: bold'>SQL AST Guard</div><div style='font-size: 70%; margin-top: 0px'>[Component: SQL parser and policy]</div><div style='font-size: 80%; margin-top:10px'>Allows one SELECT statement<br />over approved relations,<br />columns, joins, and<br />functions. It rejects DDL,<br />DML, SET, COPY, and unsafe<br />calls.</div>")
+        style 22 fill:#92400e,stroke:#662c09,color:#ffffff
+        23("<div style='font-weight: bold'>Report and Dashboard API</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Reads published reports,<br />dashboard data, workflow<br />observations, and explicit<br />failure states with a fresh<br />access check.</div>")
+        style 23 fill:#1d4ed8,stroke:#143697,color:#ffffff
+        25("<div style='font-weight: bold'>Bounded Agent Orchestrator</div><div style='font-size: 70%; margin-top: 0px'>[Component: LangGraph runtime]</div><div style='font-size: 80%; margin-top:10px'>Runs one bounded agent<br />through the report graph and<br />interactive graph. It cannot<br />create numbers, grants,<br />signals, or actions.</div>")
+        style 25 fill:#a21caf,stroke:#71137a,color:#ffffff
+        26("<div style='font-weight: bold'>Evidence Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Builds authorized and<br />traceable evidence bundles<br />before any model call.</div>")
+        style 26 fill:#92400e,stroke:#662c09,color:#ffffff
+        27("<div style='font-weight: bold'>Model Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Component: Provider-neutral model client]</div><div style='font-size: 80%; margin-top:10px'>Applies token, time, retry,<br />and daily cost limits. It is<br />the only path to the LLM<br />Provider.</div>")
+        style 27 fill:#a21caf,stroke:#71137a,color:#ffffff
+        28("<div style='font-weight: bold'>Output Validator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic validator]</div><div style='font-size: 80%; margin-top:10px'>Checks numbers, query<br />references, evidence, access,<br />JSON schema, tone,<br />recurrence, and report<br />content.</div>")
+        style 28 fill:#334155,stroke:#232d3b,color:#ffffff
+        29("<div style='font-weight: bold'>Audit Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Records query, model, access,<br />validation, publication,<br />cost, and failure evidence<br />with restricted visibility.</div>")
+        style 29 fill:#334155,stroke:#232d3b,color:#ffffff
+      end
+
+      12("<div style='font-weight: bold'>Web Application</div><div style='font-size: 70%; margin-top: 0px'>[Container: Web application; framework open]</div><div style='font-size: 80%; margin-top:10px'>Persian RTL web application.<br />It provides the three<br />required management<br />interfaces.</div>")
+      style 12 fill:#0369a1,stroke:#024970,color:#ffffff
+      44[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+      style 44 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+    end
+
+    3["<div style='font-weight: bold'>Team Supervisor</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Reads team data and<br />authorized direct-member work<br />details for workload<br />management.</div>"]
+    style 3 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+    8("<div style='font-weight: bold'>Identity Provider</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Authenticates users and<br />supplies a trusted identity.<br />The product or internal<br />method is open.</div>")
+    style 8 fill:#64748b,stroke:#f59e0b,color:#ffffff
+    9("<div style='font-weight: bold'>Language Model Provider</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Returns bounded<br />language-model completions.<br />The provider and model are<br />open decisions.</div>")
+    style 9 fill:#a21caf,stroke:#f59e0b,color:#ffffff
+    12("<div style='font-weight: bold'>Web Application</div><div style='font-size: 70%; margin-top: 0px'>[Container: Web application; framework open]</div><div style='font-size: 80%; margin-top:10px'>Persian RTL web application.<br />It provides the three<br />required management<br />interfaces.</div>")
+    style 12 fill:#0369a1,stroke:#024970,color:#ffffff
+    44[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+    style 44 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+
+    3-. "<div>1. Ask a scoped question</div><div style='font-size: 70%'>[HTTPS]</div>" .->12
+    12-. "<div>2. Submit session and<br />question</div><div style='font-size: 70%'></div>" .->17
+    17-. "<div>3. Validate identity</div><div style='font-size: 70%'></div>" .->8
+    17-. "<div>4. Build trusted AuthContext</div><div style='font-size: 70%'></div>" .->18
+    19-. "<div>5. Start interactive graph<br />with pinned Snapshot</div><div style='font-size: 70%'></div>" .->25
+    25-. "<div>6. Read permitted context</div><div style='font-size: 70%'></div>" .->26
+    25-. "<div>7. Propose candidate SQL and<br />QuerySpec</div><div style='font-size: 70%'></div>" .->21
+    21-. "<div>8. Parse and validate one<br />SELECT statement</div><div style='font-size: 70%'></div>" .->22
+    21-. "<div>9. Execute read-only SQL with<br />forced row-level security and<br />limits</div><div style='font-size: 70%'></div>" .->44
+    21-. "<div>10. Record actual SQL, scope,<br />Snapshot, and result hash</div><div style='font-size: 70%'></div>" .->29
+    25-. "<div>11. Draft answer from<br />executed results only</div><div style='font-size: 70%'></div>" .->27
+    27-. "<div>12. Request bounded<br />completion</div><div style='font-size: 70%'>[Model API]</div>" .->9
+    25-. "<div>13. Check numbers, evidence,<br />scope, and answer-quality<br />schema</div><div style='font-size: 70%'></div>" .->28
+    28-. "<div>14. Recheck referenced<br />numbers</div><div style='font-size: 70%'></div>" .->21
+    23-. "<div>15. Return checked Persian<br />answer, query identifier, and<br />permitted SQL</div><div style='font-size: 70%'></div>" .->12
+
+  end

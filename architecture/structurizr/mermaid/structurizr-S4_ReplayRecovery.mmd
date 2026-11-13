@@ -1,0 +1,35 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.4 - Supporting Dynamic - Replay and Recovery"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    subgraph 11 ["DIDRAH"]
+      style 11 fill:#ffffff,stroke:#152860,color:#152860
+
+      16("<div style='font-weight: bold'>Backend API</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application runtime; framework open]</div><div style='font-size: 80%; margin-top:10px'>Authenticates requests and<br />serves reports, queries,<br />manager inputs, and<br />decisions.</div>")
+      style 16 fill:#1d4ed8,stroke:#143697,color:#ffffff
+      30("<div style='font-weight: bold'>Background Worker</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application runtime; shared modular codebase]</div><div style='font-size: 80%; margin-top:10px'>Runs deterministic ingestion,<br />snapshots, KPI calculation,<br />workflow projection, signals,<br />report jobs, and evaluation.</div>")
+      style 30 fill:#0f766e,stroke:#0a524d,color:#ffffff
+      43("<div style='font-weight: bold'>Scheduler and Replay Runner</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application command/process]</div><div style='font-size: 80%; margin-top:10px'>Owns the simulated clock, run<br />lease, replay range,<br />evaluation profile, and<br />resumable job dispatch.</div>")
+      style 43 fill:#0e7490,stroke:#095164,color:#ffffff
+      44[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+      style 44 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+    end
+
+    4["<div style='font-weight: bold'>Evaluator</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Runs Docker, replay,<br />hidden-data checks, and<br />acceptance tests.</div>"]
+    style 4 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+    10("<div style='font-weight: bold'>Hidden Evaluation Dataset</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Uses the same data contract<br />with different events and<br />dates.</div>")
+    style 10 fill:#475569,stroke:#313b49,color:#ffffff
+
+    4-. "<div>1. Start mornings 62-91 with<br />an EvaluationProfile</div><div style='font-size: 70%'>[CLI or API]</div>" .->43
+    43-. "<div>2. Claim replay namespace,<br />run lease, and pinned<br />versions</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->44
+    10-. "<div>3. Supply hidden drops<br />through normal adapters</div><div style='font-size: 70%'>[File delivery]</div>" .->30
+    43-. "<div>4. Run the same intake, KPI,<br />workflow, and signal stages</div><div style='font-size: 70%'>[PostgreSQL-backed jobs]</div>" .->30
+    30-. "<div>5. Record stage outcomes and<br />checkpoints</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->44
+    43-. "<div>6. Run reports and scripted<br />questions</div><div style='font-size: 70%'>[Internal authenticated API]</div>" .->16
+    16-. "<div>7. Record packages, answer<br />quality, query, model, and<br />validation evidence</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->44
+    43-. "<div>8. Resume failed stages with<br />the same idempotency keys</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->44
+    4-. "<div>9. Read acceptance report and<br />explicit partial failures</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->16
+
+  end

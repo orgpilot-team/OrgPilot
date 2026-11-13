@@ -1,0 +1,61 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.5 - Supporting Dynamic - Independent Publication"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    9("<div style='font-weight: bold'>Language Model Provider</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Returns bounded<br />language-model completions.<br />The provider and model are<br />open decisions.</div>")
+    style 9 fill:#a21caf,stroke:#f59e0b,color:#ffffff
+
+    subgraph 11 ["DIDRAH"]
+      style 11 fill:#ffffff,stroke:#152860,color:#152860
+
+      subgraph 16 ["Backend API"]
+        style 16 fill:#ffffff,stroke:#143697,color:#143697
+
+        18("<div style='font-weight: bold'>Authorization Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Builds row, column, role,<br />purpose, and policy scope<br />from trusted identity and<br />versioned grants.</div>")
+        style 18 fill:#92400e,stroke:#662c09,color:#ffffff
+        21("<div style='font-weight: bold'>Query Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic query execution]</div><div style='font-size: 80%; margin-top:10px'>Executes registered tools and<br />constrained read-only SQL<br />with RLS, timeout, row<br />limits, and audit.</div>")
+        style 21 fill:#92400e,stroke:#662c09,color:#ffffff
+        23("<div style='font-weight: bold'>Report and Dashboard API</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Reads published reports,<br />dashboard data, workflow<br />observations, and explicit<br />failure states with a fresh<br />access check.</div>")
+        style 23 fill:#1d4ed8,stroke:#143697,color:#ffffff
+        25("<div style='font-weight: bold'>Bounded Agent Orchestrator</div><div style='font-size: 70%; margin-top: 0px'>[Component: LangGraph runtime]</div><div style='font-size: 80%; margin-top:10px'>Runs one bounded agent<br />through the report graph and<br />interactive graph. It cannot<br />create numbers, grants,<br />signals, or actions.</div>")
+        style 25 fill:#a21caf,stroke:#71137a,color:#ffffff
+        27("<div style='font-weight: bold'>Model Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Component: Provider-neutral model client]</div><div style='font-size: 80%; margin-top:10px'>Applies token, time, retry,<br />and daily cost limits. It is<br />the only path to the LLM<br />Provider.</div>")
+        style 27 fill:#a21caf,stroke:#71137a,color:#ffffff
+        28("<div style='font-weight: bold'>Output Validator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic validator]</div><div style='font-size: 80%; margin-top:10px'>Checks numbers, query<br />references, evidence, access,<br />JSON schema, tone,<br />recurrence, and report<br />content.</div>")
+        style 28 fill:#334155,stroke:#232d3b,color:#ffffff
+        29("<div style='font-weight: bold'>Audit Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Records query, model, access,<br />validation, publication,<br />cost, and failure evidence<br />with restricted visibility.</div>")
+        style 29 fill:#334155,stroke:#232d3b,color:#ffffff
+      end
+
+      12("<div style='font-weight: bold'>Web Application</div><div style='font-size: 70%; margin-top: 0px'>[Container: Web application; framework open]</div><div style='font-size: 80%; margin-top:10px'>Persian RTL web application.<br />It provides the three<br />required management<br />interfaces.</div>")
+      style 12 fill:#0369a1,stroke:#024970,color:#ffffff
+      30("<div style='font-weight: bold'>Background Worker</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application runtime; shared modular codebase]</div><div style='font-size: 80%; margin-top:10px'>Runs deterministic ingestion,<br />snapshots, KPI calculation,<br />workflow projection, signals,<br />report jobs, and evaluation.</div>")
+      style 30 fill:#0f766e,stroke:#0a524d,color:#ffffff
+      44[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+      style 44 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+    end
+
+    9("<div style='font-weight: bold'>Language Model Provider</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Returns bounded<br />language-model completions.<br />The provider and model are<br />open decisions.</div>")
+    style 9 fill:#a21caf,stroke:#f59e0b,color:#ffffff
+    12("<div style='font-weight: bold'>Web Application</div><div style='font-size: 70%; margin-top: 0px'>[Container: Web application; framework open]</div><div style='font-size: 80%; margin-top:10px'>Persian RTL web application.<br />It provides the three<br />required management<br />interfaces.</div>")
+    style 12 fill:#0369a1,stroke:#024970,color:#ffffff
+    30("<div style='font-weight: bold'>Background Worker</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application runtime; shared modular codebase]</div><div style='font-size: 80%; margin-top:10px'>Runs deterministic ingestion,<br />snapshots, KPI calculation,<br />workflow projection, signals,<br />report jobs, and evaluation.</div>")
+    style 30 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    44[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+    style 44 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+
+    30-. "<div>1. Start manager A and<br />manager B report graphs</div><div style='font-size: 70%'>[Internal authenticated call]</div>" .->25
+    25-. "<div>2. Request manager A language<br />draft</div><div style='font-size: 70%'></div>" .->27
+    27-. "<div>3. Call provider within retry<br />and cost limits</div><div style='font-size: 70%'>[Model API]</div>" .->9
+    27-. "<div>4. Return final failure for<br />manager A</div><div style='font-size: 70%'></div>" .->25
+    29-. "<div>5. Record A failure without a<br />fabricated draft</div><div style='font-size: 70%'></div>" .->44
+    30-. "<div>6. Keep daily run incomplete<br />and continue manager B</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->44
+    25-. "<div>7. Submit manager B draft</div><div style='font-size: 70%'></div>" .->28
+    28-. "<div>8. Verify every number and<br />query reference</div><div style='font-size: 70%'></div>" .->21
+    28-. "<div>9. Verify B recipient scope</div><div style='font-size: 70%'></div>" .->18
+    30-. "<div>10. Atomically publish B text<br />and JSON if valid</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->44
+    23-. "<div>11. Return A failure state or<br />B valid package by scope</div><div style='font-size: 70%'></div>" .->12
+
+  end

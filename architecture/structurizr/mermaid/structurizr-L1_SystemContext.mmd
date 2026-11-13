@@ -1,0 +1,29 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["01 - C4 Level 1 - System Context for DIDRAH"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    1["<div style='font-weight: bold'>Senior Manager</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Reads organization health,<br />cross-unit workflows,<br />escalations, and pending<br />decisions.</div>"]
+    style 1 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+    11("<div style='font-weight: bold'>DIDRAH</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>A bounded agentic management<br />assistant. It computes<br />deterministic metrics and<br />supports human decisions.</div>")
+    style 11 fill:#1e3a8a,stroke:#152860,color:#ffffff
+    2["<div style='font-weight: bold'>Unit Manager</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Reads authorized unit and<br />team aggregates. Records<br />decisions and follow-up<br />actions.</div>"]
+    style 2 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+    3["<div style='font-weight: bold'>Team Supervisor</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Reads team data and<br />authorized direct-member work<br />details for workload<br />management.</div>"]
+    style 3 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+    6("<div style='font-weight: bold'>Simulated Nightly Sources</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Supplies CSV and JSON drops,<br />manifests, organization data,<br />configuration, and history.</div>")
+    style 6 fill:#475569,stroke:#313b49,color:#ffffff
+    8("<div style='font-weight: bold'>Identity Provider</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Authenticates users and<br />supplies a trusted identity.<br />The product or internal<br />method is open.</div>")
+    style 8 fill:#64748b,stroke:#f59e0b,color:#ffffff
+    9("<div style='font-weight: bold'>Language Model Provider</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Returns bounded<br />language-model completions.<br />The provider and model are<br />open decisions.</div>")
+    style 9 fill:#a21caf,stroke:#f59e0b,color:#ffffff
+
+    1-. "<div>Reads executive reports and<br />records human decisions</div><div style='font-size: 70%'></div>" .->11
+    2-. "<div>Reads unit reports and<br />records human decisions</div><div style='font-size: 70%'></div>" .->11
+    3-. "<div>Reads team reports and<br />records human decisions</div><div style='font-size: 70%'></div>" .->11
+    6-. "<div>Supplies read-only nightly<br />deliveries</div><div style='font-size: 70%'></div>" .->11
+    11-. "<div>Validates user identities<br />with</div><div style='font-size: 70%'></div>" .->8
+    11-. "<div>Requests bounded model<br />completions</div><div style='font-size: 70%'></div>" .->9
+
+  end

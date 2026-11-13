@@ -1,0 +1,65 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.6 - Supporting Deployment - Evaluation Environment"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    subgraph 158 ["Reference Host"]
+      style 158 fill:#ffffff,stroke:#313b49,color:#ffffff
+
+      subgraph 159 ["Web Container"]
+        style 159 fill:#ffffff,stroke:#313b49,color:#ffffff
+
+        160("<div style='font-weight: bold'>Web Application</div><div style='font-size: 70%; margin-top: 0px'>[Container: Web application; framework open]</div><div style='font-size: 80%; margin-top:10px'>Persian RTL web application.<br />It provides the three<br />required management<br />interfaces.</div>")
+        style 160 fill:#0369a1,stroke:#024970,color:#ffffff
+      end
+
+      subgraph 161 ["API Container"]
+        style 161 fill:#ffffff,stroke:#313b49,color:#ffffff
+
+        162("<div style='font-weight: bold'>Backend API</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application runtime; framework open]</div><div style='font-size: 80%; margin-top:10px'>Authenticates requests and<br />serves reports, queries,<br />manager inputs, and<br />decisions.</div>")
+        style 162 fill:#1d4ed8,stroke:#143697,color:#ffffff
+      end
+
+      subgraph 164 ["Worker Container"]
+        style 164 fill:#ffffff,stroke:#313b49,color:#ffffff
+
+        165("<div style='font-weight: bold'>Background Worker</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application runtime; shared modular codebase]</div><div style='font-size: 80%; margin-top:10px'>Runs deterministic ingestion,<br />snapshots, KPI calculation,<br />workflow projection, signals,<br />report jobs, and evaluation.</div>")
+        style 165 fill:#0f766e,stroke:#0a524d,color:#ffffff
+      end
+
+      subgraph 168 ["Scheduler Container or Command"]
+        style 168 fill:#ffffff,stroke:#313b49,color:#ffffff
+
+        169("<div style='font-weight: bold'>Scheduler and Replay Runner</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application command/process]</div><div style='font-size: 80%; margin-top:10px'>Owns the simulated clock, run<br />lease, replay range,<br />evaluation profile, and<br />resumable job dispatch.</div>")
+        style 169 fill:#0e7490,stroke:#095164,color:#ffffff
+      end
+
+      subgraph 172 ["PostgreSQL Container"]
+        style 172 fill:#ffffff,stroke:#3f177f,color:#ffffff
+
+        173[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+        style 173 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+      end
+
+      subgraph 177 ["Archive Volume"]
+        style 177 fill:#ffffff,stroke:#4c1c97,color:#ffffff
+
+        178["<div style='font-weight: bold'>Protected File Archive</div><div style='font-size: 70%; margin-top: 0px'>[Container: Protected volume or object storage]</div><div style='font-size: 80%; margin-top:10px'>Stores original source and<br />upload bytes with hashes and<br />manifests. It is not a query<br />database.</div>"]
+        style 178 fill:#6d28d9,stroke:#4c1c97,color:#ffffff
+      end
+
+    end
+
+    160-. "<div>Requests reports, scoped<br />queries, uploads,<br />configuration changes, and<br />decisions</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->162
+    165-. "<div>Requests bounded report<br />graphs and records job<br />outcomes</div><div style='font-size: 70%'>[Internal authenticated API]</div>" .->162
+    162-. "<div>Queues approved structured<br />uploads and configuration<br />validation</div><div style='font-size: 70%'>[PostgreSQL-backed jobs]</div>" .->165
+    169-. "<div>Requests manager report and<br />QA jobs</div><div style='font-size: 70%'>[Internal authenticated API]</div>" .->162
+    169-. "<div>Dispatches deterministic run<br />stages with a pinned clock</div><div style='font-size: 70%'>[PostgreSQL-backed jobs]</div>" .->165
+    162-. "<div>Reads and writes scoped<br />application state</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->173
+    165-. "<div>Reads snapshots and writes<br />deterministic results</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->173
+    169-. "<div>Claims run leases and records<br />run state</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->173
+    162-. "<div>Archives uploads and reads<br />approved fragments</div><div style='font-size: 70%'>[Restricted file API]</div>" .->178
+    165-. "<div>Archives and reads approved<br />source bytes</div><div style='font-size: 70%'>[Restricted file API]</div>" .->178
+
+  end

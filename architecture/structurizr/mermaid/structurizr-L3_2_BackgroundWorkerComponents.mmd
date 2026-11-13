@@ -1,0 +1,85 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["03.2 - C4 Level 3 - Background Worker Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    10("<div style='font-weight: bold'>Hidden Evaluation Dataset</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Uses the same data contract<br />with different events and<br />dates.</div>")
+    style 10 fill:#475569,stroke:#313b49,color:#ffffff
+    6("<div style='font-weight: bold'>Simulated Nightly Sources</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Supplies CSV and JSON drops,<br />manifests, organization data,<br />configuration, and history.</div>")
+    style 6 fill:#475569,stroke:#313b49,color:#ffffff
+
+    subgraph 11 ["DIDRAH"]
+      style 11 fill:#ffffff,stroke:#152860,color:#152860
+
+      subgraph 30 ["Background Worker"]
+        style 30 fill:#ffffff,stroke:#0a524d,color:#0a524d
+
+        31("<div style='font-weight: bold'>Ingestion Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Checks manifests, hashes,<br />idempotency keys, source<br />status, and atomic batch<br />commits.</div>")
+        style 31 fill:#334155,stroke:#232d3b,color:#ffffff
+        32("<div style='font-weight: bold'>Source Adapters</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic adapters]</div><div style='font-size: 80%; margin-top:10px'>Parse versioned source<br />schemas and preserve the<br />source bytes and headers.</div>")
+        style 32 fill:#334155,stroke:#232d3b,color:#ffffff
+        33("<div style='font-weight: bold'>Data Quality Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Records missing sources, late<br />arrivals, duplicates,<br />corrections, schema changes,<br />and quarantine results.</div>")
+        style 33 fill:#334155,stroke:#232d3b,color:#ffffff
+        34("<div style='font-weight: bold'>Snapshot Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Pins committed data,<br />organization, access policy,<br />and configuration versions<br />for a run.</div>")
+        style 34 fill:#334155,stroke:#232d3b,color:#ffffff
+        35("<div style='font-weight: bold'>Projection Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Builds reproducible facts and<br />process projections from<br />committed source events.</div>")
+        style 35 fill:#334155,stroke:#232d3b,color:#ffffff
+        36("<div style='font-weight: bold'>Semantic Registry</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic registry]</div><div style='font-size: 80%; margin-top:10px'>Versions KPI definitions,<br />PostgreSQL SQL, units,<br />precision, targets,<br />ownership, and dependencies.</div>")
+        style 36 fill:#166534,stroke:#0f4624,color:#ffffff
+        37("<div style='font-weight: bold'>KPI Calculator</div><div style='font-size: 70%; margin-top: 0px'>[Component: PostgreSQL SQL]</div><div style='font-size: 80%; margin-top:10px'>Executes the 55 approved<br />PostgreSQL KPI queries and<br />records QueryRun and lineage.</div>")
+        style 37 fill:#166534,stroke:#0f4624,color:#ffffff
+        38("<div style='font-weight: bold'>Workflow Engine</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic process analysis]</div><div style='font-size: 80%; margin-top:10px'>Reconstructs three workflows<br />and calculates stage timing,<br />SLA, backlog, and<br />bottlenecks.</div>")
+        style 38 fill:#166534,stroke:#0f4624,color:#ffffff
+        39("<div style='font-weight: bold'>Signal Engine</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic rules]</div><div style='font-size: 80%; margin-top:10px'>Applies R1-R8, ownership,<br />grouping, ranking,<br />suppression, and escalation<br />without LLM.</div>")
+        style 39 fill:#166534,stroke:#0f4624,color:#ffffff
+        40("<div style='font-weight: bold'>Report Job Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic orchestration]</div><div style='font-size: 80%; margin-top:10px'>Creates one job per active<br />manager and requests a<br />bounded report graph with<br />pinned context.</div>")
+        style 40 fill:#334155,stroke:#232d3b,color:#ffffff
+        41("<div style='font-weight: bold'>Publisher</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Atomically publishes valid<br />text and JSON per manager. It<br />records independent failures<br />and daily coverage.</div>")
+        style 41 fill:#334155,stroke:#232d3b,color:#ffffff
+        42("<div style='font-weight: bold'>Evaluation Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic test harness]</div><div style='font-size: 80%; margin-top:10px'>Checks coverage, KPI parity,<br />detection, leakage, time,<br />cost, replay, and output<br />contracts.</div>")
+        style 42 fill:#475569,stroke:#313b49,color:#ffffff
+      end
+
+      16("<div style='font-weight: bold'>Backend API</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application runtime; framework open]</div><div style='font-size: 80%; margin-top:10px'>Authenticates requests and<br />serves reports, queries,<br />manager inputs, and<br />decisions.</div>")
+      style 16 fill:#1d4ed8,stroke:#143697,color:#ffffff
+      43("<div style='font-weight: bold'>Scheduler and Replay Runner</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application command/process]</div><div style='font-size: 80%; margin-top:10px'>Owns the simulated clock, run<br />lease, replay range,<br />evaluation profile, and<br />resumable job dispatch.</div>")
+      style 43 fill:#0e7490,stroke:#095164,color:#ffffff
+      44[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+      style 44 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+      45["<div style='font-weight: bold'>Protected File Archive</div><div style='font-size: 70%; margin-top: 0px'>[Container: Protected volume or object storage]</div><div style='font-size: 80%; margin-top:10px'>Stores original source and<br />upload bytes with hashes and<br />manifests. It is not a query<br />database.</div>"]
+      style 45 fill:#6d28d9,stroke:#4c1c97,color:#ffffff
+    end
+
+    43-. "<div>Starts idempotent intake for<br />the selected cutoff</div><div style='font-size: 70%'></div>" .->31
+    31-. "<div>Reads expected files and<br />manifests</div><div style='font-size: 70%'></div>" .->6
+    31-. "<div>Reads hidden files through<br />the same adapters</div><div style='font-size: 70%'></div>" .->10
+    31-. "<div>Parses each source contract</div><div style='font-size: 70%'></div>" .->32
+    32-. "<div>Preserves original bytes,<br />headers, and hashes</div><div style='font-size: 70%'></div>" .->45
+    32-. "<div>Submits parsed and rejected<br />rows</div><div style='font-size: 70%'></div>" .->33
+    33-. "<div>Writes accepted records,<br />quarantine, and DataIssues</div><div style='font-size: 70%'></div>" .->44
+    43-. "<div>Requests a pinned snapshot</div><div style='font-size: 70%'></div>" .->34
+    34-. "<div>Pins committed batches, org,<br />policy, and configuration<br />versions</div><div style='font-size: 70%'></div>" .->44
+    34-. "<div>Requests reproducible facts<br />and process projections</div><div style='font-size: 70%'></div>" .->35
+    35-. "<div>Reads events and writes facts<br />and projections</div><div style='font-size: 70%'></div>" .->44
+    43-. "<div>Requests all approved KPI<br />definitions</div><div style='font-size: 70%'></div>" .->37
+    37-. "<div>Reads approved PostgreSQL SQL<br />and metadata</div><div style='font-size: 70%'></div>" .->36
+    36-. "<div>Reads versioned KPI<br />definitions and dependencies</div><div style='font-size: 70%'></div>" .->44
+    37-. "<div>Executes KPI SQL and writes<br />observations, QueryRun, and<br />lineage</div><div style='font-size: 70%'></div>" .->44
+    43-. "<div>Requests WF1-WF3 projection<br />for the snapshot</div><div style='font-size: 70%'></div>" .->38
+    38-. "<div>Reads events and writes case,<br />stage, SLA, and bottleneck<br />observations</div><div style='font-size: 70%'></div>" .->44
+    43-. "<div>Requests signal detection and<br />ranking</div><div style='font-size: 70%'></div>" .->39
+    39-. "<div>Reads KPI and history; writes<br />episodes, ownership,<br />suppression, and escalation</div><div style='font-size: 70%'></div>" .->44
+    43-. "<div>Creates one job per active<br />manager</div><div style='font-size: 70%'></div>" .->40
+    40-. "<div>Requests one bounded report<br />graph per manager</div><div style='font-size: 70%'></div>" .->16
+    40-. "<div>Writes job lease, attempt,<br />outcome, and daily coverage</div><div style='font-size: 70%'></div>" .->44
+    41-. "<div>Atomically commits text,<br />JSON, publication receipt, or<br />explicit failure</div><div style='font-size: 70%'></div>" .->44
+    41-. "<div>Reports package and export<br />outcome</div><div style='font-size: 70%'></div>" .->42
+    42-. "<div>Reads run evidence and writes<br />acceptance results</div><div style='font-size: 70%'></div>" .->44
+    42-. "<div>Returns complete or partial<br />run status</div><div style='font-size: 70%'></div>" .->43
+    43-. "<div>Requests manager report and<br />QA jobs</div><div style='font-size: 70%'>[Internal authenticated API]</div>" .->16
+    43-. "<div>Claims run leases and records<br />run state</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->44
+    16-. "<div>Reads and writes scoped<br />application state</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->44
+    16-. "<div>Archives uploads and reads<br />approved fragments</div><div style='font-size: 70%'>[Restricted file API]</div>" .->45
+
+  end

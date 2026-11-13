@@ -257,13 +257,13 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         component backendApi L3_1_BackendApiComponents "Complete C4 component view of Backend API access control, manager operations, secure queries, agent orchestration, validation, reports, decisions, and audit." {
             title "03.1 - C4 Level 3 - Backend API Components"
             include webApp worker managerInputFeed identityProvider llmProvider postgres fileArchive identityBoundary authorizationService managerInputService configurationService queryGateway sqlGuard reportApi decisionTracker agentOrchestrator evidenceService modelGateway outputValidator auditService
-            autoLayout lr
+            
         }
 
         component worker L3_2_BackgroundWorkerComponents "Complete C4 component view of Background Worker intake, data quality, snapshots, deterministic analytics, report jobs, publication, and evaluation." {
             title "03.2 - C4 Level 3 - Background Worker Components"
             include nightlySources hiddenDataset schedulerReplay backendApi postgres fileArchive ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportJobCoordinator publisher evaluationService
-            autoLayout lr
+            
         }
 
         // C4 supporting views: numbered runtime interactions for complex or recurring behavior.
