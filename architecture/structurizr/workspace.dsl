@@ -41,20 +41,31 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 workflowUi = component "Workflow Control Room UI" "Shows WF1-WF3, stage SLA, bottlenecks, escalations, and pending decisions. Senior Manager only." "Web UI" "Web,ExecutiveOnly"
             }
 
-            backendApi = container "Backend API" "Authenticates requests and serves reports, queries, manager inputs, and decisions." "Application runtime; framework open" "API" {
-                identityBoundary = component "Identity Boundary" "Validates the session and builds a trusted AuthContext. It does not trust manager_id from the client or model." "Deterministic module" "Security"
-                authorizationService = component "Authorization Service" "Builds row, column, role, purpose, and policy scope from trusted identity and versioned grants." "Deterministic module" "Security"
-                managerInputService = component "Manager Input Service" "Receives questions, priorities, configuration changes, uploads, decisions, and organization changes." "Deterministic module" "API"
-                configurationService = component "Configuration Service" "Versions goals, targets, thresholds, escalation rules, KPI candidates, organization, and access grants." "Deterministic module" "Governance"
-                queryGateway = component "Query Gateway" "Executes registered tools and constrained read-only SQL with RLS, timeout, row limits, and audit." "Deterministic query execution" "Security,Query"
-                sqlGuard = component "SQL AST Guard" "Allows one SELECT statement over approved relations, columns, joins, and functions. It rejects DDL, DML, SET, COPY, and unsafe calls." "SQL parser and policy" "Security,Query"
-                reportApi = component "Report and Dashboard API" "Reads published reports, dashboard data, workflow observations, and explicit failure states with a fresh access check." "Deterministic module" "API"
-                decisionTracker = component "Decision and Follow-Up" "Records human decisions, delegation, closure, deadlines, action drafts, and later observations. It executes no action." "Deterministic module" "Decision"
-                agentOrchestrator = component "Bounded Agent Orchestrator" "Runs one bounded agent through the report graph and interactive graph. It cannot create numbers, grants, signals, or actions." "LangGraph runtime" "AI"
-                evidenceService = component "Evidence Service" "Builds authorized and traceable evidence bundles before any model call." "Deterministic module" "Security,Analysis"
-                modelGateway = component "Model Gateway" "Applies token, time, retry, and daily cost limits. It is the only path to the LLM Provider." "Provider-neutral model client" "AI"
-                outputValidator = component "Output Validator" "Checks numbers, query references, evidence, access, JSON schema, tone, recurrence, and report content." "Deterministic validator" "Governance"
-                auditService = component "Audit Service" "Records query, model, access, validation, publication, cost, and failure evidence with restricted visibility." "Deterministic module" "Governance"
+            backendApi = container "Backend API" "Authenticates requests and routes each request through bounded analysis, validation, and delivery." "Application runtime; framework open" "API" {
+                group "01 Access" {
+                    identityBoundary = component "Identity Boundary" "Validates the session and creates a trusted identity context." "Deterministic module" "Security"
+                    authorizationService = component "Authorization Service" "Builds the permitted row, column, role, purpose, and policy scope." "Deterministic module" "Security"
+                }
+
+                group "02 Request Routing" {
+                    managerInputService = component "Manager Request Router" "Routes report reads, questions, uploads, configuration changes, and decisions." "Deterministic module" "API"
+                    configurationService = component "Configuration Service" "Versions and validates configuration candidates before activation." "Deterministic module" "Governance"
+                    decisionTracker = component "Decision and Follow-Up" "Records human decisions and follow-up events. It executes no action." "Deterministic module" "Decision"
+                }
+
+                group "03 Bounded Analysis" {
+                    agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report or interactive analysis graph." "LangGraph runtime" "AI"
+                    evidenceService = component "Evidence Service" "Builds an authorized and traceable evidence bundle." "Deterministic module" "Evidence"
+                    queryGateway = component "Query Gateway" "Runs registered tools and scoped read-only SQL with limits and audit." "Deterministic query execution" "Query"
+                    sqlGuard = component "SQL AST Guard" "Allows one approved SELECT statement and rejects unsafe SQL." "SQL parser and policy" "Security"
+                    modelGateway = component "Model Gateway" "Applies token, time, retry, and cost limits to every model call." "Provider-neutral model client" "AI"
+                }
+
+                group "04 Validate and Deliver" {
+                    outputValidator = component "Output Validator" "Checks numbers, evidence, scope, schema, tone, and report rules." "Deterministic validator" "Governance"
+                    reportApi = component "Report and Dashboard API" "Delivers valid reports, dashboard data, answers, or explicit failures." "Deterministic module" "API"
+                    auditService = component "Audit Service" "Records query, model, validation, cost, and failure evidence." "Deterministic module" "Governance"
+                }
             }
 
             worker = container "Background Worker" "Runs deterministic ingestion, snapshots, KPI calculation, workflow projection, signals, report jobs, and evaluation." "Application runtime; shared modular codebase" "Worker" {
@@ -107,14 +118,16 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         operator -> backendApi "Reads authorized operational status" "HTTPS"
         nightlySources -> worker "Supplies eligible CSV and JSON drops" "File delivery"
         hiddenDataset -> worker "Supplies hidden drops with the same contract" "File delivery"
-        managerInputFeed -> backendApi "Submits scripted inputs" "HTTPS or input adapter"
+        managerInputFeed -> schedulerReplay "Supplies scripted manager inputs and replay scenarios" "Input adapter"
         backendApi -> identityProvider "Validates sessions and trusted identities" "OIDC or internal method; open"
         webApp -> backendApi "Requests reports, scoped queries, uploads, configuration changes, and decisions" "HTTPS/JSON"
         schedulerReplay -> worker "Dispatches deterministic run stages with a pinned clock" "PostgreSQL-backed jobs"
         schedulerReplay -> backendApi "Requests manager report and QA jobs" "Internal authenticated API"
         schedulerReplay -> postgres "Claims run leases and records run state" "TLS/PostgreSQL"
         worker -> backendApi "Requests bounded report graphs and records job outcomes" "Internal authenticated API"
-        worker -> agentOrchestrator "Starts one bounded report graph for each manager job" "Internal authenticated call"
+        worker -> agentOrchestrator "Starts a bounded report graph" "Internal authenticated call" {
+            tags "PrimaryFlow"
+        }
         backendApi -> worker "Queues approved structured uploads and configuration validation" "PostgreSQL-backed jobs"
         backendApi -> postgres "Reads and writes scoped application state" "TLS/PostgreSQL"
         worker -> postgres "Reads snapshots and writes deterministic results" "TLS/PostgreSQL"
@@ -134,51 +147,143 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         dashboardUi -> backendApi "Retrieves authorized metrics, trends, and drill-down results" "HTTPS/JSON"
         workflowUi -> backendApi "Retrieves executive workflow, bottleneck, and escalation results" "HTTPS/JSON"
 
-        // API component relationships
-        webApp -> identityBoundary "Submits session credentials"
-        managerInputFeed -> identityBoundary "Submits an evaluator-authenticated identity"
-        identityBoundary -> identityProvider "Validates identity when an external provider is selected"
-        identityBoundary -> authorizationService "Creates trusted AuthContext"
-        authorizationService -> postgres "Reads versioned hierarchy, grants, purpose, and policy"
-        webApp -> managerInputService "Submits questions, uploads, settings, and decisions"
-        managerInputService -> configurationService "Submits authorized configuration candidates"
-        managerInputService -> decisionTracker "Submits explicit human decisions and status changes"
-        managerInputService -> agentOrchestrator "Starts an authorized interactive graph"
-        managerInputService -> fileArchive "Preserves original upload bytes"
-        managerInputService -> worker "Queues approved structured uploads"
-        configurationService -> authorizationService "Checks actor authority and affected scope"
-        configurationService -> postgres "Versions candidates, approvals, activation, and rollback"
-        configurationService -> worker "Requests deterministic validation before activation"
-        reportApi -> authorizationService "Rechecks current audience and purpose"
-        reportApi -> queryGateway "Requests registered dashboard and workflow queries"
-        reportApi -> postgres "Reads immutable report versions and failure states"
-        reportApi -> webApp "Returns authorized reports, answers, and explicit failure states"
-        decisionTracker -> authorizationService "Checks human decision authority"
-        decisionTracker -> postgres "Appends decision, draft, deadline, status, and follow-up events"
-        decisionTracker -> agentOrchestrator "Requests a task or message draft after a recorded decision"
-        agentOrchestrator -> evidenceService "Requests an authorized EvidenceBundle"
-        agentOrchestrator -> queryGateway "Requests tools or proposes constrained custom SQL"
-        agentOrchestrator -> modelGateway "Requests bounded analysis or Persian drafting"
-        agentOrchestrator -> outputValidator "Submits report or interactive answer drafts"
-        evidenceService -> authorizationService "Checks rows, columns, purpose, and evidence audience"
-        evidenceService -> queryGateway "Runs registered evidence queries"
-        evidenceService -> postgres "Reads authorized KPI, workflow, calendar, and decision references"
-        evidenceService -> fileArchive "Reads only approved document fragments"
-        queryGateway -> authorizationService "Gets trusted scope and allowlists"
-        queryGateway -> sqlGuard "Validates candidate SQL AST"
-        sqlGuard -> queryGateway "Returns an approved statement or refusal"
-        queryGateway -> postgres "Runs a read-only transaction with RLS, timeout, and limits"
-        queryGateway -> auditService "Records SQL, parameters, scope, snapshot, rows, hash, and refusal"
-        modelGateway -> postgres "Reserves and settles the shared daily cost budget"
-        modelGateway -> llmProvider "Sends only authorized evidence and receives completion" "Model API"
-        modelGateway -> auditService "Records model, prompt, tokens, latency, retry, and cost"
-        modelGateway -> agentOrchestrator "Returns a completion or an explicit terminal failure"
-        outputValidator -> queryGateway "Rechecks every reported number and query reference"
-        outputValidator -> authorizationService "Rechecks recipient scope and individual-data limits"
-        outputValidator -> evidenceService "Checks evidence groups, alternatives, and provenance"
-        outputValidator -> postgres "Stores validation receipts and exact failure reasons"
-        outputValidator -> publisher "Submits only a validated manager package"
-        auditService -> postgres "Stores restricted audit, cost, and operational evidence"
+        // API component relationships.
+        // Primary request path: Web -> Identity -> Authorization -> Router -> Agent -> Validator -> Delivery -> Web.
+        webApp -> identityBoundary "Submits session and request" {
+            tags "PrimaryFlow"
+        }
+        identityBoundary -> identityProvider "Validates identity" {
+            tags "ExternalFlow"
+        }
+        identityBoundary -> authorizationService "Creates trusted AuthContext" {
+            tags "PrimaryFlow"
+        }
+        authorizationService -> postgres "Reads hierarchy, grants, and policy" {
+            tags "DataFlow"
+        }
+        authorizationService -> managerInputService "Passes trusted scope and request context" {
+            tags "PrimaryFlow"
+        }
+
+        // Request routing and manager commands.
+        managerInputService -> reportApi "Routes published report and dashboard reads" {
+            tags "ControlFlow"
+        }
+        managerInputService -> configurationService "Routes a configuration candidate" {
+            tags "ControlFlow"
+        }
+        managerInputService -> decisionTracker "Routes an explicit human decision" {
+            tags "ControlFlow"
+        }
+        managerInputService -> agentOrchestrator "Starts an interactive graph" {
+            tags "PrimaryFlow"
+        }
+        managerInputService -> fileArchive "Preserves original upload bytes" {
+            tags "ControlFlow"
+        }
+        managerInputService -> worker "Queues an approved structured upload" {
+            tags "ControlFlow"
+        }
+        configurationService -> authorizationService "Checks actor authority and affected scope" {
+            tags "PolicyCheck"
+        }
+        configurationService -> postgres "Stores versioned configuration state" {
+            tags "ControlFlow"
+        }
+        configurationService -> worker "Requests deterministic validation" {
+            tags "ControlFlow"
+        }
+        decisionTracker -> authorizationService "Checks decision authority" {
+            tags "PolicyCheck"
+        }
+        decisionTracker -> postgres "Appends decision and follow-up events" {
+            tags "ControlFlow"
+        }
+        decisionTracker -> agentOrchestrator "Requests a draft only" {
+            tags "ControlFlow"
+        }
+
+        // Bounded analysis. Tool and model responses are implicit unless a failure path needs a separate edge.
+        agentOrchestrator -> evidenceService "Requests an authorized evidence bundle" {
+            tags "DataFlow"
+        }
+        evidenceService -> authorizationService "Checks evidence scope" {
+            tags "PolicyCheck"
+        }
+        evidenceService -> queryGateway "Runs a registered evidence query" {
+            tags "DataFlow"
+        }
+        evidenceService -> fileArchive "Reads approved document fragments" {
+            tags "DataFlow"
+        }
+        queryGateway -> authorizationService "Gets scope and allowlists" {
+            tags "PolicyCheck"
+        }
+        queryGateway -> sqlGuard "Validates one SELECT statement" {
+            tags "DataFlow"
+        }
+        sqlGuard -> queryGateway "Returns approval or refusal" {
+            tags "Feedback"
+        }
+        queryGateway -> postgres "Runs a scoped read-only query" {
+            tags "DataFlow"
+        }
+        queryGateway -> auditService "Records query evidence" {
+            tags "ControlFlow"
+        }
+        agentOrchestrator -> modelGateway "Requests bounded analysis or drafting" {
+            tags "ModelFlow"
+        }
+        modelGateway -> postgres "Reserves and settles the cost budget" {
+            tags "ControlFlow"
+        }
+        modelGateway -> llmProvider "Sends authorized evidence and receives a completion" "Model API" {
+            tags "ExternalFlow"
+        }
+        modelGateway -> auditService "Records model and cost evidence" {
+            tags "ControlFlow"
+        }
+        modelGateway -> agentOrchestrator "Returns a completion or terminal failure" {
+            tags "Feedback"
+        }
+        agentOrchestrator -> outputValidator "Submits a draft and evidence references" {
+            tags "PrimaryFlow"
+        }
+
+        // Validation, delivery, and accountability.
+        outputValidator -> queryGateway "Rechecks reported numbers" {
+            tags "Feedback"
+        }
+        outputValidator -> authorizationService "Rechecks recipient scope" {
+            tags "PolicyCheck"
+        }
+        outputValidator -> evidenceService "Checks provenance and alternatives" {
+            tags "Feedback"
+        }
+        outputValidator -> auditService "Records validation evidence" {
+            tags "ControlFlow"
+        }
+        outputValidator -> reportApi "Releases a valid result or explicit failure" {
+            tags "PrimaryFlow"
+        }
+        outputValidator -> publisher "Submits a validated manager package" {
+            tags "ControlFlow"
+        }
+        reportApi -> authorizationService "Rechecks audience and purpose" {
+            tags "PolicyCheck"
+        }
+        reportApi -> queryGateway "Runs a dashboard or workflow query" {
+            tags "DataFlow"
+        }
+        reportApi -> postgres "Reads published reports and failure states" {
+            tags "DataFlow"
+        }
+        reportApi -> webApp "Returns a valid response or explicit failure" {
+            tags "PrimaryFlow"
+        }
+        auditService -> postgres "Stores restricted audit evidence" {
+            tags "ControlFlow"
+        }
 
         // Worker component relationships
         schedulerReplay -> ingestionCoordinator "Starts idempotent intake for the selected cutoff"
@@ -241,7 +346,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         // C4 core view: one software system and its directly connected people and software systems.
         systemContext didrah L1_SystemContext "Business-facing C4 system context for DIDRAH." {
             title "01 - C4 Level 1 - System Context for DIDRAH"
-            include seniorManager unitManager teamSupervisor didrah nightlySources identityProvider llmProvider
+            include seniorManager unitManager teamSupervisor didrah nightlySources managerInputFeed identityProvider llmProvider
             autoLayout tb
             default
         }
@@ -249,15 +354,27 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         // C4 core view: deployable applications and data stores inside the DIDRAH boundary.
         container didrah L2_Containers "C4 container view of the DIDRAH applications, data stores, users, and external dependencies." {
             title "02 - C4 Level 2 - Containers for DIDRAH"
-            include seniorManager unitManager teamSupervisor nightlySources identityProvider llmProvider webApp backendApi worker schedulerReplay postgres fileArchive
+            include seniorManager unitManager teamSupervisor nightlySources managerInputFeed identityProvider llmProvider webApp backendApi worker schedulerReplay postgres fileArchive
             autoLayout tb
         }
 
         // C4 Level 3: each view opens one container and shows all of its components.
-        component backendApi L3_1_BackendApiComponents "Complete C4 component view of Backend API access control, manager operations, secure queries, agent orchestration, validation, reports, decisions, and audit." {
+        component backendApi L3_1_BackendApiComponents "Primary Backend API request-to-response flow with supporting management, data, model, storage, and audit paths." {
             title "03.1 - C4 Level 3 - Backend API Components"
-            include webApp worker managerInputFeed identityProvider llmProvider postgres fileArchive identityBoundary authorizationService managerInputService configurationService queryGateway sqlGuard reportApi decisionTracker agentOrchestrator evidenceService modelGateway outputValidator auditService
-            
+            include webApp worker identityProvider llmProvider postgres fileArchive identityBoundary authorizationService managerInputService configurationService queryGateway sqlGuard reportApi decisionTracker agentOrchestrator evidenceService modelGateway outputValidator auditService
+            exclude "configurationService -> authorizationService"
+            exclude "decisionTracker -> authorizationService"
+            exclude "evidenceService -> authorizationService"
+            exclude "queryGateway -> authorizationService"
+            exclude "outputValidator -> authorizationService"
+            exclude "reportApi -> authorizationService"
+            exclude "modelGateway -> agentOrchestrator"
+            exclude "outputValidator -> queryGateway"
+            exclude "outputValidator -> evidenceService"
+            exclude "reportApi -> queryGateway"
+            exclude "managerInputService -> worker"
+            exclude "configurationService -> worker"
+            autoLayout lr 450 180
         }
 
         component worker L3_2_BackgroundWorkerComponents "Complete C4 component view of Background Worker intake, data quality, snapshots, deterministic analytics, report jobs, publication, and evaluation." {
@@ -291,7 +408,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             identityBoundary -> authorizationService "Build trusted AuthContext"
             managerInputService -> agentOrchestrator "Start interactive graph with pinned Snapshot"
             agentOrchestrator -> evidenceService "Read permitted context"
-            agentOrchestrator -> queryGateway "Propose candidate SQL and QuerySpec"
+            evidenceService -> queryGateway "Run a registered query or validate a QuerySpec"
             queryGateway -> sqlGuard "Parse and validate one SELECT statement"
             queryGateway -> postgres "Execute read-only SQL with forced row-level security and limits"
             queryGateway -> auditService "Record actual SQL, scope, Snapshot, and result hash"
@@ -400,6 +517,12 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             element "Security" {
                 background #92400e
             }
+            element "Evidence" {
+                background #0f766e
+            }
+            element "Query" {
+                background #0f766e
+            }
             element "Analytics" {
                 background #166534
             }
@@ -427,10 +550,68 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 shape Folder
                 background #6d28d9
             }
+            element "Group" {
+                color #94a3b8
+                stroke #334155
+                strokeWidth 2
+            }
+            element "Group:01 Access" {
+                color #f2b84b
+                stroke #7c5b20
+            }
+            element "Group:02 Request Routing" {
+                color #60a5fa
+                stroke #1d4ed8
+            }
+            element "Group:03 Bounded Analysis" {
+                color #5eead4
+                stroke #0f766e
+            }
+            element "Group:04 Validate and Deliver" {
+                color #67e8f9
+                stroke #0e7490
+            }
             relationship "Relationship" {
                 color #64748b
                 routing Orthogonal
-                fontSize 16
+                fontSize 14
+                thickness 1
+                dashed true
+            }
+            relationship "PrimaryFlow" {
+                color #22d3ee
+                thickness 3
+                dashed false
+            }
+            relationship "DataFlow" {
+                color #2dd4bf
+                thickness 2
+                dashed false
+            }
+            relationship "ModelFlow" {
+                color #c084fc
+                thickness 2
+                dashed false
+            }
+            relationship "ControlFlow" {
+                color #64748b
+                thickness 1
+                dashed false
+            }
+            relationship "PolicyCheck" {
+                color #f59e0b
+                thickness 1
+                dashed true
+            }
+            relationship "ExternalFlow" {
+                color #f59e0b
+                thickness 2
+                dashed true
+            }
+            relationship "Feedback" {
+                color #94a3b8
+                thickness 1
+                dashed true
             }
         }
     }
