@@ -351,7 +351,7 @@ dialog{border:0;border-radius:10px;padding:0;width:min(1160px,94vw);max-height:9
 #slide-10 .week-card.active{background:var(--teal-soft)}
 
 /* ARKA wordmark and slide 2 redesign. */
-.brand-logo{position:absolute;top:48px;left:96px;width:156px;height:auto;z-index:4;object-fit:contain}
+.brand-logo{position:absolute;top:48px;left:96px;width:156px;height:auto;aspect-ratio:3/1;z-index:4;object-fit:contain}
 #slide-4 .brand-logo{filter:grayscale(1) brightness(0) invert(1);opacity:.96}
 #slide-1 .org-masthead,#slide-2 .s2-masthead,#slide-3 .tb-masthead{justify-content:flex-start}
 
@@ -361,17 +361,17 @@ dialog{border:0;border-radius:10px;padding:0;width:min(1160px,94vw);max-height:9
 #slide-2 .s2-header h1{font-size:52px;line-height:1.35;letter-spacing:-1px;margin:0;font-weight:700}
 #slide-2 .s2-english{font-size:21px;color:var(--muted);line-height:1.55;margin-top:3px;text-align:right}
 #slide-2 .s2-lead{font-size:24px;line-height:1.7;color:var(--ink);margin-top:14px;max-width:1050px}
-#slide-2 .s2-stage{position:absolute;top:278px;right:96px;left:96px;bottom:87px;display:grid;grid-template-columns:500px minmax(0,1fr);gap:54px;direction:rtl}
-#slide-2 .s2-metrics{background:var(--ink);color:#fff;padding:41px 39px 35px;display:flex;flex-direction:column;min-width:0}
-#slide-2 .s2-primary-number{display:block;font-size:104px;line-height:1;color:var(--aqua);font-weight:700;letter-spacing:-3px}
+#slide-2 .s2-stage{position:absolute;top:278px;right:96px;left:96px;bottom:87px;display:grid;grid-template-columns:500px minmax(0,1fr);grid-template-rows:auto auto;align-content:start;column-gap:54px;direction:rtl}
+#slide-2 .s2-metrics{background:var(--ink);color:#fff;padding:38px 39px 32px;display:block;align-self:start;min-width:0}
+#slide-2 .s2-primary-number{display:block;font-size:96px;line-height:1;color:var(--aqua);font-weight:700;letter-spacing:-3px}
 #slide-2 .s2-primary-label{font-size:28px;line-height:1.5;font-weight:700;margin-top:8px}
 #slide-2 .s2-primary-note{font-size:19px;line-height:1.7;color:#c7d8df;margin-top:5px}
-#slide-2 .s2-metric-rule{height:1px;background:#496170;margin:32px 0 25px}
-#slide-2 .s2-secondary{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:auto}
+#slide-2 .s2-metric-rule{height:1px;background:#496170;margin:27px 0 0}
+#slide-2 .s2-secondary{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:26px}
 #slide-2 .s2-secondary div{border-top:3px solid var(--teal);padding-top:15px}
 #slide-2 .s2-secondary strong{display:block;font-size:47px;line-height:1.15;color:#fff}
 #slide-2 .s2-secondary span{display:block;font-size:19px;line-height:1.55;color:#c7d8df;margin-top:4px}
-#slide-2 .s2-metric-caption{font-size:16px;line-height:1.65;color:#9fb5bf;margin-top:24px}
+#slide-2 .s2-metric-caption{font-size:16px;line-height:1.65;color:#b8c9d0;margin-top:23px;padding-top:17px;border-top:1px solid #496170}
 #slide-2 .s2-flow{min-width:0;display:flex;flex-direction:column;padding-top:4px}
 #slide-2 .s2-flow-title{font-size:20px;color:var(--teal);line-height:1.6;margin-bottom:12px}
 #slide-2 .s2-flow-list{border-top:2px solid var(--ink);border-bottom:1px solid var(--line)}
@@ -381,7 +381,7 @@ dialog{border:0;border-radius:10px;padding:0;width:min(1160px,94vw);max-height:9
 #slide-2 .s2-copy b{display:block;font-size:24px;line-height:1.45}
 #slide-2 .s2-copy span{display:block;font-size:18px;line-height:1.55;color:var(--muted);margin-top:2px}
 #slide-2 .s2-risk{font-size:17px;line-height:1.4;color:var(--red);background:var(--soft-red);padding:7px 11px;white-space:nowrap}
-#slide-2 .s2-takeaway{margin-top:auto;border-right:4px solid var(--teal);padding:10px 18px 10px 0}
+#slide-2 .s2-takeaway{grid-column:1/-1;margin-top:30px;border-right:4px solid var(--teal);padding:8px 18px 8px 0}
 #slide-2 .s2-takeaway span{display:block;font-size:17px;color:var(--teal);line-height:1.5}
 #slide-2 .s2-takeaway p{font-size:25px;line-height:1.65;font-weight:700;margin-top:2px}
 
@@ -457,8 +457,8 @@ dialog{border:0;border-radius:10px;padding:0;width:min(1160px,94vw);max-height:9
     <div class="s2-flow-row"><span class="s2-step">۳</span><div class="s2-copy"><b>جلسه هفتگی</b><span>مدیر ارشد گزارش نهایی را مرور می‌کند.</span></div><span class="s2-risk">تأخیر در تحلیل</span></div>
     <div class="s2-flow-row"><span class="s2-step">۴</span><div class="s2-copy"><b>پیگیری پراکنده</b><span>خروجی جلسه در پیام‌رسان و حافظه افراد می‌ماند.</span></div><span class="s2-risk">نتیجه نامشخص</span></div>
    </div>
-   <div class="s2-takeaway"><span>جمع‌بندی</span><p>داده وجود دارد، اما آماده‌سازی و پیگیری آن پراکنده است.</p></div>
   </div>
+  <div class="s2-takeaway"><span>جمع‌بندی</span><p>داده وجود دارد، اما آماده‌سازی و پیگیری آن پراکنده است.</p></div>
  </div>
   <footer class="sources"><span class="source-title">منابع / <span lang="en">Sources</span></span><button class="source-link" data-ref="S01"><bdi>S01</bdi>: بریف رسمی، ص. ۱–۳</button><button class="source-link" data-ref="S04"><bdi>S04</bdi>: مدیران اولیه</button><button class="source-link" data-ref="S05"><bdi>S05</bdi>: تیم‌های اولیه</button><span class="page">۰۲ / ۱۰</span></footer>
 </section>
@@ -470,10 +470,9 @@ dialog{border:0;border-radius:10px;padding:0;width:min(1160px,94vw);max-height:9
   <p class="tb-english" lang="en" dir="ltr">Current Reporting Workflow</p>
   <p class="tb-lead">گزارش از تیم‌ها به مدیریت ارشد می‌رسد، اما هر مرحله به کار دستی و هماهنگی دوباره نیاز دارد.</p>
  </header>
- <div class="asis-stage" role="img" aria-label="فرایند فعلی گزارش‌دهی از شش تیم تا پیگیری تصمیم و چهار گلوگاه اصلی">
+ <div class="asis-stage" role="img" aria-label="فرایند فعلی گزارش‌دهی از شش تیم عملیاتی و سرپرستان آن‌ها تا پیگیری تصمیم و چهار گلوگاه اصلی">
   <div class="asis-flow">
-   <div class="asis-node"><b>۶ تیم عملیاتی</b><span>تهیه گزارش‌های جدا</span></div><span class="asis-arrow" aria-hidden="true"></span>
-   <div class="asis-node"><b>۶ سرپرست تیم</b><span>۳۰ نفرساعت در هفته</span></div><span class="asis-arrow" aria-hidden="true"></span>
+   <div class="asis-node"><b>۶ تیم عملیاتی</b><span>هر تیم با یک سرپرست<br>۶ گزارش، ۳۰ نفرساعت در هفته</span></div><span class="asis-arrow" aria-hidden="true"></span>
    <div class="asis-node"><b>۳ مدیر واحد</b><span>۱۴ نفرساعت در هفته</span></div><span class="asis-arrow" aria-hidden="true"></span>
    <div class="asis-node"><b>مدیر ارشد</b><span>۶ نفرساعت و جلسه هفتگی</span></div><span class="asis-arrow" aria-hidden="true"></span>
    <div class="asis-node tracking"><b>پیگیری تصمیم</b><span>پیام‌رسان و حافظه افراد</span></div>
