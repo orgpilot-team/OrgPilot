@@ -12,7 +12,7 @@
 
 ### رجیستر یکپارچه
 
-فایل [رجیستر کنترل‌های معماری](architecture-control-register.md) مرجع واحد این موارد است:
+فایل [رجیستر کنترل‌های معماری نسخه ۳](architecture-control-register-v3.md) با Tag ثابت `DIDRAH-ARCH-CONTROL-V3` مرجع فعال این موارد است:
 
 - تصمیم‌های `ADR`
 - موضوعات باز `DL`
@@ -20,6 +20,8 @@
 - معیارهای پذیرش `AT`
 
 هر رکورد فقط یک محل اصلی دارد. شناسه‌های قبلی حفظ شده‌اند.
+
+فایل‌های `architecture-control-register.md` و `architecture-control-register-v2.md` فقط برای مقایسه و سابقه نگهداری می‌شوند.
 
 ### بریف پروژه
 

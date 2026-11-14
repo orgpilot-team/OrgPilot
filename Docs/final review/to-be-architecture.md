@@ -336,7 +336,7 @@ Retry همان Idempotency key را حفظ می‌کند. Publisher روی کل�
 | BR-066 | خطوط 434-436 | اثر تصمیم از داده ثابت روزهای بعد سنجیده شود | Decision Tracker | DL-12 | Follow-up fixture | Deferred with Gate: evidence scope |
 | BR-067 | خطوط 438-443 | گزارش و UI فارسی و RTL باشند | UI، Publisher | - | RTL review | Design Covered |
 | BR-068 | خطوط 438-465 | برای هر مدیر و روز JSON با فیلدهای رسمی کنار گزارش باشد | Publisher | DL-18 | JSON Schema test | Open Decision |
-| BR-069 | خط 444 | وضعیت‌های new، escalated و suppressed طبق بریف رعایت شوند | Signal، Publisher | DL-11 | Status mapping | Open Decision |
+| BR-069 | خط 444 | وضعیت‌های `new`، `escalated` و `ongoing` رعایت شوند | Signal، Publisher | ADR-09 | Status mapping | Design Covered |
 | BR-070 | خطوط 470-481 | هر روز گزارش مدیران فعال پیش از ۷:۳۰ و حداکثر پنج مورد | Publisher، Replay | ADR-14/DL-18 | Coverage test | Open Decision |
 | BR-071 | خطوط 474-490 | حداقل ۹۰٪ رویدادها ظرف ۲۴ ساعت، برای مالک و علت درست کشف شوند | Signal، Evaluation | DL-09 | Hidden labels | Deferred with Gate: evaluator results |
 | BR-072 | خطوط 478، 487-491 | صفر عدد نادرست با گردکردن و تطبیق Query | Deterministic Core، Validator | ADR-01/DL-01 | Full numeric oracle | Deferred with Gate: parity evidence |

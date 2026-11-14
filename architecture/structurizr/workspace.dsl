@@ -68,7 +68,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
             }
 
-            worker = container "Background Worker" "Runs deterministic ingestion, snapshots, KPI calculation, workflow projection, signals, report jobs, and evaluation." "Application runtime; shared modular codebase" "Worker" {
+            worker = container "Background Worker" "Runs deterministic ingestion, snapshots, KPI calculation, workflow projection, signals, Insight Brief construction, report jobs, publication, and evaluation." "Application runtime; shared modular codebase" "Worker" {
                 ingestionCoordinator = component "Ingestion Coordinator" "Checks manifests, hashes, idempotency keys, source status, and atomic batch commits." "Deterministic module" "Processing"
                 sourceAdapters = component "Source Adapters" "Parse versioned source schemas and preserve the source bytes and headers." "Deterministic adapters" "Processing"
                 dataQualityService = component "Data Quality Service" "Records missing sources, late arrivals, duplicates, corrections, schema changes, and quarantine results." "Deterministic module" "DataQuality"
@@ -78,8 +78,9 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 kpiCalculator = component "KPI Calculator" "Executes the 55 approved PostgreSQL KPI queries and records QueryRun and lineage." "PostgreSQL SQL" "Analytics"
                 workflowEngine = component "Workflow Engine" "Reconstructs three workflows and calculates stage timing, SLA, backlog, and bottlenecks." "Deterministic process analysis" "Analytics"
                 signalEngine = component "Signal Engine" "Applies R1-R8, ownership, grouping, ranking, suppression, and escalation without LLM." "Deterministic rules" "Analytics"
-                reportJobCoordinator = component "Report Job Coordinator" "Creates one job per active manager and requests a bounded report graph with pinned context." "Deterministic orchestration" "Processing"
-                publisher = component "Publisher" "Atomically publishes valid text and JSON per manager. It records independent failures and daily coverage." "Deterministic module" "Processing"
+                reportJobCoordinator = component "Report Job Coordinator" "Creates one job per active manager and requests a deterministic Insight Brief with pinned context." "Deterministic orchestration" "Processing"
+                insightBriefBuilder = component "Insight Brief Builder" "Builds an authorized Insight Brief and schema-valid canonical JSON from pinned KPI, workflow, signal, query, and evidence results without a model call." "Deterministic report assembly" "Reporting"
+                publisher = component "Publisher" "Atomically publishes canonical JSON and, when available, validated Persian text per manager. It records independent narrative failures and daily coverage." "Deterministic module" "Processing"
                 evaluationService = component "Evaluation Service" "Checks coverage, KPI parity, detection, leakage, time, cost, replay, and output contracts." "Deterministic test harness" "Evaluation"
             }
 
@@ -124,8 +125,8 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         schedulerReplay -> worker "Dispatches deterministic run stages with a pinned clock" "PostgreSQL-backed jobs"
         schedulerReplay -> backendApi "Requests manager report and QA jobs" "Internal authenticated API"
         schedulerReplay -> postgres "Claims run leases and records run state" "TLS/PostgreSQL"
-        worker -> backendApi "Requests bounded report graphs and records job outcomes" "Internal authenticated API"
-        worker -> agentOrchestrator "Starts a bounded report graph" "Internal authenticated call" {
+        worker -> backendApi "Submits canonical Insight Briefs for deterministic validation and optional Persian narrative generation" "Internal authenticated API"
+        worker -> agentOrchestrator "Supplies a canonical Insight Brief for an optional bounded Persian narrative" "Internal authenticated call" {
             tags "PrimaryFlow"
         }
         backendApi -> worker "Queues approved structured uploads and configuration validation" "PostgreSQL-backed jobs"
@@ -306,9 +307,14 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         schedulerReplay -> signalEngine "Requests signal detection and ranking"
         signalEngine -> postgres "Reads KPI and history; writes episodes, ownership, suppression, and escalation"
         schedulerReplay -> reportJobCoordinator "Creates one job per active manager"
-        reportJobCoordinator -> backendApi "Requests one bounded report graph per manager"
+        reportJobCoordinator -> insightBriefBuilder "Requests one authorized canonical Insight Brief per manager"
         reportJobCoordinator -> postgres "Writes job lease, attempt, outcome, and daily coverage"
-        publisher -> postgres "Atomically commits text, JSON, publication receipt, or explicit failure"
+        insightBriefBuilder -> postgres "Reads pinned KPI, workflow, signal, query, evidence, organization, and access-policy results"
+        insightBriefBuilder -> backendApi "Submits canonical JSON for deterministic validation and optional Persian narrative"
+        insightBriefBuilder -> outputValidator "Submits canonical JSON, scope, and evidence references for deterministic validation"
+        insightBriefBuilder -> agentOrchestrator "Supplies canonical Insight Brief content for optional Persian drafting"
+        insightBriefBuilder -> publisher "Submits schema-valid canonical JSON independently of narrative generation"
+        publisher -> postgres "Atomically commits canonical JSON, optional validated text, publication receipt, and explicit artifact failures"
         publisher -> evaluationService "Reports package and export outcome"
         evaluationService -> postgres "Reads run evidence and writes acceptance results"
         evaluationService -> schedulerReplay "Returns complete or partial run status"
@@ -374,28 +380,26 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             exclude "reportApi -> queryGateway"
             exclude "managerInputService -> worker"
             exclude "configurationService -> worker"
-            autoLayout lr 450 180
+
         }
 
-        component worker L3_2_BackgroundWorkerComponents "Complete C4 component view of Background Worker intake, data quality, snapshots, deterministic analytics, report jobs, publication, and evaluation." {
+        component worker L3_2_BackgroundWorkerComponents "Complete C4 component view of Background Worker intake, data quality, snapshots, deterministic analytics, Insight Brief construction, report jobs, publication, and evaluation." {
             title "03.2 - C4 Level 3 - Background Worker Components"
-            include nightlySources hiddenDataset schedulerReplay backendApi postgres fileArchive ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportJobCoordinator publisher evaluationService
+            include nightlySources hiddenDataset schedulerReplay backendApi postgres fileArchive ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportJobCoordinator insightBriefBuilder publisher evaluationService
             
         }
 
         // C4 supporting views: numbered runtime interactions for complex or recurring behavior.
-        dynamic didrah S1_NightlyReporting "Previous-day intake through independent validated manager packages." {
+        dynamic worker S1_NightlyReporting "Model-independent canonical JSON assembly and optional Persian narrative request." {
             title "04.1 - Supporting Dynamic - Nightly Reporting"
-            schedulerReplay -> postgres "Claim run lease and pin the evaluation profile"
-            schedulerReplay -> worker "Start previous-day intake and deterministic analytics"
-            nightlySources -> worker "Supply eligible deliveries"
-            worker -> fileArchive "Preserve original bytes and manifests"
-            worker -> postgres "Commit data and freeze Snapshot"
-            worker -> postgres "Compute 55 key performance indicators, three workflows, and signal episodes"
-            schedulerReplay -> backendApi "Request bounded report jobs for active managers"
-            backendApi -> llmProvider "Analyze authorized evidence and draft Persian content"
-            backendApi -> postgres "Store validation receipts and report outcomes"
-            worker -> postgres "Atomically publish valid packages and record failures"
+            schedulerReplay -> reportJobCoordinator "Create one report job per active manager"
+            reportJobCoordinator -> insightBriefBuilder "Request an authorized Insight Brief with pinned context"
+            insightBriefBuilder -> postgres "Read deterministic results, query references, evidence, and access scope"
+            insightBriefBuilder -> publisher "Release schema-valid canonical JSON without a model call"
+            insightBriefBuilder -> backendApi "Request deterministic validation and optional Persian narrative"
+            publisher -> postgres "Atomically publish each valid artifact and record explicit artifact failures"
+            publisher -> evaluationService "Report package, narrative, and export outcomes"
+            evaluationService -> schedulerReplay "Return complete or partial run status"
             schedulerReplay -> postgres "Record coverage, time, cost, and final run state"
             autoLayout tb
         }
@@ -451,19 +455,17 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             autoLayout tb
         }
 
-        dynamic backendApi S5_IndependentPublication "One manager can fail while another valid package is published. Daily coverage remains incomplete." {
+        dynamic didrah S5_IndependentPublication "A model failure does not stop deterministic JSON publication. Invalid artifacts remain isolated per manager." {
             title "04.5 - Supporting Dynamic - Independent Publication"
-            worker -> agentOrchestrator "Start manager A and manager B report graphs"
-            agentOrchestrator -> modelGateway "Request manager A language draft"
-            modelGateway -> llmProvider "Call provider within retry and cost limits"
-            modelGateway -> agentOrchestrator "Return final failure for manager A"
-            auditService -> postgres "Record A failure without a fabricated draft"
-            worker -> postgres "Keep daily run incomplete and continue manager B"
-            agentOrchestrator -> outputValidator "Submit manager B draft"
-            outputValidator -> queryGateway "Verify every number and query reference"
-            outputValidator -> authorizationService "Verify B recipient scope"
-            worker -> postgres "Atomically publish B text and JSON if valid"
-            reportApi -> webApp "Return A failure state or B valid package by scope"
+            schedulerReplay -> worker "Start manager A and manager B report jobs"
+            worker -> postgres "Build and publish both valid canonical JSON artifacts without the model"
+            worker -> backendApi "Request optional manager A and manager B Persian narratives"
+            backendApi -> llmProvider "Request manager A draft within retry and cost limits; receive terminal failure"
+            backendApi -> postgres "Record manager A narrative failure without a fabricated draft"
+            worker -> postgres "Keep manager A JSON published and continue manager B"
+            backendApi -> llmProvider "Request manager B draft within retry and cost limits"
+            backendApi -> postgres "Store manager B validation receipt and valid Persian text outcome"
+            worker -> postgres "Publish manager B JSON and validated text without changing manager A"
             autoLayout tb
         }
 

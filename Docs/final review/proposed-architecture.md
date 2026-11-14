@@ -228,7 +228,7 @@ Scheduler می‌تواند به‌صورت Command در Container Worker اجر
 | `ProjectionService` | Projection | ساخت Factها و Projectionهای قابل بازسازی. |
 | `SemanticRegistry` | Semantic Registry | نگهداری تعریف KPI، واحد، هدف، مالک، SQL و Dependency. |
 | `ReferenceCalculator` | محاسبه‌گر KPI | اجرای SQL ثبت‌شده PostgreSQL و ثبت QueryRun. |
-| `SignalEngine` | موتور Signal | تشخیص قطعی، Episode، Suppression و Escalation. |
+| `SignalEngine` | موتور Signal | تشخیص قطعی، Episode، تداوم و Escalation. |
 | `WorkflowEngine` | موتور Workflow | بازسازی Case، Stage، SLA و Bottleneck. |
 | `EvidenceService` | Evidence Service | ساخت EvidenceBundle محدود به Scope. |
 | `AgentOrchestrator` | هماهنگ‌کننده Agent | اجرای Graph گزارش و Graph تعاملی. |
@@ -394,7 +394,7 @@ State داخلی پیشنهادی:
 - `candidate`
 - `owned`
 - `open`
-- `suppressed`
+- `ongoing`
 - `escalated`
 - `resolved`
 - `data_blocked`
@@ -642,12 +642,7 @@ RLS تنها کنترل نیست. این کنترل‌ها نیز لازم‌ا�
 
 متن فارسی و JSON از یک مدل محتوای Validation‌شده ساخته می‌شوند. هر عدد متن باید در JSON به `query_id` و KPI مربوط متصل باشد.
 
-تعارض `suppressed` در بریف و `ongoing` در Schema رسمی هنوز `Open` است. تا حل رسمی:
-
-- State داخلی Suppression حفظ می‌شود.
-- Enum نامعتبر به JSON اضافه نمی‌شود.
-- مورد بدون تغییر در `open_items` یا محل مورد تأیید Schema نگهداری می‌شود.
-- نگاشت نهایی باید در EvaluationProfile نسخه‌دار شود.
+وضعیت‌های رسمی خروجی `new`، `escalated` و `ongoing` هستند. مورد بدون تغییر با وضعیت `ongoing` و تاریخچه خود نگهداری می‌شود.
 
 ## ۱۶. تصمیم و پیگیری
 
@@ -781,11 +776,10 @@ Job ناموفق پس از Retry محدود باید به Dead-letter state بر
 2. ماتریس دقیق Row/Column Projection برای منابع مشترک.
 3. سیاست RLS و نقش‌های PostgreSQL برای Batch، API، Query و Audit.
 4. قرارداد کامل مدل داخلی Insight Brief، Report و DecisionCard.
-5. نگاشت رسمی `suppressed` بریف به `ongoing/open_items` در Schema عرضه‌شده.
-6. حالت‌های مرزی Signal: تساوی Threshold، مخرج صفر، Reset، Recovery و Owner غیرفعال.
-7. مالک هر Stage در سه Workflow و رفتار Stage فاقد SLA.
-8. قرارداد Canonical نوع داده، Null، زمان و تغییر نام ستون‌ها.
-9. اختیار تغییر Config، مرحله Approval، زمان فعال‌سازی و Rollback.
+5. حالت‌های مرزی Signal: تساوی Threshold، مخرج صفر، Reset، Recovery و Owner غیرفعال.
+6. مالک هر Stage در سه Workflow و رفتار Stage فاقد SLA.
+7. قرارداد Canonical نوع داده، Null، زمان و تغییر نام ستون‌ها.
+8. اختیار تغییر Config، مرحله Approval، زمان فعال‌سازی و Rollback.
 10. State Machine مربوط به Job، Retry، Timeout، Repair و Fallback.
 
 ### ۲۲.۲. P1؛ پیش از Replay کامل
