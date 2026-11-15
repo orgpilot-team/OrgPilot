@@ -1,0 +1,52 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["03.5 - C4 Level 3 - Revised Scheduler and Replay Runner Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    4["<div style='font-weight: bold'>Evaluator</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Runs Docker, replay,<br />hidden-data checks, and<br />acceptance tests.</div>"]
+    style 4 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+
+    7("<div style='font-weight: bold'>Manager Input Feed</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Supplies scripted questions,<br />priorities, threshold<br />changes, uploads, decisions,<br />and organization changes.</div>")
+    style 7 fill:#475569,stroke:#313b49,color:#ffffff
+
+    subgraph 11 ["DIDRAH"]
+      style 11 fill:#ffffff,stroke:#152860,color:#152860
+
+      subgraph 16 ["Backend API"]
+        style 16 fill:#ffffff,stroke:#143697,color:#143697
+
+        subgraph group1 ["02 Request Routing"]
+          style group1 fill:#ffffff,stroke:#60a5fa,color:#60a5fa,stroke-dasharray:5
+
+          22("<div style='font-weight: bold'>Run Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic run control]</div><div style='font-size: 80%; margin-top:10px'>Creates and monitors pinned<br />daily runs, run-stage jobs,<br />replay progress, and final<br />run status.</div>")
+          style 22 fill:#334155,stroke:#232d3b,color:#ffffff
+        end
+
+      end
+
+      subgraph 50 ["Scheduler and Replay Runner"]
+        style 50 fill:#ffffff,stroke:#095164,color:#095164
+
+        51("<div style='font-weight: bold'>Replay Command</div><div style='font-size: 70%; margin-top: 0px'>[Component: Application command]</div><div style='font-size: 80%; margin-top:10px'>Accepts a replay range,<br />sequences simulated days, and<br />resumes from the last<br />terminal day.</div>")
+        style 51 fill:#0e7490,stroke:#095164,color:#ffffff
+        52("<div style='font-weight: bold'>Simulation Clock</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic clock]</div><div style='font-size: 80%; margin-top:10px'>Derives the pinned business<br />date and source cutoff<br />without using the host clock<br />as product time.</div>")
+        style 52 fill:#0e7490,stroke:#095164,color:#ffffff
+        53("<div style='font-weight: bold'>Evaluation Profile Loader</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic configuration reader]</div><div style='font-size: 80%; margin-top:10px'>Loads the selected evaluation<br />limits, acceptance<br />thresholds, and run options.</div>")
+        style 53 fill:#475569,stroke:#313b49,color:#ffffff
+        54("<div style='font-weight: bold'>Run Status Client</div><div style='font-size: 70%; margin-top: 0px'>[Component: Internal API client]</div><div style='font-size: 80%; margin-top:10px'>Starts and monitors runs only<br />through the Backend Run<br />Coordinator.</div>")
+        style 54 fill:#0e7490,stroke:#095164,color:#ffffff
+      end
+
+    end
+
+    4-. "<div>Starts a replay range and<br />requests acceptance results</div><div style='font-size: 70%'></div>" .->51
+    7-. "<div>Supplies scripted replay<br />range and manager-input<br />scenarios</div><div style='font-size: 70%'></div>" .->51
+    51-. "<div>Requests one pinned business<br />date and source cutoff per<br />day</div><div style='font-size: 70%'></div>" .->52
+    51-. "<div>Loads the selected evaluation<br />profile</div><div style='font-size: 70%'></div>" .->53
+    51-. "<div>Starts or resumes each<br />simulated day in sequence</div><div style='font-size: 70%'></div>" .->54
+    52-. "<div>Provides the pinned business<br />date and cutoff</div><div style='font-size: 70%'></div>" .->54
+    53-. "<div>Provides limits, thresholds,<br />and run options</div><div style='font-size: 70%'></div>" .->54
+    54-. "<div>Starts and monitors runs<br />through the internal Backend<br />API</div><div style='font-size: 70%'></div>" .->22
+
+  end

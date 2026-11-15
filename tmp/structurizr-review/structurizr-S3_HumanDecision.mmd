@@ -1,0 +1,84 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.3 - Supporting Dynamic - Human Decision"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    2["<div style='font-weight: bold'>Unit Manager</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Reads authorized unit and<br />team aggregates. Records<br />decisions and follow-up<br />actions.</div>"]
+    style 2 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+
+    9("<div style='font-weight: bold'>Language Model Provider</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Returns bounded<br />language-model completions.<br />The provider and model are<br />open decisions.</div>")
+    style 9 fill:#a21caf,stroke:#f59e0b,color:#ffffff
+
+    subgraph 11 ["DIDRAH"]
+      style 11 fill:#ffffff,stroke:#152860,color:#152860
+
+      subgraph 16 ["Backend API"]
+        style 16 fill:#ffffff,stroke:#143697,color:#143697
+
+        subgraph group1 ["01 Access"]
+          style group1 fill:#ffffff,stroke:#f2b84b,color:#f2b84b,stroke-dasharray:5
+
+          17("<div style='font-weight: bold'>Identity Boundary</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Validates the session and<br />creates a trusted identity<br />context.</div>")
+          style 17 fill:#92400e,stroke:#662c09,color:#ffffff
+          18("<div style='font-weight: bold'>Authorization Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Builds the permitted row,<br />column, role, purpose, and<br />policy scope.</div>")
+          style 18 fill:#92400e,stroke:#662c09,color:#ffffff
+        end
+
+        subgraph group2 ["02 Request Routing"]
+          style group2 fill:#ffffff,stroke:#60a5fa,color:#60a5fa,stroke-dasharray:5
+
+          19("<div style='font-weight: bold'>Manager Request Router</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Routes report reads,<br />questions, uploads,<br />configuration changes, and<br />decisions.</div>")
+          style 19 fill:#1d4ed8,stroke:#143697,color:#ffffff
+          21("<div style='font-weight: bold'>Decision and Follow-Up</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Records human decisions and<br />follow-up events. It executes<br />no action.</div>")
+          style 21 fill:#9a3412,stroke:#6b240c,color:#ffffff
+        end
+
+        subgraph group3 ["03 Bounded Analysis"]
+          style group3 fill:#ffffff,stroke:#5eead4,color:#5eead4,stroke-dasharray:5
+
+          23("<div style='font-weight: bold'>Bounded Agent Orchestrator</div><div style='font-size: 70%; margin-top: 0px'>[Component: LangGraph runtime]</div><div style='font-size: 80%; margin-top:10px'>Coordinates one bounded<br />report or interactive<br />analysis graph.</div>")
+          style 23 fill:#a21caf,stroke:#71137a,color:#ffffff
+          28("<div style='font-weight: bold'>Model Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Component: Provider-neutral model client]</div><div style='font-size: 80%; margin-top:10px'>Applies token, time, retry,<br />and cost limits to every<br />model call.</div>")
+          style 28 fill:#a21caf,stroke:#71137a,color:#ffffff
+        end
+
+      end
+
+      12("<div style='font-weight: bold'>Web Application</div><div style='font-size: 70%; margin-top: 0px'>[Container: Web application; framework open]</div><div style='font-size: 80%; margin-top:10px'>Persian RTL web application.<br />It provides the three<br />required management<br />interfaces.</div>")
+      style 12 fill:#0369a1,stroke:#024970,color:#ffffff
+      33("<div style='font-weight: bold'>Background Worker</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application runtime; shared modular codebase]</div><div style='font-size: 80%; margin-top:10px'>Runs deterministic ingestion,<br />snapshots, KPI calculation,<br />workflow projection, signals,<br />Insight Brief construction,<br />report jobs, publication, and<br />evaluation.</div>")
+      style 33 fill:#0f766e,stroke:#0a524d,color:#ffffff
+      50("<div style='font-weight: bold'>Scheduler and Replay Runner</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application command/process]</div><div style='font-size: 80%; margin-top:10px'>Owns the simulated clock, run<br />lease, replay range,<br />evaluation profile, and<br />resumable job dispatch.</div>")
+      style 50 fill:#0e7490,stroke:#095164,color:#ffffff
+      55[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+      style 55 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+    end
+
+    2["<div style='font-weight: bold'>Unit Manager</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Reads authorized unit and<br />team aggregates. Records<br />decisions and follow-up<br />actions.</div>"]
+    style 2 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+    9("<div style='font-weight: bold'>Language Model Provider</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Returns bounded<br />language-model completions.<br />The provider and model are<br />open decisions.</div>")
+    style 9 fill:#a21caf,stroke:#f59e0b,color:#ffffff
+    12("<div style='font-weight: bold'>Web Application</div><div style='font-size: 70%; margin-top: 0px'>[Container: Web application; framework open]</div><div style='font-size: 80%; margin-top:10px'>Persian RTL web application.<br />It provides the three<br />required management<br />interfaces.</div>")
+    style 12 fill:#0369a1,stroke:#024970,color:#ffffff
+    33("<div style='font-weight: bold'>Background Worker</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application runtime; shared modular codebase]</div><div style='font-size: 80%; margin-top:10px'>Runs deterministic ingestion,<br />snapshots, KPI calculation,<br />workflow projection, signals,<br />Insight Brief construction,<br />report jobs, publication, and<br />evaluation.</div>")
+    style 33 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    50("<div style='font-weight: bold'>Scheduler and Replay Runner</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application command/process]</div><div style='font-size: 80%; margin-top:10px'>Owns the simulated clock, run<br />lease, replay range,<br />evaluation profile, and<br />resumable job dispatch.</div>")
+    style 50 fill:#0e7490,stroke:#095164,color:#ffffff
+    55[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+    style 55 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+
+    2-. "<div>1. Read decision card and<br />evidence</div><div style='font-size: 70%'>[HTTPS]</div>" .->12
+    12-- "<div>2. Submit explicit decision</div><div style='font-size: 70%'></div>" -->17
+    17-- "<div>3. Build trusted actor and<br />decision scope</div><div style='font-size: 70%'></div>" -->18
+    19-- "<div>4. Record select, delegate,<br />close, or escalate</div><div style='font-size: 70%'></div>" -->21
+    21-- "<div>5. Append decision, owner,<br />deadline, and success<br />criteria</div><div style='font-size: 70%'></div>" -->55
+    21-- "<div>6. Request task or message<br />draft only</div><div style='font-size: 70%'></div>" -->23
+    23-- "<div>7. Draft without sending</div><div style='font-size: 70%'></div>" -->28
+    28-. "<div>8. Request bounded draft</div><div style='font-size: 70%'>[Model API]</div>" .->9
+    21-- "<div>9. Store draft linked to the<br />human decision</div><div style='font-size: 70%'></div>" -->55
+    2-. "<div>10. Review and send outside<br />DIDRAH</div><div style='font-size: 70%'>[HTTPS]</div>" .->12
+    50-. "<div>11. On later days, measure<br />observations against success<br />criteria</div><div style='font-size: 70%'>[PostgreSQL-backed jobs]</div>" .->33
+    33-. "<div>12. Append supported<br />follow-up result and<br />limitations</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->55
+
+  end

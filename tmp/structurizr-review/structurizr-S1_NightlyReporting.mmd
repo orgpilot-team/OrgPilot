@@ -1,0 +1,48 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.1 - Supporting Dynamic - Nightly Reporting"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    subgraph 11 ["DIDRAH"]
+      style 11 fill:#ffffff,stroke:#152860,color:#152860
+
+      subgraph 33 ["Background Worker"]
+        style 33 fill:#ffffff,stroke:#0a524d,color:#0a524d
+
+        44("<div style='font-weight: bold'>Report Job Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic orchestration]</div><div style='font-size: 80%; margin-top:10px'>Creates one job per active<br />manager and requests a<br />deterministic Insight Brief<br />with pinned context.</div>")
+        style 44 fill:#334155,stroke:#232d3b,color:#ffffff
+        46("<div style='font-weight: bold'>Insight Brief Builder</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic report assembly]</div><div style='font-size: 80%; margin-top:10px'>Builds an authorized Insight<br />Brief and schema-valid<br />canonical JSON from pinned<br />KPI, workflow, signal, query,<br />and evidence results without<br />a model call.</div>")
+        style 46 fill:#334155,stroke:#232d3b,color:#ffffff
+        48("<div style='font-weight: bold'>Publisher</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Atomically publishes<br />canonical JSON and, when<br />available, validated Persian<br />text per manager. It records<br />independent narrative<br />failures and daily coverage.</div>")
+        style 48 fill:#334155,stroke:#232d3b,color:#ffffff
+        49("<div style='font-weight: bold'>Evaluation Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic test harness]</div><div style='font-size: 80%; margin-top:10px'>Checks coverage, KPI parity,<br />detection, leakage, time,<br />cost, replay, and output<br />contracts.</div>")
+        style 49 fill:#475569,stroke:#313b49,color:#ffffff
+      end
+
+      16("<div style='font-weight: bold'>Backend API</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application runtime; framework open]</div><div style='font-size: 80%; margin-top:10px'>Authenticates requests and<br />routes each request through<br />bounded analysis, validation,<br />and delivery.</div>")
+      style 16 fill:#1d4ed8,stroke:#143697,color:#ffffff
+      50("<div style='font-weight: bold'>Scheduler and Replay Runner</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application command/process]</div><div style='font-size: 80%; margin-top:10px'>Owns the simulated clock, run<br />lease, replay range,<br />evaluation profile, and<br />resumable job dispatch.</div>")
+      style 50 fill:#0e7490,stroke:#095164,color:#ffffff
+      55[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+      style 55 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+    end
+
+    16("<div style='font-weight: bold'>Backend API</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application runtime; framework open]</div><div style='font-size: 80%; margin-top:10px'>Authenticates requests and<br />routes each request through<br />bounded analysis, validation,<br />and delivery.</div>")
+    style 16 fill:#1d4ed8,stroke:#143697,color:#ffffff
+    50("<div style='font-weight: bold'>Scheduler and Replay Runner</div><div style='font-size: 70%; margin-top: 0px'>[Container: Application command/process]</div><div style='font-size: 80%; margin-top:10px'>Owns the simulated clock, run<br />lease, replay range,<br />evaluation profile, and<br />resumable job dispatch.</div>")
+    style 50 fill:#0e7490,stroke:#095164,color:#ffffff
+    55[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+    style 55 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+
+    50-. "<div>1. Create one report job per<br />active manager</div><div style='font-size: 70%'></div>" .->44
+    44-. "<div>2. Request an authorized<br />Insight Brief with pinned<br />context</div><div style='font-size: 70%'></div>" .->46
+    46-. "<div>3. Read deterministic<br />results, query references,<br />evidence, and access scope</div><div style='font-size: 70%'></div>" .->55
+    46-. "<div>4. Release schema-valid<br />canonical JSON without a<br />model call</div><div style='font-size: 70%'></div>" .->48
+    46-. "<div>5. Request deterministic<br />validation and optional<br />Persian narrative</div><div style='font-size: 70%'></div>" .->16
+    48-. "<div>6. Atomically publish each<br />valid artifact and record<br />explicit artifact failures</div><div style='font-size: 70%'></div>" .->55
+    48-. "<div>7. Report package, narrative,<br />and export outcomes</div><div style='font-size: 70%'></div>" .->49
+    49-. "<div>8. Return complete or partial<br />run status</div><div style='font-size: 70%'></div>" .->50
+    50-. "<div>9. Record coverage, time,<br />cost, and final run state</div><div style='font-size: 70%'>[TLS/PostgreSQL]</div>" .->55
+
+  end
