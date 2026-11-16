@@ -1,65 +1,89 @@
-2026-11-16T06:57:33.612Z  INFO 1 --- [main] com.structurizr.server.Local             : ***********************************************************************************
-2026-11-16T06:57:33.625Z  INFO 1 --- [main] com.structurizr.server.Local             :   _____ _                   _              _          
-2026-11-16T06:57:33.625Z  INFO 1 --- [main] com.structurizr.server.Local             :  / ____| |                 | |            (_)         
-2026-11-16T06:57:33.626Z  INFO 1 --- [main] com.structurizr.server.Local             : | (___ | |_ _ __ _   _  ___| |_ _   _ _ __ _ _____ __ 
-2026-11-16T06:57:33.626Z  INFO 1 --- [main] com.structurizr.server.Local             :  \___ \| __| '__| | | |/ __| __| | | | '__| |_  / '__|
-2026-11-16T06:57:33.627Z  INFO 1 --- [main] com.structurizr.server.Local             :  ____) | |_| |  | |_| | (__| |_| |_| | |  | |/ /| |   
-2026-11-16T06:57:33.627Z  INFO 1 --- [main] com.structurizr.server.Local             : |_____/ \__|_|   \__,_|\___|\__|\__,_|_|  |_/___|_|   
-2026-11-16T06:57:33.628Z  INFO 1 --- [main] com.structurizr.server.Local             :                                                       
-2026-11-16T06:57:33.629Z  INFO 1 --- [main] com.structurizr.server.Local             : Local v2026.10.26
-2026-11-16T06:57:33.630Z  INFO 1 --- [main] com.structurizr.server.Local             : ***********************************************************************************
-2026-11-16T06:57:33.631Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.authentication: none
-2026-11-16T06:57:33.631Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.autorefreshinterval: 0
-2026-11-16T06:57:33.632Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.autosaveinterval: 5000
-2026-11-16T06:57:33.633Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.cache: none
-2026-11-16T06:57:33.634Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.data: file
-2026-11-16T06:57:33.634Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.datadirectory: /usr/local/structurizr
-2026-11-16T06:57:33.635Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.debug: false
-2026-11-16T06:57:33.636Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.editable: true
-2026-11-16T06:57:33.636Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.logging.filename: /usr/local/structurizr/.structurizr/logs/structurizr.log
-2026-11-16T06:57:33.637Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.network.timeout: 60000
-2026-11-16T06:57:33.638Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.network.urls.allowed: .*
-2026-11-16T06:57:33.638Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.search: lucene
-2026-11-16T06:57:33.639Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.themes: /usr/local/structurizr/themes/
-2026-11-16T06:57:33.640Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.workspace.maxsize: 1MB
-2026-11-16T06:57:33.640Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.workspace.threads: 10
-2026-11-16T06:57:33.641Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.workspaces: 1
-2026-11-16T06:57:33.642Z  INFO 1 --- [main] com.structurizr.server.Local             : ***********************************************************************************
-2026-11-16T06:57:33.642Z  INFO 1 --- [main] com.structurizr.server.Local             : Themes:
-2026-11-16T06:57:33.643Z  INFO 1 --- [main] com.structurizr.server.Local             : ***********************************************************************************
-2026-11-16T10:02:49.680Z  INFO 1 --- [SpringApplicationShutdownHook] com.structurizr.server.AbstractServer    : ********************************************************
-2026-11-16T10:02:49.681Z  INFO 1 --- [SpringApplicationShutdownHook] com.structurizr.server.AbstractServer    :  Stopping Structurizr
-2026-11-16T10:02:49.681Z  INFO 1 --- [SpringApplicationShutdownHook] com.structurizr.server.AbstractServer    : ********************************************************
-2026-11-16T10:02:51.137Z  INFO 1 --- [main] com.structurizr.server.Local             : ***********************************************************************************
-2026-11-16T10:02:51.139Z  INFO 1 --- [main] com.structurizr.server.Local             :   _____ _                   _              _          
-2026-11-16T10:02:51.140Z  INFO 1 --- [main] com.structurizr.server.Local             :  / ____| |                 | |            (_)         
-2026-11-16T10:02:51.140Z  INFO 1 --- [main] com.structurizr.server.Local             : | (___ | |_ _ __ _   _  ___| |_ _   _ _ __ _ _____ __ 
-2026-11-16T10:02:51.140Z  INFO 1 --- [main] com.structurizr.server.Local             :  \___ \| __| '__| | | |/ __| __| | | | '__| |_  / '__|
-2026-11-16T10:02:51.141Z  INFO 1 --- [main] com.structurizr.server.Local             :  ____) | |_| |  | |_| | (__| |_| |_| | |  | |/ /| |   
-2026-11-16T10:02:51.141Z  INFO 1 --- [main] com.structurizr.server.Local             : |_____/ \__|_|   \__,_|\___|\__|\__,_|_|  |_/___|_|   
-2026-11-16T10:02:51.142Z  INFO 1 --- [main] com.structurizr.server.Local             :                                                       
-2026-11-16T10:02:51.143Z  INFO 1 --- [main] com.structurizr.server.Local             : Local v2026.10.26
-2026-11-16T10:02:51.144Z  INFO 1 --- [main] com.structurizr.server.Local             : ***********************************************************************************
-2026-11-16T10:02:51.144Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.authentication: none
-2026-11-16T10:02:51.145Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.autorefreshinterval: 0
-2026-11-16T10:02:51.145Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.autosaveinterval: 5000
-2026-11-16T10:02:51.146Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.cache: none
-2026-11-16T10:02:51.146Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.data: file
-2026-11-16T10:02:51.147Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.datadirectory: /usr/local/structurizr
-2026-11-16T10:02:51.147Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.debug: false
-2026-11-16T10:02:51.148Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.editable: true
-2026-11-16T10:02:51.148Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.logging.filename: /usr/local/structurizr/.structurizr/logs/structurizr.log
-2026-11-16T10:02:51.149Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.network.timeout: 60000
-2026-11-16T10:02:51.149Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.network.urls.allowed: .*
-2026-11-16T10:02:51.150Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.search: lucene
-2026-11-16T10:02:51.150Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.themes: /usr/local/structurizr/themes/
-2026-11-16T10:02:51.151Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.workspace.maxsize: 1MB
-2026-11-16T10:02:51.151Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.workspace.threads: 10
-2026-11-16T10:02:51.152Z  INFO 1 --- [main] com.structurizr.server.Local             :  - structurizr.workspaces: 1
-2026-11-16T10:02:51.152Z  INFO 1 --- [main] com.structurizr.server.Local             : ***********************************************************************************
-2026-11-16T10:02:51.153Z  INFO 1 --- [main] com.structurizr.server.Local             : Themes:
-2026-11-16T10:02:51.153Z  INFO 1 --- [main] com.structurizr.server.Local             : ***********************************************************************************
-2026-11-16T13:16:55.629Z  WARN 1 --- [http-nio-8080-exec-1] com.structurizr.view.View                : There is no layout information for the element named Document Processing Runner on view L3_3_RevisedBackendApiComponents
-2026-11-16T13:16:55.634Z  WARN 1 --- [http-nio-8080-exec-1] com.structurizr.view.View                : There is no layout information for the element named Document Parser on view L3_3_RevisedBackendApiComponents
-2026-11-16T13:16:55.634Z  WARN 1 --- [http-nio-8080-exec-1] com.structurizr.view.View                : There is no layout information for the element named Document Analysis Job Runner on view L3_3_RevisedBackendApiComponents
-2026-11-16T13:16:55.635Z  WARN 1 --- [http-nio-8080-exec-1] com.structurizr.view.View                : There is no layout information for the element named Decision Confirmation Service on view L3_3_RevisedBackendApiComponents
+2026-11-16T14:29:17.676Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.index.CorruptIndexException: Problem reading index. (resource=/usr/local/structurizr/.structurizr/index/_0.cfe)
+2026-11-16T14:29:22.304Z ERROR 1 --- [http-nio-8080-exec-7] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:22.306Z ERROR 1 --- [http-nio-8080-exec-7] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:27.353Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:27.354Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:32.303Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:32.304Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:37.325Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:37.326Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:42.302Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:42.304Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:47.307Z ERROR 1 --- [http-nio-8080-exec-7] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:47.309Z ERROR 1 --- [http-nio-8080-exec-7] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:52.287Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:52.289Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:57.301Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:29:57.302Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:30:02.303Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:30:02.304Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:30:07.357Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:30:07.358Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:12.359Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:12.361Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:17.395Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:17.397Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:22.351Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:22.352Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:27.361Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:27.363Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:32.403Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:32.405Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:37.422Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:31:37.424Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:32:02.374Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:32:02.375Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:32:07.386Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:32:07.387Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:33:42.453Z ERROR 1 --- [http-nio-8080-exec-2] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:33:42.454Z ERROR 1 --- [http-nio-8080-exec-2] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:33:47.441Z ERROR 1 --- [http-nio-8080-exec-10] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:33:47.441Z ERROR 1 --- [http-nio-8080-exec-10] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:33:52.481Z ERROR 1 --- [http-nio-8080-exec-6] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:33:52.482Z ERROR 1 --- [http-nio-8080-exec-6] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:33:57.511Z ERROR 1 --- [http-nio-8080-exec-3] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:33:57.512Z ERROR 1 --- [http-nio-8080-exec-3] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:39:18.467Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:39:18.469Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:39:23.451Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:39:23.452Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:39:28.454Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:39:28.455Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:39:33.500Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:39:33.501Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:03.475Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:03.477Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:13.509Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:13.510Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:18.521Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:18.522Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:23.466Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:23.467Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:28.485Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:28.487Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:33.506Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:33.507Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:38.512Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:38.514Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:43.506Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:43.507Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:53.514Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:40:53.516Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:03.582Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:03.583Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:08.544Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:08.547Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:13.532Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:13.534Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:18.545Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:18.546Z ERROR 1 --- [http-nio-8080-exec-4] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:43.560Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:43.561Z ERROR 1 --- [http-nio-8080-exec-5] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:48.623Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:48.624Z ERROR 1 --- [http-nio-8080-exec-1] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:53.588Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:53.589Z ERROR 1 --- [http-nio-8080-exec-8] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:58.602Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:41:58.604Z ERROR 1 --- [http-nio-8080-exec-9] c.s.s.c.s.ApacheLuceneSearchAdapter      : org.apache.lucene.store.AlreadyClosedException: this IndexWriter is closed
+2026-11-16T14:55:01.397Z ERROR 1 --- [http-nio-8080-exec-10] c.s.s.w.w.a.DiagramViewerController      : com.structurizr.dsl.StructurizrDslParserException: A top-level element named 'Authorization Service' already exists at line 169 of /usr/local/structurizr/workspace.dsl: chatDecisionAuthorization = element "Authorization Service" "Backend API" "Builds and rechecks the permitted role, row, column, purpose, and policy scope." "ScenarioStep,ScenarioChat"
+2026-11-16T14:55:14.947Z ERROR 1 --- [http-nio-8080-exec-7] c.s.s.w.w.a.DiagramViewerController      : com.structurizr.dsl.StructurizrDslParserException: A top-level element named 'Authorization Service' already exists at line 169 of /usr/local/structurizr/workspace.dsl: chatDecisionAuthorization = element "Authorization Service" "Backend API" "Builds and rechecks the permitted role, row, column, purpose, and policy scope." "ScenarioStep,ScenarioChat"
