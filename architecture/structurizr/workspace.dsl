@@ -55,7 +55,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
 
                 group "03 Bounded Analysis" {
-                    agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report or interactive analysis graph. For a configuration request, it can produce a structured candidate but cannot activate it." "LangGraph runtime" "AI"
+                    agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report, interactive, configuration-candidate, or document decision-card graph. It can produce structured candidates but cannot confirm, activate, or execute them." "LangGraph runtime" "AI"
                     agentJobRunnerV2 = component "Agent Job Runner" "Claims queued Agent Jobs with its restricted database role, loads the pinned manager-scoped report package, invokes the bounded report graph, and forwards either a narrative result or a terminal model failure for validation. It cannot widen the pinned scope." "PostgreSQL-backed job runner" "AI,Candidate"
                     conversationService = component "Conversation Service" "Stores manager-scoped conversation sessions and validated turns, and returns a bounded history window for interactive analysis. Conversation text is not business evidence." "Deterministic conversation module" "AI"
                     evidenceService = component "Evidence Service" "Builds a traceable Evidence Bundle inside the authorized scope supplied with the request." "Deterministic module" "Evidence"
@@ -65,10 +65,19 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
 
                 group "04 Validate and Deliver" {
-                    outputValidator = component "Output Validator" "Checks the output schema, cited values, evidence references, allowed scope, and response rules. It does not repeat KPI calculation or report-evidence assembly." "Deterministic validator" "Governance"
+                    outputValidator = component "Output Validator" "Checks the output schema, cited values, evidence references, allowed scope, response rules, and decision-card contract. It does not repeat KPI calculation, document parsing, or report-evidence assembly." "Deterministic validator" "Governance"
                     publisherV2 = component "Publisher" "Atomically publishes model-independent canonical JSON with validated Persian narrative when available, or deterministic fallback text when the model API is unavailable. It records publication receipts and artifact failures." "Deterministic publication module" "Processing,Candidate"
                     reportApi = component "Report and Dashboard API" "Reads published reports and dashboard data, and returns validated interactive answers or explicit failures." "Deterministic delivery API" "API"
                     auditService = component "Audit Service" "Records query, model, validation, cost, and failure evidence." "Deterministic module" "Governance"
+                }
+
+                // Keep this feature group after the existing components so their generated
+                // element IDs and the manual layout in workspace.json remain stable.
+                group "05 Document Decision Flow" {
+                    documentProcessingRunner = component "Document Processing Runner" "Accepts an authorized upload from the Manager Request Router, preserves the original bytes, invokes deterministic parsing, and creates a Document Analysis Job only after a successful parse. It does not call a model or create a decision." "Deterministic document intake controller" "Processing,Candidate"
+                    documentParser = component "Document Parser" "Reads approved upload bytes, validates a supported document contract, and stores immutable fragments and a parse receipt. It treats document content as data, not instructions." "Deterministic document parser" "Processing"
+                    documentAnalysisJobRunner = component "Document Analysis Job Runner" "Claims only Document Analysis Jobs, reloads their pinned actor, scope, policy, and document fragments, invokes the bounded document decision-card graph, and submits its outcome for validation. It never claims report Agent Jobs or records decisions." "PostgreSQL-backed document job runner" "AI,Candidate"
+                    decisionConfirmationService = component "Decision Confirmation Service" "Stores a validated decision card, returns it for manager review, and accepts an authenticated confirm, edit, or reject command. It forwards only a confirmed card to Decision and Follow-Up and does not execute the decision." "Deterministic decision review control" "Decision"
                 }
             }
 
@@ -101,7 +110,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
             postgres = container "PostgreSQL" "The only product database. It stores product state, analytical results, access policy, checkpoints, and audit records." "PostgreSQL" "Database" {
                 properties {
-                    "schemas.proposed" "ingest, core, org, semantic, analytics, workflow, reporting, decision, agent, audit"
+                    "schemas.proposed" "ingest, core, org, semantic, analytics, workflow, reporting, document, decision, agent, audit"
                     "security" "RLS, FORCE ROW LEVEL SECURITY, non-owner runtime roles, no BYPASSRLS"
                     "runtime.roles.proposed" "ingestion_writer, analytics_worker, application_api, agent_query_reader, audit_reader"
                     "migration.owner" "migration_owner; never used at runtime"
@@ -183,7 +192,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         worker -> agentOrchestrator "Supplies a canonical Insight Brief for an optional bounded Persian narrative" "Internal authenticated call" {
             tags "PrimaryFlow"
         }
-        backendApi -> worker "Queues approved structured uploads and configuration validation" "PostgreSQL-backed jobs"
+        backendApi -> worker "Queues deterministic configuration-validation jobs" "PostgreSQL-backed jobs"
         backendApi -> postgres "Reads and writes scoped application state" "TLS/PostgreSQL"
         worker -> postgres "Reads snapshots and writes deterministic results" "TLS/PostgreSQL"
         worker -> fileArchive "Archives and reads approved source bytes" "Restricted file API"
@@ -227,20 +236,44 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         managerInputService -> configurationService "Routes a configuration candidate" {
             tags "ControlFlow"
         }
-        managerInputService -> decisionTracker "Routes an explicit human decision" {
-            tags "ControlFlow"
-        }
-        managerInputService -> agentOrchestrator "Starts an interactive graph" {
+        managerInputService -> agentOrchestrator "Starts an interactive question or chat decision-card graph" {
             tags "PrimaryFlow"
         }
         agentOrchestrator -> configurationService "Submits a structured configuration candidate for explicit approval" {
             tags "ControlFlow"
         }
-        managerInputService -> fileArchive "Preserves original upload bytes" {
+        managerInputService -> documentProcessingRunner "Routes an authorized document upload" {
+            tags "PrimaryFlow"
+        }
+        managerInputService -> decisionConfirmationService "Routes an authenticated confirm, edit, or reject command" {
             tags "ControlFlow"
         }
-        managerInputService -> worker "Queues an approved structured upload" {
+        documentProcessingRunner -> fileArchive "Preserves original upload bytes, hash, and manifest" {
             tags "ControlFlow"
+        }
+        documentProcessingRunner -> documentParser "Requests deterministic parsing of the archived upload" {
+            tags "PrimaryFlow"
+        }
+        documentParser -> fileArchive "Reads approved original upload bytes" {
+            tags "DataFlow"
+        }
+        documentParser -> postgres "Stores immutable document fragments and a parse receipt" {
+            tags "ControlFlow"
+        }
+        documentProcessingRunner -> postgres "Creates a Document Analysis Job only after a successful parse" {
+            tags "ControlFlow"
+        }
+        documentAnalysisJobRunner -> postgres "Claims a Document Analysis Job and loads its pinned actor, scope, policy, and fragments" {
+            tags "DataFlow"
+        }
+        documentAnalysisJobRunner -> authorizationService "Revalidates document access and decision-card scope" {
+            tags "PolicyCheck"
+        }
+        documentAnalysisJobRunner -> agentOrchestrator "Invokes the bounded document decision-card graph" {
+            tags "PrimaryFlow"
+        }
+        documentAnalysisJobRunner -> outputValidator "Submits a decision-card candidate or explicit terminal failure" {
+            tags "PrimaryFlow"
         }
         configurationService -> authorizationService "Checks actor authority and affected scope" {
             tags "PolicyCheck"
@@ -328,6 +361,21 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             tags "ControlFlow"
         }
         outputValidator -> conversationService "Stores the validated answer or explicit terminal failure" {
+            tags "ControlFlow"
+        }
+        outputValidator -> decisionConfirmationService "Releases a valid decision card for manager review" {
+            tags "PrimaryFlow"
+        }
+        decisionConfirmationService -> postgres "Stores the decision candidate, validated card, source references, and review status" {
+            tags "ControlFlow"
+        }
+        decisionConfirmationService -> webApp "Returns the decision card or review status" {
+            tags "PrimaryFlow"
+        }
+        decisionConfirmationService -> agentOrchestrator "Requests a revised decision card after a manager edit" {
+            tags "Feedback"
+        }
+        decisionConfirmationService -> decisionTracker "Forwards only a manager-confirmed decision card" {
             tags "ControlFlow"
         }
         outputValidator -> reportApi "Releases a valid result or explicit failure" {
@@ -464,9 +512,9 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         }
 
         // Revised C4 Level 3 views.
-        component backendApi L3_3_RevisedBackendApiComponents "Revised Backend API view with separate authorized request routing, scheduler-only run control, bounded agent execution, configuration control, validation, publication, and delivery." {
+        component backendApi L3_3_RevisedBackendApiComponents "Revised Backend API view with authorized request routing, in-process document intake and parsing, separate report and document job runners, manager-confirmed decision cards, scheduler-only run control, validation, publication, and delivery." {
             title "03.3 - C4 Level 3 - Revised Backend API Components"
-            include webApp worker fileArchive identityProvider llmProvider postgres runStatusClientV2 identityBoundary authorizationService managerInputService configurationService decisionTracker runCoordinatorV2 agentJobRunnerV2 agentOrchestrator conversationService evidenceService queryGateway sqlGuard modelGateway outputValidator publisherV2 reportApi auditService
+            include webApp worker fileArchive identityProvider llmProvider postgres runStatusClientV2 identityBoundary authorizationService managerInputService configurationService decisionTracker runCoordinatorV2 documentProcessingRunner documentParser documentAnalysisJobRunner agentJobRunnerV2 agentOrchestrator conversationService evidenceService queryGateway sqlGuard modelGateway outputValidator decisionConfirmationService publisherV2 reportApi auditService
             exclude "configurationService -> authorizationService"
             exclude "decisionTracker -> authorizationService"
             exclude "evidenceService -> authorizationService"
@@ -479,11 +527,13 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             exclude "outputValidator -> authorizationService"
             exclude "outputValidator -> evidenceService"
             exclude "reportApi -> authorizationService"
+            autoLayout lr 200 100
         }
 
-        component worker L3_4_RevisedBackgroundWorkerComponents "Revised Background Worker view with PostgreSQL-backed run-stage execution, independent configuration validation, deterministic analytics, and one-manager-at-a-time report evidence assembly." {
+        component worker L3_4_RevisedBackgroundWorkerComponents "Revised Background Worker view with PostgreSQL-backed run-stage execution, independent configuration validation, deterministic analytics, and one-manager-at-a-time report evidence assembly. Manager document processing remains inside the Backend API." {
             title "03.4 - C4 Level 3 - Revised Background Worker Components"
             include nightlySources hiddenDataset postgres fileArchive configurationService runCoordinatorV2 agentJobRunnerV2 runStageCoordinatorV2 configurationValidationRunnerV2 ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportEvidenceBuilderV2
+            autoLayout lr 200 100
         }
 
         component schedulerReplay L3_5_RevisedSchedulerReplayComponents "Revised Scheduler and Replay Runner view that controls simulated time and replay through the Backend Run Coordinator and runs acceptance checks outside the daily publication path." {

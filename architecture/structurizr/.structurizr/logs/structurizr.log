@@ -59,3 +59,7 @@
 2026-11-16T10:02:51.152Z  INFO 1 --- [main] com.structurizr.server.Local             : ***********************************************************************************
 2026-11-16T10:02:51.153Z  INFO 1 --- [main] com.structurizr.server.Local             : Themes:
 2026-11-16T10:02:51.153Z  INFO 1 --- [main] com.structurizr.server.Local             : ***********************************************************************************
+2026-11-16T13:16:55.629Z  WARN 1 --- [http-nio-8080-exec-1] com.structurizr.view.View                : There is no layout information for the element named Document Processing Runner on view L3_3_RevisedBackendApiComponents
+2026-11-16T13:16:55.634Z  WARN 1 --- [http-nio-8080-exec-1] com.structurizr.view.View                : There is no layout information for the element named Document Parser on view L3_3_RevisedBackendApiComponents
+2026-11-16T13:16:55.634Z  WARN 1 --- [http-nio-8080-exec-1] com.structurizr.view.View                : There is no layout information for the element named Document Analysis Job Runner on view L3_3_RevisedBackendApiComponents
+2026-11-16T13:16:55.635Z  WARN 1 --- [http-nio-8080-exec-1] com.structurizr.view.View                : There is no layout information for the element named Decision Confirmation Service on view L3_3_RevisedBackendApiComponents
