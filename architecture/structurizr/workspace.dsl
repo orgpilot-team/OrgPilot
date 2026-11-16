@@ -48,31 +48,33 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
 
                 group "02 Request Routing" {
-                    managerInputService = component "Manager Request Router" "Routes report reads, questions, uploads, configuration changes, and decisions." "Deterministic module" "API"
-                    configurationService = component "Configuration Service" "Versions and validates configuration candidates before activation." "Deterministic module" "Governance"
-                    decisionTracker = component "Decision and Follow-Up" "Records human decisions and follow-up events. It executes no action." "Deterministic module" "Decision"
-                    runCoordinatorV2 = component "Run Coordinator" "Creates each pinned run and its complete job plan, stores job dependencies and manager order, monitors terminal job states, and closes the run. It does not execute jobs." "Deterministic run control" "Governance,Candidate"
+                    managerInputService = component "Manager Request Router" "Classifies each authorized request by its explicit request type and sends it to one fixed handler. It does not authorize requests, execute work, or create jobs." "Deterministic request dispatcher" "API"
+                    configurationService = component "Configuration Service" "Accepts authorized configuration candidates, stores inactive versions, queues deterministic validation, and activates only an approved valid version. It does not calculate KPIs." "Deterministic configuration control" "Governance"
+                    decisionTracker = component "Decision and Follow-Up" "Records an authorized human decision, its owner, deadline, success criteria, and later follow-up results. It does not execute the decision." "Deterministic decision control" "Decision"
+                    runCoordinatorV2 = component "Run Coordinator" "Accepts run commands only from the Scheduler and Replay Runner. It creates each pinned run and its complete job plan, stores dependencies and manager order, monitors terminal jobs, and closes the run. It does not execute jobs." "Deterministic run control" "Governance,Candidate"
                 }
 
                 group "03 Bounded Analysis" {
-                    agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report or interactive analysis graph." "LangGraph runtime" "AI"
-                    agentJobRunnerV2 = component "Agent Job Runner" "Claims queued agent jobs, invokes the bounded report graph, and forwards either a narrative result or a terminal model failure for validation." "PostgreSQL-backed job runner" "AI,Candidate"
-                    evidenceService = component "Evidence Service" "Builds an authorized and traceable evidence bundle." "Deterministic module" "Evidence"
+                    agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report or interactive analysis graph. For a configuration request, it can produce a structured candidate but cannot activate it." "LangGraph runtime" "AI"
+                    agentJobRunnerV2 = component "Agent Job Runner" "Claims queued Agent Jobs with its restricted database role, loads the pinned manager-scoped report package, invokes the bounded report graph, and forwards either a narrative result or a terminal model failure for validation. It cannot widen the pinned scope." "PostgreSQL-backed job runner" "AI,Candidate"
+                    conversationService = component "Conversation Service" "Stores manager-scoped conversation sessions and validated turns, and returns a bounded history window for interactive analysis. Conversation text is not business evidence." "Deterministic conversation module" "AI"
+                    evidenceService = component "Evidence Service" "Builds a traceable Evidence Bundle inside the authorized scope supplied with the request." "Deterministic module" "Evidence"
                     queryGateway = component "Query Gateway" "Runs registered tools and scoped read-only SQL with limits and audit." "Deterministic query execution" "Query"
                     sqlGuard = component "SQL AST Guard" "Allows one approved SELECT statement and rejects unsafe SQL." "SQL parser and policy" "Security"
                     modelGateway = component "Model Gateway" "Applies token, time, retry, and cost limits to every model call." "Provider-neutral model client" "AI"
                 }
 
                 group "04 Validate and Deliver" {
-                    outputValidator = component "Output Validator" "Checks numbers, evidence, scope, schema, tone, and report rules." "Deterministic validator" "Governance"
+                    outputValidator = component "Output Validator" "Checks the output schema, cited values, evidence references, allowed scope, and response rules. It does not repeat KPI calculation or report-evidence assembly." "Deterministic validator" "Governance"
                     publisherV2 = component "Publisher" "Atomically publishes model-independent canonical JSON with validated Persian narrative when available, or deterministic fallback text when the model API is unavailable. It records publication receipts and artifact failures." "Deterministic publication module" "Processing,Candidate"
-                    reportApi = component "Report and Dashboard API" "Delivers valid reports, dashboard data, answers, or explicit failures." "Deterministic module" "API"
+                    reportApi = component "Report and Dashboard API" "Reads published reports and dashboard data, and returns validated interactive answers or explicit failures." "Deterministic delivery API" "API"
                     auditService = component "Audit Service" "Records query, model, validation, cost, and failure evidence." "Deterministic module" "Governance"
                 }
             }
 
-            worker = container "Background Worker" "Runs deterministic ingestion, snapshots, KPI calculation, workflow projection, signals, Insight Brief construction, report jobs, publication, and evaluation." "Application runtime; shared modular codebase" "Worker" {
+            worker = container "Background Worker" "Executes deterministic ingestion, snapshot, KPI, workflow, signal, report-evidence, and configuration-validation jobs. It stores results in PostgreSQL and does not run agent graphs or publish reports." "Application runtime; shared modular codebase" "Worker" {
                 runStageCoordinatorV2 = component "Run Stage Coordinator" "Claims Ready deterministic jobs from PostgreSQL and invokes ingestion, snapshot, KPI, workflow, signal, and report-evidence components according to stored dependencies. It does not create jobs." "PostgreSQL-backed deterministic job runner" "Processing,Candidate"
+                configurationValidationRunnerV2 = component "Configuration Validation Runner" "Claims configuration-validation jobs, checks KPI SQL, type, unit, scope, rollup, dependencies, and parity fixtures, and stores a validation receipt. It does not activate configuration." "PostgreSQL-backed validation runner" "Governance,Candidate"
                 ingestionCoordinator = component "Ingestion Coordinator" "Checks manifests, hashes, idempotency keys, source status, and atomic batch commits." "Deterministic module" "Processing"
                 sourceAdapters = component "Source Adapters" "Parse versioned source schemas and preserve the source bytes and headers." "Deterministic adapters" "Processing"
                 dataQualityService = component "Data Quality Service" "Records missing sources, late arrivals, duplicates, corrections, schema changes, and quarantine results." "Deterministic module" "DataQuality"
@@ -84,7 +86,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 signalEngine = component "Signal Engine" "Applies R1-R8, ownership, grouping, ranking, suppression, and escalation without LLM." "Deterministic rules" "Analytics"
                 reportJobCoordinator = component "Report Job Coordinator" "Creates one job per active manager and requests a deterministic Insight Brief with pinned context." "Deterministic orchestration" "Processing"
                 insightBriefBuilder = component "Insight Brief Builder" "Builds an authorized Insight Brief and schema-valid canonical JSON from pinned KPI, workflow, signal, query, and evidence results without a model call." "Deterministic report assembly" "Reporting"
-                reportEvidenceBuilderV2 = component "Report Evidence Builder" "Executes one claimed Report Evidence Job. It builds a pinned, manager-scoped Evidence Package and model-independent Canonical Report JSON, stores both, and marks the job complete. It does not create jobs, call a model, or publish reports." "Deterministic report evidence assembly" "Reporting,Candidate"
+                reportEvidenceBuilderV2 = component "Report Evidence Builder" "Executes one claimed Report Evidence Job. It builds and stores one pinned, manager-scoped Evidence Package and model-independent Canonical Report JSON. It does not create jobs, call a model, validate model output, or publish reports." "Deterministic report evidence assembly" "Reporting,Candidate"
                 publisher = component "Publisher" "Atomically publishes canonical JSON and, when available, validated Persian text per manager. It records independent narrative failures and daily coverage." "Deterministic module" "Processing"
                 evaluationService = component "Evaluation Service" "Checks coverage, KPI parity, detection, leakage, time, cost, replay, and output contracts." "Deterministic test harness" "Evaluation"
             }
@@ -231,6 +233,9 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         managerInputService -> agentOrchestrator "Starts an interactive graph" {
             tags "PrimaryFlow"
         }
+        agentOrchestrator -> configurationService "Submits a structured configuration candidate for explicit approval" {
+            tags "ControlFlow"
+        }
         managerInputService -> fileArchive "Preserves original upload bytes" {
             tags "ControlFlow"
         }
@@ -258,6 +263,12 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         // Bounded analysis. Tool and model responses are implicit unless a failure path needs a separate edge.
         agentOrchestrator -> evidenceService "Requests an authorized evidence bundle" {
+            tags "DataFlow"
+        }
+        agentOrchestrator -> conversationService "Stores the manager message and loads bounded conversation history" {
+            tags "DataFlow"
+        }
+        conversationService -> postgres "Reads and writes manager-scoped sessions and conversation turns" {
             tags "DataFlow"
         }
         evidenceService -> authorizationService "Checks evidence scope" {
@@ -314,6 +325,9 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             tags "Feedback"
         }
         outputValidator -> auditService "Records validation evidence" {
+            tags "ControlFlow"
+        }
+        outputValidator -> conversationService "Stores the validated answer or explicit terminal failure" {
             tags "ControlFlow"
         }
         outputValidator -> reportApi "Releases a valid result or explicit failure" {
@@ -380,13 +394,16 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         replayCommandV2 -> runStatusClientV2 "Starts or resumes each simulated day with the pinned date, cutoff, profile, and run options"
         replayCommandV2 -> acceptanceTestHarnessV2 "Starts acceptance checks after the replay range reaches a terminal state"
         runStatusClientV2 -> runCoordinatorV2 "Starts and monitors runs through the internal Backend API"
+        runCoordinatorV2 -> authorizationService "Validates the Scheduler or Replay service identity and run-control permission"
         evaluator -> acceptanceTestHarnessV2 "Starts replay acceptance, hidden-data, and regression checks"
         acceptanceTestHarnessV2 -> evaluationProfileLoaderV2 "Loads acceptance thresholds and limits"
         acceptanceTestHarnessV2 -> runStatusClientV2 "Reads terminal replay run status and artifact references"
         acceptanceTestHarnessV2 -> postgres "Reads replay evidence and writes acceptance results"
 
-        managerInputService -> runCoordinatorV2 "Routes an authorized run-control request"
         runCoordinatorV2 -> postgres "Creates each pinned Run, all Jobs, dependency edges, and manager execution order; monitors terminal states and records final Run status"
+        configurationService -> configurationValidationRunnerV2 "Queues an inactive configuration candidate for deterministic validation" "PostgreSQL-backed job"
+        configurationValidationRunnerV2 -> semanticRegistry "Checks the candidate against current KPI definitions and dependencies"
+        configurationValidationRunnerV2 -> postgres "Claims the validation Job and stores SQL, scope, rollup, parity, and validation receipts"
         runStageCoordinatorV2 -> postgres "Claims run-stage jobs and records stage attempts and outcomes"
         runStageCoordinatorV2 -> ingestionCoordinator "Invokes idempotent intake for the pinned cutoff"
         runStageCoordinatorV2 -> snapshotService "Invokes snapshot creation after intake"
@@ -397,7 +414,6 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         reportEvidenceBuilderV2 -> postgres "Stores the Evidence Package and Canonical Report JSON, completes the Report Evidence Job, and unlocks its existing Agent Job"
 
         agentJobRunnerV2 -> postgres "Claims Ready Agent Jobs and loads Canonical Report JSON, evidence, Snapshot, scope, and checkpoint state"
-        agentJobRunnerV2 -> authorizationService "Revalidates the pinned recipient scope"
         agentJobRunnerV2 -> agentOrchestrator "Invokes the bounded report graph and receives its outcome"
         agentJobRunnerV2 -> outputValidator "Submits canonical JSON with a narrative candidate or explicit model failure"
         outputValidator -> publisherV2 "Releases a validated package or authorizes deterministic fallback publication"
@@ -438,7 +454,6 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         systemContext didrah L1_SystemContext "Business-facing C4 system context for DIDRAH." {
             title "01 - C4 Level 1 - System Context for DIDRAH"
             include seniorManager unitManager teamSupervisor didrah nightlySources managerInputFeed identityProvider llmProvider
-            autoLayout tb
             default
         }
 
@@ -446,51 +461,29 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         container didrah L2_Containers "C4 container view of the DIDRAH applications, data stores, users, and external dependencies." {
             title "02 - C4 Level 2 - Containers for DIDRAH"
             include seniorManager unitManager teamSupervisor nightlySources managerInputFeed identityProvider llmProvider webApp backendApi worker schedulerReplay postgres fileArchive
-            autoLayout tb
         }
 
-        // C4 Level 3: each view opens one container and shows all of its components.
-        component backendApi L3_1_BackendApiComponents "Primary Backend API request-to-response flow with supporting management, data, model, storage, and audit paths." {
-            title "03.1 - C4 Level 3 - Backend API Components"
-            include webApp worker identityProvider llmProvider postgres fileArchive identityBoundary authorizationService managerInputService configurationService queryGateway sqlGuard reportApi decisionTracker agentOrchestrator evidenceService modelGateway outputValidator auditService
+        // Revised C4 Level 3 views.
+        component backendApi L3_3_RevisedBackendApiComponents "Revised Backend API view with separate authorized request routing, scheduler-only run control, bounded agent execution, configuration control, validation, publication, and delivery." {
+            title "03.3 - C4 Level 3 - Revised Backend API Components"
+            include webApp worker fileArchive identityProvider llmProvider postgres runStatusClientV2 identityBoundary authorizationService managerInputService configurationService decisionTracker runCoordinatorV2 agentJobRunnerV2 agentOrchestrator conversationService evidenceService queryGateway sqlGuard modelGateway outputValidator publisherV2 reportApi auditService
             exclude "configurationService -> authorizationService"
             exclude "decisionTracker -> authorizationService"
             exclude "evidenceService -> authorizationService"
             exclude "queryGateway -> authorizationService"
-            exclude "outputValidator -> authorizationService"
-            exclude "reportApi -> authorizationService"
-            exclude "modelGateway -> agentOrchestrator"
-            exclude "outputValidator -> queryGateway"
-            exclude "outputValidator -> evidenceService"
-            exclude "reportApi -> queryGateway"
-            exclude "managerInputService -> worker"
-            exclude "configurationService -> worker"
-
-        }
-
-        component worker L3_2_BackgroundWorkerComponents "Complete C4 component view of Background Worker intake, data quality, snapshots, deterministic analytics, Insight Brief construction, report jobs, publication, and evaluation." {
-            title "03.2 - C4 Level 3 - Background Worker Components"
-            include nightlySources hiddenDataset schedulerReplay backendApi postgres fileArchive ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportJobCoordinator insightBriefBuilder publisher evaluationService
-            
-        }
-
-        // Revised comparison views. The current L3_1 and L3_2 views above are unchanged.
-        component backendApi L3_3_RevisedBackendApiComponents "Revised Backend API view with centralized run control, bounded agent execution, validation, fallback, publication, and delivery." {
-            title "03.3 - C4 Level 3 - Revised Backend API Components"
-            include webApp identityProvider llmProvider postgres runStatusClientV2 identityBoundary authorizationService managerInputService runCoordinatorV2 agentJobRunnerV2 agentOrchestrator evidenceService queryGateway sqlGuard modelGateway outputValidator publisherV2 reportApi
+            exclude "worker -> backendApi"
+            exclude "worker -> agentOrchestrator"
             exclude "sqlGuard -> queryGateway"
             exclude "modelGateway -> agentOrchestrator"
-            exclude "agentOrchestrator -> outputValidator"
             exclude "outputValidator -> queryGateway"
             exclude "outputValidator -> authorizationService"
             exclude "outputValidator -> evidenceService"
             exclude "reportApi -> authorizationService"
-            exclude "reportApi -> queryGateway"
         }
 
-        component worker L3_4_RevisedBackgroundWorkerComponents "Revised Background Worker view with PostgreSQL-backed stage dispatch, deterministic processing, and report evidence assembly." {
+        component worker L3_4_RevisedBackgroundWorkerComponents "Revised Background Worker view with PostgreSQL-backed run-stage execution, independent configuration validation, deterministic analytics, and one-manager-at-a-time report evidence assembly." {
             title "03.4 - C4 Level 3 - Revised Background Worker Components"
-            include nightlySources hiddenDataset postgres fileArchive runCoordinatorV2 agentJobRunnerV2 runStageCoordinatorV2 ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportEvidenceBuilderV2
+            include nightlySources hiddenDataset postgres fileArchive configurationService runCoordinatorV2 agentJobRunnerV2 runStageCoordinatorV2 configurationValidationRunnerV2 ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportEvidenceBuilderV2
         }
 
         component schedulerReplay L3_5_RevisedSchedulerReplayComponents "Revised Scheduler and Replay Runner view that controls simulated time and replay through the Backend Run Coordinator and runs acceptance checks outside the daily publication path." {
@@ -498,97 +491,9 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             include evaluator managerInputFeed postgres runCoordinatorV2 replayCommandV2 simulationClockV2 evaluationProfileLoaderV2 runStatusClientV2 acceptanceTestHarnessV2
         }
 
-        // C4 supporting views: numbered runtime interactions for complex or recurring behavior.
-        dynamic worker S1_NightlyReporting "Model-independent canonical JSON assembly and optional Persian narrative request." {
-            title "04.1 - Supporting Dynamic - Nightly Reporting"
-            schedulerReplay -> reportJobCoordinator "Create one report job per active manager"
-            reportJobCoordinator -> insightBriefBuilder "Request an authorized Insight Brief with pinned context"
-            insightBriefBuilder -> postgres "Read deterministic results, query references, evidence, and access scope"
-            insightBriefBuilder -> publisher "Release schema-valid canonical JSON without a model call"
-            insightBriefBuilder -> backendApi "Request deterministic validation and optional Persian narrative"
-            publisher -> postgres "Atomically publish each valid artifact and record explicit artifact failures"
-            publisher -> evaluationService "Report package, narrative, and export outcomes"
-            evaluationService -> schedulerReplay "Return complete or partial run status"
-            schedulerReplay -> postgres "Record coverage, time, cost, and final run state"
-            autoLayout tb
-        }
-
-        dynamic backendApi S2_InteractiveQuery "A manager question becomes a constrained SQL query, a row-filtered result, and a checked answer." {
-            title "04.2 - Supporting Dynamic - Interactive Query"
-            teamSupervisor -> webApp "Ask a scoped question"
-            webApp -> identityBoundary "Submit session and question"
-            identityBoundary -> identityProvider "Validate identity"
-            identityBoundary -> authorizationService "Build trusted AuthContext"
-            managerInputService -> agentOrchestrator "Start interactive graph with pinned Snapshot"
-            agentOrchestrator -> evidenceService "Read permitted context"
-            evidenceService -> queryGateway "Run a registered query or validate a QuerySpec"
-            queryGateway -> sqlGuard "Parse and validate one SELECT statement"
-            queryGateway -> postgres "Execute read-only SQL with forced row-level security and limits"
-            queryGateway -> auditService "Record actual SQL, scope, Snapshot, and result hash"
-            agentOrchestrator -> modelGateway "Draft answer from executed results only"
-            modelGateway -> llmProvider "Request bounded completion"
-            agentOrchestrator -> outputValidator "Check numbers, evidence, scope, and answer-quality schema"
-            outputValidator -> queryGateway "Recheck referenced numbers"
-            reportApi -> webApp "Return checked Persian answer, query identifier, and permitted SQL"
-            autoLayout tb
-        }
-
-        dynamic backendApi S3_HumanDecision "The system proposes. A human decides and authorizes any external action." {
-            title "04.3 - Supporting Dynamic - Human Decision"
-            unitManager -> webApp "Read decision card and evidence"
-            webApp -> identityBoundary "Submit explicit decision"
-            identityBoundary -> authorizationService "Build trusted actor and decision scope"
-            managerInputService -> decisionTracker "Record select, delegate, close, or escalate"
-            decisionTracker -> postgres "Append decision, owner, deadline, and success criteria"
-            decisionTracker -> agentOrchestrator "Request task or message draft only"
-            agentOrchestrator -> modelGateway "Draft without sending"
-            modelGateway -> llmProvider "Request bounded draft"
-            decisionTracker -> postgres "Store draft linked to the human decision"
-            unitManager -> webApp "Review and send outside DIDRAH"
-            schedulerReplay -> worker "On later days, measure observations against success criteria"
-            worker -> postgres "Append supported follow-up result and limitations"
-            autoLayout tb
-        }
-
-        dynamic didrah S4_ReplayRecovery "Replay uses the production path and resumes from durable stage outcomes." {
-            title "04.4 - Supporting Dynamic - Replay and Recovery"
-            evaluator -> schedulerReplay "Start mornings 62-91 with an EvaluationProfile"
-            schedulerReplay -> postgres "Claim replay namespace, run lease, and pinned versions"
-            hiddenDataset -> worker "Supply hidden drops through normal adapters"
-            schedulerReplay -> worker "Run the same intake, KPI, workflow, and signal stages"
-            worker -> postgres "Record stage outcomes and checkpoints"
-            schedulerReplay -> backendApi "Run reports and scripted questions"
-            backendApi -> postgres "Record packages, answer quality, query, model, and validation evidence"
-            schedulerReplay -> postgres "Resume failed stages with the same idempotency keys"
-            evaluator -> backendApi "Read acceptance report and explicit partial failures"
-            autoLayout tb
-        }
-
-        dynamic didrah S5_IndependentPublication "A model failure does not stop deterministic JSON publication. Invalid artifacts remain isolated per manager." {
-            title "04.5 - Supporting Dynamic - Independent Publication"
-            schedulerReplay -> worker "Start manager A and manager B report jobs"
-            worker -> postgres "Build and publish both valid canonical JSON artifacts without the model"
-            worker -> backendApi "Request optional manager A and manager B Persian narratives"
-            backendApi -> llmProvider "Request manager A draft within retry and cost limits; receive terminal failure"
-            backendApi -> postgres "Record manager A narrative failure without a fabricated draft"
-            worker -> postgres "Keep manager A JSON published and continue manager B"
-            backendApi -> llmProvider "Request manager B draft within retry and cost limits"
-            backendApi -> postgres "Store manager B validation receipt and valid Persian text outcome"
-            worker -> postgres "Publish manager B JSON and validated text without changing manager A"
-            autoLayout tb
-        }
-
-        // C4 supporting view: container instances mapped to one deployment environment.
-        deployment * "Evaluation" S6_EvaluationDeployment "C4 deployment view for one-command Docker Compose execution on the evaluator reference host." {
-            title "04.6 - Supporting Deployment - Evaluation Environment"
-            include *
-            autoLayout lr
-        }
-
         // Numbered end-to-end scenario for the revised L3 architecture.
         custom S7_ReportGenerationScenario "04.7 - Scenario - Report Generation" "Primary report-generation path across Scheduler, Backend API, Background Worker, and PostgreSQL." {
             include reportScenarioReplay reportScenarioRunStatus reportScenarioRunCoordinator reportScenarioPostgres reportScenarioRunStage reportScenarioIngestion reportScenarioSnapshot reportScenarioKpi reportScenarioWorkflow reportScenarioSignal reportScenarioEvidenceBuilder reportScenarioAgentRunner reportScenarioAuthorization reportScenarioAgent reportScenarioValidator reportScenarioPublisher reportScenarioDelivery
-            autoLayout lr 350 160
         }
 
         styles {

@@ -1,0 +1,183 @@
+flowchart LR
+
+    %% External elements
+    WEB["Web Application"]
+    IDP["Identity Provider"]
+    LLM["Language Model Provider"]
+    DB[("PostgreSQL")]
+    ARCHIVE[("Protected File Archive")]
+    SOURCES["Simulated Nightly Sources"]
+
+    %% Backend API
+    subgraph API["Backend API"]
+
+        subgraph ACCESS["01 Access"]
+            IB["Identity Boundary"]
+            AUTH["Authorization Service"]
+        end
+
+        subgraph ROUTING["02 Request Routing"]
+            ROUTER["Manager Request Router"]
+            CONFIG["Configuration Service"]
+            DECISION["Decision and Follow-Up"]
+            RUNCOORD["Run Coordinator"]
+            
+            DOC_PROCESS["Document Processing Runner<br/>(NEW)"]
+            DOC_PARSER["Document Parser<br/>(NEW)"]
+            DECISION_CONFIRM["Decision Confirmation Service<br/>(NEW)"]
+        end
+
+        subgraph ANALYSIS["03 Bounded Analysis"]
+            AGENT_RUNNER["Agent Job Runner<br/>Report jobs only"]
+            DOC_AGENT_RUNNER["Document Analysis Job Runner<br/>(NEW: document jobs only)"]
+
+            AGENT["Bounded Agent Orchestrator"]
+            CONVERSATION["Conversation Service"]
+            EVIDENCE["Evidence Service"]
+            QUERY["Query Gateway"]
+            SQL_GUARD["SQL AST Guard"]
+            MODEL["Model Gateway"]
+        end
+
+        subgraph DELIVERY["04 Validate and Deliver"]
+            VALIDATOR["Output Validator"]
+            PUBLISHER["Publisher"]
+            REPORT_API["Report and Dashboard API"]
+            AUDIT["Audit Service"]
+        end
+    end
+
+    %% Background Worker
+    subgraph WORKER["Background Worker"]
+
+        RUN_STAGE["Run Stage Coordinator"]
+        CONFIG_RUNNER["Configuration Validation Runner"]
+
+        INGEST["Ingestion Coordinator"]
+        ADAPTERS["Source Adapters"]
+        DQ["Data Quality Service"]
+
+        SNAPSHOT["Snapshot Service"]
+        PROJECTION["Projection Service"]
+        SEMANTIC["Semantic Registry"]
+        KPI["KPI Calculator"]
+        WORKFLOW["Workflow Engine"]
+        SIGNAL["Signal Engine"]
+        REPORT_EVIDENCE["Report Evidence Builder"]
+    end
+
+    %% Normal request entry
+    WEB -->|"Submit session and request"| IB
+    IB -->|"Validate identity"| IDP
+    IB -->|"Create trusted AuthContext"| AUTH
+    AUTH -->|"Read hierarchy, grants and policy"| DB
+    AUTH -->|"Pass trusted scope and request context"| ROUTER
+
+    %% Chat decision path
+    ROUTER -->|"Start interactive decision-card graph"| AGENT
+    AGENT -->|"Store message and read bounded history"| CONVERSATION
+    CONVERSATION -->|"Read and write scoped conversation turns"| DB
+
+    AGENT -->|"Request authorized evidence"| EVIDENCE
+    EVIDENCE -->|"Read approved document fragments"| ARCHIVE
+    EVIDENCE -->|"Run registered evidence query"| QUERY
+
+    QUERY -->|"Validate SELECT"| SQL_GUARD
+    QUERY -->|"Run scoped read-only query"| DB
+    QUERY -->|"Record query evidence"| AUDIT
+
+    AGENT -->|"Request bounded decision-card draft"| MODEL
+    MODEL -->|"Request bounded completion"| LLM
+    MODEL -->|"Record model and cost evidence"| AUDIT
+
+    AGENT -->|"Submit decision card and evidence references"| VALIDATOR
+    VALIDATOR -->|"Release valid decision card"| DECISION_CONFIRM
+    DECISION_CONFIRM -->|"Store candidate, card and review status"| DB
+    DECISION_CONFIRM -->|"Return card for manager review"| WEB
+
+    %% Upload entry path
+    ROUTER -->|"Route authorized upload"| DOC_PROCESS
+    DOC_PROCESS -->|"Preserve original bytes, hash and manifest"| ARCHIVE
+    DOC_PROCESS -->|"Request deterministic parsing"| DOC_PARSER
+
+    DOC_PARSER -->|"Read original upload bytes"| ARCHIVE
+    DOC_PARSER -->|"Store fragments and parse receipt"| DB
+
+    DOC_PROCESS -->|"Create Document Analysis Job after successful parse"| DB
+
+    %% Separate document analysis runner
+    DOC_AGENT_RUNNER -->|"Claim Document Analysis Job and load fragments"| DB
+    DOC_AGENT_RUNNER -->|"Revalidate actor, scope and document access"| AUTH
+    DOC_AGENT_RUNNER -->|"Invoke document decision-card graph"| AGENT
+
+    %% Manager confirmation path
+    ROUTER -->|"Route confirm, edit or reject command"| DECISION_CONFIRM
+
+    DECISION_CONFIRM -->|"Request card revision after manager edit"| AGENT
+    DECISION_CONFIRM -->|"Submit confirmed decision only"| DECISION
+
+    DECISION -->|"Recheck decision authority"| AUTH
+    DECISION -->|"Append confirmed DecisionEvent"| DB
+    DECISION -->|"Request task or message draft only"| AGENT
+
+    %% Existing report Agent Job Runner remains separate
+    AGENT_RUNNER -->|"Claim Report Agent Job and load report package"| DB
+    AGENT_RUNNER -->|"Invoke bounded report graph"| AGENT
+    AGENT_RUNNER -->|"Submit report result or model failure"| VALIDATOR
+
+    VALIDATOR -->|"Release validated report or fallback"| PUBLISHER
+    PUBLISHER -->|"Commit report and publication receipt"| DB
+    PUBLISHER -->|"Record publication evidence"| AUDIT
+
+    %% Existing read routes
+    ROUTER -->|"Route published report and dashboard read"| REPORT_API
+    REPORT_API -->|"Read published results"| DB
+    REPORT_API -->|"Return authorized result"| WEB
+
+    %% Existing configuration path
+    ROUTER -->|"Route configuration candidate"| CONFIG
+    CONFIG -->|"Store inactive configuration version"| DB
+    CONFIG -->|"Queue deterministic validation"| CONFIG_RUNNER
+    CONFIG_RUNNER -->|"Read KPI definitions and dependencies"| SEMANTIC
+    CONFIG_RUNNER -->|"Store validation receipt"| DB
+
+    %% Existing worker flow: no document processing
+    RUNCOORD -->|"Create pinned runs and jobs"| DB
+    RUN_STAGE -->|"Claim deterministic run-stage jobs"| DB
+
+    RUN_STAGE -->|"Invoke intake"| INGEST
+    INGEST -->|"Read nightly files"| SOURCES
+    INGEST -->|"Parse versioned source schemas"| ADAPTERS
+    ADAPTERS -->|"Preserve source bytes and headers"| ARCHIVE
+    ADAPTERS -->|"Submit accepted and rejected rows"| DQ
+    DQ -->|"Store records, quarantine and DataIssues"| DB
+
+    RUN_STAGE -->|"Invoke snapshot creation"| SNAPSHOT
+    SNAPSHOT -->|"Build reproducible projections"| PROJECTION
+    PROJECTION -->|"Store projections"| DB
+
+    RUN_STAGE -->|"Invoke KPI calculations"| KPI
+    KPI -->|"Read registered KPI definitions"| SEMANTIC
+    KPI -->|"Store KPI observations and lineage"| DB
+
+    RUN_STAGE -->|"Invoke workflow reconstruction"| WORKFLOW
+    WORKFLOW -->|"Store workflow observations"| DB
+
+    RUN_STAGE -->|"Invoke signal detection"| SIGNAL
+    SIGNAL -->|"Store signals and escalation state"| DB
+
+    RUN_STAGE -->|"Invoke report evidence assembly"| REPORT_EVIDENCE
+    REPORT_EVIDENCE -->|"Store Evidence Package and Canonical Report JSON"| DB
+
+    %% Styles
+    classDef newComponent fill:#f97316,stroke:#9a3412,color:#ffffff,stroke-width:3px;
+    classDef existingApi fill:#2563eb,stroke:#1e3a8a,color:#ffffff;
+    classDef existingWorker fill:#0f766e,stroke:#134e4a,color:#ffffff;
+    classDef external fill:#475569,stroke:#1e293b,color:#ffffff;
+    classDef storage fill:#7c3aed,stroke:#4c1d95,color:#ffffff;
+
+    class DOC_PROCESS,DOC_PARSER,DOC_AGENT_RUNNER,DECISION_CONFIRM newComponent;
+    class IB,AUTH,ROUTER,CONFIG,DECISION,RUNCOORD,AGENT_RUNNER,AGENT,CONVERSATION,EVIDENCE,QUERY,SQL_GUARD,MODEL,VALIDATOR,PUBLISHER,REPORT_API,AUDIT existingApi;
+    class RUN_STAGE,CONFIG_RUNNER,INGEST,ADAPTERS,DQ,SNAPSHOT,PROJECTION,SEMANTIC,KPI,WORKFLOW,SIGNAL,REPORT_EVIDENCE existingWorker;
+    class WEB,IDP,LLM,SOURCES external;
+    class DB,ARCHIVE storage;
