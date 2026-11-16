@@ -1,1 +1,34 @@
+# Local editor settings
+.vscode/
+.idea/
+
+# Test and browser automation artifacts
+.playwright-cli/
+playwright-report/
+test-results/
+
+# Temporary and generated output
+tmp/
+output/
+*.tmp
+*.log
+
+# Structurizr local cache
 .structurizr/
+
+# Local backup files
+*.backup-*.html
+*~
+*.bak
+
+# Python cache and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini

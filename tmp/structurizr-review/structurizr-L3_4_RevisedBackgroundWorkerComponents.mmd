@@ -1,0 +1,101 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["03.4 - C4 Level 3 - Revised Background Worker Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    10("<div style='font-weight: bold'>Hidden Evaluation Dataset</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Uses the same data contract<br />with different events and<br />dates.</div>")
+    style 10 fill:#475569,stroke:#313b49,color:#ffffff
+    6("<div style='font-weight: bold'>Simulated Nightly Sources</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Supplies CSV and JSON drops,<br />manifests, organization data,<br />configuration, and history.</div>")
+    style 6 fill:#475569,stroke:#313b49,color:#ffffff
+
+    subgraph 11 ["DIDRAH"]
+      style 11 fill:#ffffff,stroke:#152860,color:#152860
+
+      subgraph 16 ["Backend API"]
+        style 16 fill:#ffffff,stroke:#143697,color:#143697
+
+        subgraph group1 ["02 Request Routing"]
+          style group1 fill:#ffffff,stroke:#60a5fa,color:#60a5fa,stroke-dasharray:5
+
+          22("<div style='font-weight: bold'>Run Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic run control]</div><div style='font-size: 80%; margin-top:10px'>Creates and monitors pinned<br />daily runs, run-stage jobs,<br />replay progress, and final<br />run status.</div>")
+          style 22 fill:#334155,stroke:#232d3b,color:#ffffff
+        end
+
+        subgraph group2 ["03 Bounded Analysis"]
+          style group2 fill:#ffffff,stroke:#5eead4,color:#5eead4,stroke-dasharray:5
+
+          24("<div style='font-weight: bold'>Agent Job Runner</div><div style='font-size: 70%; margin-top: 0px'>[Component: PostgreSQL-backed job runner]</div><div style='font-size: 80%; margin-top:10px'>Claims queued agent jobs,<br />invokes the bounded report<br />graph, and forwards either a<br />narrative result or a<br />terminal model failure for<br />validation.</div>")
+          style 24 fill:#a21caf,stroke:#71137a,color:#ffffff
+        end
+
+      end
+
+      subgraph 33 ["Background Worker"]
+        style 33 fill:#ffffff,stroke:#0a524d,color:#0a524d
+
+        34("<div style='font-weight: bold'>Run Stage Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Component: PostgreSQL-backed stage runner]</div><div style='font-size: 80%; margin-top:10px'>Claims pinned deterministic<br />run-stage jobs and invokes<br />ingestion, snapshot,<br />projection, KPI, workflow,<br />signal, report-evidence, and<br />evaluation stages in order.</div>")
+        style 34 fill:#334155,stroke:#232d3b,color:#ffffff
+        35("<div style='font-weight: bold'>Ingestion Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Checks manifests, hashes,<br />idempotency keys, source<br />status, and atomic batch<br />commits.</div>")
+        style 35 fill:#334155,stroke:#232d3b,color:#ffffff
+        36("<div style='font-weight: bold'>Source Adapters</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic adapters]</div><div style='font-size: 80%; margin-top:10px'>Parse versioned source<br />schemas and preserve the<br />source bytes and headers.</div>")
+        style 36 fill:#334155,stroke:#232d3b,color:#ffffff
+        37("<div style='font-weight: bold'>Data Quality Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Records missing sources, late<br />arrivals, duplicates,<br />corrections, schema changes,<br />and quarantine results.</div>")
+        style 37 fill:#334155,stroke:#232d3b,color:#ffffff
+        38("<div style='font-weight: bold'>Snapshot Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Pins committed data,<br />organization, access policy,<br />and configuration versions<br />for a run.</div>")
+        style 38 fill:#334155,stroke:#232d3b,color:#ffffff
+        39("<div style='font-weight: bold'>Projection Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Builds reproducible facts and<br />process projections from<br />committed source events.</div>")
+        style 39 fill:#334155,stroke:#232d3b,color:#ffffff
+        40("<div style='font-weight: bold'>Semantic Registry</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic registry]</div><div style='font-size: 80%; margin-top:10px'>Versions KPI definitions,<br />PostgreSQL SQL, units,<br />precision, targets,<br />ownership, and dependencies.</div>")
+        style 40 fill:#166534,stroke:#0f4624,color:#ffffff
+        41("<div style='font-weight: bold'>KPI Calculator</div><div style='font-size: 70%; margin-top: 0px'>[Component: PostgreSQL SQL]</div><div style='font-size: 80%; margin-top:10px'>Executes the 55 approved<br />PostgreSQL KPI queries and<br />records QueryRun and lineage.</div>")
+        style 41 fill:#166534,stroke:#0f4624,color:#ffffff
+        42("<div style='font-weight: bold'>Workflow Engine</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic process analysis]</div><div style='font-size: 80%; margin-top:10px'>Reconstructs three workflows<br />and calculates stage timing,<br />SLA, backlog, and<br />bottlenecks.</div>")
+        style 42 fill:#166534,stroke:#0f4624,color:#ffffff
+        43("<div style='font-weight: bold'>Signal Engine</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic rules]</div><div style='font-size: 80%; margin-top:10px'>Applies R1-R8, ownership,<br />grouping, ranking,<br />suppression, and escalation<br />without LLM.</div>")
+        style 43 fill:#166534,stroke:#0f4624,color:#ffffff
+        45("<div style='font-weight: bold'>Report Evidence Job Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic orchestration]</div><div style='font-size: 80%; margin-top:10px'>Creates one pinned<br />report-evidence job per<br />active manager and records<br />job attempts, outcomes, and<br />daily coverage.</div>")
+        style 45 fill:#334155,stroke:#232d3b,color:#ffffff
+        47("<div style='font-weight: bold'>Report Evidence Builder</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic report evidence assembly]</div><div style='font-size: 80%; margin-top:10px'>Builds a pinned,<br />manager-scoped evidence<br />package and model-independent<br />canonical report JSON from<br />KPI, workflow, signal,<br />QueryRun, lineage, and<br />access-policy results. It<br />does not call a model or<br />publish reports.</div>")
+        style 47 fill:#334155,stroke:#232d3b,color:#ffffff
+        49("<div style='font-weight: bold'>Evaluation Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic test harness]</div><div style='font-size: 80%; margin-top:10px'>Checks coverage, KPI parity,<br />detection, leakage, time,<br />cost, replay, and output<br />contracts.</div>")
+        style 49 fill:#475569,stroke:#313b49,color:#ffffff
+      end
+
+      55[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+      style 55 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+      56["<div style='font-weight: bold'>Protected File Archive</div><div style='font-size: 70%; margin-top: 0px'>[Container: Protected volume or object storage]</div><div style='font-size: 80%; margin-top:10px'>Stores original source and<br />upload bytes with hashes and<br />manifests. It is not a query<br />database.</div>"]
+      style 56 fill:#6d28d9,stroke:#4c1c97,color:#ffffff
+    end
+
+    35-. "<div>Reads expected files and<br />manifests</div><div style='font-size: 70%'></div>" .->6
+    35-. "<div>Reads hidden files through<br />the same adapters</div><div style='font-size: 70%'></div>" .->10
+    35-. "<div>Parses each source contract</div><div style='font-size: 70%'></div>" .->36
+    36-. "<div>Preserves original bytes,<br />headers, and hashes</div><div style='font-size: 70%'></div>" .->56
+    36-. "<div>Submits parsed and rejected<br />rows</div><div style='font-size: 70%'></div>" .->37
+    37-. "<div>Writes accepted records,<br />quarantine, and DataIssues</div><div style='font-size: 70%'></div>" .->55
+    38-. "<div>Pins committed batches, org,<br />policy, and configuration<br />versions</div><div style='font-size: 70%'></div>" .->55
+    38-. "<div>Requests reproducible facts<br />and process projections</div><div style='font-size: 70%'></div>" .->39
+    39-. "<div>Reads events and writes facts<br />and projections</div><div style='font-size: 70%'></div>" .->55
+    41-. "<div>Reads approved PostgreSQL SQL<br />and metadata</div><div style='font-size: 70%'></div>" .->40
+    40-. "<div>Reads versioned KPI<br />definitions and dependencies</div><div style='font-size: 70%'></div>" .->55
+    41-. "<div>Executes KPI SQL and writes<br />observations, QueryRun, and<br />lineage</div><div style='font-size: 70%'></div>" .->55
+    42-. "<div>Reads events and writes case,<br />stage, SLA, and bottleneck<br />observations</div><div style='font-size: 70%'></div>" .->55
+    43-. "<div>Reads KPI and history; writes<br />episodes, ownership,<br />suppression, and escalation</div><div style='font-size: 70%'></div>" .->55
+    49-. "<div>Reads run evidence and writes<br />acceptance results</div><div style='font-size: 70%'></div>" .->55
+    22-. "<div>Creates pinned runs and<br />queues deterministic<br />run-stage jobs</div><div style='font-size: 70%'></div>" .->55
+    34-. "<div>Claims run-stage jobs and<br />records stage attempts and<br />outcomes</div><div style='font-size: 70%'></div>" .->55
+    34-. "<div>Invokes idempotent intake for<br />the pinned cutoff</div><div style='font-size: 70%'></div>" .->35
+    34-. "<div>Invokes snapshot creation<br />after intake</div><div style='font-size: 70%'></div>" .->38
+    34-. "<div>Invokes all approved KPI<br />calculations for the snapshot</div><div style='font-size: 70%'></div>" .->41
+    34-. "<div>Invokes WF1-WF3<br />reconstruction for the<br />snapshot</div><div style='font-size: 70%'></div>" .->42
+    34-. "<div>Invokes deterministic signal<br />detection and ranking</div><div style='font-size: 70%'></div>" .->43
+    34-. "<div>Invokes manager-scoped report<br />job creation</div><div style='font-size: 70%'></div>" .->45
+    34-. "<div>Invokes evaluation after all<br />required report jobs are<br />terminal</div><div style='font-size: 70%'></div>" .->49
+    45-. "<div>Writes report job lease,<br />attempt, outcome, and daily<br />coverage</div><div style='font-size: 70%'></div>" .->55
+    45-. "<div>Requests one pinned report<br />evidence package per active<br />manager</div><div style='font-size: 70%'></div>" .->47
+    47-. "<div>Stores the evidence package<br />and model-independent<br />canonical JSON, then queues<br />one agent job</div><div style='font-size: 70%'></div>" .->55
+    24-. "<div>Claims agent jobs and loads<br />canonical JSON, evidence,<br />Snapshot, scope, and<br />checkpoint state</div><div style='font-size: 70%'></div>" .->55
+    49-. "<div>Reports acceptance results<br />and complete, partial, or<br />failed run status</div><div style='font-size: 70%'></div>" .->22
+
+  end
