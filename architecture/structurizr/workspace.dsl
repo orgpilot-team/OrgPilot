@@ -266,9 +266,6 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         documentAnalysisJobRunner -> postgres "Claims a Document Analysis Job and loads its pinned actor, scope, policy, and fragments" {
             tags "DataFlow"
         }
-        documentAnalysisJobRunner -> authorizationService "Revalidates document access and decision-card scope" {
-            tags "PolicyCheck"
-        }
         documentAnalysisJobRunner -> agentOrchestrator "Invokes the bounded document decision-card graph" {
             tags "PrimaryFlow"
         }
@@ -527,13 +524,11 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             exclude "outputValidator -> authorizationService"
             exclude "outputValidator -> evidenceService"
             exclude "reportApi -> authorizationService"
-            autoLayout lr 200 100
         }
 
         component worker L3_4_RevisedBackgroundWorkerComponents "Revised Background Worker view with PostgreSQL-backed run-stage execution, independent configuration validation, deterministic analytics, and one-manager-at-a-time report evidence assembly. Manager document processing remains inside the Backend API." {
             title "03.4 - C4 Level 3 - Revised Background Worker Components"
             include nightlySources hiddenDataset postgres fileArchive configurationService runCoordinatorV2 agentJobRunnerV2 runStageCoordinatorV2 configurationValidationRunnerV2 ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportEvidenceBuilderV2
-            autoLayout lr 200 100
         }
 
         component schedulerReplay L3_5_RevisedSchedulerReplayComponents "Revised Scheduler and Replay Runner view that controls simulated time and replay through the Backend Run Coordinator and runs acceptance checks outside the daily publication path." {

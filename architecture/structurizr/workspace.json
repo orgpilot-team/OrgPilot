@@ -1449,12 +1449,6 @@
             "sourceId" : "36",
             "tags" : "Relationship,DataFlow"
           }, {
-            "description" : "Revalidates document access and decision-card scope",
-            "destinationId" : "18",
-            "id" : "158",
-            "sourceId" : "36",
-            "tags" : "Relationship,PolicyCheck"
-          }, {
             "description" : "Invokes the bounded document decision-card graph",
             "destinationId" : "23",
             "id" : "159",
@@ -2209,13 +2203,6 @@
   },
   "views" : {
     "componentViews" : [ {
-      "automaticLayout" : {
-        "edgeSeparation" : 50,
-        "nodeSeparation" : 100,
-        "rankDirection" : "LeftRight",
-        "rankSeparation" : 200,
-        "vertices" : true
-      },
       "containerId" : "16",
       "description" : "Revised Backend API view with authorized request routing, in-process document intake and parsing, separate report and document job runners, manager-confirmed decision cards, scheduler-only run control, validation, publication, and delivery.",
       "elements" : [ {
@@ -2374,8 +2361,6 @@
       }, {
         "id" : "157"
       }, {
-        "id" : "158"
-      }, {
         "id" : "159"
       }, {
         "id" : "160"
@@ -2458,13 +2443,6 @@
       } ],
       "title" : "03.3 - C4 Level 3 - Revised Backend API Components"
     }, {
-      "automaticLayout" : {
-        "edgeSeparation" : 50,
-        "nodeSeparation" : 100,
-        "rankDirection" : "LeftRight",
-        "rankSeparation" : 200,
-        "vertices" : true
-      },
       "containerId" : "38",
       "description" : "Revised Background Worker view with PostgreSQL-backed run-stage execution, independent configuration validation, deterministic analytics, and one-manager-at-a-time report evidence assembly. Manager document processing remains inside the Backend API.",
       "elements" : [ {
