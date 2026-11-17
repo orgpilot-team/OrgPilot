@@ -32,3 +32,10 @@ venv/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+
+# Structurizr generated thumbnails and images
+/architecture/structurizr/.structurizr/**/images/
+
+# Structurizr runtime logs
+/architecture/structurizr/.structurizr/**/logs/

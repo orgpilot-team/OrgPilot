@@ -2828,12 +2828,22 @@
           "background" : "#0f766e",
           "tag" : "Query"
         }, {
+          "background" : "#7c2d12",
+          "shape" : "Person",
+          "tag" : "ScenarioActor"
+        }, {
           "background" : "#1d4ed8",
           "tag" : "ScenarioBackend"
+        }, {
+          "background" : "#1d4ed8",
+          "tag" : "ScenarioChat"
         }, {
           "background" : "#6d28d9",
           "shape" : "Cylinder",
           "tag" : "ScenarioDatabase"
+        }, {
+          "background" : "#0f766e",
+          "tag" : "ScenarioDocument"
         }, {
           "background" : "#0e7490",
           "tag" : "ScenarioScheduler"
@@ -2844,6 +2854,10 @@
           "shape" : "RoundedBox",
           "tag" : "ScenarioStep",
           "width" : 360
+        }, {
+          "background" : "#6d28d9",
+          "shape" : "Folder",
+          "tag" : "ScenarioStorage"
         }, {
           "background" : "#0369a1",
           "tag" : "ScenarioWeb"
@@ -3179,7 +3193,7 @@
       "name" : "System Context View: DIDRAH",
       "order" : 1,
       "relationships" : [ {
-        "id" : "100"
+        "id" : "187"
       }, {
         "id" : "93"
       }, {
@@ -3193,7 +3207,7 @@
       }, {
         "id" : "98"
       }, {
-        "id" : "99"
+        "id" : "195"
       } ],
       "softwareSystemId" : "9",
       "title" : "01 - C4 Level 1 - System Context for DIDRAH"

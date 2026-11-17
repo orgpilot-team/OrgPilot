@@ -158,6 +158,101 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         reportScenarioPostgres -> reportScenarioDelivery "18. Deliver the published manager report"
         reportScenarioRunCoordinator -> reportScenarioPostgres "19. After all required Jobs are terminal, persist final status and close the Run"
 
+        // Scenario-only mirrors for two manager decision paths. The names match the
+        // revised Backend API components while keeping these numbered edges isolated
+        // from the reusable L3 component relationships.
+        chatDecisionManager = element "A - Manager" "Scenario A - decision in manager chat" "Submits a decision request, reviews the validated decision card, and remains the only actor that can confirm, edit, reject, and send the decision." "ScenarioStep,ScenarioActor"
+        chatDecisionUi = element "A - Conversational Assistant UI" "Web Application" "Collects the manager chat request, displays the validated decision card, and submits the manager's review command over the authenticated API path." "ScenarioStep,ScenarioWeb"
+        chatDecisionIdentity = element "A - Identity Boundary" "Backend API" "Validates the manager session and creates the trusted identity context." "ScenarioStep,ScenarioChat"
+        chatDecisionAuthorization = element "A - Authorization Service" "Backend API" "Builds and rechecks the permitted role, row, column, purpose, and policy scope." "ScenarioStep,ScenarioChat"
+        chatDecisionRouter = element "A - Manager Request Router" "Backend API" "Routes the authorized chat request and later review command to fixed handlers." "ScenarioStep,ScenarioChat"
+        chatDecisionConversation = element "A - Conversation Service" "Backend API" "Stores manager-scoped turns and supplies a bounded history window; conversation text is not business evidence." "ScenarioStep,ScenarioChat"
+        chatDecisionEvidence = element "A - Evidence Service" "Backend API" "Builds a traceable Evidence Bundle inside the trusted scope." "ScenarioStep,ScenarioChat"
+        chatDecisionQuery = element "A - Query Gateway" "Backend API" "Runs registered tools and scoped read-only SQL with limits and audit." "ScenarioStep,ScenarioChat"
+        chatDecisionSqlGuard = element "A - SQL AST Guard" "Backend API" "Allows one approved SELECT statement and rejects unsafe SQL." "ScenarioStep,ScenarioChat"
+        chatDecisionAgent = element "A - Bounded Agent Orchestrator" "Backend API" "Coordinates the interactive decision-card graph and produces a structured candidate without confirming or executing it." "ScenarioStep,ScenarioChat"
+        chatDecisionModel = element "A - Model Gateway" "Backend API" "Applies token, time, retry, and cost limits to bounded analysis and drafting." "ScenarioStep,ScenarioChat"
+        chatDecisionValidator = element "A - Output Validator" "Backend API" "Checks the decision-card contract, cited values, evidence, scope, and response rules." "ScenarioStep,ScenarioChat"
+        chatDecisionConfirmation = element "A - Decision Confirmation Service" "Backend API" "Stores the validated card and accepts only an authenticated manager review command." "ScenarioStep,ScenarioChat"
+        chatDecisionTracker = element "A - Decision and Follow-Up" "Backend API" "Records a confirmed human decision and its follow-up contract without executing the decision." "ScenarioStep,ScenarioChat"
+        chatDecisionPostgres = element "A - PostgreSQL" "Scenario A state" "Stores policy, scoped conversation, query evidence, review state, confirmed decisions, and follow-up events." "ScenarioStep,ScenarioDatabase"
+
+        chatDecisionManager -> chatDecisionUi "A01. Enter a decision request in manager chat"
+        chatDecisionUi -> chatDecisionIdentity "A02. Submit the session and chat request over HTTPS/JSON"
+        chatDecisionIdentity -> chatDecisionAuthorization "A03. Validate the session and create trusted AuthContext"
+        chatDecisionAuthorization -> chatDecisionRouter "A04. Pass the trusted scope and request context"
+        chatDecisionRouter -> chatDecisionAgent "A05. Route the authorized request to the interactive decision-card graph"
+        chatDecisionAgent -> chatDecisionConversation "A06. Store the manager turn and load bounded history"
+        chatDecisionConversation -> chatDecisionPostgres "A07. Read and write the manager-scoped conversation"
+        chatDecisionAgent -> chatDecisionEvidence "A08. Request an authorized Evidence Bundle"
+        chatDecisionEvidence -> chatDecisionQuery "A09. Run registered evidence queries within the trusted scope"
+        chatDecisionQuery -> chatDecisionSqlGuard "A10. Validate one approved SELECT statement"
+        chatDecisionSqlGuard -> chatDecisionQuery "A11. Return approval or refusal"
+        chatDecisionQuery -> chatDecisionPostgres "A12. Execute approved read-only queries and retain lineage"
+        chatDecisionAgent -> chatDecisionModel "A13. Request bounded analysis and a decision-card draft"
+        chatDecisionModel -> chatDecisionAgent "A14. Return a completion or explicit terminal failure"
+        chatDecisionAgent -> chatDecisionValidator "A15. Submit the draft with evidence references"
+        chatDecisionValidator -> chatDecisionConfirmation "A16. Release only a valid decision card for review"
+        chatDecisionConfirmation -> chatDecisionPostgres "A17. Store the candidate, validated card, sources, and review status"
+        chatDecisionConfirmation -> chatDecisionUi "A18. Return the validated decision card or review status"
+        chatDecisionUi -> chatDecisionManager "A19. Display the decision card; the system does not send or execute it"
+        chatDecisionManager -> chatDecisionUi "A20. Choose confirm, edit, or reject"
+        chatDecisionUi -> chatDecisionIdentity "A21. Submit the authenticated review command"
+        chatDecisionIdentity -> chatDecisionAuthorization "A22. Revalidate identity and recreate trusted AuthContext"
+        chatDecisionAuthorization -> chatDecisionRouter "A23. Pass the authorized review command"
+        chatDecisionRouter -> chatDecisionConfirmation "A24. Route the review command to its fixed handler"
+        chatDecisionConfirmation -> chatDecisionAgent "A25a. On edit, request a revised decision card"
+        chatDecisionConfirmation -> chatDecisionPostgres "A25b. On reject, store the terminal review status"
+        chatDecisionConfirmation -> chatDecisionTracker "A25c. On confirm only, forward the manager-confirmed card"
+        chatDecisionTracker -> chatDecisionAuthorization "A26. Recheck decision authority and affected scope"
+        chatDecisionTracker -> chatDecisionPostgres "A27. Append decision, owner, deadline, success criteria, guardrail, and follow-up; do not execute"
+
+        minutesUploadManager = element "B - Manager" "Scenario B - meeting-minutes upload" "Uploads meeting minutes, then reviews the validated decision card extracted from the approved document evidence." "ScenarioStep,ScenarioActor"
+        minutesUploadUi = element "B - Conversational Assistant UI" "Web Application" "Collects the meeting-minutes upload, displays the validated decision card, and submits the manager's review command over the authenticated API path." "ScenarioStep,ScenarioWeb"
+        minutesUploadIdentity = element "B - Identity Boundary" "Backend API" "Validates the manager session and creates the trusted identity context." "ScenarioStep,ScenarioDocument"
+        minutesUploadAuthorization = element "B - Authorization Service" "Backend API" "Builds and rechecks the permitted role, row, column, purpose, and policy scope." "ScenarioStep,ScenarioDocument"
+        minutesUploadRouter = element "B - Manager Request Router" "Backend API" "Routes the authorized upload and later review command to fixed handlers." "ScenarioStep,ScenarioDocument"
+        minutesUploadProcessing = element "B - Document Processing Runner" "Backend API" "Preserves original bytes, invokes deterministic parsing, and creates a Document Analysis Job only after a successful parse." "ScenarioStep,ScenarioDocument"
+        minutesUploadParser = element "B - Document Parser" "Backend API" "Validates the supported document contract and treats meeting-minutes content as data, not instructions." "ScenarioStep,ScenarioDocument"
+        minutesUploadJobRunner = element "B - Document Analysis Job Runner" "Backend API" "Claims only Document Analysis Jobs and reloads their pinned actor, scope, policy, and fragments." "ScenarioStep,ScenarioDocument"
+        minutesUploadAgent = element "B - Bounded Agent Orchestrator" "Backend API" "Coordinates the document decision-card graph and produces a structured candidate without confirming or executing it." "ScenarioStep,ScenarioDocument"
+        minutesUploadModel = element "B - Model Gateway" "Backend API" "Applies token, time, retry, and cost limits to bounded document analysis and drafting." "ScenarioStep,ScenarioDocument"
+        minutesUploadValidator = element "B - Output Validator" "Backend API" "Checks the decision-card contract, document evidence references, scope, and response rules." "ScenarioStep,ScenarioDocument"
+        minutesUploadConfirmation = element "B - Decision Confirmation Service" "Backend API" "Stores the validated card and accepts only an authenticated manager review command." "ScenarioStep,ScenarioDocument"
+        minutesUploadTracker = element "B - Decision and Follow-Up" "Backend API" "Records a confirmed human decision and its follow-up contract without executing the decision." "ScenarioStep,ScenarioDocument"
+        minutesUploadArchive = element "B - Protected File Archive" "Protected storage" "Stores original upload bytes with their hash and manifest." "ScenarioStep,ScenarioStorage"
+        minutesUploadPostgres = element "B - PostgreSQL" "Scenario B state" "Stores immutable fragments, parse receipts, pinned Document Analysis Jobs, review state, decisions, and follow-up events." "ScenarioStep,ScenarioDatabase"
+
+        minutesUploadManager -> minutesUploadUi "B01. Select meeting minutes and an explicit supported document type"
+        minutesUploadUi -> minutesUploadIdentity "B02. Submit the session and document upload over HTTPS"
+        minutesUploadIdentity -> minutesUploadAuthorization "B03. Validate the session and create trusted AuthContext"
+        minutesUploadAuthorization -> minutesUploadRouter "B04. Pass the trusted scope and upload request context"
+        minutesUploadRouter -> minutesUploadProcessing "B05. Route the authorized document upload"
+        minutesUploadProcessing -> minutesUploadArchive "B06. Preserve original bytes, hash, and manifest"
+        minutesUploadProcessing -> minutesUploadParser "B07. Request deterministic parsing of the archived upload"
+        minutesUploadParser -> minutesUploadArchive "B08. Read only the approved original upload bytes"
+        minutesUploadParser -> minutesUploadPostgres "B09. Validate the contract and store immutable fragments and parse receipt"
+        minutesUploadProcessing -> minutesUploadPostgres "B10. After successful parsing, create a pinned Document Analysis Job"
+        minutesUploadJobRunner -> minutesUploadPostgres "B11. Claim the Job and load pinned actor, scope, policy, and fragments"
+        minutesUploadJobRunner -> minutesUploadAgent "B12. Invoke the bounded document decision-card graph"
+        minutesUploadAgent -> minutesUploadModel "B13. Request bounded analysis of approved document evidence"
+        minutesUploadModel -> minutesUploadAgent "B14. Return a completion or explicit terminal failure"
+        minutesUploadJobRunner -> minutesUploadValidator "B15. Submit the decision-card candidate or explicit terminal failure"
+        minutesUploadValidator -> minutesUploadConfirmation "B16. Release only a valid decision card for review"
+        minutesUploadConfirmation -> minutesUploadPostgres "B17. Store the candidate, validated card, sources, and review status"
+        minutesUploadConfirmation -> minutesUploadUi "B18. Return the validated decision card or review status"
+        minutesUploadUi -> minutesUploadManager "B19. Display the card; the system does not send or execute it"
+        minutesUploadManager -> minutesUploadUi "B20. Choose confirm, edit, or reject"
+        minutesUploadUi -> minutesUploadIdentity "B21. Submit the authenticated review command"
+        minutesUploadIdentity -> minutesUploadAuthorization "B22. Revalidate identity and recreate trusted AuthContext"
+        minutesUploadAuthorization -> minutesUploadRouter "B23. Pass the authorized review command"
+        minutesUploadRouter -> minutesUploadConfirmation "B24. Route the review command to its fixed handler"
+        minutesUploadConfirmation -> minutesUploadAgent "B25a. On edit, request a revised decision card"
+        minutesUploadConfirmation -> minutesUploadPostgres "B25b. On reject, store the terminal review status"
+        minutesUploadConfirmation -> minutesUploadTracker "B25c. On confirm only, forward the manager-confirmed card"
+        minutesUploadTracker -> minutesUploadAuthorization "B26. Recheck decision authority and affected scope"
+        minutesUploadTracker -> minutesUploadPostgres "B27. Append decision, owner, deadline, success criteria, guardrail, and follow-up; do not execute"
+
         // System-level relationships
         seniorManager -> didrah "Reads organization health, workflows, escalations, and pending decisions" "HTTPS"
         unitManager -> didrah "Reads authorized unit and team results and records decisions" "HTTPS"
@@ -482,6 +577,11 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             include reportScenarioReplay reportScenarioRunStatus reportScenarioRunCoordinator reportScenarioPostgres reportScenarioRunStage reportScenarioIngestion reportScenarioSnapshot reportScenarioKpi reportScenarioWorkflow reportScenarioSignal reportScenarioEvidenceBuilder reportScenarioAgentRunner reportScenarioAuthorization reportScenarioAgent reportScenarioValidator reportScenarioPublisher reportScenarioDelivery
         }
 
+        custom S8_ManagerDecisionScenarios "04.8 - Scenario - Manager Chat Decision and Meeting-Minutes Upload" "Two numbered human-in-the-loop decision paths based on the revised Backend API components: a decision initiated in manager chat and a decision card extracted from uploaded meeting minutes." {
+            include chatDecisionManager chatDecisionUi chatDecisionIdentity chatDecisionAuthorization chatDecisionRouter chatDecisionConversation chatDecisionEvidence chatDecisionQuery chatDecisionSqlGuard chatDecisionAgent chatDecisionModel chatDecisionValidator chatDecisionConfirmation chatDecisionTracker chatDecisionPostgres minutesUploadManager minutesUploadUi minutesUploadIdentity minutesUploadAuthorization minutesUploadRouter minutesUploadProcessing minutesUploadParser minutesUploadJobRunner minutesUploadAgent minutesUploadModel minutesUploadValidator minutesUploadConfirmation minutesUploadTracker minutesUploadArchive minutesUploadPostgres
+            autoLayout lr 240 160
+        }
+
         styles {
             element "Element" {
                 shape RoundedBox
@@ -495,6 +595,20 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 fontSize 18
                 width 360
                 height 180
+            }
+            element "ScenarioChat" {
+                background #1d4ed8
+            }
+            element "ScenarioDocument" {
+                background #0f766e
+            }
+            element "ScenarioActor" {
+                shape Person
+                background #7c2d12
+            }
+            element "ScenarioStorage" {
+                shape Folder
+                background #6d28d9
             }
             element "ScenarioScheduler" {
                 background #0e7490
