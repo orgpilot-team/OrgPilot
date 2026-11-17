@@ -21,13 +21,14 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         operator = person "Operator" "Monitors runs, failures, cost, backup, and restore evidence." "Person,Operator"
 
         // External systems
-        nightlySources = softwareSystem "Simulated Nightly Sources" "Supplies CSV and JSON drops, manifests, organization data, configuration, and history." "External,Source"
-        managerInputFeed = softwareSystem "Manager Input Feed" "Supplies scripted questions, priorities, threshold changes, uploads, decisions, and organization changes." "External,Source"
+        inputDataset = softwareSystem "DIDRAH Input Dataset" "Provides nightly drops, manifests, manager inputs, uploads, configuration, and history through one versioned data contract. Development and hidden evaluation datasets use the same structure." "External,Source,Evaluation"
         identityProvider = softwareSystem "Identity Provider" "Authenticates users and supplies a trusted identity. The product or internal method is open." "External,Identity,OpenDecision"
         llmProvider = softwareSystem "Language Model Provider" "Returns bounded language-model completions. The provider and model are open decisions." "External,AI,OpenDecision"
-        hiddenDataset = softwareSystem "Hidden Evaluation Dataset" "Uses the same data contract with different events and dates." "External,Evaluation"
 
         didrah = softwareSystem "DIDRAH" "A bounded agentic management assistant. It computes deterministic metrics and supports human decisions." "Target" {
+            !docs docs
+            !adrs adrs adrtools
+
             properties {
                 "architecture.status" "Proposed"
                 "architecture.style" "Modular Monolith"
@@ -51,12 +52,12 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                     managerInputService = component "Manager Request Router" "Classifies each authorized request by its explicit request type and sends it to one fixed handler. It does not authorize requests, execute work, or create jobs." "Deterministic request dispatcher" "API"
                     configurationService = component "Configuration Service" "Accepts authorized configuration candidates, stores inactive versions, queues deterministic validation, and activates only an approved valid version. It does not calculate KPIs." "Deterministic configuration control" "Governance"
                     decisionTracker = component "Decision and Follow-Up" "Records an authorized human decision, its owner, deadline, success criteria, and later follow-up results. It does not execute the decision." "Deterministic decision control" "Decision"
-                    runCoordinatorV2 = component "Run Coordinator" "Accepts run commands only from the Scheduler and Replay Runner. It creates each pinned run and its complete job plan, stores dependencies and manager order, monitors terminal jobs, and closes the run. It does not execute jobs." "Deterministic run control" "Governance,Candidate"
+                    runCoordinatorV2 = component "Run Coordinator" "Accepts run commands only from the Scheduler and Replay Runner. It creates each pinned run and its complete job plan, stores dependencies and manager order, monitors terminal jobs, and closes the run. It does not execute jobs." "Deterministic run control" "Governance"
                 }
 
                 group "03 Bounded Analysis" {
                     agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report, interactive, configuration-candidate, or document decision-card graph. It can produce structured candidates but cannot confirm, activate, or execute them." "LangGraph runtime" "AI"
-                    agentJobRunnerV2 = component "Agent Job Runner" "Claims queued Agent Jobs with its restricted database role, loads the pinned manager-scoped report package, invokes the bounded report graph, and forwards either a narrative result or a terminal model failure for validation. It cannot widen the pinned scope." "PostgreSQL-backed job runner" "AI,Candidate"
+                    agentJobRunnerV2 = component "Agent Job Runner" "Claims queued Agent Jobs with its restricted database role, loads the pinned manager-scoped report package, invokes the bounded report graph, and forwards either a narrative result or a terminal model failure for validation. It cannot widen the pinned scope." "PostgreSQL-backed job runner" "AI"
                     conversationService = component "Conversation Service" "Stores manager-scoped conversation sessions and validated turns, and returns a bounded history window for interactive analysis. Conversation text is not business evidence." "Deterministic conversation module" "AI"
                     evidenceService = component "Evidence Service" "Builds a traceable Evidence Bundle inside the authorized scope supplied with the request." "Deterministic module" "Evidence"
                     queryGateway = component "Query Gateway" "Runs registered tools and scoped read-only SQL with limits and audit." "Deterministic query execution" "Query"
@@ -66,7 +67,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
                 group "04 Validate and Deliver" {
                     outputValidator = component "Output Validator" "Checks the output schema, cited values, evidence references, allowed scope, response rules, and decision-card contract. It does not repeat KPI calculation, document parsing, or report-evidence assembly." "Deterministic validator" "Governance"
-                    publisherV2 = component "Publisher" "Atomically publishes model-independent canonical JSON with validated Persian narrative when available, or deterministic fallback text when the model API is unavailable. It records publication receipts and artifact failures." "Deterministic publication module" "Processing,Candidate"
+                    publisherV2 = component "Publisher" "Atomically publishes model-independent canonical JSON with validated Persian narrative when available, or deterministic fallback text when the model API is unavailable. It records publication receipts and artifact failures." "Deterministic publication module" "Processing"
                     reportApi = component "Report and Dashboard API" "Reads published reports and dashboard data, and returns validated interactive answers or explicit failures." "Deterministic delivery API" "API"
                     auditService = component "Audit Service" "Records query, model, validation, cost, and failure evidence." "Deterministic module" "Governance"
                 }
@@ -74,16 +75,16 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 // Keep this feature group after the existing components so their generated
                 // element IDs and the manual layout in workspace.json remain stable.
                 group "05 Document Decision Flow" {
-                    documentProcessingRunner = component "Document Processing Runner" "Accepts an authorized upload from the Manager Request Router, preserves the original bytes, invokes deterministic parsing, and creates a Document Analysis Job only after a successful parse. It does not call a model or create a decision." "Deterministic document intake controller" "Processing,Candidate"
+                    documentProcessingRunner = component "Document Processing Runner" "Accepts an authorized upload from the Manager Request Router, preserves the original bytes, invokes deterministic parsing, and creates a Document Analysis Job only after a successful parse. It does not call a model or create a decision." "Deterministic document intake controller" "Processing"
                     documentParser = component "Document Parser" "Reads approved upload bytes, validates a supported document contract, and stores immutable fragments and a parse receipt. It treats document content as data, not instructions." "Deterministic document parser" "Processing"
-                    documentAnalysisJobRunner = component "Document Analysis Job Runner" "Claims only Document Analysis Jobs, reloads their pinned actor, scope, policy, and document fragments, invokes the bounded document decision-card graph, and submits its outcome for validation. It never claims report Agent Jobs or records decisions." "PostgreSQL-backed document job runner" "AI,Candidate"
+                    documentAnalysisJobRunner = component "Document Analysis Job Runner" "Claims only Document Analysis Jobs, reloads their pinned actor, scope, policy, and document fragments, invokes the bounded document decision-card graph, and submits its outcome for validation. It never claims report Agent Jobs or records decisions." "PostgreSQL-backed document job runner" "AI"
                     decisionConfirmationService = component "Decision Confirmation Service" "Stores a validated decision card, returns it for manager review, and accepts an authenticated confirm, edit, or reject command. It forwards only a confirmed card to Decision and Follow-Up and does not execute the decision." "Deterministic decision review control" "Decision"
                 }
             }
 
             worker = container "Background Worker" "Executes deterministic ingestion, snapshot, KPI, workflow, signal, report-evidence, and configuration-validation jobs. It stores results in PostgreSQL and does not run agent graphs or publish reports." "Application runtime; shared modular codebase" "Worker" {
-                runStageCoordinatorV2 = component "Run Stage Coordinator" "Claims Ready deterministic jobs from PostgreSQL and invokes ingestion, snapshot, KPI, workflow, signal, and report-evidence components according to stored dependencies. It does not create jobs." "PostgreSQL-backed deterministic job runner" "Processing,Candidate"
-                configurationValidationRunnerV2 = component "Configuration Validation Runner" "Claims configuration-validation jobs, checks KPI SQL, type, unit, scope, rollup, dependencies, and parity fixtures, and stores a validation receipt. It does not activate configuration." "PostgreSQL-backed validation runner" "Governance,Candidate"
+                runStageCoordinatorV2 = component "Run Stage Coordinator" "Claims Ready deterministic jobs from PostgreSQL and invokes ingestion, snapshot, KPI, workflow, signal, and report-evidence components according to stored dependencies. It does not create jobs." "PostgreSQL-backed deterministic job runner" "Processing"
+                configurationValidationRunnerV2 = component "Configuration Validation Runner" "Claims configuration-validation jobs, checks KPI SQL, type, unit, scope, rollup, dependencies, and parity fixtures, and stores a validation receipt. It does not activate configuration." "PostgreSQL-backed validation runner" "Governance"
                 ingestionCoordinator = component "Ingestion Coordinator" "Checks manifests, hashes, idempotency keys, source status, and atomic batch commits." "Deterministic module" "Processing"
                 sourceAdapters = component "Source Adapters" "Parse versioned source schemas and preserve the source bytes and headers." "Deterministic adapters" "Processing"
                 dataQualityService = component "Data Quality Service" "Records missing sources, late arrivals, duplicates, corrections, schema changes, and quarantine results." "Deterministic module" "DataQuality"
@@ -93,11 +94,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 kpiCalculator = component "KPI Calculator" "Executes the 55 approved PostgreSQL KPI queries and records QueryRun and lineage." "PostgreSQL SQL" "Analytics"
                 workflowEngine = component "Workflow Engine" "Reconstructs three workflows and calculates stage timing, SLA, backlog, and bottlenecks." "Deterministic process analysis" "Analytics"
                 signalEngine = component "Signal Engine" "Applies R1-R8, ownership, grouping, ranking, suppression, and escalation without LLM." "Deterministic rules" "Analytics"
-                reportJobCoordinator = component "Report Job Coordinator" "Creates one job per active manager and requests a deterministic Insight Brief with pinned context." "Deterministic orchestration" "Processing"
-                insightBriefBuilder = component "Insight Brief Builder" "Builds an authorized Insight Brief and schema-valid canonical JSON from pinned KPI, workflow, signal, query, and evidence results without a model call." "Deterministic report assembly" "Reporting"
-                reportEvidenceBuilderV2 = component "Report Evidence Builder" "Executes one claimed Report Evidence Job. It builds and stores one pinned, manager-scoped Evidence Package and model-independent Canonical Report JSON. It does not create jobs, call a model, validate model output, or publish reports." "Deterministic report evidence assembly" "Reporting,Candidate"
-                publisher = component "Publisher" "Atomically publishes canonical JSON and, when available, validated Persian text per manager. It records independent narrative failures and daily coverage." "Deterministic module" "Processing"
-                evaluationService = component "Evaluation Service" "Checks coverage, KPI parity, detection, leakage, time, cost, replay, and output contracts." "Deterministic test harness" "Evaluation"
+                reportEvidenceBuilderV2 = component "Report Evidence Builder" "Executes one claimed Report Evidence Job. It builds and stores one pinned, manager-scoped Evidence Package and model-independent Canonical Report JSON. It does not create jobs, call a model, validate model output, or publish reports." "Deterministic report evidence assembly" "Reporting"
             }
 
             schedulerReplay = container "Scheduler and Replay Runner" "Owns the simulated clock, run lease, replay range, evaluation profile, and resumable job dispatch." "Application command/process" "Scheduler" {
@@ -162,42 +159,36 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         reportScenarioRunCoordinator -> reportScenarioPostgres "19. After all required Jobs are terminal, persist final status and close the Run"
 
         // System-level relationships
-        seniorManager -> didrah "Reads executive reports and records human decisions"
-        unitManager -> didrah "Reads unit reports and records human decisions"
-        teamSupervisor -> didrah "Reads team reports and records human decisions"
-        evaluator -> didrah "Runs replay and acceptance checks"
-        operator -> didrah "Monitors operations and recovery evidence"
-        nightlySources -> didrah "Supplies read-only nightly deliveries"
-        managerInputFeed -> didrah "Submits scripted manager inputs"
-        didrah -> identityProvider "Validates user identities with"
-        didrah -> llmProvider "Requests bounded model completions"
-        hiddenDataset -> didrah "Supplies hidden evaluation data"
+        seniorManager -> didrah "Reads organization health, workflows, escalations, and pending decisions" "HTTPS"
+        unitManager -> didrah "Reads authorized unit and team results and records decisions" "HTTPS"
+        teamSupervisor -> didrah "Reads authorized team results and direct-member workload" "HTTPS"
+        evaluator -> didrah "Runs replay, hidden-data checks, and acceptance tests" "CLI and HTTPS/JSON"
+        operator -> didrah "Monitors runs, failures, cost, backup, and restore evidence" "HTTPS"
+        inputDataset -> didrah "Supplies versioned source data and scripted manager activity" "Read-only filesystem: CSV, JSON, and Markdown"
+        didrah -> identityProvider "Validates trusted user identities" "OIDC or internal authentication over HTTPS"
+        didrah -> llmProvider "Requests bounded model completions" "HTTPS/JSON"
 
         // Container-level relationships
         seniorManager -> webApp "Reads organization health, cross-unit workflows, escalations, and decisions" "HTTPS"
         unitManager -> webApp "Reads authorized unit and team results and records decisions" "HTTPS"
         teamSupervisor -> webApp "Reads authorized team results and direct-member workload" "HTTPS"
-        evaluator -> schedulerReplay "Starts replay and checks outputs" "CLI or API"
+        evaluator -> schedulerReplay "Starts replay and acceptance checks" "CLI and HTTPS/JSON"
         evaluator -> backendApi "Reads acceptance evidence and exported outputs" "HTTPS/JSON"
         operator -> backendApi "Reads authorized operational status" "HTTPS"
-        nightlySources -> worker "Supplies eligible CSV and JSON drops" "File delivery"
-        hiddenDataset -> worker "Supplies hidden drops with the same contract" "File delivery"
-        managerInputFeed -> schedulerReplay "Supplies scripted manager inputs and replay scenarios" "Input adapter"
-        backendApi -> identityProvider "Validates sessions and trusted identities" "OIDC or internal method; open"
+        inputDataset -> worker "Supplies eligible nightly drops, manifests, and source contracts" "Read-only filesystem: CSV and JSON"
+        inputDataset -> schedulerReplay "Supplies scripted manager inputs, upload attachments, and replay scenarios" "Read-only filesystem: JSON, CSV, and Markdown"
+        backendApi -> identityProvider "Validates sessions and trusted identities" "OIDC over HTTPS or internal authentication"
         webApp -> backendApi "Requests reports, scoped queries, uploads, configuration changes, and decisions" "HTTPS/JSON"
-        schedulerReplay -> worker "Dispatches deterministic run stages with a pinned clock" "PostgreSQL-backed jobs"
-        schedulerReplay -> backendApi "Requests manager report and QA jobs" "Internal authenticated API"
-        schedulerReplay -> postgres "Claims run leases and records run state" "TLS/PostgreSQL"
-        worker -> backendApi "Submits canonical Insight Briefs for deterministic validation and optional Persian narrative generation" "Internal authenticated API"
+        schedulerReplay -> backendApi "Starts and monitors pinned runs through the Run Coordinator" "Authenticated HTTPS/JSON"
+        schedulerReplay -> postgres "Reads replay evidence and records acceptance results" "PostgreSQL protocol over TLS"
         worker -> agentOrchestrator "Supplies a canonical Insight Brief for an optional bounded Persian narrative" "Internal authenticated call" {
             tags "PrimaryFlow"
         }
-        backendApi -> worker "Queues deterministic configuration-validation jobs" "PostgreSQL-backed jobs"
-        backendApi -> postgres "Reads and writes scoped application state" "TLS/PostgreSQL"
-        worker -> postgres "Reads snapshots and writes deterministic results" "TLS/PostgreSQL"
-        worker -> fileArchive "Archives and reads approved source bytes" "Restricted file API"
-        backendApi -> fileArchive "Archives uploads and reads approved fragments" "Restricted file API"
-        backendApi -> llmProvider "Calls only through Model Gateway" "Model API"
+        backendApi -> postgres "Reads and writes scoped application state and durable jobs" "PostgreSQL protocol over TLS"
+        worker -> postgres "Claims durable jobs and reads or writes deterministic results" "PostgreSQL protocol over TLS"
+        worker -> fileArchive "Archives and reads approved source bytes" "Restricted file system I/O"
+        backendApi -> fileArchive "Archives uploads and reads approved fragments" "Restricted file system I/O"
+        backendApi -> llmProvider "Calls only through Model Gateway" "HTTPS/JSON"
 
         // Web component relationships
         seniorManager -> chatUi "Reads executive brief and asks aggregate questions"
@@ -213,281 +204,233 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         // API component relationships.
         // Primary request path: Web -> Identity -> Authorization -> Router -> Agent -> Validator -> Delivery -> Web.
-        webApp -> identityBoundary "Submits session and request" {
+        webApp -> identityBoundary "Submits session and request" "HTTPS/JSON" {
             tags "PrimaryFlow"
         }
-        identityBoundary -> identityProvider "Validates identity" {
+        identityBoundary -> identityProvider "Validates identity" "OIDC over HTTPS or internal authentication" {
             tags "ExternalFlow"
         }
-        identityBoundary -> authorizationService "Creates trusted AuthContext" {
+        identityBoundary -> authorizationService "Creates trusted AuthContext" "In-process function call" {
             tags "PrimaryFlow"
         }
-        authorizationService -> postgres "Reads hierarchy, grants, and policy" {
+        authorizationService -> postgres "Reads hierarchy, grants, and policy" "PostgreSQL protocol over TLS" {
             tags "DataFlow"
         }
-        authorizationService -> managerInputService "Passes trusted scope and request context" {
+        authorizationService -> managerInputService "Passes trusted scope and request context" "In-process function call" {
             tags "PrimaryFlow"
         }
 
         // Request routing and manager commands.
-        managerInputService -> reportApi "Routes published report and dashboard reads" {
+        managerInputService -> reportApi "Routes published report and dashboard reads" "In-process function call" {
             tags "ControlFlow"
         }
-        managerInputService -> configurationService "Routes a configuration candidate" {
+        managerInputService -> configurationService "Routes a configuration candidate" "In-process function call" {
             tags "ControlFlow"
         }
-        managerInputService -> agentOrchestrator "Starts an interactive question or chat decision-card graph" {
+        managerInputService -> agentOrchestrator "Starts an interactive question or chat decision-card graph" "In-process function call" {
             tags "PrimaryFlow"
         }
-        agentOrchestrator -> configurationService "Submits a structured configuration candidate for explicit approval" {
+        agentOrchestrator -> configurationService "Submits a structured configuration candidate for explicit approval" "In-process function call" {
             tags "ControlFlow"
         }
-        managerInputService -> documentProcessingRunner "Routes an authorized document upload" {
+        managerInputService -> documentProcessingRunner "Routes an authorized document upload" "In-process function call" {
             tags "PrimaryFlow"
         }
-        managerInputService -> decisionConfirmationService "Routes an authenticated confirm, edit, or reject command" {
+        managerInputService -> decisionConfirmationService "Routes an authenticated confirm, edit, or reject command" "In-process function call" {
             tags "ControlFlow"
         }
-        documentProcessingRunner -> fileArchive "Preserves original upload bytes, hash, and manifest" {
+        documentProcessingRunner -> fileArchive "Preserves original upload bytes, hash, and manifest" "Restricted file system I/O" {
             tags "ControlFlow"
         }
-        documentProcessingRunner -> documentParser "Requests deterministic parsing of the archived upload" {
+        documentProcessingRunner -> documentParser "Requests deterministic parsing of the archived upload" "In-process function call" {
             tags "PrimaryFlow"
         }
-        documentParser -> fileArchive "Reads approved original upload bytes" {
+        documentParser -> fileArchive "Reads approved original upload bytes" "Restricted file system I/O" {
             tags "DataFlow"
         }
-        documentParser -> postgres "Stores immutable document fragments and a parse receipt" {
+        documentParser -> postgres "Stores immutable document fragments and a parse receipt" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
-        documentProcessingRunner -> postgres "Creates a Document Analysis Job only after a successful parse" {
+        documentProcessingRunner -> postgres "Creates a Document Analysis Job only after a successful parse" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
-        documentAnalysisJobRunner -> postgres "Claims a Document Analysis Job and loads its pinned actor, scope, policy, and fragments" {
+        documentAnalysisJobRunner -> postgres "Claims a Document Analysis Job and loads its pinned actor, scope, policy, and fragments" "PostgreSQL protocol over TLS" {
             tags "DataFlow"
         }
-        documentAnalysisJobRunner -> agentOrchestrator "Invokes the bounded document decision-card graph" {
+        documentAnalysisJobRunner -> agentOrchestrator "Invokes the bounded document decision-card graph" "In-process function call" {
             tags "PrimaryFlow"
         }
-        documentAnalysisJobRunner -> outputValidator "Submits a decision-card candidate or explicit terminal failure" {
+        documentAnalysisJobRunner -> outputValidator "Submits a decision-card candidate or explicit terminal failure" "In-process function call" {
             tags "PrimaryFlow"
         }
-        configurationService -> authorizationService "Checks actor authority and affected scope" {
+        configurationService -> authorizationService "Checks actor authority and affected scope" "In-process function call" {
             tags "PolicyCheck"
         }
-        configurationService -> postgres "Stores versioned configuration state" {
+        configurationService -> postgres "Stores an inactive configuration version and enqueues a deterministic validation job" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
-        configurationService -> worker "Requests deterministic validation" {
-            tags "ControlFlow"
-        }
-        decisionTracker -> authorizationService "Checks decision authority" {
+        decisionTracker -> authorizationService "Checks decision authority" "In-process function call" {
             tags "PolicyCheck"
         }
-        decisionTracker -> postgres "Appends decision and follow-up events" {
+        decisionTracker -> postgres "Appends decision and follow-up events" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
-        decisionTracker -> agentOrchestrator "Requests a draft only" {
+        decisionTracker -> agentOrchestrator "Requests a draft only" "In-process function call" {
             tags "ControlFlow"
         }
 
         // Bounded analysis. Tool and model responses are implicit unless a failure path needs a separate edge.
-        agentOrchestrator -> evidenceService "Requests an authorized evidence bundle" {
+        agentOrchestrator -> evidenceService "Requests an authorized evidence bundle" "In-process function call" {
             tags "DataFlow"
         }
-        agentOrchestrator -> conversationService "Stores the manager message and loads bounded conversation history" {
+        agentOrchestrator -> conversationService "Stores the manager message and loads bounded conversation history" "In-process function call" {
             tags "DataFlow"
         }
-        conversationService -> postgres "Reads and writes manager-scoped sessions and conversation turns" {
+        conversationService -> postgres "Reads and writes manager-scoped sessions and conversation turns" "PostgreSQL protocol over TLS" {
             tags "DataFlow"
         }
-        evidenceService -> authorizationService "Checks evidence scope" {
+        evidenceService -> authorizationService "Checks evidence scope" "In-process function call" {
             tags "PolicyCheck"
         }
-        evidenceService -> queryGateway "Runs a registered evidence query" {
+        evidenceService -> queryGateway "Runs a registered evidence query" "In-process function call" {
             tags "DataFlow"
         }
-        evidenceService -> fileArchive "Reads approved document fragments" {
+        evidenceService -> fileArchive "Reads approved original evidence bytes by archive reference" "Restricted file system I/O" {
             tags "DataFlow"
         }
-        queryGateway -> authorizationService "Gets scope and allowlists" {
+        queryGateway -> authorizationService "Gets scope and allowlists" "In-process function call" {
             tags "PolicyCheck"
         }
-        queryGateway -> sqlGuard "Validates one SELECT statement" {
+        queryGateway -> sqlGuard "Validates one SELECT statement" "In-process function call" {
             tags "DataFlow"
         }
-        sqlGuard -> queryGateway "Returns approval or refusal" {
+        sqlGuard -> queryGateway "Returns approval or refusal" "In-process function call" {
             tags "Feedback"
         }
-        queryGateway -> postgres "Runs a scoped read-only query" {
+        queryGateway -> postgres "Runs a scoped read-only query" "PostgreSQL protocol over TLS" {
             tags "DataFlow"
         }
-        queryGateway -> auditService "Records query evidence" {
+        queryGateway -> auditService "Records query evidence" "In-process function call" {
             tags "ControlFlow"
         }
-        agentOrchestrator -> modelGateway "Requests bounded analysis or drafting" {
+        agentOrchestrator -> modelGateway "Requests bounded analysis or drafting" "In-process function call" {
             tags "ModelFlow"
         }
-        modelGateway -> postgres "Reserves and settles the cost budget" {
+        modelGateway -> postgres "Reserves and settles the cost budget" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
-        modelGateway -> llmProvider "Sends authorized evidence and receives a completion" "Model API" {
+        modelGateway -> llmProvider "Sends authorized evidence and receives a completion" "HTTPS/JSON" {
             tags "ExternalFlow"
         }
-        modelGateway -> auditService "Records model and cost evidence" {
+        modelGateway -> auditService "Records model and cost evidence" "In-process function call" {
             tags "ControlFlow"
         }
-        modelGateway -> agentOrchestrator "Returns a completion or terminal failure" {
+        modelGateway -> agentOrchestrator "Returns a completion or terminal failure" "In-process function call" {
             tags "Feedback"
         }
-        agentOrchestrator -> outputValidator "Submits a draft and evidence references" {
+        agentOrchestrator -> outputValidator "Submits a draft and evidence references" "In-process function call" {
             tags "PrimaryFlow"
         }
 
         // Validation, delivery, and accountability.
-        outputValidator -> queryGateway "Rechecks reported numbers" {
+        outputValidator -> queryGateway "Rechecks reported numbers" "In-process function call" {
             tags "Feedback"
         }
-        outputValidator -> authorizationService "Rechecks recipient scope" {
+        outputValidator -> authorizationService "Rechecks recipient scope" "In-process function call" {
             tags "PolicyCheck"
         }
-        outputValidator -> evidenceService "Checks provenance and alternatives" {
+        outputValidator -> evidenceService "Checks provenance and alternatives" "In-process function call" {
             tags "Feedback"
         }
-        outputValidator -> auditService "Records validation evidence" {
+        outputValidator -> auditService "Records validation evidence" "In-process function call" {
             tags "ControlFlow"
         }
-        outputValidator -> conversationService "Stores the validated answer or explicit terminal failure" {
+        outputValidator -> conversationService "Stores the validated answer or explicit terminal failure" "In-process function call" {
             tags "ControlFlow"
         }
-        outputValidator -> decisionConfirmationService "Releases a valid decision card for manager review" {
+        outputValidator -> decisionConfirmationService "Releases a valid decision card for manager review" "In-process function call" {
             tags "PrimaryFlow"
         }
-        decisionConfirmationService -> postgres "Stores the decision candidate, validated card, source references, and review status" {
+        decisionConfirmationService -> postgres "Stores the decision candidate, validated card, source references, and review status" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
-        decisionConfirmationService -> webApp "Returns the decision card or review status" {
+        decisionConfirmationService -> webApp "Returns the decision card or review status" "HTTPS/JSON" {
             tags "PrimaryFlow"
         }
-        decisionConfirmationService -> agentOrchestrator "Requests a revised decision card after a manager edit" {
+        decisionConfirmationService -> agentOrchestrator "Requests a revised decision card after a manager edit" "In-process function call" {
             tags "Feedback"
         }
-        decisionConfirmationService -> decisionTracker "Forwards only a manager-confirmed decision card" {
+        decisionConfirmationService -> decisionTracker "Forwards only a manager-confirmed decision card" "In-process function call" {
             tags "ControlFlow"
         }
-        outputValidator -> reportApi "Releases a valid result or explicit failure" {
+        outputValidator -> reportApi "Releases a valid result or explicit failure" "In-process function call" {
             tags "PrimaryFlow"
         }
-        outputValidator -> publisher "Submits a validated manager package" {
-            tags "ControlFlow"
-        }
-        reportApi -> authorizationService "Rechecks audience and purpose" {
+        reportApi -> authorizationService "Rechecks audience and purpose" "In-process function call" {
             tags "PolicyCheck"
         }
-        reportApi -> queryGateway "Runs a dashboard or workflow query" {
+        reportApi -> queryGateway "Runs a dashboard or workflow query" "In-process function call" {
             tags "DataFlow"
         }
-        reportApi -> postgres "Reads published reports and failure states" {
+        reportApi -> postgres "Reads published reports and failure states" "PostgreSQL protocol over TLS" {
             tags "DataFlow"
         }
-        reportApi -> webApp "Returns a valid response or explicit failure" {
+        reportApi -> webApp "Returns a valid response or explicit failure" "HTTPS/JSON" {
             tags "PrimaryFlow"
         }
-        auditService -> postgres "Stores restricted audit evidence" {
+        auditService -> postgres "Stores restricted audit evidence" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
 
         // Worker component relationships
-        schedulerReplay -> ingestionCoordinator "Starts idempotent intake for the selected cutoff"
-        ingestionCoordinator -> nightlySources "Reads expected files and manifests"
-        ingestionCoordinator -> hiddenDataset "Reads hidden files through the same adapters"
-        ingestionCoordinator -> sourceAdapters "Parses each source contract"
-        sourceAdapters -> fileArchive "Preserves original bytes, headers, and hashes"
-        sourceAdapters -> dataQualityService "Submits parsed and rejected rows"
-        dataQualityService -> postgres "Writes accepted records, quarantine, and DataIssues"
-        schedulerReplay -> snapshotService "Requests a pinned snapshot"
-        snapshotService -> postgres "Pins committed batches, org, policy, and configuration versions"
-        snapshotService -> projectionService "Requests reproducible facts and process projections"
-        projectionService -> postgres "Reads events and writes facts and projections"
-        schedulerReplay -> kpiCalculator "Requests all approved KPI definitions"
-        kpiCalculator -> semanticRegistry "Reads approved PostgreSQL SQL and metadata"
-        semanticRegistry -> postgres "Reads versioned KPI definitions and dependencies"
-        kpiCalculator -> postgres "Executes KPI SQL and writes observations, QueryRun, and lineage"
-        schedulerReplay -> workflowEngine "Requests WF1-WF3 projection for the snapshot"
-        workflowEngine -> postgres "Reads events and writes case, stage, SLA, and bottleneck observations"
-        schedulerReplay -> signalEngine "Requests signal detection and ranking"
-        signalEngine -> postgres "Reads KPI and history; writes episodes, ownership, suppression, and escalation"
-        schedulerReplay -> reportJobCoordinator "Creates one job per active manager"
-        reportJobCoordinator -> insightBriefBuilder "Requests one authorized canonical Insight Brief per manager"
-        reportJobCoordinator -> postgres "Writes job lease, attempt, outcome, and daily coverage"
-        insightBriefBuilder -> postgres "Reads pinned KPI, workflow, signal, query, evidence, organization, and access-policy results"
-        insightBriefBuilder -> backendApi "Submits canonical JSON for deterministic validation and optional Persian narrative"
-        insightBriefBuilder -> outputValidator "Submits canonical JSON, scope, and evidence references for deterministic validation"
-        insightBriefBuilder -> agentOrchestrator "Supplies canonical Insight Brief content for optional Persian drafting"
-        insightBriefBuilder -> publisher "Submits schema-valid canonical JSON independently of narrative generation"
-        publisher -> postgres "Atomically commits canonical JSON, optional validated text, publication receipt, and explicit artifact failures"
-        publisher -> evaluationService "Reports package and export outcome"
-        evaluationService -> postgres "Reads run evidence and writes acceptance results"
-        evaluationService -> schedulerReplay "Returns complete or partial run status"
+        ingestionCoordinator -> inputDataset "Reads expected nightly drops, manifests, and source contracts" "Read-only filesystem: CSV and JSON"
+        ingestionCoordinator -> sourceAdapters "Parses each source contract" "In-process function call"
+        sourceAdapters -> fileArchive "Preserves original bytes, headers, and hashes" "Restricted file system I/O"
+        sourceAdapters -> dataQualityService "Submits parsed and rejected rows" "In-process function call"
+        dataQualityService -> postgres "Writes accepted records, quarantine, and DataIssues" "PostgreSQL protocol over TLS"
+        snapshotService -> postgres "Pins committed batches, organization, policy, and configuration versions" "PostgreSQL protocol over TLS"
+        snapshotService -> projectionService "Requests reproducible facts and process projections" "In-process function call"
+        projectionService -> postgres "Reads events and writes facts and projections" "PostgreSQL protocol over TLS"
+        kpiCalculator -> semanticRegistry "Reads approved PostgreSQL SQL and metadata" "In-process function call"
+        semanticRegistry -> postgres "Reads versioned KPI definitions and dependencies" "PostgreSQL protocol over TLS"
+        kpiCalculator -> postgres "Executes KPI SQL and writes observations, QueryRun, and lineage" "PostgreSQL protocol over TLS"
+        workflowEngine -> postgres "Reads events and writes case, stage, SLA, and bottleneck observations" "PostgreSQL protocol over TLS"
+        signalEngine -> postgres "Reads KPI and history; writes episodes, ownership, suppression, and escalation" "PostgreSQL protocol over TLS"
 
-        // Revised candidate flow. These relationships support comparison views only;
-        // the current views and relationships above remain unchanged.
+        // Current run-control, report-evidence, agent, publication, and evaluation flow.
         evaluator -> replayCommandV2 "Starts a replay range and requests acceptance results"
-        managerInputFeed -> replayCommandV2 "Supplies scripted replay range and manager-input scenarios"
+        inputDataset -> replayCommandV2 "Supplies scripted replay range and manager-input scenarios" "Read-only JSON"
         replayCommandV2 -> simulationClockV2 "Requests one pinned business date and source cutoff per day"
         replayCommandV2 -> evaluationProfileLoaderV2 "Loads the selected evaluation profile"
         replayCommandV2 -> runStatusClientV2 "Starts or resumes each simulated day with the pinned date, cutoff, profile, and run options"
         replayCommandV2 -> acceptanceTestHarnessV2 "Starts acceptance checks after the replay range reaches a terminal state"
-        runStatusClientV2 -> runCoordinatorV2 "Starts and monitors runs through the internal Backend API"
-        runCoordinatorV2 -> authorizationService "Validates the Scheduler or Replay service identity and run-control permission"
+        runStatusClientV2 -> runCoordinatorV2 "Starts and monitors runs through the internal Backend API" "Authenticated HTTPS/JSON"
+        runCoordinatorV2 -> authorizationService "Validates the Scheduler or Replay service identity and run-control permission" "In-process function call"
         evaluator -> acceptanceTestHarnessV2 "Starts replay acceptance, hidden-data, and regression checks"
         acceptanceTestHarnessV2 -> evaluationProfileLoaderV2 "Loads acceptance thresholds and limits"
         acceptanceTestHarnessV2 -> runStatusClientV2 "Reads terminal replay run status and artifact references"
         acceptanceTestHarnessV2 -> postgres "Reads replay evidence and writes acceptance results"
 
-        runCoordinatorV2 -> postgres "Creates each pinned Run, all Jobs, dependency edges, and manager execution order; monitors terminal states and records final Run status"
-        configurationService -> configurationValidationRunnerV2 "Queues an inactive configuration candidate for deterministic validation" "PostgreSQL-backed job"
-        configurationValidationRunnerV2 -> semanticRegistry "Checks the candidate against current KPI definitions and dependencies"
-        configurationValidationRunnerV2 -> postgres "Claims the validation Job and stores SQL, scope, rollup, parity, and validation receipts"
-        runStageCoordinatorV2 -> postgres "Claims run-stage jobs and records stage attempts and outcomes"
-        runStageCoordinatorV2 -> ingestionCoordinator "Invokes idempotent intake for the pinned cutoff"
-        runStageCoordinatorV2 -> snapshotService "Invokes snapshot creation after intake"
-        runStageCoordinatorV2 -> kpiCalculator "Invokes all approved KPI calculations for the snapshot"
-        runStageCoordinatorV2 -> workflowEngine "Invokes WF1-WF3 reconstruction for the snapshot"
-        runStageCoordinatorV2 -> signalEngine "Invokes deterministic signal detection and ranking"
-        runStageCoordinatorV2 -> reportEvidenceBuilderV2 "Invokes the builder for each claimed Report Evidence Job in stored manager order"
-        reportEvidenceBuilderV2 -> postgres "Stores the Evidence Package and Canonical Report JSON, completes the Report Evidence Job, and unlocks its existing Agent Job"
+        runCoordinatorV2 -> postgres "Creates each pinned Run, all Jobs, dependency edges, and manager execution order; monitors terminal states and records final Run status" "PostgreSQL protocol over TLS"
+        configurationService -> configurationValidationRunnerV2 "Queues an inactive configuration candidate for deterministic validation" "PostgreSQL-backed job queue"
+        configurationValidationRunnerV2 -> semanticRegistry "Checks the candidate against current KPI definitions and dependencies" "In-process function call"
+        configurationValidationRunnerV2 -> postgres "Claims the validation Job and stores SQL, scope, rollup, parity, and validation receipts" "PostgreSQL protocol over TLS"
+        runStageCoordinatorV2 -> postgres "Claims run-stage jobs and records stage attempts and outcomes" "PostgreSQL protocol over TLS"
+        runStageCoordinatorV2 -> ingestionCoordinator "Invokes idempotent intake for the pinned cutoff" "In-process function call"
+        runStageCoordinatorV2 -> snapshotService "Invokes snapshot creation after intake" "In-process function call"
+        runStageCoordinatorV2 -> kpiCalculator "Invokes all approved KPI calculations for the snapshot" "In-process function call"
+        runStageCoordinatorV2 -> workflowEngine "Invokes WF1-WF3 reconstruction for the snapshot" "In-process function call"
+        runStageCoordinatorV2 -> signalEngine "Invokes deterministic signal detection and ranking" "In-process function call"
+        runStageCoordinatorV2 -> reportEvidenceBuilderV2 "Invokes the builder for each claimed Report Evidence Job in stored manager order" "In-process function call"
+        reportEvidenceBuilderV2 -> postgres "Stores the Evidence Package and Canonical Report JSON, completes the Report Evidence Job, and unlocks its existing Agent Job" "PostgreSQL protocol over TLS"
 
-        agentJobRunnerV2 -> postgres "Claims Ready Agent Jobs and loads Canonical Report JSON, evidence, Snapshot, scope, and checkpoint state"
-        agentJobRunnerV2 -> agentOrchestrator "Invokes the bounded report graph and receives its outcome"
-        agentJobRunnerV2 -> outputValidator "Submits canonical JSON with a narrative candidate or explicit model failure"
-        outputValidator -> publisherV2 "Releases a validated package or authorizes deterministic fallback publication"
-        publisherV2 -> postgres "Atomically commits Canonical Report JSON, validated narrative or fallback text, and publication receipt; completes the Agent Job and unlocks the next manager Job"
-        publisherV2 -> auditService "Records publication mode and artifact failures"
+        agentJobRunnerV2 -> postgres "Claims Ready Agent Jobs and loads Canonical Report JSON, evidence, Snapshot, scope, and checkpoint state" "PostgreSQL protocol over TLS"
+        agentJobRunnerV2 -> agentOrchestrator "Invokes the bounded report graph and receives its outcome" "In-process function call"
+        agentJobRunnerV2 -> outputValidator "Submits canonical JSON with a narrative candidate or explicit model failure" "In-process function call"
+        outputValidator -> publisherV2 "Releases a validated package or authorizes deterministic fallback publication" "In-process function call"
+        publisherV2 -> postgres "Atomically commits Canonical Report JSON, validated narrative or fallback text, and publication receipt; completes the Agent Job and unlocks the next manager Job" "PostgreSQL protocol over TLS"
+        publisherV2 -> auditService "Records publication mode and artifact failures" "In-process function call"
 
-        // Deployment model for the one-command evaluation target.
-        deploymentEnvironment "Evaluation" {
-            deploymentNode "Reference Host" "Evaluator-provided Docker host." "Docker Compose" "DeploymentNode" {
-                webNode = deploymentNode "Web Container" "Serves the Persian RTL web application." "Container" "DeploymentNode,WebNode" {
-                    containerInstance webApp
-                }
-                apiNode = deploymentNode "API Container" "Runs Backend API and the bounded interactive/report agent runtime." "Container" "DeploymentNode,ApiNode" {
-                    containerInstance backendApi
-                }
-                workerNode = deploymentNode "Worker Container" "Runs deterministic background processing." "Container" "DeploymentNode,WorkerNode" {
-                    containerInstance worker
-                }
-                schedulerNode = deploymentNode "Scheduler Container or Command" "Runs the simulated clock and replay command." "Container" "DeploymentNode,SchedulerNode" {
-                    containerInstance schedulerReplay
-                }
-                dataNode = deploymentNode "PostgreSQL Container" "Runs the only product database with persistent storage." "Container" "DeploymentNode,DataNode" {
-                    containerInstance postgres
-                }
-                archiveNode = deploymentNode "Archive Volume" "Stores protected original files and manifests." "Persistent volume" "DeploymentNode,StorageNode" {
-                    containerInstance fileArchive
-                }
-            }
-        }
     }
 
     views {
@@ -498,26 +441,24 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         // C4 core view: one software system and its directly connected people and software systems.
         systemContext didrah L1_SystemContext "Business-facing C4 system context for DIDRAH." {
             title "01 - C4 Level 1 - System Context for DIDRAH"
-            include seniorManager unitManager teamSupervisor didrah nightlySources managerInputFeed identityProvider llmProvider
+            include seniorManager unitManager teamSupervisor evaluator operator didrah inputDataset identityProvider llmProvider
             default
         }
 
         // C4 core view: deployable applications and data stores inside the DIDRAH boundary.
         container didrah L2_Containers "C4 container view of the DIDRAH applications, data stores, users, and external dependencies." {
             title "02 - C4 Level 2 - Containers for DIDRAH"
-            include seniorManager unitManager teamSupervisor nightlySources managerInputFeed identityProvider llmProvider webApp backendApi worker schedulerReplay postgres fileArchive
+            include seniorManager unitManager teamSupervisor evaluator operator inputDataset identityProvider llmProvider webApp backendApi worker schedulerReplay postgres fileArchive
         }
 
         // Revised C4 Level 3 views.
-        component backendApi L3_3_RevisedBackendApiComponents "Revised Backend API view with authorized request routing, in-process document intake and parsing, separate report and document job runners, manager-confirmed decision cards, scheduler-only run control, validation, publication, and delivery." {
-            title "03.3 - C4 Level 3 - Revised Backend API Components"
-            include webApp worker fileArchive identityProvider llmProvider postgres runStatusClientV2 identityBoundary authorizationService managerInputService configurationService decisionTracker runCoordinatorV2 documentProcessingRunner documentParser documentAnalysisJobRunner agentJobRunnerV2 agentOrchestrator conversationService evidenceService queryGateway sqlGuard modelGateway outputValidator decisionConfirmationService publisherV2 reportApi auditService
+        component backendApi L3_3_RevisedBackendApiComponents "Backend API view with authorized request routing, in-process document intake and parsing, separate report and document job runners, manager-confirmed decision cards, scheduler-only run control, validation, publication, and delivery." {
+            title "03.3 - C4 Level 3 - Backend API Components"
+            include webApp fileArchive identityProvider llmProvider postgres runStatusClientV2 identityBoundary authorizationService managerInputService configurationService decisionTracker runCoordinatorV2 documentProcessingRunner documentParser documentAnalysisJobRunner agentJobRunnerV2 agentOrchestrator conversationService evidenceService queryGateway sqlGuard modelGateway outputValidator decisionConfirmationService publisherV2 reportApi auditService
             exclude "configurationService -> authorizationService"
             exclude "decisionTracker -> authorizationService"
             exclude "evidenceService -> authorizationService"
             exclude "queryGateway -> authorizationService"
-            exclude "worker -> backendApi"
-            exclude "worker -> agentOrchestrator"
             exclude "sqlGuard -> queryGateway"
             exclude "modelGateway -> agentOrchestrator"
             exclude "outputValidator -> queryGateway"
@@ -526,14 +467,14 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             exclude "reportApi -> authorizationService"
         }
 
-        component worker L3_4_RevisedBackgroundWorkerComponents "Revised Background Worker view with PostgreSQL-backed run-stage execution, independent configuration validation, deterministic analytics, and one-manager-at-a-time report evidence assembly. Manager document processing remains inside the Backend API." {
-            title "03.4 - C4 Level 3 - Revised Background Worker Components"
-            include nightlySources hiddenDataset postgres fileArchive configurationService runCoordinatorV2 agentJobRunnerV2 runStageCoordinatorV2 configurationValidationRunnerV2 ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportEvidenceBuilderV2
+        component worker L3_4_RevisedBackgroundWorkerComponents "Background Worker view with PostgreSQL-backed run-stage execution, independent configuration validation, deterministic analytics, and one-manager-at-a-time report evidence assembly. Manager document processing remains inside the Backend API." {
+            title "03.4 - C4 Level 3 - Background Worker Components"
+            include inputDataset postgres fileArchive configurationService runCoordinatorV2 agentJobRunnerV2 runStageCoordinatorV2 configurationValidationRunnerV2 ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportEvidenceBuilderV2
         }
 
         component schedulerReplay L3_5_RevisedSchedulerReplayComponents "Revised Scheduler and Replay Runner view that controls simulated time and replay through the Backend Run Coordinator and runs acceptance checks outside the daily publication path." {
             title "03.5 - C4 Level 3 - Revised Scheduler and Replay Runner Components"
-            include evaluator managerInputFeed postgres runCoordinatorV2 replayCommandV2 simulationClockV2 evaluationProfileLoaderV2 runStatusClientV2 acceptanceTestHarnessV2
+            include evaluator inputDataset postgres runCoordinatorV2 replayCommandV2 simulationClockV2 evaluationProfileLoaderV2 runStatusClientV2 acceptanceTestHarnessV2
         }
 
         // Numbered end-to-end scenario for the revised L3 architecture.
@@ -628,17 +569,6 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             element "OpenDecision" {
                 stroke #f59e0b
                 strokeWidth 4
-            }
-            element "DeploymentNode" {
-                background #475569
-            }
-            element "DataNode" {
-                shape Cylinder
-                background #5b21b6
-            }
-            element "StorageNode" {
-                shape Folder
-                background #6d28d9
             }
             element "Group" {
                 color #94a3b8
