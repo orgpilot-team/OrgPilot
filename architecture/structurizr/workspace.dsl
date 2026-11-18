@@ -58,10 +58,18 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
 
                 group "03 Bounded Analysis" {
-                    agentGateway = component "Agent Runtime Gateway" "Validates and durably enqueues idempotent interactive Agent Jobs in PostgreSQL. For already-created jobs such as document analysis, it sends only a best-effort authenticated job-ID wake-up. It does not execute graphs or make the wake-up the source of truth." "Deterministic job gateway" "AI"
-                    evidenceService = component "Evidence Service" "Builds a traceable Evidence Bundle inside the authorized scope supplied with the request." "Deterministic module" "Evidence"
-                    queryGateway = component "Query Gateway" "Runs registered tools and scoped read-only SQL with limits and audit." "Deterministic query execution" "Query"
-                    sqlGuard = component "SQL AST Guard" "Allows one approved SELECT statement and rejects unsafe SQL." "SQL parser and policy" "Security"
+                    agentGateway = component "Agent Runtime Gateway" "Validates and durably enqueues idempotent interactive Agent Jobs in PostgreSQL. For already-created jobs such as document analysis, it sends only a best-effort authenticated job-ID wake-up. It does not execute graphs or make the wake-up the source of truth." "Deterministic job gateway" "AI" {
+                        url "{workspace}/documentation/DIDRAH#agent-runtime-gateway"
+                    }
+                    evidenceService = component "Evidence Service" "Builds a traceable Evidence Bundle inside the authorized scope supplied with the request." "Deterministic module" "Evidence" {
+                        url "{workspace}/documentation/DIDRAH#evidence-service"
+                    }
+                    queryGateway = component "Query Gateway" "Runs registered tools and scoped read-only SQL with limits and audit." "Deterministic query execution" "Query" {
+                        url "{workspace}/documentation/DIDRAH#query-gateway"
+                    }
+                    sqlGuard = component "SQL AST Guard" "Allows one approved SELECT statement and rejects unsafe SQL." "SQL parser and policy" "Security" {
+                        url "{workspace}/documentation/DIDRAH#sql-ast-guard"
+                    }
                 }
 
                 group "04 Validate and Deliver" {
