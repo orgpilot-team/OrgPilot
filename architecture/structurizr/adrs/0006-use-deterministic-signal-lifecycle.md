@@ -22,6 +22,8 @@ Organization and workflow warning conditions escalate to the Senior Manager. R5 
 
 Signal generation is reproducible and testable. Rules, thresholds, ownership, grouping, and ranking must be versioned configuration. The language model can explain a signal but cannot create or change it.
 
-## Source
+## Related requirements
 
-`ADR-V3-06` in `Docs/final review/architecture-control-register-v3.md`.
+- Threshold evaluation, escalation, grouping, and ranking must be deterministic.
+- Signal state must be stored per recipient as defined by ADR-0017.
+- Data-quality issues must not become business signals.

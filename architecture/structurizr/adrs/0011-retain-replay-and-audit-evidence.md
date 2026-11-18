@@ -20,6 +20,7 @@ PostgreSQL backups and Archive manifests must form a consistent recovery point. 
 
 This decision remains proposed. `ISSUE-V3-09` must define the retention matrix, backup schedule, audit access, and restore procedure before acceptance.
 
-## Source
+## Related requirements
 
-`ADR-V3-11` in `Docs/final review/architecture-control-register-v3.md`.
+- Replay and recovery must preserve the evidence that produced a result.
+- Retention periods, backup frequency, RPO, RTO, and the audit-reader role remain open decisions.

@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-The architecture has KPI Calculator and Acceptance Test Harness, but parity between SQLite reference SQL and PostgreSQL translated SQL needs an executable contract. The user notes:
+The architecture has KPI Calculator and Acceptance Test Harness, but parity between SQLite reference SQL and PostgreSQL translated SQL needs an executable contract. SQLite is not a product database or a runtime container. It is embedded only in the Acceptance Test Harness.
 
 - A component in Replayer should convert SQLite SQL to PostgreSQL
 - Only two functions differ: `median()` → `percentile_cont(0.5)` and date difference calculations
@@ -16,7 +16,7 @@ The architecture has KPI Calculator and Acceptance Test Harness, but parity betw
 
 ## Decision
 
-Add `KPI Parity Validator` component in Scheduler/Replay Runner (part of Acceptance Test Harness).
+Add `KPI Parity Validator` component in Scheduler/Replay Runner as part of the Acceptance Test Harness. The harness owns the SQLite execution boundary.
 
 Tasks:
 
@@ -37,10 +37,12 @@ Important: Agent Runtime has NO role in parity. If KPI is wrong, Agent must not 
 
 - Parity is an executable contract, not just a concept
 - Part of Acceptance Harness, not daily product
+- SQLite exists only inside the Acceptance Test Harness
 - Deterministic validation with receipts
 - Agent completely excluded from parity
 
-## Source
+## Related requirements
 
-Addresses Gap 5 from architectural review: "Parity واقعی SQLite و PostgreSQL"
-User's note: "ما باید یه کاپوننت جدید تو replayer داشته باشیم. که کار convert کردن SQL/ SQlite رو به postgress انجام بده"
+- The Acceptance Test Harness must execute the read-only SQLite reference SQL.
+- The translated PostgreSQL SQL must run against an equivalent snapshot.
+- Parity evidence must exist before a translated KPI definition is accepted.

@@ -15,7 +15,7 @@ The current architecture has "Decision and Follow-Up" but it focuses on recordin
 - Effect direction: `improved`, `worsened`, `too_early`, or "effect not isolatable"
 - `no_change` must be preserved in schema (per IMPL-GAP-V3-03)
 
-The user proposes for v1:
+The approved v1 behavior is:
 
 1. At decision registration: record target KPI, comparison period, minimum meaningful change, guardrail KPI with threshold
 2. At follow-up: if evaluation date not reached → `too_early`; if date reached and data sufficient → determine direction (`improved`/`worsened`/`no_change`); if data insufficient → record reason, leave result empty
@@ -39,16 +39,24 @@ Effect Assessment → Report (Decision Follow-up)
 
 Agent only uses the deterministic result for narrative; it cannot guess effect from free text.
 
-Schema alignment: `brief_schema.json` currently has `no_change` but TA mentions `improved`/`worsened`/`too_early`. Keep `no_change` and add the three TA directions.
+The complete Decision Effect is an internal, versioned PostgreSQL record. It does not add fields or enum values to the read-only output contract.
+
+Export mapping is limited to fields that the reference schema already permits:
+
+- `evaluated` with `improved`, `worsened`, or `no_change` exports the permitted `effect_direction` value.
+- `too_early` exports the permitted `too_early` value.
+- `insufficient_data` or `not_isolatable` does not export `effect_direction`. The limitation can appear only in the permitted `detail_fa` field.
 
 ## Consequences
 
 - Deterministic effect calculation, not LLM-based
 - Structured fields for method, assumptions, confidence, confounders, guardrail
-- `no_change` preserved in schema per IMPL-GAP-V3-03
+- The internal record can evolve without changing the reference output schema
+- `brief_schema.json` remains read-only
 - Closes Gap 4 and IMPL-GAP-V3-03
 
-## Source
+## Related requirements
 
-Addresses Gap 4 from architectural review: "سنجش اثر تصمیم"
-Addresses IMPL-GAP-V3-03 from architecture-control-register-v3.md
+- Decision effects must be deterministic and must keep their attribution limits.
+- The output must conform to the read-only `brief_schema.json` contract.
+- Internal Decision Effect fields must not be added to exported JSON.

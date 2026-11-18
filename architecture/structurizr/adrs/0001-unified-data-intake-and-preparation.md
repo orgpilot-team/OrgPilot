@@ -20,6 +20,8 @@ The system reads input only from `DATA_DIR` and writes delivery output only to `
 
 The system can reproduce a report from its pinned data and contracts. A new source normally needs an adapter and a schema registration. It does not need a new pipeline. The system must store source hashes, receipts, schema versions, data issues, and lineage. Complete rebuilds can cost more than selective recalculation.
 
-## Source
+## Related requirements
 
-`ADR-V3-01` in `Docs/final review/architecture-control-register-v3.md`.
+- The official input contracts define the accepted data sources and schemas.
+- Evaluation must support deterministic replay without future-data leakage.
+- Source hashes, receipts, schema versions, and lineage must make each result reproducible.

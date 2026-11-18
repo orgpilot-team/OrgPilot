@@ -18,6 +18,7 @@ A published report is immutable. The system labels the first version `as_reporte
 
 The system preserves the historical management record. Consumers must select the correct report version for their purpose. Storage and APIs must support version links and cannot use destructive report updates.
 
-## Source
+## Related requirements
 
-`ADR-V3-03` in `Docs/final review/architecture-control-register-v3.md`.
+- Late or corrected data must not overwrite a published management record.
+- A restated report must link to the original report and state the restatement reason.

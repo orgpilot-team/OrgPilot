@@ -22,6 +22,8 @@ Decision cards need explicit confirmation before they enter the decision record.
 
 The authorized confirmer and evidence of actual execution remain open in `ISSUE-V3-05`.
 
-## Source
+## Related requirements
 
-`ADR-V3-10` in `Docs/final review/architecture-control-register-v3.md`.
+- DIDRAH can propose a decision, but a human manager must confirm it.
+- DIDRAH must not send or execute an organization action.
+- Decision Effect evaluation must follow ADR-0015 without changing the output contract.

@@ -19,20 +19,22 @@ The current architecture has Publisher writing to PostgreSQL and Report API read
 
 Add a `Submission Exporter` component in the Backend API that:
 
-1. Reads only validated, final reports and QA results
-2. Validates again against JSON Schema before writing
-3. Creates directory structure: `briefs/` and `qa/`
-4. Uses atomic write (temp file + rename)
-5. Records hash and export receipt
-6. Prevents partial/incomplete output
-7. Does not write internal logs, DB files, or non-contract files to `/submission`
-8. Uses `OUTPUT_DIR` environment variable, not hardcoded paths
+1. Reads only validated, final reports and QA results.
+2. Validates each artifact against the read-only reference JSON Schema.
+3. Builds the output path by joining `OUTPUT_DIR` directly with `briefs/day_XXX/<manager_id>.json` or `qa/<question_id>.json`.
+4. Resolves the final path and verifies that it remains inside `OUTPUT_DIR`.
+5. Rejects absolute-path injection and `..` path traversal.
+6. Writes a temporary file on the same filesystem as the final file.
+7. Flushes and closes the temporary file before an atomic rename.
+8. Records the content hash and an Export Receipt in PostgreSQL.
+9. Records the `trace_id` and the relative artifact path in the receipt.
+10. Does not write internal logs, database files, or non-contract files to `OUTPUT_DIR`.
 
 Flow:
 
 ```
-Publisher → Submission Exporter → /submission/briefs/...
-Validated QA Result → Submission Exporter → /submission/qa/...
+Publisher → Submission Exporter → OUTPUT_DIR/briefs/day_XXX/<manager_id>.json
+Validated QA Result → Submission Exporter → OUTPUT_DIR/qa/<question_id>.json
 ```
 
 ## Consequences
@@ -41,6 +43,7 @@ Validated QA Result → Submission Exporter → /submission/qa/...
 - Publisher no longer directly responsible for filesystem output
 - Submission Exporter is the single writer to `/submission`
 - Atomic writes prevent evaluator seeing partial files
+- For `OUTPUT_DIR=/submission`, the exporter writes directly below `/submission`. It does not create `/submission/submission`.
 
 ## Source
 

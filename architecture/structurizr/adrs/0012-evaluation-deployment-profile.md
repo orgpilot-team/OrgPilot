@@ -4,7 +4,9 @@ Date: 2026-11-17
 
 ## Status
 
-Accepted
+Superseded
+
+Superseded by [ADR-0018](0018-adopt-modular-monolith-and-compose-runtime.md).
 
 ## Context
 
@@ -37,6 +39,8 @@ In production, the three containers can be deployed separately. In evaluation, t
 - C4 model shows logical separation; deployment view shows evaluation co-location
 - No Docker Compose or second container required for evaluation
 - The `docker run` command starts all three logical components
+
+This deployment profile is historical. ADR-0018 replaces it with separate Docker Compose services and containers.
 
 ## Source
 

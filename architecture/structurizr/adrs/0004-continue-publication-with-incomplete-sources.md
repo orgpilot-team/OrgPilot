@@ -20,6 +20,8 @@ Managers can receive valid results from healthy sources. Each report must show t
 
 The completion criterion after backfill remains open in `DOC-GAP-V3-04`.
 
-## Source
+## Related requirements
 
-`ADR-V3-04` in `Docs/final review/architecture-control-register-v3.md`.
+- Missing evidence must not produce an estimated KPI value.
+- A source failure must not remove valid reports that do not depend on that source.
+- Data-quality issues must remain separate from business signals.

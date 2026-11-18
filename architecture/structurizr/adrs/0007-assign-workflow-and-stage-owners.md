@@ -33,6 +33,7 @@ The accepted stage ownership is:
 
 Every workflow observation and escalation has a deterministic owner. `workflow_definitions.csv` must contain the accepted stage owners.
 
-## Source
+## Related requirements
 
-`ADR-V3-07` in `Docs/final review/architecture-control-register-v3.md`.
+- Workflow stage ownership must follow the official KPI ownership data.
+- The active workflow definition contract must contain the accepted stage owners.

@@ -22,6 +22,7 @@ Run status and report status are separate. The system needs manager-level job st
 
 The exact retry count, timeout, and fallback content remain open in `ISSUE-V3-06`.
 
-## Source
+## Related requirements
 
-`ADR-V3-09` in `Docs/final review/architecture-control-register-v3.md`.
+- A failure for one manager must not remove valid output for another manager.
+- A model failure must not stop deterministic calculation or valid canonical JSON output.
