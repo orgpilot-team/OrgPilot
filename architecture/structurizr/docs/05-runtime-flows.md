@@ -1,24 +1,32 @@
 # Runtime flows
 
+## Agent Job lifecycle and persistence
+
+PostgreSQL is the authoritative queue and state store for all report, interactive, and document-analysis Agent Jobs. A job is committed before any wake-up and carries an idempotency key plus pinned actor, policy, scope, and workload-specific input references. The Agent Runtime Runner claims a Ready job under a lease and records attempts and terminal state. A wake-up may reduce latency, but polling and lease recovery prevent work from being lost. Runtime outcome persistence and deterministic validation are separate states; the UI or publisher consumes only the validated result.
+
 ## Nightly report flow
 
 The Replay Command selects a business day. The Simulation Clock supplies the business date and cutoff. The Evaluation Profile Loader supplies acceptance limits and run options.
 
-The Run Status Client asks the Backend Run Coordinator to create a pinned run and its complete job plan. PostgreSQL stores job dependencies and manager order.
+The Run Status Client asks the Backend Run Coordinator to create a pinned run and its complete job plan. PostgreSQL stores job dependencies, manager order, and durable job state.
 
-The Background Worker claims ready deterministic jobs. It runs ingestion, snapshot, KPI, workflow, signal, and report-evidence stages. A Report Evidence Job creates one manager-scoped Evidence Package and Canonical Report JSON.
+The Background Worker claims ready deterministic jobs. It runs ingestion, snapshot, KPI, workflow, signal, and report-evidence stages. A Report Evidence Job creates one manager-scoped Evidence Package and Canonical Report JSON, then unlocks its preplanned Agent Job.
 
-The Agent Job Runner claims one ready Agent Job. It reloads the pinned manager scope. The bounded agent can produce a Persian narrative candidate. It cannot change the canonical numbers or widen the scope.
+One PostgreSQL-backed Agent Job Runner in Agent Runtime claims and leases every Ready report, interactive, or document-analysis Agent Job. It reloads the pinned actor, scope, policy, and workload-specific inputs from PostgreSQL, runs the bounded graph, persists the candidate or explicit failure, and only then submits the outcome for deterministic validation. The bounded agent cannot change canonical numbers or widen scope.
+
+Backend producers commit an idempotent job before optionally sending an authenticated wake-up containing only the job ID. The wake-up is a latency hint, not a payload or source of truth. Runtime polling and lease recovery find jobs even when a wake-up is lost. The Web Application receives the job ID and polls the authorized Backend status API; queued/running work remains pending, and only a persisted validated result is presented as ready for review or delivery.
 
 The Output Validator checks schema, evidence, scope, report rules, and model failure state. The Publisher publishes valid manager reports independently. A required manager failure makes the day `incomplete`, but it does not remove valid reports for other managers.
 
-## Interactive question flow
+## Interactive question and manager decision flow
 
-The Web Application sends an authenticated request to the Backend API. The Manager Request Router selects the fixed request handler. The Authorization Service defines the permitted scope. The Evidence Service and Query Gateway retrieve authorized evidence. The SQL AST Guard rejects unsafe SQL. The Output Validator checks the answer before delivery.
+The Web Application sends an authenticated request to the Backend API. The Manager Request Router selects the fixed handler and the Authorization Service pins the permitted scope. The Agent Runtime Gateway commits an idempotent interactive Agent Job to PostgreSQL with actor, policy, scope, request, and conversation references. It returns the committed job ID to the request handler, which returns it to the UI; the Gateway may also send the Agent Runtime an authenticated wake-up containing only the job ID.
+
+The Agent Runtime Runner claims and leases the job from PostgreSQL, reloads its canonical inputs and pinned scope, and invokes the bounded graph. Conversation and evidence tools use their explicitly authorized Backend services. The Runner persists its candidate or explicit execution failure before submitting the outcome to Output Validator. The validator persists its receipt and transitions the job to validated or rejected. The UI polls the Backend status API, which returns only the owning manager's authorized status and validated result reference. Editing an interactive decision card creates a new idempotent revision job through the Agent Runtime Gateway; confirm, edit, or reject remains a human command, and only a confirmed card enters Decision and Follow-Up.
 
 ## Document decision flow
 
-The Document Processing Runner stores the original upload and calls the deterministic Document Parser. After a successful parse, it creates a Document Analysis Job. The bounded agent produces a decision-card candidate. The Output Validator checks the candidate. The Decision Confirmation Service stores the valid card for manager review. Only a confirmed card can enter Decision and Follow-Up.
+The Document Processing Runner archives the original upload and calls the deterministic Document Parser. On unsupported or invalid content, parsing returns an explicit failure and no Agent Job is created. On successful parsing, immutable fragments and a parse receipt are stored, then the Document Processing Runner commits one durable document-analysis Agent Job with pinned actor, scope, policy, and fragment references. It returns the job ID to the request handler and may request a best-effort job-ID-only wake-up through the Gateway; the Runtime Runner still claims canonical job data from PostgreSQL. The same Agent Runtime Runner claims and leases the job, executes the bounded document graph, and persists its candidate or execution failure before validation. The UI polls authorized job status. The Decision Confirmation Service presents only a valid card for manager review. A manager edit creates a revision through the Document Processing Runner using the approved fragments; only a confirmed card can enter Decision and Follow-Up.
 
 ## Replay and evaluation
 

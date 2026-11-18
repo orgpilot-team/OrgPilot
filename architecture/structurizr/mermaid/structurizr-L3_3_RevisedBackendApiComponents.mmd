@@ -1,0 +1,65 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["Component View: DIDRAH - Backend API"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    subgraph 1 ["DIDRAH"]
+      style 1 fill:#ffffff,stroke:#444444,color:#444444
+
+      subgraph 4 ["Backend API"]
+        style 4 fill:#ffffff,stroke:#444444,color:#444444
+
+        10["<div style='font-weight: bold'>Document Parser</div><div style='font-size: 70%; margin-top: 0px'>[Component: Parser]</div><div style='font-size: 80%; margin-top:10px'>Stores immutable<br />fragments/receipt on success;<br />returns parse failure<br />otherwise.</div>"]
+        style 10 fill:#ffffff,stroke:#444444,color:#444444
+        11["<div style='font-weight: bold'>Output Validator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic validator]</div><div style='font-size: 80%; margin-top:10px'>Validates outcomes and<br />persists validation<br />receipts/job state.</div>"]
+        style 11 fill:#ffffff,stroke:#444444,color:#444444
+        12["<div style='font-weight: bold'>Agent Job Status API</div><div style='font-size: 70%; margin-top: 0px'>[Component: Delivery API]</div><div style='font-size: 80%; margin-top:10px'>Returns authorized status and<br />result references.</div>"]
+        style 12 fill:#ffffff,stroke:#444444,color:#444444
+        13["<div style='font-weight: bold'>Decision Confirmation Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Decision review]</div><div style='font-size: 80%; margin-top:10px'>Stores validated cards; on<br />edit routes revision jobs to<br />the workload-specific<br />producer.</div>"]
+        style 13 fill:#ffffff,stroke:#444444,color:#444444
+        14["<div style='font-weight: bold'>Decision and Follow-Up</div><div style='font-size: 70%; margin-top: 0px'>[Component: Decision control]</div><div style='font-size: 80%; margin-top:10px'>Records confirmed human<br />decisions only.</div>"]
+        style 14 fill:#ffffff,stroke:#444444,color:#444444
+        5["<div style='font-weight: bold'>Identity Boundary</div><div style='font-size: 70%; margin-top: 0px'>[Component: Security]</div><div style='font-size: 80%; margin-top:10px'>Validates sessions.</div>"]
+        style 5 fill:#ffffff,stroke:#444444,color:#444444
+        6["<div style='font-weight: bold'>Authorization Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Security]</div><div style='font-size: 80%; margin-top:10px'>Pins and rechecks actor<br />scope.</div>"]
+        style 6 fill:#ffffff,stroke:#444444,color:#444444
+        7["<div style='font-weight: bold'>Manager Request Router</div><div style='font-size: 70%; margin-top: 0px'>[Component: Dispatcher]</div><div style='font-size: 80%; margin-top:10px'>Routes requests; returns<br />accepted job IDs and status.</div>"]
+        style 7 fill:#ffffff,stroke:#444444,color:#444444
+        8["<div style='font-weight: bold'>Agent Runtime Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic job gateway]</div><div style='font-size: 80%; margin-top:10px'>Creates interactive Agent<br />Jobs in PostgreSQL; sends<br />job-ID-only wake-ups.</div>"]
+        style 8 fill:#ffffff,stroke:#444444,color:#444444
+        9["<div style='font-weight: bold'>Document Processing Runner</div><div style='font-size: 70%; margin-top: 0px'>[Component: Job producer]</div><div style='font-size: 80%; margin-top:10px'>Archives/parses uploads;<br />creates document jobs only<br />after parse success.</div>"]
+        style 9 fill:#ffffff,stroke:#444444,color:#444444
+      end
+
+      15["<div style='font-weight: bold'>Agent Runtime</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python; LangGraph]</div><div style='font-size: 80%; margin-top:10px'>Claims and executes every<br />durable Agent Job.</div>"]
+      style 15 fill:#ffffff,stroke:#444444,color:#444444
+      2["<div style='font-weight: bold'>Web Application</div><div style='font-size: 70%; margin-top: 0px'>[Container: Web application]</div><div style='font-size: 80%; margin-top:10px'>Manager UI and authenticated<br />status polling.</div>"]
+      style 2 fill:#ffffff,stroke:#444444,color:#444444
+      20["<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>Authoritative durable queue,<br />pinned inputs, outcomes,<br />validation, and checkpoints.</div>"]
+      style 20 fill:#ffffff,stroke:#444444,color:#444444
+    end
+
+    7-. "<div>Routes interactive request<br />for durable enqueue</div><div style='font-size: 70%'>[In-process call]</div>" .->8
+    8-. "<div>Commits idempotent<br />interactive Agent Job with<br />pinned<br />actor/scope/policy/inputs</div><div style='font-size: 70%'>[PostgreSQL TLS]</div>" .->20
+    8-. "<div>Returns committed job ID to<br />request handler</div><div style='font-size: 70%'>[In-process call]</div>" .->7
+    7-. "<div>Returns accepted job ID after<br />durable commit</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->2
+    9-. "<div>Requests deterministic<br />parsing</div><div style='font-size: 70%'>[In-process call]</div>" .->10
+    10-. "<div>On successful parse, stores<br />immutable fragments and<br />receipt</div><div style='font-size: 70%'>[PostgreSQL TLS]</div>" .->20
+    10-. "<div>On invalid/unsupported<br />upload, returns parse<br />failure; no job is created</div><div style='font-size: 70%'>[In-process call]</div>" .->9
+    9-. "<div>After successful parse only,<br />commits one durable document<br />Agent Job with pinned<br />scope/policy/fragments</div><div style='font-size: 70%'>[PostgreSQL TLS]</div>" .->20
+    9-. "<div>Returns committed document<br />job ID or parse failure</div><div style='font-size: 70%'>[In-process call]</div>" .->7
+    9-. "<div>Requests best-effort wake-up<br />after job commit</div><div style='font-size: 70%'>[In-process call]</div>" .->8
+    15-. "<div>Claims/leases all Ready Agent<br />Jobs; reads pinned inputs;<br />persists outcomes/checkpoints</div><div style='font-size: 70%'>[PostgreSQL TLS]</div>" .->20
+    12-. "<div>Checks owning manager access</div><div style='font-size: 70%'>[In-process call]</div>" .->6
+    12-. "<div>Reads authorized state,<br />receipt, outcome</div><div style='font-size: 70%'>[PostgreSQL TLS]</div>" .->20
+    12-. "<div>Returns authorized<br />status/result reference</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->2
+    11-. "<div>Persists validation receipt;<br />transitions<br />awaiting-validation to<br />validated/rejected</div><div style='font-size: 70%'>[PostgreSQL TLS]</div>" .->20
+    13-. "<div>Stores validated card/review<br />state</div><div style='font-size: 70%'>[PostgreSQL TLS]</div>" .->20
+    13-. "<div>On interactive edit, requests<br />durable revision; Gateway<br />commits before wake-up</div><div style='font-size: 70%'>[In-process call]</div>" .->8
+    13-. "<div>On document edit, requests<br />durable revision from<br />document producer using<br />approved fragments</div><div style='font-size: 70%'>[In-process call]</div>" .->9
+    13-. "<div>Forwards confirmed card only</div><div style='font-size: 70%'>[In-process call]</div>" .->14
+    14-. "<div>Rechecks decision<br />authority/scope</div><div style='font-size: 70%'>[In-process call]</div>" .->6
+    14-. "<div>Persists confirmed<br />decision/follow-up</div><div style='font-size: 70%'>[PostgreSQL TLS]</div>" .->20
+
+  end

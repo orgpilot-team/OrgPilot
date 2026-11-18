@@ -21,6 +21,8 @@ The DIDRAH Input Dataset is one versioned `DATA_DIR` package. It contains nightl
 
 The deterministic core is outside the agent. It owns KPI calculation, workflow reconstruction, signal rules, authorization, validation, and publication. The bounded agent analyzes only authorized evidence and can produce a narrative candidate or a decision-card candidate.
 
+All report, interactive, and document-analysis Agent Jobs use one durable PostgreSQL queue. The Backend producer commits an idempotent job with pinned actor, scope, policy, and input references before sending an optional authenticated wake-up containing only the job ID. The Agent Runtime Runner claims and leases the canonical job from PostgreSQL, executes it, and persists its outcome. A missed wake-up cannot lose work; polling and lease recovery remain authoritative. The Backend validates persisted outcomes and exposes authorized job status/results to the Web Application. The Agent Runtime Gateway produces interactive jobs; the Document Processing Runner produces document jobs only after a successful parse; an edit revision is created by the producer for that workload type.
+
 The main nightly path is:
 
 ```text
@@ -29,7 +31,8 @@ Scheduler and Replay Runner
   -> PostgreSQL job plan
   -> Background Worker stages
   -> manager-scoped Evidence Package and Canonical Report JSON
-  -> bounded Agent Job
+  -> PostgreSQL unlocks the pinned Agent Job
+  -> Agent Runtime Runner claims, executes, and persists outcome
   -> deterministic validation
   -> independent publication
 ```

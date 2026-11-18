@@ -1,0 +1,69 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.7 - Scenario - Report Generation"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    22["<div style='font-weight: bold'>Replay Command</div><div style='font-size: 70%; margin-top: 0px'>[Scheduler and Replay Runner]</div><div style='font-size: 80%; margin-top:10px'>Selects simulated business<br />day and profile.</div>"]
+    style 22 fill:#ffffff,stroke:#444444,color:#444444
+    23["<div style='font-weight: bold'>Run Status Client</div><div style='font-size: 70%; margin-top: 0px'>[Scheduler and Replay Runner]</div><div style='font-size: 80%; margin-top:10px'>Requests run and monitors<br />terminal status.</div>"]
+    style 23 fill:#ffffff,stroke:#444444,color:#444444
+    24["<div style='font-weight: bold'>Run Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Creates pinned Run and<br />complete dependency/job plan.</div>"]
+    style 24 fill:#ffffff,stroke:#444444,color:#444444
+    25["<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Durable run/report store]</div><div style='font-size: 80%; margin-top:10px'>Stores Jobs, dependencies,<br />packages, outcomes, and<br />publication receipts.</div>"]
+    style 25 fill:#ffffff,stroke:#444444,color:#444444
+    26["<div style='font-weight: bold'>Run Stage Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Claims deterministic jobs and<br />invokes stages.</div>"]
+    style 26 fill:#ffffff,stroke:#444444,color:#444444
+    27["<div style='font-weight: bold'>Ingestion Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Processes inputs and data<br />quality.</div>"]
+    style 27 fill:#ffffff,stroke:#444444,color:#444444
+    28["<div style='font-weight: bold'>Snapshot Service</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Pins snapshot.</div>"]
+    style 28 fill:#ffffff,stroke:#444444,color:#444444
+    29["<div style='font-weight: bold'>KPI Calculator</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Calculates KPI observations.</div>"]
+    style 29 fill:#ffffff,stroke:#444444,color:#444444
+    30["<div style='font-weight: bold'>Workflow Engine</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Reconstructs workflow<br />observations.</div>"]
+    style 30 fill:#ffffff,stroke:#444444,color:#444444
+    31["<div style='font-weight: bold'>Signal Engine</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Detects/ranks signals.</div>"]
+    style 31 fill:#ffffff,stroke:#444444,color:#444444
+    32["<div style='font-weight: bold'>Report Evidence Builder</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Stores Evidence<br />Package/Canonical Report JSON<br />and unlocks preplanned Agent<br />Job; no graph execution.</div>"]
+    style 32 fill:#ffffff,stroke:#444444,color:#444444
+    33["<div style='font-weight: bold'>Agent Job Runner</div><div style='font-size: 70%; margin-top: 0px'>[Agent Runtime]</div><div style='font-size: 80%; margin-top:10px'>Claims unlocked job from<br />PostgreSQL and persists<br />candidate/failure.</div>"]
+    style 33 fill:#ffffff,stroke:#444444,color:#444444
+    34["<div style='font-weight: bold'>Authorization Service</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Revalidates pinned manager<br />scope.</div>"]
+    style 34 fill:#ffffff,stroke:#444444,color:#444444
+    35["<div style='font-weight: bold'>Bounded Agent Orchestrator</div><div style='font-size: 70%; margin-top: 0px'>[Agent Runtime]</div><div style='font-size: 80%; margin-top:10px'>Produces narrative candidate<br />only.</div>"]
+    style 35 fill:#ffffff,stroke:#444444,color:#444444
+    36["<div style='font-weight: bold'>Model Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Agent Runtime]</div><div style='font-size: 80%; margin-top:10px'>Returns bounded completion or<br />explicit failure.</div>"]
+    style 36 fill:#ffffff,stroke:#444444,color:#444444
+    37["<div style='font-weight: bold'>Output Validator</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Validates outcome and<br />persists receipt/state.</div>"]
+    style 37 fill:#ffffff,stroke:#444444,color:#444444
+    38["<div style='font-weight: bold'>Publisher</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Publishes validated result or<br />authorized fallback.</div>"]
+    style 38 fill:#ffffff,stroke:#444444,color:#444444
+    39["<div style='font-weight: bold'>Report and Dashboard API</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Delivers published report.</div>"]
+    style 39 fill:#ffffff,stroke:#444444,color:#444444
+
+    22-. "<div>01. Prepare replay date,<br />cutoff, and profile</div><div style='font-size: 70%'></div>" .->23
+    23-. "<div>02. Request pinned report run</div><div style='font-size: 70%'></div>" .->24
+    24-. "<div>03. Commit Run, all Jobs,<br />dependencies, manager order</div><div style='font-size: 70%'></div>" .->25
+    26-. "<div>04. Claim Ready deterministic<br />jobs</div><div style='font-size: 70%'></div>" .->25
+    26-. "<div>05. Run intake and<br />data-quality checks</div><div style='font-size: 70%'></div>" .->27
+    26-. "<div>06. Pin snapshot</div><div style='font-size: 70%'></div>" .->28
+    26-. "<div>07. Calculate KPI<br />observations</div><div style='font-size: 70%'></div>" .->29
+    26-. "<div>08. Reconstruct workflows</div><div style='font-size: 70%'></div>" .->30
+    26-. "<div>09. Detect and rank<br />deterministic signals</div><div style='font-size: 70%'></div>" .->31
+    26-. "<div>10. Execute Report Evidence<br />Job per manager</div><div style='font-size: 70%'></div>" .->32
+    32-. "<div>11. Store package/report<br />JSON; complete Evidence Job;<br />unlock existing Agent Job</div><div style='font-size: 70%'></div>" .->25
+    33-. "<div>12. Claim and lease Ready<br />Agent Job; load pinned<br />package/scope/checkpoint</div><div style='font-size: 70%'></div>" .->25
+    33-. "<div>13. Revalidate pinned manager<br />scope</div><div style='font-size: 70%'></div>" .->34
+    33-. "<div>14. Run bounded report<br />narrative graph</div><div style='font-size: 70%'></div>" .->35
+    35-. "<div>15. Request bounded narrative</div><div style='font-size: 70%'></div>" .->36
+    36-. "<div>16. Return completion or<br />explicit model failure</div><div style='font-size: 70%'></div>" .->35
+    35-. "<div>17. Return candidate/failure<br />to job owner</div><div style='font-size: 70%'></div>" .->33
+    33-. "<div>18. Persist<br />awaiting-validation candidate<br />or terminal execution failure</div><div style='font-size: 70%'></div>" .->25
+    33-. "<div>19. Submit persisted outcome<br />for deterministic validation</div><div style='font-size: 70%'></div>" .->37
+    37-. "<div>20. Persist validation<br />receipt and<br />validated/rejected state</div><div style='font-size: 70%'></div>" .->25
+    37-. "<div>21. Release valid report or<br />authorized fallback</div><div style='font-size: 70%'></div>" .->38
+    38-. "<div>22. Publish report/receipt,<br />complete job, unlock next<br />manager job</div><div style='font-size: 70%'></div>" .->25
+    25-. "<div>23. Deliver authorized<br />published report</div><div style='font-size: 70%'></div>" .->39
+    24-. "<div>24. Close Run after required<br />jobs become terminal</div><div style='font-size: 70%'></div>" .->25
+
+  end
