@@ -39,3 +39,4 @@ Desktop.ini
 
 # Structurizr runtime logs
 /architecture/structurizr/.structurizr/**/logs/
+.roo/mcp.json

@@ -5,230 +5,779 @@
   "description" : "Proposed C4 model for the DIDRAH management assistant. Open decisions are not approved facts.",
   "documentation" : { },
   "id" : 1,
-  "lastModifiedAgent" : "structurizr/diagrams/589cf3a2-61d4-4384-9a28-a5a91854cd25",
-  "lastModifiedDate" : "2026-11-17T08:26:37Z",
-  "lastModifiedUser" : "1982197388",
+  "lastModifiedDate" : "2026-11-18T07:16:19Z",
   "model" : {
     "customElements" : [ {
-      "description" : "Resolves the Simulation Clock and Evaluation Profile, then starts one reporting day.",
-      "id" : "57",
-      "metadata" : "Scheduler and Replay Runner",
-      "name" : "Replay Command",
+      "description" : "Stores immutable fragments, parse receipts, pinned Document Analysis Jobs, review state, decisions, and follow-up events.",
+      "id" : "179",
+      "metadata" : "Scenario B state",
+      "name" : "B - PostgreSQL",
       "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioReplay"
+        "structurizr.dsl.identifier" : "minutesUploadPostgres"
       },
-      "relationships" : [ {
-        "description" : "01. Prepare one reporting day",
-        "destinationId" : "58",
-        "id" : "74",
-        "sourceId" : "57",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,ScenarioStep,ScenarioScheduler"
-    }, {
-      "description" : "Starts and monitors the run only through the Backend Run Coordinator.",
-      "id" : "58",
-      "metadata" : "Scheduler and Replay Runner",
-      "name" : "Run Status Client",
-      "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioRunStatus"
-      },
-      "relationships" : [ {
-        "description" : "02. Request a pinned run",
-        "destinationId" : "59",
-        "id" : "75",
-        "sourceId" : "58",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,ScenarioStep,ScenarioScheduler"
-    }, {
-      "description" : "Creates the pinned run and complete job plan, stores dependencies and manager order, monitors terminal jobs, and closes the run.",
-      "id" : "59",
-      "metadata" : "Backend API",
-      "name" : "Run Coordinator",
-      "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioRunCoordinator"
-      },
-      "relationships" : [ {
-        "description" : "03. Create the Run, all Jobs, dependencies, and manager order",
-        "destinationId" : "60",
-        "id" : "76",
-        "sourceId" : "59",
-        "tags" : "Relationship"
-      }, {
-        "description" : "19. After all required Jobs are terminal, persist final status and close the Run",
-        "destinationId" : "60",
-        "id" : "92",
-        "sourceId" : "59",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,ScenarioStep,ScenarioBackend"
-    }, {
-      "description" : "Stores durable jobs, pinned inputs, report packages, final run status, published reports, and publication receipts.",
-      "id" : "60",
-      "metadata" : "Job and report store",
-      "name" : "PostgreSQL",
-      "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioPostgres"
-      },
-      "relationships" : [ {
-        "description" : "18. Deliver the published manager report",
-        "destinationId" : "73",
-        "id" : "91",
-        "sourceId" : "60",
-        "tags" : "Relationship"
-      } ],
       "tags" : "Element,ScenarioStep,ScenarioDatabase"
     }, {
-      "description" : "Claims Ready deterministic jobs and invokes their components according to dependencies stored in PostgreSQL.",
-      "id" : "61",
-      "metadata" : "Background Worker",
-      "name" : "Run Stage Coordinator",
+      "description" : "Stores original upload bytes with their hash and manifest.",
+      "id" : "178",
+      "metadata" : "Protected storage",
+      "name" : "B - Protected File Archive",
       "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioRunStage"
+        "structurizr.dsl.identifier" : "minutesUploadArchive"
       },
-      "relationships" : [ {
-        "description" : "04. Claim Ready deterministic Jobs",
-        "destinationId" : "60",
-        "id" : "77",
-        "sourceId" : "61",
-        "tags" : "Relationship"
-      }, {
-        "description" : "05. Run ingestion and data-quality checks",
-        "destinationId" : "62",
-        "id" : "78",
-        "sourceId" : "61",
-        "tags" : "Relationship"
-      }, {
-        "description" : "06. Create the pinned Snapshot",
-        "destinationId" : "63",
-        "id" : "79",
-        "sourceId" : "61",
-        "tags" : "Relationship"
-      }, {
-        "description" : "07. Calculate approved KPIs",
-        "destinationId" : "64",
-        "id" : "80",
-        "sourceId" : "61",
-        "tags" : "Relationship"
-      }, {
-        "description" : "08. Reconstruct workflows",
-        "destinationId" : "65",
-        "id" : "81",
-        "sourceId" : "61",
-        "tags" : "Relationship"
-      }, {
-        "description" : "09. Detect and rank signals",
-        "destinationId" : "66",
-        "id" : "82",
-        "sourceId" : "61",
-        "tags" : "Relationship"
-      }, {
-        "description" : "10. For each manager in order, execute the Ready Report Evidence Job",
-        "destinationId" : "67",
-        "id" : "83",
-        "sourceId" : "61",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,ScenarioStep,ScenarioWorker"
+      "tags" : "Element,ScenarioStep,ScenarioStorage"
     }, {
-      "description" : "Runs source parsing and data-quality checks through Source Adapters and Data Quality Service.",
-      "id" : "62",
-      "metadata" : "Background Worker",
-      "name" : "Ingestion Coordinator",
-      "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioIngestion"
-      },
-      "tags" : "Element,ScenarioStep,ScenarioWorker"
-    }, {
-      "description" : "Creates the pinned Snapshot and requests reproducible projections from Projection Service.",
-      "id" : "63",
-      "metadata" : "Background Worker",
-      "name" : "Snapshot Service",
-      "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioSnapshot"
-      },
-      "tags" : "Element,ScenarioStep,ScenarioWorker"
-    }, {
-      "description" : "Calculates approved KPIs using definitions from Semantic Registry.",
-      "id" : "64",
-      "metadata" : "Background Worker",
-      "name" : "KPI Calculator",
-      "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioKpi"
-      },
-      "tags" : "Element,ScenarioStep,ScenarioWorker"
-    }, {
-      "description" : "Reconstructs WF1-WF3 and calculates stage, SLA, backlog, and bottleneck observations.",
-      "id" : "65",
-      "metadata" : "Background Worker",
-      "name" : "Workflow Engine",
-      "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioWorkflow"
-      },
-      "tags" : "Element,ScenarioStep,ScenarioWorker"
-    }, {
-      "description" : "Detects, groups, ranks, suppresses, and escalates deterministic signals.",
-      "id" : "66",
-      "metadata" : "Background Worker",
-      "name" : "Signal Engine",
-      "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioSignal"
-      },
-      "tags" : "Element,ScenarioStep,ScenarioWorker"
-    }, {
-      "description" : "Executes one Report Evidence Job and stores the pinned Evidence Package and Canonical Report JSON without a model call.",
-      "id" : "67",
-      "metadata" : "Background Worker",
-      "name" : "Report Evidence Builder",
-      "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioEvidenceBuilder"
-      },
-      "relationships" : [ {
-        "description" : "11. Store the package, complete the Job, and unlock its Agent Job",
-        "destinationId" : "60",
-        "id" : "84",
-        "sourceId" : "67",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,ScenarioStep,ScenarioWorker"
-    }, {
-      "description" : "Claims one Ready Agent Job, loads its report package, and controls bounded report-graph execution.",
-      "id" : "68",
+      "description" : "Records a confirmed human decision and its follow-up contract without executing the decision.",
+      "id" : "177",
       "metadata" : "Backend API",
-      "name" : "Agent Job Runner",
+      "name" : "B - Decision and Follow-Up",
       "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioAgentRunner"
+        "structurizr.dsl.identifier" : "minutesUploadTracker"
       },
       "relationships" : [ {
-        "description" : "12. Claim the Ready Agent Job and load its package",
-        "destinationId" : "60",
-        "id" : "85",
-        "sourceId" : "68",
+        "description" : "B27. Recheck decision authority and affected scope",
+        "destinationId" : "167",
+        "id" : "209",
+        "sourceId" : "177",
         "tags" : "Relationship"
       }, {
-        "description" : "13. Revalidate manager scope",
-        "destinationId" : "69",
-        "id" : "86",
-        "sourceId" : "68",
+        "description" : "B28. Append decision, owner, deadline, success criteria, guardrail, and follow-up; do not execute",
+        "destinationId" : "179",
+        "id" : "210",
+        "sourceId" : "177",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioDocument"
+    }, {
+      "description" : "Stores the validated card and accepts only an authenticated manager review command.",
+      "id" : "176",
+      "metadata" : "Backend API",
+      "name" : "B - Decision Confirmation Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadConfirmation"
+      },
+      "relationships" : [ {
+        "description" : "B18. Store the candidate, validated card, sources, and review status",
+        "destinationId" : "179",
+        "id" : "197",
+        "sourceId" : "176",
         "tags" : "Relationship"
       }, {
-        "description" : "14. Run the bounded report graph",
-        "destinationId" : "70",
-        "id" : "87",
-        "sourceId" : "68",
+        "description" : "B19. Return the validated card or review status",
+        "destinationId" : "165",
+        "id" : "198",
+        "sourceId" : "176",
         "tags" : "Relationship"
       }, {
-        "description" : "15. Submit narrative candidate or model failure",
-        "destinationId" : "71",
-        "id" : "88",
-        "sourceId" : "68",
+        "description" : "B26a. On edit, request a revised decision card",
+        "destinationId" : "172",
+        "id" : "205",
+        "sourceId" : "176",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B26c. On reject, store the terminal review status",
+        "destinationId" : "179",
+        "id" : "207",
+        "sourceId" : "176",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B26d. On confirm only, forward the manager-confirmed card",
+        "destinationId" : "177",
+        "id" : "208",
+        "sourceId" : "176",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioDocument"
+    }, {
+      "description" : "Checks the decision-card contract, document evidence references, scope, and response rules.",
+      "id" : "175",
+      "metadata" : "Backend API",
+      "name" : "B - Output Validator",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadValidator"
+      },
+      "relationships" : [ {
+        "description" : "B17. Release only a valid decision card for review",
+        "destinationId" : "176",
+        "id" : "196",
+        "sourceId" : "175",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioDocument"
+    }, {
+      "description" : "Applies token, time, retry, and cost limits to bounded document analysis and drafting.",
+      "id" : "174",
+      "metadata" : "Agent Runtime",
+      "name" : "B - Model Gateway",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadModel"
+      },
+      "relationships" : [ {
+        "description" : "B15. Return a completion or explicit terminal failure",
+        "destinationId" : "173",
+        "id" : "194",
+        "sourceId" : "174",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioAgent"
+    }, {
+      "description" : "Coordinates the document decision-card graph and produces a structured candidate without confirming or executing it.",
+      "id" : "173",
+      "metadata" : "Agent Runtime",
+      "name" : "B - Bounded Agent Orchestrator",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadAgent"
+      },
+      "relationships" : [ {
+        "description" : "B14. Request bounded analysis of approved document evidence",
+        "destinationId" : "174",
+        "id" : "193",
+        "sourceId" : "173",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B16. Submit the decision-card candidate for deterministic validation",
+        "destinationId" : "175",
+        "id" : "195",
+        "sourceId" : "173",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioAgent"
+    }, {
+      "description" : "Forwards scoped document-analysis work to Agent Runtime and routes the candidate back for validation.",
+      "id" : "172",
+      "metadata" : "Backend API",
+      "name" : "B - Agent Runtime Gateway",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadGateway"
+      },
+      "relationships" : [ {
+        "description" : "B13. Forward pinned document evidence and authorized scope",
+        "destinationId" : "173",
+        "id" : "192",
+        "sourceId" : "172",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B26b. Run the revised document decision graph",
+        "destinationId" : "173",
+        "id" : "206",
+        "sourceId" : "172",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioDocument"
+    }, {
+      "description" : "Claims only Document Analysis Jobs and reloads their pinned actor, scope, policy, and fragments.",
+      "id" : "171",
+      "metadata" : "Backend API",
+      "name" : "B - Document Analysis Job Runner",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadJobRunner"
+      },
+      "relationships" : [ {
+        "description" : "B11. Claim the Job and load pinned actor, scope, policy, and fragments",
+        "destinationId" : "179",
+        "id" : "190",
+        "sourceId" : "171",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B12. Request the bounded document decision-card graph",
+        "destinationId" : "172",
+        "id" : "191",
+        "sourceId" : "171",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioDocument"
+    }, {
+      "description" : "Validates the supported document contract and treats meeting-minutes content as data, not instructions.",
+      "id" : "170",
+      "metadata" : "Backend API",
+      "name" : "B - Document Parser",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadParser"
+      },
+      "relationships" : [ {
+        "description" : "B08. Read only the approved original upload bytes",
+        "destinationId" : "178",
+        "id" : "187",
+        "sourceId" : "170",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B09. Validate the contract and store immutable fragments and parse receipt",
+        "destinationId" : "179",
+        "id" : "188",
+        "sourceId" : "170",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioDocument"
+    }, {
+      "description" : "Preserves original bytes, invokes deterministic parsing, and creates a Document Analysis Job only after a successful parse.",
+      "id" : "169",
+      "metadata" : "Backend API",
+      "name" : "B - Document Processing Runner",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadProcessing"
+      },
+      "relationships" : [ {
+        "description" : "B06. Preserve original bytes, hash, and manifest",
+        "destinationId" : "178",
+        "id" : "185",
+        "sourceId" : "169",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B07. Request deterministic parsing of the archived upload",
+        "destinationId" : "170",
+        "id" : "186",
+        "sourceId" : "169",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B10. After successful parsing, create a pinned Document Analysis Job",
+        "destinationId" : "179",
+        "id" : "189",
+        "sourceId" : "169",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioDocument"
+    }, {
+      "description" : "Routes the authorized upload and later review command to fixed handlers.",
+      "id" : "168",
+      "metadata" : "Backend API",
+      "name" : "B - Manager Request Router",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadRouter"
+      },
+      "relationships" : [ {
+        "description" : "B05. Route the authorized document upload",
+        "destinationId" : "169",
+        "id" : "184",
+        "sourceId" : "168",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B25. Route the review command to its fixed handler",
+        "destinationId" : "176",
+        "id" : "204",
+        "sourceId" : "168",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioDocument"
+    }, {
+      "description" : "Builds and rechecks the permitted role, row, column, purpose, and policy scope.",
+      "id" : "167",
+      "metadata" : "Backend API",
+      "name" : "B - Authorization Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadAuthorization"
+      },
+      "relationships" : [ {
+        "description" : "B04. Pass the trusted scope and upload request context",
+        "destinationId" : "168",
+        "id" : "183",
+        "sourceId" : "167",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B24. Pass the authorized review command",
+        "destinationId" : "168",
+        "id" : "203",
+        "sourceId" : "167",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioDocument"
+    }, {
+      "description" : "Validates the manager session and creates the trusted identity context.",
+      "id" : "166",
+      "metadata" : "Backend API",
+      "name" : "B - Identity Boundary",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadIdentity"
+      },
+      "relationships" : [ {
+        "description" : "B03. Validate the session and create trusted AuthContext",
+        "destinationId" : "167",
+        "id" : "182",
+        "sourceId" : "166",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B23. Revalidate identity and recreate trusted AuthContext",
+        "destinationId" : "167",
+        "id" : "202",
+        "sourceId" : "166",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioDocument"
+    }, {
+      "description" : "Collects the meeting-minutes upload, displays the validated decision card, and submits the manager's review command over the authenticated API path.",
+      "id" : "165",
+      "metadata" : "Web Application",
+      "name" : "B - Conversational Assistant UI",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadUi"
+      },
+      "relationships" : [ {
+        "description" : "B02. Submit the session and document upload over HTTPS",
+        "destinationId" : "166",
+        "id" : "181",
+        "sourceId" : "165",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B20. Display the card; the system does not send or execute it",
+        "destinationId" : "164",
+        "id" : "199",
+        "sourceId" : "165",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B22. Submit the authenticated review command",
+        "destinationId" : "166",
+        "id" : "201",
+        "sourceId" : "165",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioWeb"
+    }, {
+      "description" : "Uploads meeting minutes, then reviews the validated decision card extracted from the approved document evidence.",
+      "id" : "164",
+      "metadata" : "Scenario B - meeting-minutes upload",
+      "name" : "B - Manager",
+      "properties" : {
+        "structurizr.dsl.identifier" : "minutesUploadManager"
+      },
+      "relationships" : [ {
+        "description" : "B01. Select meeting minutes and an explicit supported document type",
+        "destinationId" : "165",
+        "id" : "180",
+        "sourceId" : "164",
+        "tags" : "Relationship"
+      }, {
+        "description" : "B21. Choose confirm, edit, or reject",
+        "destinationId" : "165",
+        "id" : "200",
+        "sourceId" : "164",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioActor"
+    }, {
+      "description" : "Stores policy, scoped conversation, query evidence, review state, confirmed decisions, and follow-up events.",
+      "id" : "132",
+      "metadata" : "Scenario A state",
+      "name" : "A - PostgreSQL",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionPostgres"
+      },
+      "tags" : "Element,ScenarioStep,ScenarioDatabase"
+    }, {
+      "description" : "Records a confirmed human decision and its follow-up contract without executing the decision.",
+      "id" : "131",
+      "metadata" : "Backend API",
+      "name" : "A - Decision and Follow-Up",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionTracker"
+      },
+      "relationships" : [ {
+        "description" : "A27. Recheck decision authority and affected scope",
+        "destinationId" : "120",
+        "id" : "162",
+        "sourceId" : "131",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A28. Append decision, owner, deadline, success criteria, guardrail, and follow-up; do not execute",
+        "destinationId" : "132",
+        "id" : "163",
+        "sourceId" : "131",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioChat"
+    }, {
+      "description" : "Stores the validated card and accepts only an authenticated manager review command.",
+      "id" : "130",
+      "metadata" : "Backend API",
+      "name" : "A - Decision Confirmation Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionConfirmation"
+      },
+      "relationships" : [ {
+        "description" : "A18. Store the candidate, validated card, sources, and review status",
+        "destinationId" : "132",
+        "id" : "150",
+        "sourceId" : "130",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A19. Return the validated decision card or review status",
+        "destinationId" : "118",
+        "id" : "151",
+        "sourceId" : "130",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A26a. On edit, request a revised decision card",
+        "destinationId" : "122",
+        "id" : "158",
+        "sourceId" : "130",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A26c. On reject, store the terminal review status",
+        "destinationId" : "132",
+        "id" : "160",
+        "sourceId" : "130",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A26d. On confirm only, forward the manager-confirmed card",
+        "destinationId" : "131",
+        "id" : "161",
+        "sourceId" : "130",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioChat"
+    }, {
+      "description" : "Checks the decision-card contract, cited values, evidence, scope, and response rules.",
+      "id" : "129",
+      "metadata" : "Backend API",
+      "name" : "A - Output Validator",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionValidator"
+      },
+      "relationships" : [ {
+        "description" : "A17. Release only a valid decision card for review",
+        "destinationId" : "130",
+        "id" : "149",
+        "sourceId" : "129",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioChat"
+    }, {
+      "description" : "Applies token, time, retry, and cost limits to bounded analysis and drafting.",
+      "id" : "128",
+      "metadata" : "Agent Runtime",
+      "name" : "A - Model Gateway",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionModel"
+      },
+      "relationships" : [ {
+        "description" : "A15. Return a completion or explicit terminal failure",
+        "destinationId" : "127",
+        "id" : "147",
+        "sourceId" : "128",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioAgent"
+    }, {
+      "description" : "Coordinates the interactive decision-card graph and produces a structured candidate without confirming or executing it.",
+      "id" : "127",
+      "metadata" : "Agent Runtime",
+      "name" : "A - Bounded Agent Orchestrator",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionAgent"
+      },
+      "relationships" : [ {
+        "description" : "A07. Store the manager turn and load bounded history",
+        "destinationId" : "123",
+        "id" : "139",
+        "sourceId" : "127",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A09. Request an authorized Evidence Bundle from Backend",
+        "destinationId" : "124",
+        "id" : "141",
+        "sourceId" : "127",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A14. Request bounded analysis and a decision-card draft",
+        "destinationId" : "128",
+        "id" : "146",
+        "sourceId" : "127",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A16. Submit the draft for deterministic validation",
+        "destinationId" : "129",
+        "id" : "148",
+        "sourceId" : "127",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioAgent"
+    }, {
+      "description" : "Allows one approved SELECT statement and rejects unsafe SQL.",
+      "id" : "126",
+      "metadata" : "Backend API",
+      "name" : "A - SQL AST Guard",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionSqlGuard"
+      },
+      "relationships" : [ {
+        "description" : "A12. Return approval or refusal",
+        "destinationId" : "125",
+        "id" : "144",
+        "sourceId" : "126",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioChat"
+    }, {
+      "description" : "Runs registered tools and scoped read-only SQL with limits and audit.",
+      "id" : "125",
+      "metadata" : "Backend API",
+      "name" : "A - Query Gateway",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionQuery"
+      },
+      "relationships" : [ {
+        "description" : "A11. Validate one approved SELECT statement",
+        "destinationId" : "126",
+        "id" : "143",
+        "sourceId" : "125",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A13. Execute approved read-only queries and retain lineage",
+        "destinationId" : "132",
+        "id" : "145",
+        "sourceId" : "125",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioChat"
+    }, {
+      "description" : "Builds a traceable Evidence Bundle inside the trusted scope.",
+      "id" : "124",
+      "metadata" : "Backend API",
+      "name" : "A - Evidence Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionEvidence"
+      },
+      "relationships" : [ {
+        "description" : "A10. Run registered evidence queries within the trusted scope",
+        "destinationId" : "125",
+        "id" : "142",
+        "sourceId" : "124",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioChat"
+    }, {
+      "description" : "Stores manager-scoped turns and supplies a bounded history window; conversation text is not business evidence.",
+      "id" : "123",
+      "metadata" : "Agent Runtime",
+      "name" : "A - Conversation Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionConversation"
+      },
+      "relationships" : [ {
+        "description" : "A08. Read and write the manager-scoped conversation",
+        "destinationId" : "132",
+        "id" : "140",
+        "sourceId" : "123",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioAgent"
+    }, {
+      "description" : "Forwards scoped, authorized work to Agent Runtime and routes candidates back for validation.",
+      "id" : "122",
+      "metadata" : "Backend API",
+      "name" : "A - Agent Runtime Gateway",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionGateway"
+      },
+      "relationships" : [ {
+        "description" : "A06. Forward the scoped interactive decision-card job",
+        "destinationId" : "127",
+        "id" : "138",
+        "sourceId" : "122",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A26b. Run the revised card graph in Agent Runtime",
+        "destinationId" : "127",
+        "id" : "159",
+        "sourceId" : "122",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioChat"
+    }, {
+      "description" : "Routes the authorized chat request and later review command to fixed handlers.",
+      "id" : "121",
+      "metadata" : "Backend API",
+      "name" : "A - Manager Request Router",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionRouter"
+      },
+      "relationships" : [ {
+        "description" : "A05. Route the authorized request to Agent Runtime",
+        "destinationId" : "122",
+        "id" : "137",
+        "sourceId" : "121",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A25. Route the review command to its fixed handler",
+        "destinationId" : "130",
+        "id" : "157",
+        "sourceId" : "121",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioChat"
+    }, {
+      "description" : "Builds and rechecks the permitted role, row, column, purpose, and policy scope.",
+      "id" : "120",
+      "metadata" : "Backend API",
+      "name" : "A - Authorization Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionAuthorization"
+      },
+      "relationships" : [ {
+        "description" : "A04. Pass the trusted scope and request context",
+        "destinationId" : "121",
+        "id" : "136",
+        "sourceId" : "120",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A24. Pass the authorized review command",
+        "destinationId" : "121",
+        "id" : "156",
+        "sourceId" : "120",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioChat"
+    }, {
+      "description" : "Validates the manager session and creates the trusted identity context.",
+      "id" : "119",
+      "metadata" : "Backend API",
+      "name" : "A - Identity Boundary",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionIdentity"
+      },
+      "relationships" : [ {
+        "description" : "A03. Validate the session and create trusted AuthContext",
+        "destinationId" : "120",
+        "id" : "135",
+        "sourceId" : "119",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A23. Revalidate identity and recreate trusted AuthContext",
+        "destinationId" : "120",
+        "id" : "155",
+        "sourceId" : "119",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioChat"
+    }, {
+      "description" : "Collects the manager chat request, displays the validated decision card, and submits the manager's review command over the authenticated API path.",
+      "id" : "118",
+      "metadata" : "Web Application",
+      "name" : "A - Conversational Assistant UI",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionUi"
+      },
+      "relationships" : [ {
+        "description" : "A02. Submit the session and chat request over HTTPS/JSON",
+        "destinationId" : "119",
+        "id" : "134",
+        "sourceId" : "118",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A20. Display the decision card; the system does not send or execute it",
+        "destinationId" : "117",
+        "id" : "152",
+        "sourceId" : "118",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A22. Submit the authenticated review command",
+        "destinationId" : "119",
+        "id" : "154",
+        "sourceId" : "118",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioWeb"
+    }, {
+      "description" : "Submits a decision request, reviews the validated decision card, and remains the only actor that can confirm, edit, reject, and send the decision.",
+      "id" : "117",
+      "metadata" : "Scenario A - decision in manager chat",
+      "name" : "A - Manager",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatDecisionManager"
+      },
+      "relationships" : [ {
+        "description" : "A01. Enter a decision request in manager chat",
+        "destinationId" : "118",
+        "id" : "133",
+        "sourceId" : "117",
+        "tags" : "Relationship"
+      }, {
+        "description" : "A21. Choose confirm, edit, or reject",
+        "destinationId" : "118",
+        "id" : "153",
+        "sourceId" : "117",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioActor"
+    }, {
+      "description" : "Reads and delivers each published manager report.",
+      "id" : "95",
+      "metadata" : "Report delivery",
+      "name" : "Report and Dashboard API / Web Application",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioDelivery"
+      },
+      "tags" : "Element,ScenarioStep,ScenarioWeb"
+    }, {
+      "description" : "Publishes each validated manager report or authorized deterministic fallback and records its publication receipt.",
+      "id" : "94",
+      "metadata" : "Backend API",
+      "name" : "Publisher",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioPublisher"
+      },
+      "relationships" : [ {
+        "description" : "19. Publish the report, complete the Job, and unlock the next manager",
+        "destinationId" : "81",
+        "id" : "114",
+        "sourceId" : "94",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,ScenarioStep,ScenarioBackend"
     }, {
-      "description" : "Revalidates the pinned manager scope before report-graph execution.",
-      "id" : "69",
+      "description" : "Validates Canonical Report JSON, narrative or model failure, evidence, scope, schema, and report rules.",
+      "id" : "93",
+      "metadata" : "Backend API",
+      "name" : "Output Validator",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioValidator"
+      },
+      "relationships" : [ {
+        "description" : "18. Release a valid report or authorized fallback",
+        "destinationId" : "94",
+        "id" : "113",
+        "sourceId" : "93",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioBackend"
+    }, {
+      "description" : "Applies shared budget and model limits and returns a completion or explicit failure.",
+      "id" : "92",
+      "metadata" : "Agent Runtime",
+      "name" : "Model Gateway",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioModel"
+      },
+      "relationships" : [ {
+        "description" : "16. Return completion or explicit model failure",
+        "destinationId" : "91",
+        "id" : "111",
+        "sourceId" : "92",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioAgent"
+    }, {
+      "description" : "Runs the bounded report narrative graph and returns a candidate only.",
+      "id" : "91",
+      "metadata" : "Agent Runtime",
+      "name" : "Bounded Agent Orchestrator",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioAgent"
+      },
+      "relationships" : [ {
+        "description" : "15. Request bounded narrative generation",
+        "destinationId" : "92",
+        "id" : "110",
+        "sourceId" : "91",
+        "tags" : "Relationship"
+      }, {
+        "description" : "17. Submit narrative candidate or model failure for deterministic validation",
+        "destinationId" : "93",
+        "id" : "112",
+        "sourceId" : "91",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioAgent"
+    }, {
+      "description" : "Revalidates the pinned manager scope for the agent job.",
+      "id" : "90",
       "metadata" : "Backend API",
       "name" : "Authorization Service",
       "properties" : {
@@ -236,55 +785,355 @@
       },
       "tags" : "Element,ScenarioStep,ScenarioBackend"
     }, {
-      "description" : "Uses Evidence Service, Query Gateway, SQL AST Guard, and Model Gateway to produce an optional narrative candidate.",
-      "id" : "70",
-      "metadata" : "Backend API",
-      "name" : "Bounded Agent Orchestrator",
+      "description" : "Claims one Ready Agent Job and loads its pinned report package, scope, and checkpoint state.",
+      "id" : "89",
+      "metadata" : "Agent Runtime",
+      "name" : "Agent Job Runner",
       "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioAgent"
-      },
-      "tags" : "Element,ScenarioStep,ScenarioBackend"
-    }, {
-      "description" : "Validates Canonical Report JSON, narrative or model failure, evidence, scope, schema, and report rules.",
-      "id" : "71",
-      "metadata" : "Backend API",
-      "name" : "Output Validator",
-      "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioValidator"
+        "structurizr.dsl.identifier" : "reportScenarioAgentRunner"
       },
       "relationships" : [ {
-        "description" : "16. Release a valid report or authorized fallback",
-        "destinationId" : "72",
-        "id" : "89",
-        "sourceId" : "71",
+        "description" : "12. Claim the Ready Agent Job and load its package",
+        "destinationId" : "81",
+        "id" : "107",
+        "sourceId" : "89",
+        "tags" : "Relationship"
+      }, {
+        "description" : "13. Revalidate pinned manager scope over the Backend API boundary",
+        "destinationId" : "90",
+        "id" : "108",
+        "sourceId" : "89",
+        "tags" : "Relationship"
+      }, {
+        "description" : "14. Run the bounded report graph",
+        "destinationId" : "91",
+        "id" : "109",
+        "sourceId" : "89",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioAgent"
+    }, {
+      "description" : "Executes one Report Evidence Job and stores the pinned Evidence Package and Canonical Report JSON without a model call.",
+      "id" : "88",
+      "metadata" : "Background Worker",
+      "name" : "Report Evidence Builder",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioEvidenceBuilder"
+      },
+      "relationships" : [ {
+        "description" : "11. Store the package, complete the Job, and unlock its Agent Job",
+        "destinationId" : "81",
+        "id" : "106",
+        "sourceId" : "88",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioWorker"
+    }, {
+      "description" : "Detects, groups, ranks, suppresses, and escalates deterministic signals.",
+      "id" : "87",
+      "metadata" : "Background Worker",
+      "name" : "Signal Engine",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioSignal"
+      },
+      "tags" : "Element,ScenarioStep,ScenarioWorker"
+    }, {
+      "description" : "Reconstructs WF1-WF3 and calculates stage, SLA, backlog, and bottleneck observations.",
+      "id" : "86",
+      "metadata" : "Background Worker",
+      "name" : "Workflow Engine",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioWorkflow"
+      },
+      "tags" : "Element,ScenarioStep,ScenarioWorker"
+    }, {
+      "description" : "Calculates approved KPIs using definitions from Semantic Registry.",
+      "id" : "85",
+      "metadata" : "Background Worker",
+      "name" : "KPI Calculator",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioKpi"
+      },
+      "tags" : "Element,ScenarioStep,ScenarioWorker"
+    }, {
+      "description" : "Creates the pinned Snapshot and requests reproducible projections from Projection Service.",
+      "id" : "84",
+      "metadata" : "Background Worker",
+      "name" : "Snapshot Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioSnapshot"
+      },
+      "tags" : "Element,ScenarioStep,ScenarioWorker"
+    }, {
+      "description" : "Runs source parsing and data-quality checks through Source Adapters and Data Quality Service.",
+      "id" : "83",
+      "metadata" : "Background Worker",
+      "name" : "Ingestion Coordinator",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioIngestion"
+      },
+      "tags" : "Element,ScenarioStep,ScenarioWorker"
+    }, {
+      "description" : "Claims Ready deterministic jobs and invokes their components according to dependencies stored in PostgreSQL.",
+      "id" : "82",
+      "metadata" : "Background Worker",
+      "name" : "Run Stage Coordinator",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioRunStage"
+      },
+      "relationships" : [ {
+        "description" : "04. Claim Ready deterministic Jobs",
+        "destinationId" : "81",
+        "id" : "99",
+        "sourceId" : "82",
+        "tags" : "Relationship"
+      }, {
+        "description" : "05. Run ingestion and data-quality checks",
+        "destinationId" : "83",
+        "id" : "100",
+        "sourceId" : "82",
+        "tags" : "Relationship"
+      }, {
+        "description" : "06. Create the pinned Snapshot",
+        "destinationId" : "84",
+        "id" : "101",
+        "sourceId" : "82",
+        "tags" : "Relationship"
+      }, {
+        "description" : "07. Calculate approved KPIs",
+        "destinationId" : "85",
+        "id" : "102",
+        "sourceId" : "82",
+        "tags" : "Relationship"
+      }, {
+        "description" : "08. Reconstruct workflows",
+        "destinationId" : "86",
+        "id" : "103",
+        "sourceId" : "82",
+        "tags" : "Relationship"
+      }, {
+        "description" : "09. Detect and rank signals",
+        "destinationId" : "87",
+        "id" : "104",
+        "sourceId" : "82",
+        "tags" : "Relationship"
+      }, {
+        "description" : "10. For each manager in order, execute the Ready Report Evidence Job",
+        "destinationId" : "88",
+        "id" : "105",
+        "sourceId" : "82",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioWorker"
+    }, {
+      "description" : "Stores durable jobs, pinned inputs, report packages, final run status, published reports, and publication receipts.",
+      "id" : "81",
+      "metadata" : "Job and report store",
+      "name" : "PostgreSQL",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioPostgres"
+      },
+      "relationships" : [ {
+        "description" : "20. Deliver the published manager report",
+        "destinationId" : "95",
+        "id" : "115",
+        "sourceId" : "81",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioDatabase"
+    }, {
+      "description" : "Creates the pinned run and complete job plan, stores dependencies and manager order, monitors terminal jobs, and closes the run.",
+      "id" : "80",
+      "metadata" : "Backend API",
+      "name" : "Run Coordinator",
+      "properties" : {
+        "structurizr.dsl.identifier" : "reportScenarioRunCoordinator"
+      },
+      "relationships" : [ {
+        "description" : "03. Create the Run, all Jobs, dependencies, and manager order",
+        "destinationId" : "81",
+        "id" : "98",
+        "sourceId" : "80",
+        "tags" : "Relationship"
+      }, {
+        "description" : "21. After all required Jobs are terminal, persist final status and close the Run",
+        "destinationId" : "81",
+        "id" : "116",
+        "sourceId" : "80",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,ScenarioStep,ScenarioBackend"
     }, {
-      "description" : "Publishes each validated manager report or authorized deterministic fallback and records its publication receipt.",
-      "id" : "72",
-      "metadata" : "Backend API",
-      "name" : "Publisher",
+      "description" : "Starts and monitors the run only through the Backend Run Coordinator.",
+      "id" : "79",
+      "metadata" : "Scheduler and Replay Runner",
+      "name" : "Run Status Client",
       "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioPublisher"
+        "structurizr.dsl.identifier" : "reportScenarioRunStatus"
       },
       "relationships" : [ {
-        "description" : "17. Publish the report, complete the Job, and unlock the next manager",
-        "destinationId" : "60",
-        "id" : "90",
-        "sourceId" : "72",
+        "description" : "02. Request a pinned run",
+        "destinationId" : "80",
+        "id" : "97",
+        "sourceId" : "79",
         "tags" : "Relationship"
       } ],
-      "tags" : "Element,ScenarioStep,ScenarioBackend"
+      "tags" : "Element,ScenarioStep,ScenarioScheduler"
     }, {
-      "description" : "Reads and delivers each published manager report.",
-      "id" : "73",
-      "metadata" : "Report delivery",
-      "name" : "Report and Dashboard API / Web Application",
+      "description" : "Resolves the Simulation Clock and Evaluation Profile, then starts one reporting day.",
+      "id" : "78",
+      "metadata" : "Scheduler and Replay Runner",
+      "name" : "Replay Command",
       "properties" : {
-        "structurizr.dsl.identifier" : "reportScenarioDelivery"
+        "structurizr.dsl.identifier" : "reportScenarioReplay"
       },
-      "tags" : "Element,ScenarioStep,ScenarioWeb"
+      "relationships" : [ {
+        "description" : "01. Prepare one reporting day",
+        "destinationId" : "79",
+        "id" : "96",
+        "sourceId" : "78",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,ScenarioStep,ScenarioScheduler"
+    } ],
+    "deploymentNodes" : [ {
+      "children" : [ {
+        "containerInstances" : [ {
+          "containerId" : "11",
+          "environment" : "Evaluation",
+          "id" : "67",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "c7e21dda-581e-4481-9df5-12395797ae30"
+          },
+          "tags" : "Container Instance"
+        } ],
+        "description" : "User interface",
+        "environment" : "Evaluation",
+        "id" : "66",
+        "instances" : "1",
+        "name" : "Web",
+        "properties" : {
+          "structurizr.dsl.identifier" : "a8f6b2f2-bfb8-4f6c-ad86-ed3dec870054"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "Docker container"
+      }, {
+        "containerInstances" : [ {
+          "containerId" : "15",
+          "environment" : "Evaluation",
+          "id" : "69",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "1db48883-9f00-43d8-8edf-6d9a5ac35eb0"
+          },
+          "tags" : "Container Instance"
+        } ],
+        "description" : "API and deterministic validation",
+        "environment" : "Evaluation",
+        "id" : "68",
+        "instances" : "1",
+        "name" : "Backend API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "0a6e2ee9-c05b-427c-8f84-29c661088b65"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "Docker container"
+      }, {
+        "containerInstances" : [ {
+          "containerId" : "36",
+          "environment" : "Evaluation",
+          "id" : "71",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "a7b9f6a5-8739-49e5-b3fd-089cec726a70"
+          },
+          "tags" : "Container Instance"
+        } ],
+        "description" : "Deterministic processing",
+        "environment" : "Evaluation",
+        "id" : "70",
+        "instances" : "1",
+        "name" : "Background Worker",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ed8b4ded-4863-4b76-9cbf-997181fe1288"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "Docker container"
+      }, {
+        "containerInstances" : [ {
+          "containerId" : "50",
+          "environment" : "Evaluation",
+          "id" : "73",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "6ed66ce1-b9c6-4699-af43-284c7a5fa3f4"
+          },
+          "tags" : "Container Instance"
+        } ],
+        "description" : "Replay and acceptance",
+        "environment" : "Evaluation",
+        "id" : "72",
+        "instances" : "1",
+        "name" : "Scheduler",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ed959950-8fae-4699-81aa-19e7928e84a7"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "Docker container"
+      }, {
+        "containerInstances" : [ {
+          "containerId" : "59",
+          "environment" : "Evaluation",
+          "id" : "75",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "df3f8c72-abd2-42b4-aa66-3be22c822ef2"
+          },
+          "tags" : "Container Instance"
+        } ],
+        "description" : "Bounded agent graphs",
+        "environment" : "Evaluation",
+        "id" : "74",
+        "instances" : "1",
+        "name" : "Agent Runtime",
+        "properties" : {
+          "structurizr.dsl.identifier" : "6627c33b-06fe-4e84-94f6-add28393ad31"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "Docker container"
+      }, {
+        "containerInstances" : [ {
+          "containerId" : "57",
+          "environment" : "Evaluation",
+          "id" : "77",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "963bee9d-51ae-4d4e-9aa9-e5ac2f663b1e"
+          },
+          "tags" : "Container Instance"
+        } ],
+        "description" : "Product database",
+        "environment" : "Evaluation",
+        "id" : "76",
+        "instances" : "1",
+        "name" : "PostgreSQL",
+        "properties" : {
+          "structurizr.dsl.identifier" : "7907849e-b887-4c08-9b74-b45f01253f99"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "Docker container"
+      } ],
+      "description" : "Separate service containers started together with one docker compose command.",
+      "environment" : "Evaluation",
+      "id" : "65",
+      "instances" : "1",
+      "name" : "Evaluation Host and Docker Compose",
+      "properties" : {
+        "structurizr.dsl.identifier" : "eb28f498-8fc3-46a9-b4e7-11191ef8bda2"
+      },
+      "tags" : "Element,Deployment Node",
+      "technology" : "Docker Compose"
     } ],
     "people" : [ {
       "description" : "Reads organization health, cross-unit workflows, escalations, and pending decisions.",
@@ -295,34 +1144,34 @@
       },
       "relationships" : [ {
         "description" : "Reads organization health, workflows, escalations, and pending decisions",
-        "destinationId" : "9",
-        "id" : "93",
+        "destinationId" : "10",
+        "id" : "211",
         "sourceId" : "1",
         "tags" : "Relationship",
         "technology" : "HTTPS"
       }, {
         "description" : "Reads organization health, cross-unit workflows, escalations, and decisions",
-        "destinationId" : "10",
-        "id" : "101",
+        "destinationId" : "11",
+        "id" : "219",
         "sourceId" : "1",
         "tags" : "Relationship",
         "technology" : "HTTPS"
       }, {
         "description" : "Reads executive brief and asks aggregate questions",
-        "destinationId" : "11",
-        "id" : "119",
+        "destinationId" : "12",
+        "id" : "238",
         "sourceId" : "1",
         "tags" : "Relationship"
       }, {
         "description" : "Reads organization health",
-        "destinationId" : "12",
-        "id" : "120",
+        "destinationId" : "13",
+        "id" : "239",
         "sourceId" : "1",
         "tags" : "Relationship"
       }, {
         "description" : "Reads WF1-WF3 and escalations",
-        "destinationId" : "13",
-        "id" : "121",
+        "destinationId" : "14",
+        "id" : "240",
         "sourceId" : "1",
         "tags" : "Relationship"
       } ],
@@ -336,28 +1185,28 @@
       },
       "relationships" : [ {
         "description" : "Reads authorized unit and team results and records decisions",
-        "destinationId" : "9",
-        "id" : "94",
+        "destinationId" : "10",
+        "id" : "212",
         "sourceId" : "2",
         "tags" : "Relationship",
         "technology" : "HTTPS"
       }, {
         "description" : "Reads authorized unit and team results and records decisions",
-        "destinationId" : "10",
-        "id" : "102",
+        "destinationId" : "11",
+        "id" : "220",
         "sourceId" : "2",
         "tags" : "Relationship",
         "technology" : "HTTPS"
       }, {
         "description" : "Reads unit brief and records decisions",
-        "destinationId" : "11",
-        "id" : "122",
+        "destinationId" : "12",
+        "id" : "241",
         "sourceId" : "2",
         "tags" : "Relationship"
       }, {
         "description" : "Reads unit and team aggregates",
-        "destinationId" : "12",
-        "id" : "123",
+        "destinationId" : "13",
+        "id" : "242",
         "sourceId" : "2",
         "tags" : "Relationship"
       } ],
@@ -371,28 +1220,28 @@
       },
       "relationships" : [ {
         "description" : "Reads authorized team results and direct-member workload",
-        "destinationId" : "9",
-        "id" : "95",
+        "destinationId" : "10",
+        "id" : "213",
         "sourceId" : "3",
         "tags" : "Relationship",
         "technology" : "HTTPS"
       }, {
         "description" : "Reads authorized team results and direct-member workload",
-        "destinationId" : "10",
-        "id" : "103",
+        "destinationId" : "11",
+        "id" : "221",
         "sourceId" : "3",
         "tags" : "Relationship",
         "technology" : "HTTPS"
       }, {
         "description" : "Reads team brief and asks scoped questions",
-        "destinationId" : "11",
-        "id" : "124",
+        "destinationId" : "12",
+        "id" : "243",
         "sourceId" : "3",
         "tags" : "Relationship"
       }, {
         "description" : "Reads team KPIs and direct-workload details",
-        "destinationId" : "12",
-        "id" : "125",
+        "destinationId" : "13",
+        "id" : "244",
         "sourceId" : "3",
         "tags" : "Relationship"
       } ],
@@ -406,35 +1255,35 @@
       },
       "relationships" : [ {
         "description" : "Runs replay, hidden-data checks, and acceptance tests",
-        "destinationId" : "9",
-        "id" : "96",
+        "destinationId" : "10",
+        "id" : "214",
         "sourceId" : "4",
         "tags" : "Relationship",
         "technology" : "CLI and HTTPS/JSON"
       }, {
         "description" : "Starts replay and acceptance checks",
-        "destinationId" : "49",
-        "id" : "104",
+        "destinationId" : "50",
+        "id" : "222",
         "sourceId" : "4",
         "tags" : "Relationship",
         "technology" : "CLI and HTTPS/JSON"
       }, {
         "description" : "Reads acceptance evidence and exported outputs",
-        "destinationId" : "14",
-        "id" : "105",
+        "destinationId" : "15",
+        "id" : "223",
         "sourceId" : "4",
         "tags" : "Relationship",
         "technology" : "HTTPS/JSON"
       }, {
         "description" : "Starts a replay range and requests acceptance results",
-        "destinationId" : "50",
-        "id" : "199",
+        "destinationId" : "51",
+        "id" : "333",
         "sourceId" : "4",
         "tags" : "Relationship"
       }, {
         "description" : "Starts replay acceptance, hidden-data, and regression checks",
-        "destinationId" : "54",
-        "id" : "207",
+        "destinationId" : "55",
+        "id" : "341",
         "sourceId" : "4",
         "tags" : "Relationship"
       } ],
@@ -448,15 +1297,15 @@
       },
       "relationships" : [ {
         "description" : "Monitors runs, failures, cost, backup, and restore evidence",
-        "destinationId" : "9",
-        "id" : "97",
+        "destinationId" : "10",
+        "id" : "215",
         "sourceId" : "5",
         "tags" : "Relationship",
         "technology" : "HTTPS"
       }, {
         "description" : "Reads authorized operational status",
-        "destinationId" : "14",
-        "id" : "106",
+        "destinationId" : "15",
+        "id" : "224",
         "sourceId" : "5",
         "tags" : "Relationship",
         "technology" : "HTTPS"
@@ -473,38 +1322,47 @@
       },
       "relationships" : [ {
         "description" : "Supplies versioned source data and scripted manager activity",
-        "destinationId" : "9",
-        "id" : "98",
+        "destinationId" : "10",
+        "id" : "216",
         "sourceId" : "6",
         "tags" : "Relationship",
         "technology" : "Read-only filesystem: CSV, JSON, and Markdown"
       }, {
         "description" : "Supplies eligible nightly drops, manifests, and source contracts",
         "destinationId" : "36",
-        "id" : "107",
+        "id" : "225",
         "sourceId" : "6",
         "tags" : "Relationship",
         "technology" : "Read-only filesystem: CSV and JSON"
       }, {
         "description" : "Supplies scripted manager inputs, upload attachments, and replay scenarios",
-        "destinationId" : "49",
-        "id" : "108",
+        "destinationId" : "50",
+        "id" : "226",
         "sourceId" : "6",
         "tags" : "Relationship",
         "technology" : "Read-only filesystem: JSON, CSV, and Markdown"
       }, {
         "description" : "Supplies scripted replay range and manager-input scenarios",
-        "destinationId" : "50",
-        "id" : "200",
+        "destinationId" : "51",
+        "id" : "334",
         "sourceId" : "6",
         "tags" : "Relationship",
         "technology" : "Read-only JSON"
       } ],
       "tags" : "Element,Software System,External,Source,Evaluation"
     }, {
-      "description" : "Authenticates users and supplies a trusted identity. The product or internal method is open.",
+      "description" : "Evaluator-provided writable OUTPUT_DIR mount. DIDRAH writes only contract-approved brief and QA files under /submission.",
       "documentation" : { },
       "id" : "7",
+      "name" : "Submission Output Directory",
+      "properties" : {
+        "structurizr.dsl.identifier" : "submissionOutput"
+      },
+      "tags" : "Element,Software System,External,Storage,Evaluation"
+    }, {
+      "description" : "Authenticates users and supplies a trusted identity. The product or internal method is open.",
+      "documentation" : { },
+      "id" : "8",
       "name" : "Identity Provider",
       "properties" : {
         "structurizr.dsl.identifier" : "identityProvider"
@@ -513,7 +1371,7 @@
     }, {
       "description" : "Returns bounded language-model completions. The provider and model are open decisions.",
       "documentation" : { },
-      "id" : "8",
+      "id" : "9",
       "name" : "Language Model Provider",
       "properties" : {
         "structurizr.dsl.identifier" : "llmProvider"
@@ -524,16 +1382,16 @@
         "components" : [ {
           "description" : "Shows reports and answers. It accepts scoped questions, uploads, and manager operations.",
           "documentation" : { },
-          "id" : "11",
+          "id" : "12",
           "name" : "Conversational Assistant UI",
           "properties" : {
             "structurizr.dsl.identifier" : "chatUi"
           },
           "relationships" : [ {
             "description" : "Submits questions and manager operations; retrieves reports and answers",
-            "destinationId" : "14",
-            "id" : "126",
-            "sourceId" : "11",
+            "destinationId" : "15",
+            "id" : "245",
+            "sourceId" : "12",
             "tags" : "Relationship",
             "technology" : "HTTPS/JSON"
           } ],
@@ -542,16 +1400,16 @@
         }, {
           "description" : "Shows authorized KPIs, targets, trends, drill-downs, decisions, and open actions.",
           "documentation" : { },
-          "id" : "12",
+          "id" : "13",
           "name" : "Role-Based Dashboard UI",
           "properties" : {
             "structurizr.dsl.identifier" : "dashboardUi"
           },
           "relationships" : [ {
             "description" : "Retrieves authorized metrics, trends, and drill-down results",
-            "destinationId" : "14",
-            "id" : "127",
-            "sourceId" : "12",
+            "destinationId" : "15",
+            "id" : "246",
+            "sourceId" : "13",
             "tags" : "Relationship",
             "technology" : "HTTPS/JSON"
           } ],
@@ -560,16 +1418,16 @@
         }, {
           "description" : "Shows WF1-WF3, stage SLA, bottlenecks, escalations, and pending decisions. Senior Manager only.",
           "documentation" : { },
-          "id" : "13",
+          "id" : "14",
           "name" : "Workflow Control Room UI",
           "properties" : {
             "structurizr.dsl.identifier" : "workflowUi"
           },
           "relationships" : [ {
             "description" : "Retrieves executive workflow, bottleneck, and escalation results",
-            "destinationId" : "14",
-            "id" : "128",
-            "sourceId" : "13",
+            "destinationId" : "15",
+            "id" : "247",
+            "sourceId" : "14",
             "tags" : "Relationship",
             "technology" : "HTTPS/JSON"
           } ],
@@ -578,23 +1436,23 @@
         } ],
         "description" : "Persian RTL web application. It provides the three required management interfaces.",
         "documentation" : { },
-        "id" : "10",
+        "id" : "11",
         "name" : "Web Application",
         "properties" : {
           "structurizr.dsl.identifier" : "webApp"
         },
         "relationships" : [ {
           "description" : "Requests reports, scoped queries, uploads, configuration changes, and decisions",
-          "destinationId" : "14",
-          "id" : "110",
-          "sourceId" : "10",
+          "destinationId" : "15",
+          "id" : "228",
+          "sourceId" : "11",
           "tags" : "Relationship",
           "technology" : "HTTPS/JSON"
         }, {
           "description" : "Submits session and request",
-          "destinationId" : "15",
-          "id" : "129",
-          "sourceId" : "10",
+          "destinationId" : "16",
+          "id" : "248",
+          "sourceId" : "11",
           "tags" : "Relationship,PrimaryFlow",
           "technology" : "HTTPS/JSON"
         } ],
@@ -605,23 +1463,23 @@
           "description" : "Validates the session and creates a trusted identity context.",
           "documentation" : { },
           "group" : "01 Access",
-          "id" : "15",
+          "id" : "16",
           "name" : "Identity Boundary",
           "properties" : {
             "structurizr.dsl.identifier" : "identityBoundary"
           },
           "relationships" : [ {
             "description" : "Validates identity",
-            "destinationId" : "7",
-            "id" : "130",
-            "sourceId" : "15",
+            "destinationId" : "8",
+            "id" : "249",
+            "sourceId" : "16",
             "tags" : "Relationship,ExternalFlow",
             "technology" : "OIDC over HTTPS or internal authentication"
           }, {
             "description" : "Creates trusted AuthContext",
-            "destinationId" : "16",
-            "id" : "131",
-            "sourceId" : "15",
+            "destinationId" : "17",
+            "id" : "250",
+            "sourceId" : "16",
             "tags" : "Relationship,PrimaryFlow",
             "technology" : "In-process function call"
           } ],
@@ -631,23 +1489,23 @@
           "description" : "Builds the permitted row, column, role, purpose, and policy scope.",
           "documentation" : { },
           "group" : "01 Access",
-          "id" : "16",
+          "id" : "17",
           "name" : "Authorization Service",
           "properties" : {
             "structurizr.dsl.identifier" : "authorizationService"
           },
           "relationships" : [ {
             "description" : "Reads hierarchy, grants, and policy",
-            "destinationId" : "55",
-            "id" : "132",
-            "sourceId" : "16",
+            "destinationId" : "57",
+            "id" : "251",
+            "sourceId" : "17",
             "tags" : "Relationship,DataFlow",
             "technology" : "PostgreSQL protocol over TLS"
           }, {
             "description" : "Passes trusted scope and request context",
-            "destinationId" : "17",
-            "id" : "133",
-            "sourceId" : "16",
+            "destinationId" : "18",
+            "id" : "252",
+            "sourceId" : "17",
             "tags" : "Relationship,PrimaryFlow",
             "technology" : "In-process function call"
           } ],
@@ -657,7 +1515,7 @@
           "description" : "Classifies each authorized request by its explicit request type and sends it to one fixed handler. It does not authorize requests, execute work, or create jobs.",
           "documentation" : { },
           "group" : "02 Request Routing",
-          "id" : "17",
+          "id" : "18",
           "name" : "Manager Request Router",
           "properties" : {
             "structurizr.dsl.identifier" : "managerInputService"
@@ -665,36 +1523,43 @@
           "relationships" : [ {
             "description" : "Routes published report and dashboard reads",
             "destinationId" : "30",
-            "id" : "134",
-            "sourceId" : "17",
+            "id" : "253",
+            "sourceId" : "18",
             "tags" : "Relationship,ControlFlow",
             "technology" : "In-process function call"
           }, {
             "description" : "Routes a configuration candidate",
-            "destinationId" : "18",
-            "id" : "135",
-            "sourceId" : "17",
+            "destinationId" : "19",
+            "id" : "254",
+            "sourceId" : "18",
+            "tags" : "Relationship,ControlFlow",
+            "technology" : "In-process function call"
+          }, {
+            "description" : "Routes an organization change candidate",
+            "destinationId" : "20",
+            "id" : "255",
+            "sourceId" : "18",
             "tags" : "Relationship,ControlFlow",
             "technology" : "In-process function call"
           }, {
             "description" : "Starts an interactive question or chat decision-card graph",
-            "destinationId" : "21",
-            "id" : "136",
-            "sourceId" : "17",
+            "destinationId" : "23",
+            "id" : "256",
+            "sourceId" : "18",
             "tags" : "Relationship,PrimaryFlow",
             "technology" : "In-process function call"
           }, {
             "description" : "Routes an authorized document upload",
             "destinationId" : "32",
-            "id" : "138",
-            "sourceId" : "17",
+            "id" : "258",
+            "sourceId" : "18",
             "tags" : "Relationship,PrimaryFlow",
             "technology" : "In-process function call"
           }, {
             "description" : "Routes an authenticated confirm, edit, or reject command",
             "destinationId" : "35",
-            "id" : "139",
-            "sourceId" : "17",
+            "id" : "259",
+            "sourceId" : "18",
             "tags" : "Relationship,ControlFlow",
             "technology" : "In-process function call"
           } ],
@@ -704,63 +1569,89 @@
           "description" : "Accepts authorized configuration candidates, stores inactive versions, queues deterministic validation, and activates only an approved valid version. It does not calculate KPIs.",
           "documentation" : { },
           "group" : "02 Request Routing",
-          "id" : "18",
+          "id" : "19",
           "name" : "Configuration Service",
           "properties" : {
             "structurizr.dsl.identifier" : "configurationService"
           },
           "relationships" : [ {
             "description" : "Checks actor authority and affected scope",
-            "destinationId" : "16",
-            "id" : "148",
-            "sourceId" : "18",
+            "destinationId" : "17",
+            "id" : "268",
+            "sourceId" : "19",
             "tags" : "Relationship,PolicyCheck",
             "technology" : "In-process function call"
           }, {
             "description" : "Stores an inactive configuration version and enqueues a deterministic validation job",
-            "destinationId" : "55",
-            "id" : "149",
-            "sourceId" : "18",
+            "destinationId" : "57",
+            "id" : "269",
+            "sourceId" : "19",
             "tags" : "Relationship,ControlFlow",
             "technology" : "PostgreSQL protocol over TLS"
           }, {
             "description" : "Queues an inactive configuration candidate for deterministic validation",
             "destinationId" : "38",
-            "id" : "212",
-            "sourceId" : "18",
+            "id" : "347",
+            "sourceId" : "19",
             "tags" : "Relationship",
             "technology" : "PostgreSQL-backed job queue"
           } ],
           "tags" : "Element,Component,Governance",
           "technology" : "Deterministic configuration control"
         }, {
-          "description" : "Records an authorized human decision, its owner, deadline, success criteria, and later follow-up results. It does not execute the decision.",
+          "description" : "Applies versioned organization changes: manager, scope, RLS, mandatory reports, activation time, cache, conversation, query visibility, recipient list. Activates at D+1 after deterministic validation.",
           "documentation" : { },
           "group" : "02 Request Routing",
-          "id" : "19",
+          "id" : "20",
+          "name" : "Organization Configuration Service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "organizationConfigurationService"
+          },
+          "relationships" : [ {
+            "description" : "Checks actor authority and affected scope",
+            "destinationId" : "17",
+            "id" : "270",
+            "sourceId" : "20",
+            "tags" : "Relationship,PolicyCheck",
+            "technology" : "In-process function call"
+          }, {
+            "description" : "Stores inactive org revision, queues deterministic validation, activates at D+1",
+            "destinationId" : "57",
+            "id" : "271",
+            "sourceId" : "20",
+            "tags" : "Relationship,ControlFlow",
+            "technology" : "PostgreSQL protocol over TLS"
+          } ],
+          "tags" : "Element,Component,Governance",
+          "technology" : "Deterministic organization control"
+        }, {
+          "description" : "Records an authorized human decision, its owner, deadline, success criteria, guardrail, and later follow-up results. It does not execute the decision.",
+          "documentation" : { },
+          "group" : "02 Request Routing",
+          "id" : "21",
           "name" : "Decision and Follow-Up",
           "properties" : {
             "structurizr.dsl.identifier" : "decisionTracker"
           },
           "relationships" : [ {
             "description" : "Checks decision authority",
-            "destinationId" : "16",
-            "id" : "150",
-            "sourceId" : "19",
+            "destinationId" : "17",
+            "id" : "272",
+            "sourceId" : "21",
             "tags" : "Relationship,PolicyCheck",
             "technology" : "In-process function call"
           }, {
-            "description" : "Appends decision and follow-up events",
-            "destinationId" : "55",
-            "id" : "151",
-            "sourceId" : "19",
+            "description" : "Appends decision, follow-up events, success criteria, guardrail",
+            "destinationId" : "57",
+            "id" : "273",
+            "sourceId" : "21",
             "tags" : "Relationship,ControlFlow",
             "technology" : "PostgreSQL protocol over TLS"
           }, {
             "description" : "Requests a draft only",
-            "destinationId" : "21",
-            "id" : "152",
-            "sourceId" : "19",
+            "destinationId" : "23",
+            "id" : "274",
+            "sourceId" : "21",
             "tags" : "Relationship,ControlFlow",
             "technology" : "In-process function call"
           } ],
@@ -770,127 +1661,47 @@
           "description" : "Accepts run commands only from the Scheduler and Replay Runner. It creates each pinned run and its complete job plan, stores dependencies and manager order, monitors terminal jobs, and closes the run. It does not execute jobs.",
           "documentation" : { },
           "group" : "02 Request Routing",
-          "id" : "20",
+          "id" : "22",
           "name" : "Run Coordinator",
           "properties" : {
             "structurizr.dsl.identifier" : "runCoordinatorV2"
           },
           "relationships" : [ {
             "description" : "Validates the Scheduler or Replay service identity and run-control permission",
-            "destinationId" : "16",
-            "id" : "206",
-            "sourceId" : "20",
+            "destinationId" : "17",
+            "id" : "340",
+            "sourceId" : "22",
             "tags" : "Relationship",
             "technology" : "In-process function call"
           }, {
             "description" : "Creates each pinned Run, all Jobs, dependency edges, and manager execution order; monitors terminal states and records final Run status",
-            "destinationId" : "55",
-            "id" : "211",
-            "sourceId" : "20",
+            "destinationId" : "57",
+            "id" : "346",
+            "sourceId" : "22",
             "tags" : "Relationship",
             "technology" : "PostgreSQL protocol over TLS"
           } ],
           "tags" : "Element,Component,Governance",
           "technology" : "Deterministic run control"
         }, {
-          "description" : "Coordinates one bounded report, interactive, configuration-candidate, or document decision-card graph. It can produce structured candidates but cannot confirm, activate, or execute them.",
-          "documentation" : { },
-          "group" : "03 Bounded Analysis",
-          "id" : "21",
-          "name" : "Bounded Agent Orchestrator",
-          "properties" : {
-            "structurizr.dsl.identifier" : "agentOrchestrator"
-          },
-          "relationships" : [ {
-            "description" : "Submits a structured configuration candidate for explicit approval",
-            "destinationId" : "18",
-            "id" : "137",
-            "sourceId" : "21",
-            "tags" : "Relationship,ControlFlow",
-            "technology" : "In-process function call"
-          }, {
-            "description" : "Requests an authorized evidence bundle",
-            "destinationId" : "24",
-            "id" : "153",
-            "sourceId" : "21",
-            "tags" : "Relationship,DataFlow",
-            "technology" : "In-process function call"
-          }, {
-            "description" : "Stores the manager message and loads bounded conversation history",
-            "destinationId" : "23",
-            "id" : "154",
-            "sourceId" : "21",
-            "tags" : "Relationship,DataFlow",
-            "technology" : "In-process function call"
-          }, {
-            "description" : "Requests bounded analysis or drafting",
-            "destinationId" : "27",
-            "id" : "164",
-            "sourceId" : "21",
-            "tags" : "Relationship,ModelFlow",
-            "technology" : "In-process function call"
-          }, {
-            "description" : "Submits a draft and evidence references",
-            "destinationId" : "28",
-            "id" : "169",
-            "sourceId" : "21",
-            "tags" : "Relationship,PrimaryFlow",
-            "technology" : "In-process function call"
-          } ],
-          "tags" : "Element,Component,AI",
-          "technology" : "LangGraph runtime"
-        }, {
-          "description" : "Claims queued Agent Jobs with its restricted database role, loads the pinned manager-scoped report package, invokes the bounded report graph, and forwards either a narrative result or a terminal model failure for validation. It cannot widen the pinned scope.",
-          "documentation" : { },
-          "group" : "03 Bounded Analysis",
-          "id" : "22",
-          "name" : "Agent Job Runner",
-          "properties" : {
-            "structurizr.dsl.identifier" : "agentJobRunnerV2"
-          },
-          "relationships" : [ {
-            "description" : "Claims Ready Agent Jobs and loads Canonical Report JSON, evidence, Snapshot, scope, and checkpoint state",
-            "destinationId" : "55",
-            "id" : "223",
-            "sourceId" : "22",
-            "tags" : "Relationship",
-            "technology" : "PostgreSQL protocol over TLS"
-          }, {
-            "description" : "Invokes the bounded report graph and receives its outcome",
-            "destinationId" : "21",
-            "id" : "224",
-            "sourceId" : "22",
-            "tags" : "Relationship",
-            "technology" : "In-process function call"
-          }, {
-            "description" : "Submits canonical JSON with a narrative candidate or explicit model failure",
-            "destinationId" : "28",
-            "id" : "225",
-            "sourceId" : "22",
-            "tags" : "Relationship",
-            "technology" : "In-process function call"
-          } ],
-          "tags" : "Element,Component,AI",
-          "technology" : "PostgreSQL-backed job runner"
-        }, {
-          "description" : "Stores manager-scoped conversation sessions and validated turns, and returns a bounded history window for interactive analysis. Conversation text is not business evidence.",
+          "description" : "Receives agent job requests from Backend, validates scope, and forwards to Agent Runtime. Does not execute agent graphs.",
           "documentation" : { },
           "group" : "03 Bounded Analysis",
           "id" : "23",
-          "name" : "Conversation Service",
+          "name" : "Agent Runtime Gateway",
           "properties" : {
-            "structurizr.dsl.identifier" : "conversationService"
+            "structurizr.dsl.identifier" : "agentGateway"
           },
           "relationships" : [ {
-            "description" : "Reads and writes manager-scoped sessions and conversation turns",
-            "destinationId" : "55",
-            "id" : "155",
+            "description" : "Forwards a scoped, authorized agent job",
+            "destinationId" : "61",
+            "id" : "257",
             "sourceId" : "23",
-            "tags" : "Relationship,DataFlow",
-            "technology" : "PostgreSQL protocol over TLS"
+            "tags" : "Relationship,PrimaryFlow",
+            "technology" : "Internal authenticated API"
           } ],
           "tags" : "Element,Component,AI",
-          "technology" : "Deterministic conversation module"
+          "technology" : "Deterministic gateway"
         }, {
           "description" : "Builds a traceable Evidence Bundle inside the authorized scope supplied with the request.",
           "documentation" : { },
@@ -902,22 +1713,22 @@
           },
           "relationships" : [ {
             "description" : "Checks evidence scope",
-            "destinationId" : "16",
-            "id" : "156",
+            "destinationId" : "17",
+            "id" : "278",
             "sourceId" : "24",
             "tags" : "Relationship,PolicyCheck",
             "technology" : "In-process function call"
           }, {
             "description" : "Runs a registered evidence query",
             "destinationId" : "25",
-            "id" : "157",
+            "id" : "279",
             "sourceId" : "24",
             "tags" : "Relationship,DataFlow",
             "technology" : "In-process function call"
           }, {
             "description" : "Reads approved original evidence bytes by archive reference",
-            "destinationId" : "56",
-            "id" : "158",
+            "destinationId" : "58",
+            "id" : "280",
             "sourceId" : "24",
             "tags" : "Relationship,DataFlow",
             "technology" : "Restricted file system I/O"
@@ -935,29 +1746,29 @@
           },
           "relationships" : [ {
             "description" : "Gets scope and allowlists",
-            "destinationId" : "16",
-            "id" : "159",
+            "destinationId" : "17",
+            "id" : "281",
             "sourceId" : "25",
             "tags" : "Relationship,PolicyCheck",
             "technology" : "In-process function call"
           }, {
             "description" : "Validates one SELECT statement",
             "destinationId" : "26",
-            "id" : "160",
+            "id" : "282",
             "sourceId" : "25",
             "tags" : "Relationship,DataFlow",
             "technology" : "In-process function call"
           }, {
             "description" : "Runs a scoped read-only query",
-            "destinationId" : "55",
-            "id" : "162",
+            "destinationId" : "57",
+            "id" : "284",
             "sourceId" : "25",
             "tags" : "Relationship,DataFlow",
             "technology" : "PostgreSQL protocol over TLS"
           }, {
             "description" : "Records query evidence",
             "destinationId" : "31",
-            "id" : "163",
+            "id" : "285",
             "sourceId" : "25",
             "tags" : "Relationship,ControlFlow",
             "technology" : "In-process function call"
@@ -976,7 +1787,7 @@
           "relationships" : [ {
             "description" : "Returns approval or refusal",
             "destinationId" : "25",
-            "id" : "161",
+            "id" : "283",
             "sourceId" : "26",
             "tags" : "Relationship,Feedback",
             "technology" : "In-process function call"
@@ -984,50 +1795,10 @@
           "tags" : "Element,Component,Security",
           "technology" : "SQL parser and policy"
         }, {
-          "description" : "Applies token, time, retry, and cost limits to every model call.",
-          "documentation" : { },
-          "group" : "03 Bounded Analysis",
-          "id" : "27",
-          "name" : "Model Gateway",
-          "properties" : {
-            "structurizr.dsl.identifier" : "modelGateway"
-          },
-          "relationships" : [ {
-            "description" : "Reserves and settles the cost budget",
-            "destinationId" : "55",
-            "id" : "165",
-            "sourceId" : "27",
-            "tags" : "Relationship,ControlFlow",
-            "technology" : "PostgreSQL protocol over TLS"
-          }, {
-            "description" : "Sends authorized evidence and receives a completion",
-            "destinationId" : "8",
-            "id" : "166",
-            "sourceId" : "27",
-            "tags" : "Relationship,ExternalFlow",
-            "technology" : "HTTPS/JSON"
-          }, {
-            "description" : "Records model and cost evidence",
-            "destinationId" : "31",
-            "id" : "167",
-            "sourceId" : "27",
-            "tags" : "Relationship,ControlFlow",
-            "technology" : "In-process function call"
-          }, {
-            "description" : "Returns a completion or terminal failure",
-            "destinationId" : "21",
-            "id" : "168",
-            "sourceId" : "27",
-            "tags" : "Relationship,Feedback",
-            "technology" : "In-process function call"
-          } ],
-          "tags" : "Element,Component,AI",
-          "technology" : "Provider-neutral model client"
-        }, {
           "description" : "Checks the output schema, cited values, evidence references, allowed scope, response rules, and decision-card contract. It does not repeat KPI calculation, document parsing, or report-evidence assembly.",
           "documentation" : { },
           "group" : "04 Validate and Deliver",
-          "id" : "28",
+          "id" : "27",
           "name" : "Output Validator",
           "properties" : {
             "structurizr.dsl.identifier" : "outputValidator"
@@ -1035,57 +1806,64 @@
           "relationships" : [ {
             "description" : "Rechecks reported numbers",
             "destinationId" : "25",
-            "id" : "170",
-            "sourceId" : "28",
+            "id" : "295",
+            "sourceId" : "27",
             "tags" : "Relationship,Feedback",
             "technology" : "In-process function call"
           }, {
             "description" : "Rechecks recipient scope",
-            "destinationId" : "16",
-            "id" : "171",
-            "sourceId" : "28",
+            "destinationId" : "17",
+            "id" : "296",
+            "sourceId" : "27",
             "tags" : "Relationship,PolicyCheck",
             "technology" : "In-process function call"
           }, {
             "description" : "Checks provenance and alternatives",
             "destinationId" : "24",
-            "id" : "172",
-            "sourceId" : "28",
+            "id" : "297",
+            "sourceId" : "27",
             "tags" : "Relationship,Feedback",
             "technology" : "In-process function call"
           }, {
             "description" : "Records validation evidence",
             "destinationId" : "31",
-            "id" : "173",
-            "sourceId" : "28",
+            "id" : "298",
+            "sourceId" : "27",
             "tags" : "Relationship,ControlFlow",
             "technology" : "In-process function call"
           }, {
-            "description" : "Stores the validated answer or explicit terminal failure",
-            "destinationId" : "23",
-            "id" : "174",
-            "sourceId" : "28",
+            "description" : "Returns the validated answer or explicit terminal failure for scoped conversation storage",
+            "destinationId" : "62",
+            "id" : "299",
+            "sourceId" : "27",
             "tags" : "Relationship,ControlFlow",
-            "technology" : "In-process function call"
+            "technology" : "Internal authenticated API"
           }, {
             "description" : "Releases a valid decision card for manager review",
             "destinationId" : "35",
-            "id" : "175",
-            "sourceId" : "28",
+            "id" : "300",
+            "sourceId" : "27",
             "tags" : "Relationship,PrimaryFlow",
             "technology" : "In-process function call"
           }, {
             "description" : "Releases a valid result or explicit failure",
             "destinationId" : "30",
-            "id" : "180",
-            "sourceId" : "28",
+            "id" : "305",
+            "sourceId" : "27",
+            "tags" : "Relationship,PrimaryFlow",
+            "technology" : "In-process function call"
+          }, {
+            "description" : "Forwards each validated QA result for /submission export",
+            "destinationId" : "29",
+            "id" : "314",
+            "sourceId" : "27",
             "tags" : "Relationship,PrimaryFlow",
             "technology" : "In-process function call"
           }, {
             "description" : "Releases a validated package or authorizes deterministic fallback publication",
-            "destinationId" : "29",
-            "id" : "226",
-            "sourceId" : "28",
+            "destinationId" : "28",
+            "id" : "361",
+            "sourceId" : "27",
             "tags" : "Relationship",
             "technology" : "In-process function call"
           } ],
@@ -1095,28 +1873,61 @@
           "description" : "Atomically publishes model-independent canonical JSON with validated Persian narrative when available, or deterministic fallback text when the model API is unavailable. It records publication receipts and artifact failures.",
           "documentation" : { },
           "group" : "04 Validate and Deliver",
-          "id" : "29",
+          "id" : "28",
           "name" : "Publisher",
           "properties" : {
             "structurizr.dsl.identifier" : "publisherV2"
           },
           "relationships" : [ {
             "description" : "Atomically commits Canonical Report JSON, validated narrative or fallback text, and publication receipt; completes the Agent Job and unlocks the next manager Job",
-            "destinationId" : "55",
-            "id" : "227",
-            "sourceId" : "29",
-            "tags" : "Relationship",
+            "destinationId" : "57",
+            "id" : "311",
+            "sourceId" : "28",
+            "tags" : "Relationship,ControlFlow",
             "technology" : "PostgreSQL protocol over TLS"
           }, {
             "description" : "Records publication mode and artifact failures",
             "destinationId" : "31",
-            "id" : "228",
-            "sourceId" : "29",
-            "tags" : "Relationship",
+            "id" : "312",
+            "sourceId" : "28",
+            "tags" : "Relationship,ControlFlow",
+            "technology" : "In-process function call"
+          }, {
+            "description" : "Forwards each validated final report for /submission export",
+            "destinationId" : "29",
+            "id" : "313",
+            "sourceId" : "28",
+            "tags" : "Relationship,PrimaryFlow",
             "technology" : "In-process function call"
           } ],
           "tags" : "Element,Component,Processing",
           "technology" : "Deterministic publication module"
+        }, {
+          "description" : "Reads validated reports and QA results, validates against JSON Schema, writes atomically to OUTPUT_DIR/submission/briefs/ and /qa/ with hash and export receipt. No internal logs or DB files in /submission.",
+          "documentation" : { },
+          "group" : "04 Validate and Deliver",
+          "id" : "29",
+          "name" : "Submission Exporter",
+          "properties" : {
+            "structurizr.dsl.identifier" : "submissionExporter"
+          },
+          "relationships" : [ {
+            "description" : "Reads validated final reports and QA results; records export receipts",
+            "destinationId" : "57",
+            "id" : "315",
+            "sourceId" : "29",
+            "tags" : "Relationship,DataFlow",
+            "technology" : "PostgreSQL protocol over TLS"
+          }, {
+            "description" : "Writes atomic brief and QA files under OUTPUT_DIR/submission/",
+            "destinationId" : "7",
+            "id" : "316",
+            "sourceId" : "29",
+            "tags" : "Relationship,ControlFlow",
+            "technology" : "Restricted file system I/O"
+          } ],
+          "tags" : "Element,Component,Processing",
+          "technology" : "Deterministic export module"
         }, {
           "description" : "Reads published reports and dashboard data, and returns validated interactive answers or explicit failures.",
           "documentation" : { },
@@ -1128,29 +1939,29 @@
           },
           "relationships" : [ {
             "description" : "Rechecks audience and purpose",
-            "destinationId" : "16",
-            "id" : "181",
+            "destinationId" : "17",
+            "id" : "306",
             "sourceId" : "30",
             "tags" : "Relationship,PolicyCheck",
             "technology" : "In-process function call"
           }, {
             "description" : "Runs a dashboard or workflow query",
             "destinationId" : "25",
-            "id" : "182",
+            "id" : "307",
             "sourceId" : "30",
             "tags" : "Relationship,DataFlow",
             "technology" : "In-process function call"
           }, {
             "description" : "Reads published reports and failure states",
-            "destinationId" : "55",
-            "id" : "183",
+            "destinationId" : "57",
+            "id" : "308",
             "sourceId" : "30",
             "tags" : "Relationship,DataFlow",
             "technology" : "PostgreSQL protocol over TLS"
           }, {
             "description" : "Returns a valid response or explicit failure",
-            "destinationId" : "10",
-            "id" : "184",
+            "destinationId" : "11",
+            "id" : "309",
             "sourceId" : "30",
             "tags" : "Relationship,PrimaryFlow",
             "technology" : "HTTPS/JSON"
@@ -1168,8 +1979,8 @@
           },
           "relationships" : [ {
             "description" : "Stores restricted audit evidence",
-            "destinationId" : "55",
-            "id" : "185",
+            "destinationId" : "57",
+            "id" : "310",
             "sourceId" : "31",
             "tags" : "Relationship,ControlFlow",
             "technology" : "PostgreSQL protocol over TLS"
@@ -1187,22 +1998,22 @@
           },
           "relationships" : [ {
             "description" : "Preserves original upload bytes, hash, and manifest",
-            "destinationId" : "56",
-            "id" : "140",
+            "destinationId" : "58",
+            "id" : "260",
             "sourceId" : "32",
             "tags" : "Relationship,ControlFlow",
             "technology" : "Restricted file system I/O"
           }, {
             "description" : "Requests deterministic parsing of the archived upload",
             "destinationId" : "33",
-            "id" : "141",
+            "id" : "261",
             "sourceId" : "32",
             "tags" : "Relationship,PrimaryFlow",
             "technology" : "In-process function call"
           }, {
             "description" : "Creates a Document Analysis Job only after a successful parse",
-            "destinationId" : "55",
-            "id" : "144",
+            "destinationId" : "57",
+            "id" : "264",
             "sourceId" : "32",
             "tags" : "Relationship,ControlFlow",
             "technology" : "PostgreSQL protocol over TLS"
@@ -1220,15 +2031,15 @@
           },
           "relationships" : [ {
             "description" : "Reads approved original upload bytes",
-            "destinationId" : "56",
-            "id" : "142",
+            "destinationId" : "58",
+            "id" : "262",
             "sourceId" : "33",
             "tags" : "Relationship,DataFlow",
             "technology" : "Restricted file system I/O"
           }, {
             "description" : "Stores immutable document fragments and a parse receipt",
-            "destinationId" : "55",
-            "id" : "143",
+            "destinationId" : "57",
+            "id" : "263",
             "sourceId" : "33",
             "tags" : "Relationship,ControlFlow",
             "technology" : "PostgreSQL protocol over TLS"
@@ -1246,22 +2057,22 @@
           },
           "relationships" : [ {
             "description" : "Claims a Document Analysis Job and loads its pinned actor, scope, policy, and fragments",
-            "destinationId" : "55",
-            "id" : "145",
+            "destinationId" : "57",
+            "id" : "265",
             "sourceId" : "34",
             "tags" : "Relationship,DataFlow",
             "technology" : "PostgreSQL protocol over TLS"
           }, {
             "description" : "Invokes the bounded document decision-card graph",
-            "destinationId" : "21",
-            "id" : "146",
+            "destinationId" : "23",
+            "id" : "266",
             "sourceId" : "34",
             "tags" : "Relationship,PrimaryFlow",
-            "technology" : "In-process function call"
+            "technology" : "Internal authenticated API"
           }, {
             "description" : "Submits a decision-card candidate or explicit terminal failure",
-            "destinationId" : "28",
-            "id" : "147",
+            "destinationId" : "27",
+            "id" : "267",
             "sourceId" : "34",
             "tags" : "Relationship,PrimaryFlow",
             "technology" : "In-process function call"
@@ -1279,29 +2090,29 @@
           },
           "relationships" : [ {
             "description" : "Stores the decision candidate, validated card, source references, and review status",
-            "destinationId" : "55",
-            "id" : "176",
+            "destinationId" : "57",
+            "id" : "301",
             "sourceId" : "35",
             "tags" : "Relationship,ControlFlow",
             "technology" : "PostgreSQL protocol over TLS"
           }, {
             "description" : "Returns the decision card or review status",
-            "destinationId" : "10",
-            "id" : "177",
+            "destinationId" : "11",
+            "id" : "302",
             "sourceId" : "35",
             "tags" : "Relationship,PrimaryFlow",
             "technology" : "HTTPS/JSON"
           }, {
             "description" : "Requests a revised decision card after a manager edit",
-            "destinationId" : "21",
-            "id" : "178",
+            "destinationId" : "23",
+            "id" : "303",
             "sourceId" : "35",
             "tags" : "Relationship,Feedback",
             "technology" : "In-process function call"
           }, {
             "description" : "Forwards only a manager-confirmed decision card",
-            "destinationId" : "19",
-            "id" : "179",
+            "destinationId" : "21",
+            "id" : "304",
             "sourceId" : "35",
             "tags" : "Relationship,ControlFlow",
             "technology" : "In-process function call"
@@ -1311,45 +2122,45 @@
         } ],
         "description" : "Authenticates requests and routes each request through bounded analysis, validation, and delivery.",
         "documentation" : { },
-        "id" : "14",
+        "id" : "15",
         "name" : "Backend API",
         "properties" : {
           "structurizr.dsl.identifier" : "backendApi"
         },
         "relationships" : [ {
           "description" : "Validates sessions and trusted identities",
-          "destinationId" : "7",
-          "id" : "109",
-          "sourceId" : "14",
+          "destinationId" : "8",
+          "id" : "227",
+          "sourceId" : "15",
           "tags" : "Relationship",
           "technology" : "OIDC over HTTPS or internal authentication"
         }, {
+          "description" : "Forwards bounded agent jobs through Agent Runtime Gateway",
+          "destinationId" : "59",
+          "id" : "231",
+          "sourceId" : "15",
+          "tags" : "Relationship",
+          "technology" : "Internal authenticated API"
+        }, {
           "description" : "Reads and writes scoped application state and durable jobs",
-          "destinationId" : "55",
-          "id" : "114",
-          "sourceId" : "14",
+          "destinationId" : "57",
+          "id" : "232",
+          "sourceId" : "15",
           "tags" : "Relationship",
           "technology" : "PostgreSQL protocol over TLS"
         }, {
           "description" : "Archives uploads and reads approved fragments",
-          "destinationId" : "56",
-          "id" : "117",
-          "sourceId" : "14",
+          "destinationId" : "58",
+          "id" : "235",
+          "sourceId" : "15",
           "tags" : "Relationship",
           "technology" : "Restricted file system I/O"
-        }, {
-          "description" : "Calls only through Model Gateway",
-          "destinationId" : "8",
-          "id" : "118",
-          "sourceId" : "14",
-          "tags" : "Relationship",
-          "technology" : "HTTPS/JSON"
         } ],
         "tags" : "Element,Container,API",
         "technology" : "Application runtime; framework open"
       }, {
         "components" : [ {
-          "description" : "Claims Ready deterministic jobs from PostgreSQL and invokes ingestion, snapshot, KPI, workflow, signal, and report-evidence components according to stored dependencies. It does not create jobs.",
+          "description" : "Claims Ready deterministic jobs from PostgreSQL and invokes ingestion, snapshot, KPI, workflow, signal, report-evidence, and decision-effect-evaluation components according to stored dependencies. It does not create jobs.",
           "documentation" : { },
           "id" : "37",
           "name" : "Run Stage Coordinator",
@@ -1357,51 +2168,58 @@
             "structurizr.dsl.identifier" : "runStageCoordinatorV2"
           },
           "relationships" : [ {
+            "description" : "Invokes decision effect evaluation for due follow-ups",
+            "destinationId" : "49",
+            "id" : "331",
+            "sourceId" : "37",
+            "tags" : "Relationship",
+            "technology" : "In-process function call"
+          }, {
             "description" : "Claims run-stage jobs and records stage attempts and outcomes",
-            "destinationId" : "55",
-            "id" : "215",
+            "destinationId" : "57",
+            "id" : "350",
             "sourceId" : "37",
             "tags" : "Relationship",
             "technology" : "PostgreSQL protocol over TLS"
           }, {
             "description" : "Invokes idempotent intake for the pinned cutoff",
             "destinationId" : "39",
-            "id" : "216",
+            "id" : "351",
             "sourceId" : "37",
             "tags" : "Relationship",
             "technology" : "In-process function call"
           }, {
             "description" : "Invokes snapshot creation after intake",
             "destinationId" : "42",
-            "id" : "217",
+            "id" : "352",
             "sourceId" : "37",
             "tags" : "Relationship",
             "technology" : "In-process function call"
           }, {
             "description" : "Invokes all approved KPI calculations for the snapshot",
             "destinationId" : "45",
-            "id" : "218",
+            "id" : "353",
             "sourceId" : "37",
             "tags" : "Relationship",
             "technology" : "In-process function call"
           }, {
             "description" : "Invokes WF1-WF3 reconstruction for the snapshot",
             "destinationId" : "46",
-            "id" : "219",
+            "id" : "354",
             "sourceId" : "37",
             "tags" : "Relationship",
             "technology" : "In-process function call"
           }, {
             "description" : "Invokes deterministic signal detection and ranking",
             "destinationId" : "47",
-            "id" : "220",
+            "id" : "355",
             "sourceId" : "37",
             "tags" : "Relationship",
             "technology" : "In-process function call"
           }, {
             "description" : "Invokes the builder for each claimed Report Evidence Job in stored manager order",
             "destinationId" : "48",
-            "id" : "221",
+            "id" : "356",
             "sourceId" : "37",
             "tags" : "Relationship",
             "technology" : "In-process function call"
@@ -1419,14 +2237,14 @@
           "relationships" : [ {
             "description" : "Checks the candidate against current KPI definitions and dependencies",
             "destinationId" : "44",
-            "id" : "213",
+            "id" : "348",
             "sourceId" : "38",
             "tags" : "Relationship",
             "technology" : "In-process function call"
           }, {
             "description" : "Claims the validation Job and stores SQL, scope, rollup, parity, and validation receipts",
-            "destinationId" : "55",
-            "id" : "214",
+            "destinationId" : "57",
+            "id" : "349",
             "sourceId" : "38",
             "tags" : "Relationship",
             "technology" : "PostgreSQL protocol over TLS"
@@ -1444,14 +2262,14 @@
           "relationships" : [ {
             "description" : "Reads expected nightly drops, manifests, and source contracts",
             "destinationId" : "6",
-            "id" : "186",
+            "id" : "317",
             "sourceId" : "39",
             "tags" : "Relationship",
             "technology" : "Read-only filesystem: CSV and JSON"
           }, {
             "description" : "Parses each source contract",
             "destinationId" : "40",
-            "id" : "187",
+            "id" : "318",
             "sourceId" : "39",
             "tags" : "Relationship",
             "technology" : "In-process function call"
@@ -1468,15 +2286,15 @@
           },
           "relationships" : [ {
             "description" : "Preserves original bytes, headers, and hashes",
-            "destinationId" : "56",
-            "id" : "188",
+            "destinationId" : "58",
+            "id" : "319",
             "sourceId" : "40",
             "tags" : "Relationship",
             "technology" : "Restricted file system I/O"
           }, {
             "description" : "Submits parsed and rejected rows",
             "destinationId" : "41",
-            "id" : "189",
+            "id" : "320",
             "sourceId" : "40",
             "tags" : "Relationship",
             "technology" : "In-process function call"
@@ -1493,8 +2311,8 @@
           },
           "relationships" : [ {
             "description" : "Writes accepted records, quarantine, and DataIssues",
-            "destinationId" : "55",
-            "id" : "190",
+            "destinationId" : "57",
+            "id" : "321",
             "sourceId" : "41",
             "tags" : "Relationship",
             "technology" : "PostgreSQL protocol over TLS"
@@ -1511,15 +2329,15 @@
           },
           "relationships" : [ {
             "description" : "Pins committed batches, organization, policy, and configuration versions",
-            "destinationId" : "55",
-            "id" : "191",
+            "destinationId" : "57",
+            "id" : "322",
             "sourceId" : "42",
             "tags" : "Relationship",
             "technology" : "PostgreSQL protocol over TLS"
           }, {
             "description" : "Requests reproducible facts and process projections",
             "destinationId" : "43",
-            "id" : "192",
+            "id" : "323",
             "sourceId" : "42",
             "tags" : "Relationship",
             "technology" : "In-process function call"
@@ -1536,8 +2354,8 @@
           },
           "relationships" : [ {
             "description" : "Reads events and writes facts and projections",
-            "destinationId" : "55",
-            "id" : "193",
+            "destinationId" : "57",
+            "id" : "324",
             "sourceId" : "43",
             "tags" : "Relationship",
             "technology" : "PostgreSQL protocol over TLS"
@@ -1554,8 +2372,8 @@
           },
           "relationships" : [ {
             "description" : "Reads versioned KPI definitions and dependencies",
-            "destinationId" : "55",
-            "id" : "195",
+            "destinationId" : "57",
+            "id" : "326",
             "sourceId" : "44",
             "tags" : "Relationship",
             "technology" : "PostgreSQL protocol over TLS"
@@ -1573,14 +2391,14 @@
           "relationships" : [ {
             "description" : "Reads approved PostgreSQL SQL and metadata",
             "destinationId" : "44",
-            "id" : "194",
+            "id" : "325",
             "sourceId" : "45",
             "tags" : "Relationship",
             "technology" : "In-process function call"
           }, {
             "description" : "Executes KPI SQL and writes observations, QueryRun, and lineage",
-            "destinationId" : "55",
-            "id" : "196",
+            "destinationId" : "57",
+            "id" : "327",
             "sourceId" : "45",
             "tags" : "Relationship",
             "technology" : "PostgreSQL protocol over TLS"
@@ -1597,8 +2415,8 @@
           },
           "relationships" : [ {
             "description" : "Reads events and writes case, stage, SLA, and bottleneck observations",
-            "destinationId" : "55",
-            "id" : "197",
+            "destinationId" : "57",
+            "id" : "328",
             "sourceId" : "46",
             "tags" : "Relationship",
             "technology" : "PostgreSQL protocol over TLS"
@@ -1606,7 +2424,7 @@
           "tags" : "Element,Component,Analytics",
           "technology" : "Deterministic process analysis"
         }, {
-          "description" : "Applies R1-R8, ownership, grouping, ranking, suppression, and escalation without LLM.",
+          "description" : "Maintains SignalEpisode and SignalOccurrence lifecycles, per-recipient status, escalation history, suppression decisions, and grouped executive items under R1-R8. Data issues are excluded from business items; no LLM.",
           "documentation" : { },
           "id" : "47",
           "name" : "Signal Engine",
@@ -1614,9 +2432,9 @@
             "structurizr.dsl.identifier" : "signalEngine"
           },
           "relationships" : [ {
-            "description" : "Reads KPI and history; writes episodes, ownership, suppression, and escalation",
-            "destinationId" : "55",
-            "id" : "198",
+            "description" : "Reads KPI and history; writes episodes, occurrences, per-recipient status, suppression, grouping, and escalation events",
+            "destinationId" : "57",
+            "id" : "329",
             "sourceId" : "47",
             "tags" : "Relationship",
             "technology" : "PostgreSQL protocol over TLS"
@@ -1633,16 +2451,41 @@
           },
           "relationships" : [ {
             "description" : "Stores the Evidence Package and Canonical Report JSON, completes the Report Evidence Job, and unlocks its existing Agent Job",
-            "destinationId" : "55",
-            "id" : "222",
+            "destinationId" : "57",
+            "id" : "357",
             "sourceId" : "48",
             "tags" : "Relationship",
             "technology" : "PostgreSQL protocol over TLS"
           } ],
           "tags" : "Element,Component,Reporting",
           "technology" : "Deterministic report evidence assembly"
+        }, {
+          "description" : "Evaluates target KPI against the comparison period and minimum meaningful change, applies guardrail, and records method, assumptions, confidence, confounders, insufficient-data reason, and structured effect evidence. Outputs improved/worsened/too_early/no_change or an explicit not-isolatable assessment. No LLM.",
+          "documentation" : { },
+          "id" : "49",
+          "name" : "Decision Effect Evaluator",
+          "properties" : {
+            "structurizr.dsl.identifier" : "decisionEffectEvaluator"
+          },
+          "relationships" : [ {
+            "description" : "Reads KPI observations, decision records, context; writes structured effect assessment",
+            "destinationId" : "57",
+            "id" : "330",
+            "sourceId" : "49",
+            "tags" : "Relationship",
+            "technology" : "PostgreSQL protocol over TLS"
+          }, {
+            "description" : "Provides the deterministic follow-up assessment for manager reporting",
+            "destinationId" : "48",
+            "id" : "332",
+            "sourceId" : "49",
+            "tags" : "Relationship",
+            "technology" : "In-process function call"
+          } ],
+          "tags" : "Element,Component,Decision",
+          "technology" : "Deterministic evaluation module"
         } ],
-        "description" : "Executes deterministic ingestion, snapshot, KPI, workflow, signal, report-evidence, and configuration-validation jobs. It stores results in PostgreSQL and does not run agent graphs or publish reports.",
+        "description" : "Executes deterministic ingestion, snapshot, KPI, workflow, signal, report-evidence, configuration-validation, and decision-effect-evaluation jobs. It stores results in PostgreSQL and does not run agent graphs or publish reports.",
         "documentation" : { },
         "id" : "36",
         "name" : "Background Worker",
@@ -1650,23 +2493,16 @@
           "structurizr.dsl.identifier" : "worker"
         },
         "relationships" : [ {
-          "description" : "Supplies a canonical Insight Brief for an optional bounded Persian narrative",
-          "destinationId" : "21",
-          "id" : "113",
-          "sourceId" : "36",
-          "tags" : "Relationship,PrimaryFlow",
-          "technology" : "Internal authenticated call"
-        }, {
           "description" : "Claims durable jobs and reads or writes deterministic results",
-          "destinationId" : "55",
-          "id" : "115",
+          "destinationId" : "57",
+          "id" : "233",
           "sourceId" : "36",
           "tags" : "Relationship",
           "technology" : "PostgreSQL protocol over TLS"
         }, {
           "description" : "Archives and reads approved source bytes",
-          "destinationId" : "56",
-          "id" : "116",
+          "destinationId" : "58",
+          "id" : "234",
           "sourceId" : "36",
           "tags" : "Relationship",
           "technology" : "Restricted file system I/O"
@@ -1677,34 +2513,34 @@
         "components" : [ {
           "description" : "Accepts a replay range, sequences simulated days, and resumes from the last terminal day.",
           "documentation" : { },
-          "id" : "50",
+          "id" : "51",
           "name" : "Replay Command",
           "properties" : {
             "structurizr.dsl.identifier" : "replayCommandV2"
           },
           "relationships" : [ {
             "description" : "Requests one pinned business date and source cutoff per day",
-            "destinationId" : "51",
-            "id" : "201",
-            "sourceId" : "50",
+            "destinationId" : "52",
+            "id" : "335",
+            "sourceId" : "51",
             "tags" : "Relationship"
           }, {
             "description" : "Loads the selected evaluation profile",
-            "destinationId" : "52",
-            "id" : "202",
-            "sourceId" : "50",
+            "destinationId" : "53",
+            "id" : "336",
+            "sourceId" : "51",
             "tags" : "Relationship"
           }, {
             "description" : "Starts or resumes each simulated day with the pinned date, cutoff, profile, and run options",
-            "destinationId" : "53",
-            "id" : "203",
-            "sourceId" : "50",
+            "destinationId" : "54",
+            "id" : "337",
+            "sourceId" : "51",
             "tags" : "Relationship"
           }, {
             "description" : "Starts acceptance checks after the replay range reaches a terminal state",
-            "destinationId" : "54",
-            "id" : "204",
-            "sourceId" : "50",
+            "destinationId" : "55",
+            "id" : "338",
+            "sourceId" : "51",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component,Scheduler,Candidate",
@@ -1712,7 +2548,7 @@
         }, {
           "description" : "Derives the pinned business date and source cutoff without using the host clock as product time.",
           "documentation" : { },
-          "id" : "51",
+          "id" : "52",
           "name" : "Simulation Clock",
           "properties" : {
             "structurizr.dsl.identifier" : "simulationClockV2"
@@ -1722,7 +2558,7 @@
         }, {
           "description" : "Loads the selected evaluation limits, acceptance thresholds, and run options.",
           "documentation" : { },
-          "id" : "52",
+          "id" : "53",
           "name" : "Evaluation Profile Loader",
           "properties" : {
             "structurizr.dsl.identifier" : "evaluationProfileLoaderV2"
@@ -1732,70 +2568,87 @@
         }, {
           "description" : "Starts and monitors runs only through the Backend Run Coordinator.",
           "documentation" : { },
-          "id" : "53",
+          "id" : "54",
           "name" : "Run Status Client",
           "properties" : {
             "structurizr.dsl.identifier" : "runStatusClientV2"
           },
           "relationships" : [ {
             "description" : "Starts and monitors runs through the internal Backend API",
-            "destinationId" : "20",
-            "id" : "205",
-            "sourceId" : "53",
+            "destinationId" : "22",
+            "id" : "339",
+            "sourceId" : "54",
             "tags" : "Relationship",
             "technology" : "Authenticated HTTPS/JSON"
           } ],
           "tags" : "Element,Component,Scheduler,Candidate",
           "technology" : "Internal API client"
         }, {
-          "description" : "Runs replay, hidden-data, regression, leakage, performance, cost, and output-contract checks outside the daily report-publication path.",
+          "description" : "Runs replay, hidden-data, regression, leakage, performance, cost, output-contract, and SQLite/PostgreSQL KPI parity checks outside the daily report-publication path.",
           "documentation" : { },
-          "id" : "54",
+          "id" : "55",
           "name" : "Acceptance Test Harness",
           "properties" : {
             "structurizr.dsl.identifier" : "acceptanceTestHarnessV2"
           },
           "relationships" : [ {
             "description" : "Loads acceptance thresholds and limits",
-            "destinationId" : "52",
-            "id" : "208",
-            "sourceId" : "54",
+            "destinationId" : "53",
+            "id" : "342",
+            "sourceId" : "55",
             "tags" : "Relationship"
           }, {
             "description" : "Reads terminal replay run status and artifact references",
-            "destinationId" : "53",
-            "id" : "209",
-            "sourceId" : "54",
+            "destinationId" : "54",
+            "id" : "343",
+            "sourceId" : "55",
             "tags" : "Relationship"
           }, {
             "description" : "Reads replay evidence and writes acceptance results",
-            "destinationId" : "55",
-            "id" : "210",
-            "sourceId" : "54",
+            "destinationId" : "57",
+            "id" : "344",
+            "sourceId" : "55",
             "tags" : "Relationship"
+          }, {
+            "description" : "Runs the SQLite/PostgreSQL parity suite",
+            "destinationId" : "56",
+            "id" : "345",
+            "sourceId" : "55",
+            "tags" : "Relationship",
+            "technology" : "In-process function call"
           } ],
           "tags" : "Element,Component,Evaluation,Candidate",
           "technology" : "Deterministic test harness"
+        }, {
+          "description" : "Executes 55 reference SQL on SQLite and translated PostgreSQL SQL on equivalent snapshot, compares row sets, nulls, values within ±1%, median vs percentile_cont, timezone, date boundaries. Produces Parity Receipt per KPI. No Agent role.",
+          "documentation" : { },
+          "id" : "56",
+          "name" : "KPI Parity Validator",
+          "properties" : {
+            "structurizr.dsl.identifier" : "kpiParityValidator"
+          },
+          "tags" : "Element,Component,Evaluation",
+          "technology" : "Deterministic parity module"
         } ],
         "description" : "Owns the simulated clock, run lease, replay range, evaluation profile, and resumable job dispatch.",
         "documentation" : { },
-        "id" : "49",
+        "id" : "50",
         "name" : "Scheduler and Replay Runner",
         "properties" : {
           "structurizr.dsl.identifier" : "schedulerReplay"
         },
         "relationships" : [ {
           "description" : "Starts and monitors pinned runs through the Run Coordinator",
-          "destinationId" : "14",
-          "id" : "111",
-          "sourceId" : "49",
+          "destinationId" : "15",
+          "id" : "229",
+          "sourceId" : "50",
           "tags" : "Relationship",
           "technology" : "Authenticated HTTPS/JSON"
         }, {
           "description" : "Reads replay evidence and records acceptance results",
-          "destinationId" : "55",
-          "id" : "112",
-          "sourceId" : "49",
+          "destinationId" : "57",
+          "id" : "230",
+          "sourceId" : "50",
           "tags" : "Relationship",
           "technology" : "PostgreSQL protocol over TLS"
         } ],
@@ -1804,13 +2657,13 @@
       }, {
         "description" : "The only product database. It stores product state, analytical results, access policy, checkpoints, and audit records.",
         "documentation" : { },
-        "id" : "55",
+        "id" : "57",
         "name" : "PostgreSQL",
         "properties" : {
           "structurizr.dsl.identifier" : "postgres",
           "schemas.proposed" : "ingest, core, org, semantic, analytics, workflow, reporting, document, decision, agent, audit",
-          "migration.owner" : "migration_owner; never used at runtime",
           "security" : "RLS, FORCE ROW LEVEL SECURITY, non-owner runtime roles, no BYPASSRLS",
+          "migration.owner" : "migration_owner; never used at runtime",
           "runtime.roles.proposed" : "ingestion_writer, analytics_worker, application_api, agent_query_reader, audit_reader"
         },
         "tags" : "Element,Container,Database",
@@ -1818,13 +2671,199 @@
       }, {
         "description" : "Stores original source and upload bytes with hashes and manifests. It is not a query database.",
         "documentation" : { },
-        "id" : "56",
+        "id" : "58",
         "name" : "Protected File Archive",
         "properties" : {
           "structurizr.dsl.identifier" : "fileArchive"
         },
         "tags" : "Element,Container,Storage",
         "technology" : "Protected volume or object storage"
+      }, {
+        "components" : [ {
+          "description" : "Coordinates one bounded report, interactive, or document decision-card graph. Produces structured candidates only.",
+          "documentation" : { },
+          "id" : "60",
+          "name" : "Bounded Agent Orchestrator",
+          "properties" : {
+            "structurizr.dsl.identifier" : "agentOrchestrator"
+          },
+          "relationships" : [ {
+            "description" : "Requests an authorized evidence bundle",
+            "destinationId" : "24",
+            "id" : "275",
+            "sourceId" : "60",
+            "tags" : "Relationship,DataFlow",
+            "technology" : "Internal authenticated API"
+          }, {
+            "description" : "Stores the manager message and loads bounded conversation history",
+            "destinationId" : "62",
+            "id" : "276",
+            "sourceId" : "60",
+            "tags" : "Relationship,DataFlow",
+            "technology" : "Internal authenticated API"
+          }, {
+            "description" : "Submits a draft and evidence references for deterministic validation",
+            "destinationId" : "27",
+            "id" : "286",
+            "sourceId" : "60",
+            "tags" : "Relationship,PrimaryFlow",
+            "technology" : "Internal authenticated API"
+          }, {
+            "description" : "Requests bounded model analysis or drafting",
+            "destinationId" : "63",
+            "id" : "290",
+            "sourceId" : "60",
+            "tags" : "Relationship,ModelFlow",
+            "technology" : "In-process function call"
+          } ],
+          "tags" : "Element,Component,AI",
+          "technology" : "LangGraph runtime"
+        }, {
+          "description" : "Claims queued Agent Jobs, loads pinned report package, invokes bounded graph, returns narrative or model failure.",
+          "documentation" : { },
+          "id" : "61",
+          "name" : "Agent Job Runner",
+          "properties" : {
+            "structurizr.dsl.identifier" : "agentJobRunner"
+          },
+          "relationships" : [ {
+            "description" : "Claims Ready Agent Jobs, loads package, writes outcome",
+            "destinationId" : "57",
+            "id" : "287",
+            "sourceId" : "61",
+            "tags" : "Relationship,DataFlow",
+            "technology" : "PostgreSQL protocol over TLS"
+          }, {
+            "description" : "Invokes bounded graph, receives outcome",
+            "destinationId" : "60",
+            "id" : "288",
+            "sourceId" : "61",
+            "tags" : "Relationship,PrimaryFlow",
+            "technology" : "In-process function call"
+          }, {
+            "description" : "Submits canonical JSON with narrative or model failure",
+            "destinationId" : "27",
+            "id" : "289",
+            "sourceId" : "61",
+            "tags" : "Relationship,PrimaryFlow",
+            "technology" : "Internal authenticated API"
+          }, {
+            "description" : "Claims Ready Agent Jobs and loads Canonical Report JSON, evidence, Snapshot, scope, and checkpoint state",
+            "destinationId" : "57",
+            "id" : "358",
+            "sourceId" : "61",
+            "tags" : "Relationship",
+            "technology" : "PostgreSQL protocol over TLS"
+          }, {
+            "description" : "Invokes the bounded report graph and receives its outcome",
+            "destinationId" : "60",
+            "id" : "359",
+            "sourceId" : "61",
+            "tags" : "Relationship",
+            "technology" : "In-process function call"
+          }, {
+            "description" : "Submits canonical JSON with a narrative candidate or explicit model failure",
+            "destinationId" : "27",
+            "id" : "360",
+            "sourceId" : "61",
+            "tags" : "Relationship",
+            "technology" : "Internal authenticated API"
+          } ],
+          "tags" : "Element,Component,AI",
+          "technology" : "PostgreSQL-backed job runner"
+        }, {
+          "description" : "Stores manager-scoped conversation sessions and validated turns, returns bounded history window.",
+          "documentation" : { },
+          "id" : "62",
+          "name" : "Conversation Service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "conversationService"
+          },
+          "relationships" : [ {
+            "description" : "Reads and writes manager-scoped sessions and conversation turns",
+            "destinationId" : "57",
+            "id" : "277",
+            "sourceId" : "62",
+            "tags" : "Relationship,DataFlow",
+            "technology" : "PostgreSQL protocol over TLS"
+          } ],
+          "tags" : "Element,Component,AI",
+          "technology" : "Deterministic conversation module"
+        }, {
+          "description" : "Applies token, time, retry, and cost limits to every model call. Reserves and settles budget.",
+          "documentation" : { },
+          "id" : "63",
+          "name" : "Model Gateway",
+          "properties" : {
+            "structurizr.dsl.identifier" : "agentModelGateway"
+          },
+          "relationships" : [ {
+            "description" : "Reserves and settles the shared model-cost budget",
+            "destinationId" : "57",
+            "id" : "291",
+            "sourceId" : "63",
+            "tags" : "Relationship,ControlFlow",
+            "technology" : "PostgreSQL protocol over TLS"
+          }, {
+            "description" : "Sends authorized evidence and receives a completion",
+            "destinationId" : "9",
+            "id" : "292",
+            "sourceId" : "63",
+            "tags" : "Relationship,ExternalFlow",
+            "technology" : "HTTPS/JSON"
+          }, {
+            "description" : "Returns a completion or explicit terminal failure",
+            "destinationId" : "60",
+            "id" : "293",
+            "sourceId" : "63",
+            "tags" : "Relationship,Feedback",
+            "technology" : "In-process function call"
+          } ],
+          "tags" : "Element,Component,AI",
+          "technology" : "Provider-neutral model client"
+        }, {
+          "description" : "Stores LangGraph checkpoints in PostgreSQL for resumability and idempotency.",
+          "documentation" : { },
+          "id" : "64",
+          "name" : "PostgreSQL Checkpoint Store",
+          "properties" : {
+            "structurizr.dsl.identifier" : "checkpointStore"
+          },
+          "relationships" : [ {
+            "description" : "Stores and reads LangGraph checkpoints",
+            "destinationId" : "57",
+            "id" : "294",
+            "sourceId" : "64",
+            "tags" : "Relationship,DataFlow",
+            "technology" : "PostgreSQL protocol over TLS"
+          } ],
+          "tags" : "Element,Component,AI",
+          "technology" : "PostgreSQL-backed checkpoint"
+        } ],
+        "description" : "Runs bounded LangGraph graphs for report narrative, interactive QA, and document decision-card. No KPI calculation, signal detection, workflow, configuration, or publication. Checkpoints in PostgreSQL. Budget and model limits enforced.",
+        "documentation" : { },
+        "id" : "59",
+        "name" : "Agent Runtime",
+        "properties" : {
+          "structurizr.dsl.identifier" : "agentRuntime"
+        },
+        "relationships" : [ {
+          "description" : "Stores checkpoints, reads job packages, writes outcomes",
+          "destinationId" : "57",
+          "id" : "236",
+          "sourceId" : "59",
+          "tags" : "Relationship",
+          "technology" : "PostgreSQL protocol over TLS"
+        }, {
+          "description" : "Calls only through Model Gateway",
+          "destinationId" : "9",
+          "id" : "237",
+          "sourceId" : "59",
+          "tags" : "Relationship",
+          "technology" : "HTTPS/JSON"
+        } ],
+        "tags" : "Element,Container,AI",
+        "technology" : "Python; LangGraph"
       } ],
       "description" : "A bounded agentic management assistant. It computes deterministic metrics and supports human decisions.",
       "documentation" : {
@@ -1849,6 +2888,48 @@
           "id" : "11",
           "status" : "Proposed",
           "title" : "Retain evidence needed for replay and recovery"
+        }, {
+          "content" : "# 12. Evaluation Deployment Profile\n\nDate: 2026-11-17\n\n## Status\n\nAccepted\n\n## Context\n\nThe evaluation environment requires a single Docker image that runs with one `docker run` command. The TA only executes `docker run team_x ...` with no Docker Compose or second container guaranteed.\n\n## Decision\n\nThe evaluation deployment packages the Backend API, Agent Runtime, and PostgreSQL into a single Docker image. The logical C4 boundaries remain separate (Backend API, Agent Runtime, PostgreSQL as Containers), but in the evaluation profile they co-locate in one image.\n\n```\nEvaluation Docker Image\n├── Entry Point (Evaluation Entrypoint)\n├── .NET Batch Orchestrator / Backend API\n├── Python Agent Runtime\n└── Local PostgreSQL\n```\n\nData flows:\n\n- `/data` (read-only) → Entry Point → Backend → PostgreSQL\n- Backend → Agent Runtime\n- Agent Runtime → LLM API (external)\n- Backend → `/submission` (write)\n\nIn production, the three containers can be deployed separately. In evaluation, the same logical boundaries co-locate in one image.\n\n## Consequences\n\n- The `Evaluation Deployment Profile` documents this co-location\n- C4 model shows logical separation; deployment view shows evaluation co-location\n- No Docker Compose or second container required for evaluation\n- The `docker run` command starts all three logical components\n\n## Source\n\nAddresses Gap 1 from architectural review: \"Agent Runtime و Container ارزیابی\"\n",
+          "date" : "2026-11-17T00:00:00Z",
+          "format" : "Markdown",
+          "id" : "12",
+          "status" : "Accepted",
+          "title" : "Evaluation Deployment Profile"
+        }, {
+          "content" : "# 13. Submission Exporter for /submission Output\n\nDate: 2026-11-17\n\n## Status\n\nAccepted\n\n## Context\n\nThe evaluator does not check the Dashboard or API; it requires specific files at:\n\n- `/submission/briefs/day_XXX/<manager_id>.json`\n- `/submission/qa/<question_id>.json`\n\nThe current architecture has Publisher writing to PostgreSQL and Report API reading from it, but no component writes to the `/submission` filesystem.\n\n## Decision\n\nAdd a `Submission Exporter` component in the Backend API that:\n\n1. Reads only validated, final reports and QA results\n2. Validates again against JSON Schema before writing\n3. Creates directory structure: `briefs/` and `qa/`\n4. Uses atomic write (temp file + rename)\n5. Records hash and export receipt\n6. Prevents partial/incomplete output\n7. Does not write internal logs, DB files, or non-contract files to `/submission`\n8. Uses `OUTPUT_DIR` environment variable, not hardcoded paths\n\nFlow:\n\n```\nPublisher → Submission Exporter → /submission/briefs/...\nValidated QA Result → Submission Exporter → /submission/qa/...\n```\n\n## Consequences\n\n- This is a P0 gap - required for evaluation to pass\n- Publisher no longer directly responsible for filesystem output\n- Submission Exporter is the single writer to `/submission`\n- Atomic writes prevent evaluator seeing partial files\n\n## Source\n\nAddresses Gap 2 from architectural review: \"خروجی `/submission`\"\n",
+          "date" : "2026-11-17T00:00:00Z",
+          "format" : "Markdown",
+          "id" : "13",
+          "status" : "Accepted",
+          "title" : "Submission Exporter for /submission Output"
+        }, {
+          "content" : "# 14. Organization Configuration Service\n\nDate: 2026-11-17\n\n## Status\n\nAccepted\n\n## Context\n\nThe dataset includes an `org_change` on day 75 introducing M11 as the new marketing team manager. The current architecture has:\n\n- Authorization Service\n- Snapshot Service (pins org version)\n- Configuration Service\n\nBut no specific component handles versioned organization changes that affect:\n\n- Active manager\n- Scope\n- RLS policies\n- Mandatory reports\n- M11 start time\n- Cache invalidation\n- Conversation scope\n- Query visibility\n- Report recipient list\n\nConfiguration Service alone is insufficient because org changes have wider impact than KPI configuration.\n\n## Decision\n\nAdd `Organization Configuration Service` as a separate component (or split Configuration Service into two modules: KPI Configuration and Organization Configuration).\n\nFlow:\n\n```\nManager Input → Authorization → Organization Configuration Service\n→ inactive org revision → deterministic validation → activation at D+1\n→ Snapshot pins org_version\n```\n\nAgent must NOT participate in organization changes.\n\n## Consequences\n\n- Org changes are versioned, validated, and activated at D+1\n- Snapshot Service pins the org_version for each run\n- All downstream effects (RLS, scope, recipients, cache) handled deterministically\n- Clear separation from KPI configuration changes\n\n## Source\n\nAddresses Gap 3 from architectural review: \"تغییر سازمان\"\n",
+          "date" : "2026-11-17T00:00:00Z",
+          "format" : "Markdown",
+          "id" : "14",
+          "status" : "Accepted",
+          "title" : "Organization Configuration Service"
+        }, {
+          "content" : "# 15. Decision Effect Evaluator\n\nDate: 2026-11-17\n\n## Status\n\nAccepted\n\n## Context\n\nThe current architecture has \"Decision and Follow-Up\" but it focuses on recording decisions, not measuring their effect. The TA requires structured effect measurement including:\n\n- Target KPI, target value, measurement period, guardrail\n- Estimation method, assumptions, confidence, confounders\n- Effect direction: `improved`, `worsened`, `too_early`, or \"effect not isolatable\"\n- `no_change` must be preserved in schema (per IMPL-GAP-V3-03)\n\nThe user proposes for v1:\n\n1. At decision registration: record target KPI, comparison period, minimum meaningful change, guardrail KPI with threshold\n2. At follow-up: if evaluation date not reached → `too_early`; if date reached and data sufficient → determine direction (`improved`/`worsened`/`no_change`); if data insufficient → record reason, leave result empty\n3. Store assumptions, confounders, confidence in attribution, guardrail status in separate fields\n4. Keep `no_change` in schema and align with architectural decision\n\n## Decision\n\nAdd `Decision Effect Evaluator` component in Background Worker (or Decision module).\n\nFlow:\n\n```\nConfirmed Decision → Follow-up Schedule → Decision Effect Evaluator\nKPI Observations → Decision Effect Evaluator\nContext (Campaign/Workload/Similar Cases) → Decision Effect Evaluator\nDecision Effect Evaluator → Effect Assessment (structured)\nEffect Assessment → Agent (optional narrative only)\nEffect Assessment → Report (Decision Follow-up)\n```\n\nAgent only uses the deterministic result for narrative; it cannot guess effect from free text.\n\nSchema alignment: `brief_schema.json` currently has `no_change` but TA mentions `improved`/`worsened`/`too_early`. Keep `no_change` and add the three TA directions.\n\n## Consequences\n\n- Deterministic effect calculation, not LLM-based\n- Structured fields for method, assumptions, confidence, confounders, guardrail\n- `no_change` preserved in schema per IMPL-GAP-V3-03\n- Closes Gap 4 and IMPL-GAP-V3-03\n\n## Source\n\nAddresses Gap 4 from architectural review: \"سنجش اثر تصمیم\"\nAddresses IMPL-GAP-V3-03 from architecture-control-register-v3.md\n",
+          "date" : "2026-11-17T00:00:00Z",
+          "format" : "Markdown",
+          "id" : "15",
+          "status" : "Accepted",
+          "title" : "Decision Effect Evaluator"
+        }, {
+          "content" : "# 16. KPI Parity Validator\n\nDate: 2026-11-17\n\n## Status\n\nAccepted\n\n## Context\n\nThe architecture has KPI Calculator and Acceptance Test Harness, but parity between SQLite reference SQL and PostgreSQL translated SQL needs an executable contract. The user notes:\n\n- A component in Replayer should convert SQLite SQL to PostgreSQL\n- Only two functions differ: `median()` → `percentile_cont(0.5)` and date difference calculations\n- Initial tests show results are correct with <1% difference\n\n## Decision\n\nAdd `KPI Parity Validator` component in Scheduler/Replay Runner (part of Acceptance Test Harness).\n\nTasks:\n\n1. Execute 55 reference SQL on SQLite\n2. Execute translated PostgreSQL SQL on equivalent snapshot\n3. Compare row sets\n4. Compare nulls\n5. Compare values within ±1% tolerance\n6. Control `median` vs `percentile_cont`\n7. Control time interval calculations\n8. Control decimal division\n9. Control timezone and date boundaries\n10. Produce Parity Receipt per KPI\n\nImportant: Agent Runtime has NO role in parity. If KPI is wrong, Agent must not fix or reinterpret it.\n\n## Consequences\n\n- Parity is an executable contract, not just a concept\n- Part of Acceptance Harness, not daily product\n- Deterministic validation with receipts\n- Agent completely excluded from parity\n\n## Source\n\nAddresses Gap 5 from architectural review: \"Parity واقعی SQLite و PostgreSQL\"\nUser's note: \"ما باید یه کاپوننت جدید تو replayer داشته باشیم. که کار convert کردن SQL/ SQlite رو به postgress انجام بده\"\n",
+          "date" : "2026-11-17T00:00:00Z",
+          "format" : "Markdown",
+          "id" : "16",
+          "status" : "Accepted",
+          "title" : "KPI Parity Validator"
+        }, {
+          "content" : "# 17. Signal Episode Contract and Recipient State\n\nDate: 2026-11-17\n\n## Status\n\nAccepted\n\n## Context\n\nThe current Signal Engine component exists but the state machine for signals needs precise contracts. TA provides deterministic rules:\n\n- Owner on first Crit crossing gets `new` that morning\n- Senior manager same morning gets `escalated`\n- Warn then Crit has escalation history\n- Staying beyond `escalate_after_days` causes escalation\n- Workflow/org KPI at warn escalates to senior manager\n- Co-causal signals grouped for senior manager\n- Unchanged item does not become `new` again\n- Data errors don't enter `items`\n\nKey insight: A signal can have different statuses for different recipients simultaneously:\n\n```\nOwner: new\nSenior Manager: escalated\n```\n\nTherefore `status` cannot be stored on the Signal itself; it must be on Recipient View or Delivery State.\n\n## Decision\n\nFinalize these contracts:\n\n- `SignalEpisode` - the ongoing business issue\n- `SignalOccurrence` - a specific detection event\n- `SignalRecipientView` - per-recipient state (new/escalated/ongoing)\n- `EscalationEvent` - escalation record with reason and history\n- `SuppressionDecision` - explicit suppression with reason\n- `GroupedExecutiveItem` - grouped co-causal signals for senior manager\n\nSignal Engine component already exists; these contracts make its output precise and testable.\n\n## Consequences\n\n- Status is per-recipient, not per-signal\n- Escalation history preserved\n- Grouping for senior manager explicit\n- No re-creation of `new` for unchanged conditions\n- Data quality issues separated from business signals\n\n## Source\n\nAddresses Gap 6 from architectural review: \"قرارداد دقیق Signal Episode\"\n",
+          "date" : "2026-11-17T00:00:00Z",
+          "format" : "Markdown",
+          "id" : "17",
+          "status" : "Accepted",
+          "title" : "Signal Episode Contract and Recipient State"
         }, {
           "content" : "# 2. Use PostgreSQL as the product database and verify KPI parity\n\nDate: 2026-11-14\n\n## Status\n\nAccepted\n\n## Context\n\nDIDRAH needs one product database for runtime state, analytical results, scoped queries, jobs, checkpoints, reports, and audit records. The evaluation data includes reference KPI SQL for SQLite.\n\n## Decision\n\nPostgreSQL is the only product database. SQLite is only the reference oracle for KPI parity tests.\n\nEach PostgreSQL KPI result must match the SQLite reference result within the accepted evaluation tolerance. SQLite `median()` maps to PostgreSQL `percentile_cont(0.5)`. SQLite day differences map to PostgreSQL epoch calculations with explicit conversion to hours or days. Decimal division, rounding, date types, and timezone behavior must preserve reference semantics.\n\nThe system records the SQL, result, snapshot, scope, and `query_id` for each published number. The language model, UI, and serializer do not recalculate or round KPI values.\n\n## Consequences\n\nThe product has one operational database and one security boundary for data queries. The team must maintain a parity suite for all approved KPI definitions. A SQL translation is not accepted until its parity evidence passes.\n\nThe complete contract for ad hoc numbers remains open in `ISSUE-V3-02`.\n\n## Source\n\n`ADR-V3-02` in `Docs/final review/architecture-control-register-v3.md`.\n",
           "date" : "2026-11-14T00:00:00Z",
@@ -1956,27 +3037,27 @@
           "title" : ""
         } ]
       },
-      "id" : "9",
+      "id" : "10",
       "name" : "DIDRAH",
       "properties" : {
         "structurizr.dsl.identifier" : "didrah",
+        "architecture.status" : "Proposed",
         "database.decision" : "PostgreSQL only",
         "agent.boundary" : "One bounded AI agent; deterministic core outside the agent",
-        "architecture.status" : "Proposed",
         "architecture.style" : "Modular Monolith"
       },
       "relationships" : [ {
         "description" : "Validates trusted user identities",
-        "destinationId" : "7",
-        "id" : "99",
-        "sourceId" : "9",
+        "destinationId" : "8",
+        "id" : "217",
+        "sourceId" : "10",
         "tags" : "Relationship",
         "technology" : "OIDC or internal authentication over HTTPS"
       }, {
         "description" : "Requests bounded model completions",
-        "destinationId" : "8",
-        "id" : "100",
-        "sourceId" : "9",
+        "destinationId" : "9",
+        "id" : "218",
+        "sourceId" : "10",
         "tags" : "Relationship",
         "technology" : "HTTPS/JSON"
       } ],
@@ -1985,15 +3066,15 @@
   },
   "name" : "DIDRAH Proposed Architecture",
   "properties" : {
+    "structurizr.inspection.error" : "109",
     "structurizr.inspection.info" : "0",
     "structurizr.inspection.ignore" : "0",
-    "structurizr.inspection.error" : "38",
     "structurizr.inspection.warning" : "0"
   },
   "views" : {
     "componentViews" : [ {
-      "containerId" : "14",
-      "description" : "Backend API view with authorized request routing, in-process document intake and parsing, separate report and document job runners, manager-confirmed decision cards, scheduler-only run control, validation, publication, and delivery.",
+      "containerId" : "15",
+      "description" : "Backend API view with authorized request routing, in-process document intake and parsing, separate report and document job runners, manager-confirmed decision cards, scheduler-only run control, validation, publication, delivery, and submission export.",
       "dimensions" : {
         "height" : 6931,
         "width" : 8610
@@ -2004,44 +3085,44 @@
         "y" : 143
       }, {
         "id" : "8",
+        "x" : 2029,
+        "y" : 143
+      }, {
+        "id" : "9",
         "x" : 7019,
         "y" : 143
       }, {
-        "id" : "10",
+        "id" : "11",
         "x" : 299,
         "y" : 3083
       }, {
-        "id" : "15",
+        "id" : "16",
         "x" : 1239,
         "y" : 643
       }, {
-        "id" : "16",
+        "id" : "17",
         "x" : 2029,
         "y" : 675
       }, {
-        "id" : "17",
+        "id" : "18",
         "x" : 2919,
         "y" : 5397
       }, {
-        "id" : "18",
+        "id" : "19",
         "x" : 4549,
         "y" : 5051
-      }, {
-        "id" : "19",
-        "x" : 6179,
-        "y" : 4803
       }, {
         "id" : "20",
         "x" : 1239,
         "y" : 5331
       }, {
         "id" : "21",
-        "x" : 3735,
-        "y" : 1280
+        "x" : 6179,
+        "y" : 4803
       }, {
         "id" : "22",
-        "x" : 2919,
-        "y" : 890
+        "x" : 1239,
+        "y" : 5331
       }, {
         "id" : "23",
         "x" : 5339,
@@ -2060,12 +3141,12 @@
         "y" : 1899
       }, {
         "id" : "27",
-        "x" : 6179,
-        "y" : 1303
-      }, {
-        "id" : "28",
         "x" : 4549,
         "y" : 2694
+      }, {
+        "id" : "28",
+        "x" : 6179,
+        "y" : 2859
       }, {
         "id" : "29",
         "x" : 6179,
@@ -2095,15 +3176,15 @@
         "x" : 5339,
         "y" : 3533
       }, {
-        "id" : "53",
+        "id" : "54",
         "x" : 299,
         "y" : 5331
       }, {
-        "id" : "55",
+        "id" : "57",
         "x" : 7909,
         "y" : 3228
       }, {
-        "id" : "56",
+        "id" : "58",
         "x" : 6179,
         "y" : 6007
       } ],
@@ -2112,25 +3193,25 @@
       "name" : "Component View: DIDRAH - Backend API",
       "order" : 3,
       "relationships" : [ {
-        "id" : "129",
+        "id" : "248",
         "vertices" : [ {
           "x" : 799,
           "y" : 793
         } ]
       }, {
-        "id" : "130",
+        "id" : "249",
         "vertices" : [ {
           "x" : 1859,
           "y" : 721
         } ]
       }, {
-        "id" : "131",
+        "id" : "250",
         "vertices" : [ {
           "x" : 1859,
           "y" : 825
         } ]
       }, {
-        "id" : "132",
+        "id" : "251",
         "vertices" : [ {
           "x" : 2529,
           "y" : 775
@@ -2139,7 +3220,7 @@
           "y" : 775
         } ]
       }, {
-        "id" : "133",
+        "id" : "252",
         "vertices" : [ {
           "x" : 2529,
           "y" : 900
@@ -2148,7 +3229,7 @@
           "y" : 5547
         } ]
       }, {
-        "id" : "134",
+        "id" : "253",
         "vertices" : [ {
           "x" : 3539,
           "y" : 5401
@@ -2157,7 +3238,7 @@
           "y" : 5401
         } ]
       }, {
-        "id" : "135",
+        "id" : "254",
         "vertices" : [ {
           "x" : 3539,
           "y" : 5467
@@ -2166,22 +3247,11 @@
           "y" : 5467
         } ]
       }, {
-        "id" : "136",
-        "vertices" : [ {
-          "x" : 3539,
-          "y" : 5532
-        } ]
+        "id" : "255"
       }, {
-        "id" : "137",
-        "vertices" : [ {
-          "x" : 4329,
-          "y" : 1179
-        }, {
-          "x" : 4499,
-          "y" : 1179
-        } ]
+        "id" : "256"
       }, {
-        "id" : "138",
+        "id" : "258",
         "vertices" : [ {
           "x" : 3539,
           "y" : 5598
@@ -2190,7 +3260,7 @@
           "y" : 5598
         } ]
       }, {
-        "id" : "139",
+        "id" : "259",
         "vertices" : [ {
           "x" : 3539,
           "y" : 5671
@@ -2199,7 +3269,7 @@
           "y" : 5671
         } ]
       }, {
-        "id" : "140",
+        "id" : "260",
         "vertices" : [ {
           "x" : 5169,
           "y" : 4238
@@ -2208,13 +3278,13 @@
           "y" : 4238
         } ]
       }, {
-        "id" : "141",
+        "id" : "261",
         "vertices" : [ {
           "x" : 5169,
           "y" : 4453
         } ]
       }, {
-        "id" : "142",
+        "id" : "262",
         "vertices" : [ {
           "x" : 5839,
           "y" : 4378
@@ -2223,7 +3293,7 @@
           "y" : 4378
         } ]
       }, {
-        "id" : "143",
+        "id" : "263",
         "vertices" : [ {
           "x" : 5839,
           "y" : 4516
@@ -2232,7 +3302,7 @@
           "y" : 4516
         } ]
       }, {
-        "id" : "144",
+        "id" : "264",
         "vertices" : [ {
           "x" : 5169,
           "y" : 4653
@@ -2241,7 +3311,7 @@
           "y" : 4653
         } ]
       }, {
-        "id" : "145",
+        "id" : "265",
         "vertices" : [ {
           "x" : 3539,
           "y" : 3907
@@ -2250,13 +3320,9 @@
           "y" : 3907
         } ]
       }, {
-        "id" : "146",
-        "vertices" : [ {
-          "x" : 3539,
-          "y" : 3973
-        } ]
+        "id" : "266"
       }, {
-        "id" : "147",
+        "id" : "267",
         "vertices" : [ {
           "x" : 3539,
           "y" : 4076
@@ -2265,7 +3331,7 @@
           "y" : 4076
         } ]
       }, {
-        "id" : "149",
+        "id" : "269",
         "vertices" : [ {
           "x" : 5169,
           "y" : 5169
@@ -2274,43 +3340,13 @@
           "y" : 5169
         } ]
       }, {
-        "id" : "151",
-        "vertices" : [ {
-          "x" : 7739,
-          "y" : 4953
-        } ]
+        "id" : "271"
       }, {
-        "id" : "152",
-        "vertices" : [ {
-          "x" : 6009,
-          "y" : 1649
-        }, {
-          "x" : 4329,
-          "y" : 1649
-        } ]
+        "id" : "273"
       }, {
-        "id" : "153",
-        "vertices" : [ {
-          "x" : 4329,
-          "y" : 1253
-        } ]
+        "id" : "274"
       }, {
-        "id" : "154",
-        "vertices" : [ {
-          "x" : 4329,
-          "y" : 1361
-        }, {
-          "x" : 5169,
-          "y" : 1361
-        } ]
-      }, {
-        "id" : "155",
-        "vertices" : [ {
-          "x" : 7739,
-          "y" : 1849
-        } ]
-      }, {
-        "id" : "157",
+        "id" : "279",
         "vertices" : [ {
           "x" : 5839,
           "y" : 1129
@@ -2322,7 +3358,7 @@
           "y" : 1965
         } ]
       }, {
-        "id" : "158",
+        "id" : "280",
         "vertices" : [ {
           "x" : 5839,
           "y" : 1320
@@ -2334,19 +3370,19 @@
           "y" : 1760
         } ]
       }, {
-        "id" : "160",
+        "id" : "282",
         "vertices" : [ {
           "x" : 6679,
           "y" : 2049
         } ]
       }, {
-        "id" : "162",
+        "id" : "284",
         "vertices" : [ {
           "x" : 7739,
           "y" : 2256
         } ]
       }, {
-        "id" : "163",
+        "id" : "285",
         "vertices" : [ {
           "x" : 6679,
           "y" : 2356
@@ -2355,64 +3391,19 @@
           "y" : 2356
         } ]
       }, {
-        "id" : "164",
-        "vertices" : [ {
-          "x" : 4329,
-          "y" : 1453
-        } ]
-      }, {
-        "id" : "165",
-        "vertices" : [ {
-          "x" : 6679,
-          "y" : 1191
-        }, {
-          "x" : 7739,
-          "y" : 1191
-        } ]
-      }, {
-        "id" : "166",
-        "vertices" : [ {
-          "x" : 6849,
-          "y" : 1453
-        } ]
-      }, {
-        "id" : "167",
-        "vertices" : [ {
-          "x" : 6679,
-          "y" : 1652
-        }, {
-          "x" : 6849,
-          "y" : 1652
-        } ]
-      }, {
-        "id" : "169",
-        "vertices" : [ {
-          "x" : 4329,
-          "y" : 1518
-        }, {
-          "x" : 4499,
-          "y" : 1518
-        } ]
-      }, {
-        "id" : "173",
+        "id" : "298",
         "vertices" : [ {
           "x" : 5169,
           "y" : 2706
         } ]
       }, {
-        "id" : "174",
-        "vertices" : [ {
-          "x" : 5169,
-          "y" : 2771
-        } ]
-      }, {
-        "id" : "175",
+        "id" : "300",
         "vertices" : [ {
           "x" : 5169,
           "y" : 2852
         } ]
       }, {
-        "id" : "176",
+        "id" : "301",
         "vertices" : [ {
           "x" : 5839,
           "y" : 3633
@@ -2421,7 +3412,7 @@
           "y" : 3633
         } ]
       }, {
-        "id" : "177",
+        "id" : "302",
         "vertices" : [ {
           "x" : 5169,
           "y" : 4188
@@ -2430,19 +3421,9 @@
           "y" : 4188
         } ]
       }, {
-        "id" : "178",
-        "vertices" : [ {
-          "x" : 5015,
-          "y" : 2090
-        }, {
-          "x" : 5015,
-          "y" : 1584
-        }, {
-          "x" : 4329,
-          "y" : 1584
-        } ]
+        "id" : "303"
       }, {
-        "id" : "179",
+        "id" : "304",
         "vertices" : [ {
           "x" : 5839,
           "y" : 3770
@@ -2451,13 +3432,13 @@
           "y" : 4953
         } ]
       }, {
-        "id" : "180",
+        "id" : "305",
         "vertices" : [ {
           "x" : 5169,
           "y" : 2933
         } ]
       }, {
-        "id" : "182",
+        "id" : "307",
         "vertices" : [ {
           "x" : 5839,
           "y" : 3154
@@ -2466,7 +3447,7 @@
           "y" : 3154
         } ]
       }, {
-        "id" : "183",
+        "id" : "308",
         "vertices" : [ {
           "x" : 5839,
           "y" : 3301
@@ -2475,62 +3456,15 @@
           "y" : 3301
         } ]
       }, {
-        "id" : "184"
+        "id" : "309"
       }, {
-        "id" : "185",
+        "id" : "310",
         "vertices" : [ {
           "x" : 7739,
           "y" : 2706
         } ]
       }, {
-        "id" : "205"
-      }, {
-        "id" : "206",
-        "vertices" : [ {
-          "x" : 1859,
-          "y" : 4890
-        } ]
-      }, {
-        "id" : "211",
-        "vertices" : [ {
-          "x" : 1859,
-          "y" : 5762
-        }, {
-          "x" : 7739,
-          "y" : 5762
-        } ]
-      }, {
-        "id" : "223",
-        "vertices" : [ {
-          "x" : 3539,
-          "y" : 957
-        }, {
-          "x" : 7739,
-          "y" : 957
-        } ]
-      }, {
-        "id" : "224",
-        "vertices" : [ {
-          "x" : 3539,
-          "y" : 1040
-        } ]
-      }, {
-        "id" : "225",
-        "vertices" : [ {
-          "x" : 3539,
-          "y" : 1105
-        }, {
-          "x" : 4499,
-          "y" : 1105
-        } ]
-      }, {
-        "id" : "226",
-        "vertices" : [ {
-          "x" : 5169,
-          "y" : 3009
-        } ]
-      }, {
-        "id" : "227",
+        "id" : "311",
         "vertices" : [ {
           "x" : 6679,
           "y" : 2977
@@ -2539,7 +3473,7 @@
           "y" : 2977
         } ]
       }, {
-        "id" : "228",
+        "id" : "312",
         "vertices" : [ {
           "x" : 6679,
           "y" : 3148
@@ -2547,21 +3481,48 @@
           "x" : 6849,
           "y" : 3148
         } ]
+      }, {
+        "id" : "313"
+      }, {
+        "id" : "314"
+      }, {
+        "id" : "315"
+      }, {
+        "id" : "316"
+      }, {
+        "id" : "339"
+      }, {
+        "id" : "340",
+        "vertices" : [ {
+          "x" : 1859,
+          "y" : 4890
+        } ]
+      }, {
+        "id" : "346",
+        "vertices" : [ {
+          "x" : 1859,
+          "y" : 5762
+        }, {
+          "x" : 7739,
+          "y" : 5762
+        } ]
+      }, {
+        "id" : "361",
+        "vertices" : [ {
+          "x" : 5169,
+          "y" : 3009
+        } ]
       } ],
       "title" : "03.3 - C4 Level 3 - Backend API Components"
     }, {
       "containerId" : "36",
-      "description" : "Background Worker view with PostgreSQL-backed run-stage execution, independent configuration validation, deterministic analytics, and one-manager-at-a-time report evidence assembly. Manager document processing remains inside the Backend API.",
+      "description" : "Background Worker view with PostgreSQL-backed run-stage execution, independent configuration validation, deterministic analytics, decision effect evaluation, and one-manager-at-a-time report evidence assembly. Manager document processing remains inside the Backend API.",
       "elements" : [ {
         "id" : "6",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "18",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "20",
+        "id" : "19",
         "x" : 0,
         "y" : 0
       }, {
@@ -2617,11 +3578,15 @@
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "55",
+        "id" : "49",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "56",
+        "id" : "57",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "58",
         "x" : 0,
         "y" : 0
       } ],
@@ -2630,63 +3595,67 @@
       "name" : "Component View: DIDRAH - Background Worker",
       "order" : 4,
       "relationships" : [ {
-        "id" : "149"
+        "id" : "269"
       }, {
-        "id" : "186"
+        "id" : "317"
       }, {
-        "id" : "187"
+        "id" : "318"
       }, {
-        "id" : "188"
+        "id" : "319"
       }, {
-        "id" : "189"
+        "id" : "320"
       }, {
-        "id" : "190"
+        "id" : "321"
       }, {
-        "id" : "191"
+        "id" : "322"
       }, {
-        "id" : "192"
+        "id" : "323"
       }, {
-        "id" : "193"
+        "id" : "324"
       }, {
-        "id" : "194"
+        "id" : "325"
       }, {
-        "id" : "195"
+        "id" : "326"
       }, {
-        "id" : "196"
+        "id" : "327"
       }, {
-        "id" : "197"
+        "id" : "328"
       }, {
-        "id" : "198"
+        "id" : "329"
       }, {
-        "id" : "211"
+        "id" : "330"
       }, {
-        "id" : "212"
+        "id" : "331"
       }, {
-        "id" : "213"
+        "id" : "332"
       }, {
-        "id" : "214"
+        "id" : "346"
       }, {
-        "id" : "215"
+        "id" : "347"
       }, {
-        "id" : "216"
+        "id" : "348"
       }, {
-        "id" : "217"
+        "id" : "349"
       }, {
-        "id" : "218"
+        "id" : "350"
       }, {
-        "id" : "219"
+        "id" : "351"
       }, {
-        "id" : "220"
+        "id" : "352"
       }, {
-        "id" : "221"
+        "id" : "353"
       }, {
-        "id" : "222"
+        "id" : "354"
       }, {
-        "id" : "223"
+        "id" : "355"
+      }, {
+        "id" : "356"
+      }, {
+        "id" : "357"
       } ],
       "title" : "03.4 - C4 Level 3 - Background Worker Components"
     }, {
-      "containerId" : "49",
+      "containerId" : "50",
       "description" : "Revised Scheduler and Replay Runner view that controls simulated time and replay through the Backend Run Coordinator and runs acceptance checks outside the daily publication path.",
       "elements" : [ {
         "id" : "4",
@@ -2697,11 +3666,7 @@
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "20",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "50",
+        "id" : "22",
         "x" : 0,
         "y" : 0
       }, {
@@ -2724,42 +3689,117 @@
         "id" : "55",
         "x" : 0,
         "y" : 0
+      }, {
+        "id" : "56",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "57",
+        "x" : 0,
+        "y" : 0
       } ],
       "externalContainerBoundariesVisible" : false,
       "key" : "L3_5_RevisedSchedulerReplayComponents",
       "name" : "Component View: DIDRAH - Scheduler and Replay Runner",
       "order" : 5,
       "relationships" : [ {
-        "id" : "199"
+        "id" : "333"
       }, {
-        "id" : "200"
+        "id" : "334"
       }, {
-        "id" : "201"
+        "id" : "335"
       }, {
-        "id" : "202"
+        "id" : "336"
       }, {
-        "id" : "203"
+        "id" : "337"
       }, {
-        "id" : "204"
+        "id" : "338"
       }, {
-        "id" : "205"
+        "id" : "339"
       }, {
-        "id" : "207"
+        "id" : "341"
       }, {
-        "id" : "208"
+        "id" : "342"
       }, {
-        "id" : "209"
+        "id" : "343"
       }, {
-        "id" : "210"
+        "id" : "344"
       }, {
-        "id" : "211"
+        "id" : "345"
+      }, {
+        "id" : "346"
       } ],
       "title" : "03.5 - C4 Level 3 - Revised Scheduler and Replay Runner Components"
+    }, {
+      "containerId" : "59",
+      "description" : "Agent Runtime view with bounded LangGraph graphs and explicit authenticated calls to Backend evidence and validation services. Checkpoints and budget state use PostgreSQL.",
+      "elements" : [ {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "15",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "57",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "60",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "61",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "62",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "63",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "64",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "key" : "L3_6_AgentRuntimeComponents",
+      "name" : "Component View: DIDRAH - Agent Runtime",
+      "order" : 6,
+      "relationships" : [ {
+        "id" : "232"
+      }, {
+        "id" : "276"
+      }, {
+        "id" : "277"
+      }, {
+        "id" : "287"
+      }, {
+        "id" : "288"
+      }, {
+        "id" : "290"
+      }, {
+        "id" : "291"
+      }, {
+        "id" : "292"
+      }, {
+        "id" : "293"
+      }, {
+        "id" : "294"
+      }, {
+        "id" : "358"
+      }, {
+        "id" : "359"
+      } ],
+      "title" : "03.6 - C4 Level 3 - Agent Runtime Components"
     } ],
     "configuration" : {
       "defaultView" : "L1_SystemContext",
       "lastSavedView" : "L3_3_RevisedBackendApiComponents",
-      "metadataSymbols" : "SquareBrackets",
       "properties" : {
         "structurizr.sort" : "key"
       },
@@ -2768,11 +3808,14 @@
           "background" : "#a21caf",
           "tag" : "AI"
         }, {
-          "background" : "#166534",
-          "tag" : "Analytics"
-        }, {
           "background" : "#1d4ed8",
           "tag" : "API"
+        }, {
+          "background" : "#a21caf",
+          "tag" : "AgentRuntime"
+        }, {
+          "background" : "#166534",
+          "tag" : "Analytics"
         }, {
           "background" : "#5b21b6",
           "shape" : "Cylinder",
@@ -2831,6 +3874,9 @@
           "background" : "#7c2d12",
           "shape" : "Person",
           "tag" : "ScenarioActor"
+        }, {
+          "background" : "#a21caf",
+          "tag" : "ScenarioAgent"
         }, {
           "background" : "#1d4ed8",
           "tag" : "ScenarioBackend"
@@ -2968,11 +4014,15 @@
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "10",
+        "id" : "9",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "14",
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "15",
         "x" : 0,
         "y" : 0
       }, {
@@ -2980,15 +4030,19 @@
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "49",
+        "id" : "50",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "55",
+        "id" : "57",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "56",
+        "id" : "58",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "59",
         "x" : 0,
         "y" : 0
       } ],
@@ -2997,6 +4051,124 @@
       "name" : "Container View: DIDRAH",
       "order" : 2,
       "relationships" : [ {
+        "id" : "219"
+      }, {
+        "id" : "220"
+      }, {
+        "id" : "221"
+      }, {
+        "id" : "222"
+      }, {
+        "id" : "223"
+      }, {
+        "id" : "224"
+      }, {
+        "id" : "225"
+      }, {
+        "id" : "226"
+      }, {
+        "id" : "227"
+      }, {
+        "id" : "228"
+      }, {
+        "id" : "229"
+      }, {
+        "id" : "230"
+      }, {
+        "id" : "231"
+      }, {
+        "id" : "232"
+      }, {
+        "id" : "233"
+      }, {
+        "id" : "234"
+      }, {
+        "id" : "235"
+      }, {
+        "id" : "236"
+      }, {
+        "id" : "237"
+      } ],
+      "softwareSystemId" : "10",
+      "title" : "02 - C4 Level 2 - Containers for DIDRAH"
+    } ],
+    "customViews" : [ {
+      "description" : "Primary report-generation path across Scheduler, Backend API, Background Worker, and PostgreSQL.",
+      "elements" : [ {
+        "id" : "78",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "79",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "80",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "81",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "82",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "83",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "84",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "85",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "86",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "87",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "88",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "89",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "90",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "91",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "93",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "94",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "95",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "key" : "S7_ReportGenerationScenario",
+      "name" : "Custom View: 04.7 - Scenario - Report Generation",
+      "order" : 8,
+      "relationships" : [ {
+        "id" : "100"
+      }, {
         "id" : "101"
       }, {
         "id" : "102"
@@ -3015,11 +4187,9 @@
       }, {
         "id" : "109"
       }, {
-        "id" : "110"
-      }, {
-        "id" : "111"
-      }, {
         "id" : "112"
+      }, {
+        "id" : "113"
       }, {
         "id" : "114"
       }, {
@@ -3027,48 +4197,293 @@
       }, {
         "id" : "116"
       }, {
-        "id" : "117"
+        "id" : "96"
       }, {
-        "id" : "118"
+        "id" : "97"
+      }, {
+        "id" : "98"
+      }, {
+        "id" : "99"
       } ],
-      "softwareSystemId" : "9",
-      "title" : "02 - C4 Level 2 - Containers for DIDRAH"
-    } ],
-    "customViews" : [ {
-      "description" : "Primary report-generation path across Scheduler, Backend API, Background Worker, and PostgreSQL.",
+      "title" : "04.7 - Scenario - Report Generation"
+    }, {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 160,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 240,
+        "vertices" : true
+      },
+      "description" : "Two numbered human-in-the-loop decision paths across Backend API and Agent Runtime: a decision initiated in manager chat and a decision card extracted from uploaded meeting minutes.",
       "elements" : [ {
-        "id" : "57",
+        "id" : "117",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "58",
+        "id" : "118",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "59",
+        "id" : "119",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "60",
+        "id" : "120",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "61",
+        "id" : "121",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "62",
+        "id" : "122",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "63",
+        "id" : "123",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "64",
+        "id" : "124",
         "x" : 0,
         "y" : 0
       }, {
+        "id" : "125",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "126",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "127",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "128",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "129",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "130",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "131",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "132",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "164",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "165",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "166",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "167",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "168",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "169",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "170",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "171",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "172",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "173",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "174",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "175",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "176",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "177",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "178",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "179",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "key" : "S8_ManagerDecisionScenarios",
+      "name" : "Custom View: 04.8 - Scenario - Manager Chat Decision and Meeting-Minutes Upload",
+      "order" : 9,
+      "relationships" : [ {
+        "id" : "133"
+      }, {
+        "id" : "134"
+      }, {
+        "id" : "135"
+      }, {
+        "id" : "136"
+      }, {
+        "id" : "137"
+      }, {
+        "id" : "138"
+      }, {
+        "id" : "139"
+      }, {
+        "id" : "140"
+      }, {
+        "id" : "141"
+      }, {
+        "id" : "142"
+      }, {
+        "id" : "143"
+      }, {
+        "id" : "144"
+      }, {
+        "id" : "145"
+      }, {
+        "id" : "146"
+      }, {
+        "id" : "147"
+      }, {
+        "id" : "148"
+      }, {
+        "id" : "149"
+      }, {
+        "id" : "150"
+      }, {
+        "id" : "151"
+      }, {
+        "id" : "152"
+      }, {
+        "id" : "153"
+      }, {
+        "id" : "154"
+      }, {
+        "id" : "155"
+      }, {
+        "id" : "156"
+      }, {
+        "id" : "157"
+      }, {
+        "id" : "158"
+      }, {
+        "id" : "159"
+      }, {
+        "id" : "160"
+      }, {
+        "id" : "161"
+      }, {
+        "id" : "162"
+      }, {
+        "id" : "163"
+      }, {
+        "id" : "180"
+      }, {
+        "id" : "181"
+      }, {
+        "id" : "182"
+      }, {
+        "id" : "183"
+      }, {
+        "id" : "184"
+      }, {
+        "id" : "185"
+      }, {
+        "id" : "186"
+      }, {
+        "id" : "187"
+      }, {
+        "id" : "188"
+      }, {
+        "id" : "189"
+      }, {
+        "id" : "190"
+      }, {
+        "id" : "191"
+      }, {
+        "id" : "192"
+      }, {
+        "id" : "193"
+      }, {
+        "id" : "194"
+      }, {
+        "id" : "195"
+      }, {
+        "id" : "196"
+      }, {
+        "id" : "197"
+      }, {
+        "id" : "198"
+      }, {
+        "id" : "199"
+      }, {
+        "id" : "200"
+      }, {
+        "id" : "201"
+      }, {
+        "id" : "202"
+      }, {
+        "id" : "203"
+      }, {
+        "id" : "204"
+      }, {
+        "id" : "205"
+      }, {
+        "id" : "206"
+      }, {
+        "id" : "207"
+      }, {
+        "id" : "208"
+      }, {
+        "id" : "209"
+      }, {
+        "id" : "210"
+      } ],
+      "title" : "04.8 - Scenario - Manager Chat Decision and Meeting-Minutes Upload"
+    } ],
+    "deploymentViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "Evaluation deployment using separate Docker Compose services started with one command.",
+      "elements" : [ {
         "id" : "65",
         "x" : 0,
         "y" : 0
@@ -3104,50 +4519,28 @@
         "id" : "73",
         "x" : 0,
         "y" : 0
+      }, {
+        "id" : "74",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "75",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "76",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "77",
+        "x" : 0,
+        "y" : 0
       } ],
-      "key" : "S7_ReportGenerationScenario",
-      "name" : "Custom View: 04.7 - Scenario - Report Generation",
-      "order" : 6,
-      "relationships" : [ {
-        "id" : "74"
-      }, {
-        "id" : "75"
-      }, {
-        "id" : "76"
-      }, {
-        "id" : "77"
-      }, {
-        "id" : "78"
-      }, {
-        "id" : "79"
-      }, {
-        "id" : "80"
-      }, {
-        "id" : "81"
-      }, {
-        "id" : "82"
-      }, {
-        "id" : "83"
-      }, {
-        "id" : "84"
-      }, {
-        "id" : "85"
-      }, {
-        "id" : "86"
-      }, {
-        "id" : "87"
-      }, {
-        "id" : "88"
-      }, {
-        "id" : "89"
-      }, {
-        "id" : "90"
-      }, {
-        "id" : "91"
-      }, {
-        "id" : "92"
-      } ],
-      "title" : "04.7 - Scenario - Report Generation"
+      "environment" : "Evaluation",
+      "key" : "D1_EvaluationCompose",
+      "name" : "Deployment View: DIDRAH - Evaluation",
+      "order" : 7,
+      "softwareSystemId" : "10"
     } ],
     "systemContextViews" : [ {
       "description" : "Business-facing C4 system context for DIDRAH.",
@@ -3187,29 +4580,33 @@
         "id" : "9",
         "x" : 0,
         "y" : 0
+      }, {
+        "id" : "10",
+        "x" : 0,
+        "y" : 0
       } ],
       "enterpriseBoundaryVisible" : true,
       "key" : "L1_SystemContext",
       "name" : "System Context View: DIDRAH",
       "order" : 1,
       "relationships" : [ {
-        "id" : "187"
+        "id" : "211"
       }, {
-        "id" : "93"
+        "id" : "212"
       }, {
-        "id" : "94"
+        "id" : "213"
       }, {
-        "id" : "95"
+        "id" : "214"
       }, {
-        "id" : "96"
+        "id" : "215"
       }, {
-        "id" : "97"
+        "id" : "216"
       }, {
-        "id" : "98"
+        "id" : "217"
       }, {
-        "id" : "195"
+        "id" : "218"
       } ],
-      "softwareSystemId" : "9",
+      "softwareSystemId" : "10",
       "title" : "01 - C4 Level 1 - System Context for DIDRAH"
     } ]
   }
