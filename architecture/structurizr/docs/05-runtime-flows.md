@@ -2,7 +2,7 @@
 
 ## Agent Job lifecycle and persistence
 
-PostgreSQL is the authoritative queue and state store for all report, interactive, and document-analysis Agent Jobs. A job is committed before any wake-up and carries an idempotency key plus pinned actor, policy, scope, and workload-specific input references. The Agent Runtime Runner claims a Ready job under a lease and records attempts and terminal state. A wake-up may reduce latency, but polling and lease recovery prevent work from being lost. Runtime outcome persistence and deterministic validation are separate states; the UI or publisher consumes only the validated result.
+PostgreSQL is the authoritative job and state store for all report, interactive, and document-analysis Agent Jobs. A job is committed before any wake-up and carries an idempotency key plus pinned actor, policy, scope, and workload-specific input references. The Agent Runtime Runner claims a Ready job under a lease and records attempts and terminal state. A wake-up may reduce latency, but polling and lease recovery prevent work from being lost. Runtime outcome persistence and deterministic validation are separate states; the UI or publisher consumes only the validated result.
 
 ## Nightly report flow
 
@@ -18,6 +18,16 @@ Backend producers commit an idempotent job before optionally sending an authenti
 
 The Output Validator checks schema, evidence, scope, report rules, and model failure state. The Publisher publishes valid manager reports independently. A required manager failure makes the day `incomplete`, but it does not remove valid reports for other managers.
 
+## Validation and submission export flow
+
+Output Validator checks the candidate against the read-only reference schema. It also checks actor scope, evidence references, path containment, and output rules. It records a Validation Receipt with `trace_id`.
+
+Publisher records the valid product result in PostgreSQL. Submission Exporter reads only a validated final result. It directly joins `OUTPUT_DIR` with `briefs/day_XXX/<manager_id>.json` or `qa/<question_id>.json`. It resolves the path, verifies containment, rejects absolute paths and `..`, writes a temporary file on the same filesystem, flushes and closes it, and performs an atomic rename. It records the content hash, relative path, `trace_id`, and Export Receipt.
+
+For `OUTPUT_DIR=/submission`, the exporter writes directly below `/submission`. It does not create `/submission/submission`.
+
+The complete Decision Effect remains an internal versioned PostgreSQL record. Export uses only fields and values that the reference output schema permits.
+
 ## Interactive question and manager decision flow
 
 The Web Application sends an authenticated request to the Backend API. The Manager Request Router selects the fixed handler and the Authorization Service pins the permitted scope. The Agent Runtime Gateway commits an idempotent interactive Agent Job to PostgreSQL with actor, policy, scope, request, and conversation references. It returns the committed job ID to the request handler, which returns it to the UI; the Gateway may also send the Agent Runtime an authenticated wake-up containing only the job ID.
@@ -30,4 +40,8 @@ The Document Processing Runner archives the original upload and calls the determ
 
 ## Replay and evaluation
 
-Replay runs days in order and resumes from the last terminal day. The Acceptance Test Harness runs replay, hidden-data, regression, leakage, performance, cost, and output-contract checks outside the daily publication path.
+Replay runs days in order and resumes from the last terminal day. The Acceptance Test Harness runs replay, SQLite-to-PostgreSQL KPI parity, hidden-data, regression, leakage, performance, cost, and output-contract checks outside the daily publication path.
+
+## Trace correlation
+
+REST calls propagate W3C `traceparent`. Durable jobs persist trace context or use a Span Link when asynchronous processing starts. Run, Job, Validation Receipt, Publication Receipt, Parity Receipt, and Export Receipt records include `trace_id`. Telemetry export is optional and fail-open. It does not replace PostgreSQL job state or receipts.

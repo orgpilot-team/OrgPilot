@@ -1,32 +1,50 @@
 # Risks and open issues
 
-The active control register is `DIDRAH-ARCH-CONTROL-V3` in `Docs/final review/architecture-control-register-v3.md`.
+The active risk and decision record is this document together with the ADR Status sections. An open issue does not change an accepted decision. A proposed value must not be recorded as `Accepted`.
 
-The main architecture risks are:
+## Architecture risks
 
-- A parity difference between SQLite reference SQL and PostgreSQL product SQL
-- A row-level security bypass in interactive SQL
-- Prompt injection through source content or manager uploads
-- Excess architecture complexity for the delivery team
-- Model latency or cost that exceeds the evaluation limit
-- A data-quality condition that is incorrectly published as a business signal
-- Output that is schema-valid but semantically incomplete
-- Hardcoded behavior for the development dataset
-- Future-data leakage during replay
+| Risk | Boundary owner | Required control |
+|---|---|---|
+| SQLite and PostgreSQL KPI results differ | Scheduler and Replay Runner | KPI Parity Validator and Parity Receipt |
+| Scoped query leaks rows or columns | Backend API security boundary | Query Gateway controls and negative leakage tests |
+| Agent Runtime reads unrestricted business data | Backend API and PostgreSQL boundary | Restricted role and Evidence Service path |
+| Source content or an upload injects instructions | Document and agent boundary | Treat content as data and validate bounded evidence |
+| A lost wake-up loses accepted work | Backend API and Agent Runtime | PostgreSQL durable job and reconciliation |
+| Model latency or cost exceeds the evaluation limit | Agent Runtime and Model Gateway | Bounded calls, cost receipt, and acceptance tests |
+| A data-quality issue becomes a business signal | Background Worker | Separate issue and signal contracts |
+| Output is schema-valid but semantically incomplete | Backend API | Output Validator and evidence checks |
+| Export escapes `OUTPUT_DIR` or leaves a partial file | Backend API | Path containment and atomic rename |
+| Telemetry exposes restricted information | All instrumented services | Data minimization and telemetry leakage tests |
+| Observability failure stops core work | Runtime operations | Optional fail-open collector and Langfuse path |
+| Hardcoded behavior fails on hidden data | All deterministic services | Contract-driven processing and hidden-data tests |
+| Replay reads future data | Scheduler and Replay Runner | Pinned cutoff and ordered replay tests |
+| Retention or restore evidence is incomplete | Operations | ADR-0011 remains Proposed until policy approval |
 
-The current P0 open issues are:
+## Open decisions
 
-- `ISSUE-V3-06`: retry, timeout, and fallback behavior
-- `ISSUE-V3-07`: language model and internal budget allocation
-- `ISSUE-V3-08`: detailed LangGraph node, state, checkpoint, retry, and interrupt boundary
+| Decision | Status | Decision location |
+|---|---|---|
+| Scheduler as .NET Console or Worker Service | Open | ADR-0018 |
+| Final restricted Agent Runtime DB role name | Open | ADR-0019 |
+| Migrate from or retain `agent_query_reader` | Open | ADR-0019 |
+| Python PostgreSQL driver | Open | This document |
+| Langfuse managed or self-hosted | Open | ADR-0020 |
+| OTLP/gRPC or OTLP/HTTP for backend services | Configuration decision | `06-deployment-and-operations.md` |
+| Model and provider | Open | This document |
+| Model call timeout | Open | This document |
+| Agent Job deadline | Open | This document |
+| Retry count | Open | This document |
+| Dead-letter policy | Open | This document |
+| Reconciliation cadence | Open | This document |
+| Fallback content | Open | This document |
+| LangGraph node boundaries | Open | This document |
+| Retention and backup frequency | Open | ADR-0011 |
+| RPO and RTO | Open | ADR-0011 |
 
-The current P1 open issues are:
+## Decision rules
 
-- `ISSUE-V3-01`: complete access projections for shared resources
-- `ISSUE-V3-02`: null and ad hoc number contract
-- `ISSUE-V3-04`: complete report lifecycle outside the top five items
-- `ISSUE-V3-05`: evidence and authority for actual decision execution
-- `ISSUE-V3-09`: retention, backup, audit access, and restore policy
-- `ISSUE-V3-10`: KPI change approval, activation, and rollback
-
-An open issue does not change an accepted decision. It defines a boundary that still needs a contract or a follow-up decision.
+- An open decision does not stop work that does not depend on its value.
+- Documentation states the boundary without selecting an unapproved value.
+- A configuration decision remains configurable until approval selects one value.
+- ADR-0011 remains `Proposed` until retention, backup, audit access, restore, RPO, and RTO decisions are approved.

@@ -1,6 +1,8 @@
 # Data and processing
 
-The data path is deterministic. It uses this sequence:
+## Daily data plane
+
+The daily data path is deterministic. It uses this sequence:
 
 ```text
 Source Intake
@@ -28,4 +30,34 @@ Missing data does not stop all publication. A dependent KPI is `null`. The syste
 
 Late or corrected data causes a complete rebuild in the first version. A rebuild creates a new restated report version. It does not overwrite the original published report.
 
-PostgreSQL is the product calculation engine. The KPI parity suite compares PostgreSQL results with the SQLite reference calculations. The maximum accepted evaluation tolerance is one percent.
+PostgreSQL 18 is the only product database and the product calculation engine. It stores canonical data, snapshots, KPI results, workflow and signal state, durable jobs, receipts, reports, and audit records. Normal .NET transactions use EF Core and Npgsql. Job claims and approved KPI SQL can use Npgsql directly.
+
+## Normalization boundary
+
+Source Intake verifies the manifest and source hash. Schema Registry selects the versioned source contract. Normalizer converts accepted source fields to canonical names, types, formats, units, and timezone rules. Data Quality and Deduplication and Conflict Handling run after normalization and before a record enters canonical storage.
+
+The pipeline does not infer an unknown schema, unit, key, or alias. A failed source record remains outside the valid snapshot and has a traceable issue receipt.
+
+## KPI acceptance plane
+
+KPI acceptance is separate from the daily product path:
+
+```text
+Read-only reference SQL
+  -> SQLite inside Acceptance Test Harness
+  -> reference result
+
+Equivalent pinned snapshot
+  -> translated PostgreSQL SQL
+  -> product result
+
+Reference result + product result
+  -> KPI Parity Validator
+  -> Parity Receipt
+```
+
+SQLite is embedded only in the Acceptance Test Harness. It is not a product database, product container, or daily runtime dependency. The reference SQL and KPI Dictionary remain read-only.
+
+The KPI Parity Validator compares row sets, nulls, values, median translation, time intervals, decimal division, timezone behavior, and date boundaries. The maximum accepted evaluation tolerance is one percent. A PostgreSQL translation is not accepted until its parity evidence passes.
+
+Agent Runtime has no role in SQL translation, KPI calculation, or parity repair.
