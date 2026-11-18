@@ -266,3 +266,54 @@ Blocker وجود ندارد.
 - Commit scope: فقط ۹ فایل فاز ۳
 - Push: موفق به `origin/main`
 - تغییرات فاز ۲ و فایل‌های کنترلی وارد این Commit نشدند.
+
+## نتیجه فاز ۴ — اصلاح مدل Structurizr
+
+وضعیت: تکمیل‌شده در 2026-11-19.
+
+### نتیجه
+
+- Source commentها فقط منابع فعال معماری و Referenceهای Read-only را مشخص می‌کنند.
+- Technology همه Containerها طبق Plan ثبت شد.
+- `Normalizer`، `KPI Definition Preprocessor` و `Scripted Manager Input Adapter` اضافه شدند.
+- OpenTelemetry Collector به‌عنوان تنها Container جدید و بدون Product Component اضافه شد.
+- Langfuse به‌عنوان External Software System و وابستگی اختیاری و fail-open اضافه شد.
+- همه رابطه‌های Product، Component، Scenario و Deployment دارای Technology صریح هستند.
+- `!impliedRelationships false` حفظ شد.
+- L3 Web Application، Deployment کامل و مجموعه ۱۶ View فعال شدند.
+- Model Gateway در Report Scenario قرار گرفت و تعارض parent/child در L3 Agent رفع شد.
+- State و Record به Product Component تبدیل نشدند.
+
+### فایل‌های تغییرکرده
+
+- `architecture/structurizr/workspace.dsl`
+- `plan-stage.md` — فقط ثبت وضعیت و Resume
+
+### Validation
+
+- MCP parse: پاس.
+- MCP validate: پاس.
+- MCP inspect: صفر Finding عملیاتی.
+- دو Finding مستندات و تصمیم‌ها مصنوعی هستند. علت، حذف موقت و درون‌حافظه‌ای `!docs` و `!adrs` برای MCP است. فایل اصلی این دو Directive را حفظ می‌کند.
+- Product Component: دقیقاً ۵۰؛ Web برابر ۳، Backend برابر ۲۰، Worker برابر ۱۵، Scheduler برابر ۷ و Agent Runtime برابر ۵.
+- View: دقیقاً ۱۶.
+- Relationship بدون Technology: صفر.
+- Deployment instance جداشده: صفر.
+- Element خارج از View: صفر.
+- `!impliedRelationships false`: حفظ شد.
+- ارجاع فعال به `Docs/final review`، `Docs/trash-data` یا مسیر `submission/submission`: صفر.
+- State/Record Component: صفر.
+- `workspace.json` و فایل‌های Reference و Output Contract: بدون تغییر.
+- `git diff --check`: پاس.
+
+### تصمیم‌های باز
+
+تصمیم‌های باز مصوب تغییر نکردند. مقدار یا الزام جدیدی برای آن‌ها ثبت نشد.
+
+### Blockerها
+
+Blocker وجود ندارد.
+
+### Resume
+
+نقطه دقیق Resume: **فاز ۵، قبل از نخستین تغییر، از `architecture/structurizr/docs/09-web-application-components.md` و سپس تطبیق ۵۴ Anchor و URL طبق `plan.md` شروع شود.**

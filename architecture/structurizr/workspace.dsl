@@ -2,15 +2,12 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
     !identifiers flat
     !impliedRelationships false
 
-    // Architecture source: Docs/final review/proposed-architecture.md
-    // Requirement source: the Persian DIDRAH agentic management assistant brief in Docs.
-    // Evaluation source: DataSet/arka_dataset/README_FA.md and output_contract/*.json
+    // Architecture sources: this DSL, docs/01-purpose-and-scope.md through docs/08-risks-and-open-issues.md, and adrs/.
+    // Evaluation references: DataSet/arka_dataset/README_FA.md and output_contract/*.json are read-only.
     // Team decision: PostgreSQL is the only product database.
     // SQLite is an external test oracle for reference SQL only. It is not a runtime container.
-    // Status: Proposed for team review. This workspace does not claim implementation.
-    // Open decisions include KPI SQL parity, exact RLS projections, report schema,
-    // signal boundary rules, workflow stage ownership, retry limits, provider/model,
-    // retention, RPO/RTO, and the suppressed/ongoing output mapping.
+    // Status: Proposed. This workspace does not claim implementation.
+    // Open decisions remain in docs/08-risks-and-open-issues.md and the accepted ADR set.
 
     model {
         // People
@@ -25,6 +22,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         submissionOutput = softwareSystem "Submission Output Directory" "Evaluator-provided writable OUTPUT_DIR mount. DIDRAH writes only contract-approved brief and QA files under /submission." "External,Storage,Evaluation"
         identityProvider = softwareSystem "Identity Provider" "Authenticates users and supplies a trusted identity. The product or internal method is open." "External,Identity,OpenDecision"
         llmProvider = softwareSystem "Language Model Provider" "Returns bounded language-model completions. The provider and model are open decisions." "External,AI,OpenDecision"
+        langfuse = softwareSystem "Langfuse" "Receives optional, redacted OpenTelemetry data for agent traces, model calls, token use, cost, and evaluation. DIDRAH core workflows remain fail-open when it is unavailable." "External,Observability"
 
         didrah = softwareSystem "DIDRAH" "A bounded agentic management assistant. It computes deterministic metrics and supports human decisions." "Target" {
             !docs docs
@@ -37,13 +35,13 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 "agent.boundary" "One bounded AI agent; deterministic core outside the agent"
             }
 
-            webApp = container "Web Application" "Persian RTL web application. It provides the three required management interfaces." "Web application; framework open" "Web" {
+            webApp = container "Web Application" "Persian RTL web application. It provides the three required management interfaces." "React 19, TypeScript, Vite" "Web" {
                 chatUi = component "Conversational Assistant UI" "Shows reports and answers. It accepts scoped questions, uploads, and manager operations." "Web UI" "Web"
                 dashboardUi = component "Role-Based Dashboard UI" "Shows authorized KPIs, targets, trends, drill-downs, decisions, and open actions." "Web UI" "Web"
                 workflowUi = component "Workflow Control Room UI" "Shows WF1-WF3, stage SLA, bottlenecks, escalations, and pending decisions. Senior Manager only." "Web UI" "Web,ExecutiveOnly"
             }
 
-            backendApi = container "Backend API" "Authenticates and authorizes requests, creates durable agent jobs in PostgreSQL, coordinates optional Runtime wake-ups, validates outcomes, and delivers results." "Application runtime; framework open" "API" {
+            backendApi = container "Backend API" "Authenticates and authorizes requests, creates durable agent jobs in PostgreSQL, coordinates optional Runtime wake-ups, validates outcomes, and delivers results." "ASP.NET Core, .NET 10 LTS, REST/JSON, OpenAPI" "API" {
                 group "01 Access" {
                     identityBoundary = component "Identity Boundary" "Validates the session and creates a trusted identity context." "Deterministic module" "Security"
                     authorizationService = component "Authorization Service" "Builds the permitted row, column, role, purpose, and policy scope." "Deterministic module" "Security"
@@ -76,7 +74,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                     outputValidator = component "Output Validator" "Checks the output schema, cited values, evidence references, allowed scope, response rules, and decision-card contract. Persists a validation receipt and validated/rejected job state; it does not repeat KPI calculation, document parsing, or report-evidence assembly." "Deterministic validator" "Governance"
                     agentJobStatusService = component "Agent Job Status API" "Returns an authorized agent-job ID and its queued, running, awaiting-validation, validated, published, or failed status; reads persisted outcomes from PostgreSQL and never executes jobs." "Deterministic delivery API" "API"
                     publisherV2 = component "Publisher" "Atomically publishes model-independent canonical JSON with validated Persian narrative when available, or deterministic fallback text when the model API is unavailable. It records publication receipts and artifact failures." "Deterministic publication module" "Processing"
-                    submissionExporter = component "Submission Exporter" "Reads validated reports and QA results, validates against JSON Schema, writes atomically to OUTPUT_DIR/submission/briefs/ and /qa/ with hash and export receipt. No internal logs or DB files in /submission." "Deterministic export module" "Processing"
+                    submissionExporter = component "Submission Exporter" "Reads validated reports and QA results, validates against JSON Schema, resolves a contained direct join under OUTPUT_DIR, and writes atomically to briefs/ and qa/ with hash, relative artifact path, trace ID, and export receipt. No internal logs or database files are exported." "Deterministic export module" "Processing"
                     reportApi = component "Report and Dashboard API" "Reads published reports and dashboard data, and returns validated interactive answers or explicit failures." "Deterministic delivery API" "API"
                     auditService = component "Audit Service" "Records query, model, validation, cost, and failure evidence." "Deterministic module" "Governance"
                 }
@@ -88,15 +86,17 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
             }
 
-            worker = container "Background Worker" "Executes deterministic ingestion, snapshot, KPI, workflow, signal, report-evidence, configuration-validation, and decision-effect-evaluation jobs. It stores results in PostgreSQL and does not run agent graphs or publish reports." "Application runtime; shared modular codebase" "Worker" {
+            worker = container "Background Worker" "Executes deterministic ingestion, snapshot, KPI, workflow, signal, report-evidence, configuration-validation, and decision-effect-evaluation jobs. It stores results in PostgreSQL and does not run agent graphs or publish reports." ".NET 10 Worker Service" "Worker" {
                 runStageCoordinatorV2 = component "Run Stage Coordinator" "Claims Ready deterministic jobs from PostgreSQL and invokes ingestion, snapshot, KPI, workflow, signal, report-evidence, and decision-effect-evaluation components according to stored dependencies. It does not create jobs." "PostgreSQL-backed deterministic job runner" "Processing"
                 configurationValidationRunnerV2 = component "Configuration Validation Runner" "Claims configuration-validation jobs, checks KPI SQL, type, unit, scope, rollup, dependencies, and parity fixtures, and stores a validation receipt. It does not activate configuration." "PostgreSQL-backed validation runner" "Governance"
                 ingestionCoordinator = component "Ingestion Coordinator" "Checks manifests, hashes, idempotency keys, source status, and atomic batch commits." "Deterministic module" "Processing"
                 sourceAdapters = component "Source Adapters" "Parse versioned source schemas and preserve the source bytes and headers." "Deterministic adapters" "Processing"
+                normalizer = component "Normalizer" "Converts parsed source fields to canonical types, units, identifiers, and time semantics before data-quality validation. It does not parse source formats or decide data quality." "Deterministic normalization module" "Processing"
                 dataQualityService = component "Data Quality Service" "Records missing sources, late arrivals, duplicates, corrections, schema changes, and quarantine results." "Deterministic module" "DataQuality"
                 snapshotService = component "Snapshot Service" "Pins committed data, organization, access policy, and configuration versions for a run." "Deterministic module" "Processing"
                 projectionService = component "Projection Service" "Builds reproducible facts and process projections from committed source events." "Deterministic module" "Processing"
                 semanticRegistry = component "Semantic Registry" "Versions KPI definitions, PostgreSQL SQL, units, precision, targets, ownership, and dependencies." "Deterministic registry" "Analytics"
+                kpiDefinitionPreprocessor = component "KPI Definition Preprocessor" "Translates and versions approved KPI definitions as PostgreSQL SQL artifacts before deterministic validation and registration." "Deterministic PostgreSQL SQL preprocessor" "Analytics"
                 kpiCalculator = component "KPI Calculator" "Executes the 55 approved PostgreSQL KPI queries and records QueryRun and lineage." "PostgreSQL SQL" "Analytics"
                 workflowEngine = component "Workflow Engine" "Reconstructs three workflows and calculates stage timing, SLA, backlog, and bottlenecks." "Deterministic process analysis" "Analytics"
                 signalEngine = component "Signal Engine" "Maintains SignalEpisode and SignalOccurrence lifecycles, per-recipient status, escalation history, suppression decisions, and grouped executive items under R1-R8. Data issues are excluded from business items; no LLM." "Deterministic rules" "Analytics"
@@ -104,56 +104,36 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 decisionEffectEvaluator = component "Decision Effect Evaluator" "Evaluates target KPI against the comparison period and minimum meaningful change, applies guardrail, and records method, assumptions, confidence, confounders, insufficient-data reason, and structured effect evidence. Outputs improved/worsened/too_early/no_change or an explicit not-isolatable assessment. No LLM." "Deterministic evaluation module" "Decision"
             }
 
-            schedulerReplay = container "Scheduler and Replay Runner" "Owns the simulated clock, run lease, replay range, evaluation profile, and resumable job dispatch." "Application command/process" "Scheduler" {
+            schedulerReplay = container "Scheduler and Replay Runner" "Owns the simulated clock, run lease, replay range, evaluation profile, and resumable job dispatch." ".NET 10 Console or Worker Process" "Scheduler" {
                 replayCommandV2 = component "Replay Command" "Accepts a replay range, sequences simulated days, and resumes from the last terminal day." "Application command" "Scheduler,Candidate"
                 simulationClockV2 = component "Simulation Clock" "Derives the pinned business date and source cutoff without using the host clock as product time." "Deterministic clock" "Scheduler,Candidate"
                 evaluationProfileLoaderV2 = component "Evaluation Profile Loader" "Loads the selected evaluation limits, acceptance thresholds, and run options." "Deterministic configuration reader" "Evaluation,Candidate"
                 runStatusClientV2 = component "Run Status Client" "Starts and monitors runs only through the Backend Run Coordinator." "Internal API client" "Scheduler,Candidate"
                 acceptanceTestHarnessV2 = component "Acceptance Test Harness" "Runs replay, hidden-data, regression, leakage, performance, cost, output-contract, and SQLite/PostgreSQL KPI parity checks outside the daily report-publication path." "Deterministic test harness" "Evaluation,Candidate"
                 kpiParityValidator = component "KPI Parity Validator" "Executes 55 reference SQL on SQLite and translated PostgreSQL SQL on equivalent snapshot, compares row sets, nulls, values within ±1%, median vs percentile_cont, timezone, date boundaries. Produces Parity Receipt per KPI. No Agent role." "Deterministic parity module" "Evaluation"
+                scriptedManagerInputAdapter = component "Scripted Manager Input Adapter" "Reads versioned scripted manager inputs and approved attachment references for deterministic replay, then submits them through the same Backend API boundary as interactive inputs." "Deterministic evaluation input adapter" "Evaluation"
             }
 
-            postgres = container "PostgreSQL" "The only product database. It stores product state, analytical results, access policy, checkpoints, and audit records." "PostgreSQL" "Database" {
+            postgres = container "PostgreSQL" "The only product database. It stores product state, analytical results, access policy, checkpoints, and audit records." "PostgreSQL 18" "Database" {
                 properties {
                     "schemas.proposed" "ingest, core, org, semantic, analytics, workflow, reporting, document, decision, agent, audit"
                     "security" "RLS, FORCE ROW LEVEL SECURITY, non-owner runtime roles, no BYPASSRLS"
-                    "runtime.roles.proposed" "ingestion_writer, analytics_worker, application_api, agent_query_reader, audit_reader"
+                    "runtime.roles.proposed" "Separate least-privilege roles for ingestion, analytics, application API, restricted agent job data, and audit reads; final role names are open"
                     "migration.owner" "migration_owner; never used at runtime"
                 }
             }
 
-            fileArchive = container "Protected File Archive" "Stores original source and upload bytes with hashes and manifests. It is not a query database." "Protected volume or object storage" "Storage"
+            fileArchive = container "Protected File Archive" "Stores original source and upload bytes with hashes and manifests. It is not a query database." "Protected mounted filesystem or compatible object storage" "Storage"
 
-            agentRuntime = container "Agent Runtime" "Claims and executes all durable report, interactive, and document-analysis Agent Jobs from PostgreSQL. The database is authoritative; authenticated Backend wake-ups are best-effort hints only. No KPI calculation, signal detection, workflow, configuration, or publication." "Python; LangGraph" "AI" {
+            agentRuntime = container "Agent Runtime" "Claims and executes all durable report, interactive, and document-analysis Agent Jobs from PostgreSQL. The database is authoritative; authenticated Backend wake-ups are best-effort hints only. No KPI calculation, signal detection, workflow, configuration, or publication." "Python 3.12, LangGraph, Pydantic" "AI" {
                 agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report, interactive, or document decision-card graph. Produces structured candidates only." "LangGraph runtime" "AI"
                 agentJobRunner = component "Agent Job Runner" "Claims every Ready report, interactive, and document-analysis Agent Job from PostgreSQL with a lease; loads pinned inputs, scope, and checkpoint state; invokes the bounded graph; persists the candidate with awaiting-validation state, or an explicit terminal execution failure, before validation. Polling recovers missed wake-ups." "PostgreSQL-backed unified agent job runner" "AI"
                 conversationService = component "Conversation Service" "Stores manager-scoped conversation sessions and validated turns, returns bounded history window." "Deterministic conversation module" "AI"
                 agentModelGateway = component "Model Gateway" "Applies token, time, retry, and cost limits to every model call. Reserves and settles budget." "Provider-neutral model client" "AI"
                 checkpointStore = component "PostgreSQL Checkpoint Store" "Stores LangGraph checkpoints in PostgreSQL for resumability and idempotency." "PostgreSQL-backed checkpoint" "AI"
             }
-        }
 
-        deploymentEnvironment "Evaluation" {
-            deploymentNode "Evaluation Host and Docker Compose" "Separate service containers started together with one docker compose command." "Docker Compose" {
-                deploymentNode "Web" "User interface" "Docker container" {
-                    containerInstance webApp
-                }
-                deploymentNode "Backend API" "API and deterministic validation" "Docker container" {
-                    containerInstance backendApi
-                }
-                deploymentNode "Background Worker" "Deterministic processing" "Docker container" {
-                    containerInstance worker
-                }
-                deploymentNode "Scheduler" "Replay and acceptance" "Docker container" {
-                    containerInstance schedulerReplay
-                }
-                deploymentNode "Agent Runtime" "Bounded agent graphs" "Docker container" {
-                    containerInstance agentRuntime
-                }
-                deploymentNode "PostgreSQL" "Product database" "Docker container" {
-                    containerInstance postgres
-                }
-            }
+            otelCollector = container "OpenTelemetry Collector" "Optionally receives redacted OTLP telemetry from DIDRAH services and exports allowed observability data to Langfuse. Its availability never controls product workflow success." "OpenTelemetry Collector, optional Compose service" "Observability"
         }
 
         // Scenario-only elements. These mirrors keep numbered cross-container flows
@@ -177,29 +157,29 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         reportScenarioPublisher = element "Publisher" "Backend API" "Publishes each validated manager report or authorized deterministic fallback and records its publication receipt." "ScenarioStep,ScenarioBackend"
         reportScenarioDelivery = element "Report and Dashboard API / Web Application" "Report delivery" "Reads and delivers each published manager report." "ScenarioStep,ScenarioWeb"
 
-        reportScenarioReplay -> reportScenarioRunStatus "01. Prepare one reporting day"
-        reportScenarioRunStatus -> reportScenarioRunCoordinator "02. Request a pinned run"
-        reportScenarioRunCoordinator -> reportScenarioPostgres "03. Create the Run, all Jobs, dependencies, and manager order"
-        reportScenarioRunStage -> reportScenarioPostgres "04. Claim Ready deterministic Jobs"
-        reportScenarioRunStage -> reportScenarioIngestion "05. Run ingestion and data-quality checks"
-        reportScenarioRunStage -> reportScenarioSnapshot "06. Create the pinned Snapshot"
-        reportScenarioRunStage -> reportScenarioKpi "07. Calculate approved KPIs"
-        reportScenarioRunStage -> reportScenarioWorkflow "08. Reconstruct workflows"
-        reportScenarioRunStage -> reportScenarioSignal "09. Detect and rank signals"
-        reportScenarioRunStage -> reportScenarioEvidenceBuilder "10. For each manager in order, execute the Ready Report Evidence Job"
-        reportScenarioEvidenceBuilder -> reportScenarioPostgres "11. Store package, complete evidence Job, and unlock the preplanned Agent Job"
-        reportScenarioAgentRunner -> reportScenarioPostgres "12. Claim and lease Ready Agent Job; load pinned report package, scope, and checkpoint"
-        reportScenarioAgentRunner -> reportScenarioAuthorization "13. Revalidate pinned manager scope over the Backend API boundary"
-        reportScenarioAgentRunner -> reportScenarioAgent "14. Run the bounded report graph"
-        reportScenarioAgent -> reportScenarioModel "15. Request bounded narrative generation"
-        reportScenarioModel -> reportScenarioAgent "16. Return completion or explicit model failure"
-        reportScenarioAgent -> reportScenarioAgentRunner "17. Return narrative candidate or model failure to job owner"
-        reportScenarioAgentRunner -> reportScenarioPostgres "18. Persist candidate as awaiting-validation or explicit terminal execution failure"
-        reportScenarioAgentRunner -> reportScenarioValidator "19. Submit persisted outcome for deterministic validation"
-        reportScenarioValidator -> reportScenarioPublisher "20. Release valid report or authorized fallback"
-        reportScenarioPublisher -> reportScenarioPostgres "21. Publish report, complete Job, and unlock the next manager"
-        reportScenarioPostgres -> reportScenarioDelivery "22. Deliver the published manager report"
-        reportScenarioRunCoordinator -> reportScenarioPostgres "23. After all required Jobs are terminal, persist final status and close the Run"
+        reportScenarioReplay -> reportScenarioRunStatus "01. Prepare one reporting day" "In-process function call"
+        reportScenarioRunStatus -> reportScenarioRunCoordinator "02. Request a pinned run" "HTTPS/JSON"
+        reportScenarioRunCoordinator -> reportScenarioPostgres "03. Create the Run, all Jobs, dependencies, and manager order" "PostgreSQL protocol over TLS"
+        reportScenarioRunStage -> reportScenarioPostgres "04. Claim Ready deterministic Jobs" "PostgreSQL protocol over TLS"
+        reportScenarioRunStage -> reportScenarioIngestion "05. Run ingestion and data-quality checks" "In-process function call"
+        reportScenarioRunStage -> reportScenarioSnapshot "06. Create the pinned Snapshot" "In-process function call"
+        reportScenarioRunStage -> reportScenarioKpi "07. Calculate approved KPIs" "In-process function call"
+        reportScenarioRunStage -> reportScenarioWorkflow "08. Reconstruct workflows" "In-process function call"
+        reportScenarioRunStage -> reportScenarioSignal "09. Detect and rank signals" "In-process function call"
+        reportScenarioRunStage -> reportScenarioEvidenceBuilder "10. For each manager in order, execute the Ready Report Evidence Job" "In-process function call"
+        reportScenarioEvidenceBuilder -> reportScenarioPostgres "11. Store package, complete evidence Job, and unlock the preplanned Agent Job" "PostgreSQL protocol over TLS"
+        reportScenarioAgentRunner -> reportScenarioPostgres "12. Claim and lease Ready Agent Job; load pinned report package, scope, and checkpoint" "PostgreSQL protocol over TLS"
+        reportScenarioAgentRunner -> reportScenarioAuthorization "13. Revalidate pinned manager scope over the Backend API boundary" "Authenticated HTTPS/JSON"
+        reportScenarioAgentRunner -> reportScenarioAgent "14. Run the bounded report graph" "In-process function call"
+        reportScenarioAgent -> reportScenarioModel "15. Request bounded narrative generation" "In-process function call"
+        reportScenarioModel -> reportScenarioAgent "16. Return completion or explicit model failure" "In-process function call"
+        reportScenarioAgent -> reportScenarioAgentRunner "17. Return narrative candidate or model failure to job owner" "In-process function call"
+        reportScenarioAgentRunner -> reportScenarioPostgres "18. Persist candidate as awaiting-validation or explicit terminal execution failure" "PostgreSQL protocol over TLS"
+        reportScenarioAgentRunner -> reportScenarioValidator "19. Submit persisted outcome for deterministic validation" "Authenticated HTTPS/JSON"
+        reportScenarioValidator -> reportScenarioPublisher "20. Release valid report or authorized fallback" "In-process function call"
+        reportScenarioPublisher -> reportScenarioPostgres "21. Publish report, complete Job, and unlock the next manager" "PostgreSQL protocol over TLS"
+        reportScenarioPostgres -> reportScenarioDelivery "22. Deliver the published manager report" "PostgreSQL protocol over TLS"
+        reportScenarioRunCoordinator -> reportScenarioPostgres "23. After all required Jobs are terminal, persist final status and close the Run" "PostgreSQL protocol over TLS"
 
         // Scenario-only mirrors: durable jobs are committed before any Runtime wake-up.
         chatDecisionManager = element "A - Manager" "Scenario A - decision in manager chat" "Submits a decision request and is the only actor allowed to confirm, edit, or reject a validated card." "ScenarioStep,ScenarioActor"
@@ -221,52 +201,52 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         chatDecisionTracker = element "A - Decision and Follow-Up" "Backend API" "Records a confirmed human decision and follow-up contract without executing the decision." "ScenarioStep,ScenarioChat"
         chatDecisionPostgres = element "A - PostgreSQL" "Scenario A state" "Stores durable Agent Jobs, pinned request/scope, conversation, outcomes, validation/review state, decisions, and follow-up events." "ScenarioStep,ScenarioDatabase"
 
-        chatDecisionManager -> chatDecisionUi "A01. Enter a decision request in manager chat"
-        chatDecisionUi -> chatDecisionIdentity "A02. Submit session and request over HTTPS/JSON"
-        chatDecisionIdentity -> chatDecisionAuthorization "A03. Validate session and create trusted AuthContext"
-        chatDecisionAuthorization -> chatDecisionRouter "A04. Pass trusted scope and request context"
-        chatDecisionRouter -> chatDecisionGateway "A05. Route decision-card request for durable enqueue"
-        chatDecisionGateway -> chatDecisionPostgres "A06. Commit idempotent Agent Job with actor, scope, policy, request, and conversation references; return job ID"
-        chatDecisionGateway -> chatDecisionAgentRunner "A07. Best-effort authenticated wake-up carrying only job ID"
-        chatDecisionGateway -> chatDecisionRouter "A08. Return committed job ID to request handler"
-        chatDecisionRouter -> chatDecisionUi "A09. Return accepted job ID; request may finish before execution"
-        chatDecisionUi -> chatDecisionManager "A10. Display pending job ID"
-        chatDecisionAgentRunner -> chatDecisionPostgres "A11. Claim and lease Ready job; load canonical pinned inputs and scope"
-        chatDecisionAgentRunner -> chatDecisionAuthorization "A12. Revalidate pinned scope through Backend policy boundary"
-        chatDecisionAgentRunner -> chatDecisionAgent "A13. Invoke bounded interactive decision-card graph"
-        chatDecisionAgent -> chatDecisionConversation "A14. Store manager turn and load bounded history"
-        chatDecisionConversation -> chatDecisionPostgres "A15. Read/write manager-scoped conversation"
-        chatDecisionAgent -> chatDecisionEvidence "A16. Request authorized Evidence Bundle from Backend"
-        chatDecisionEvidence -> chatDecisionQuery "A17. Run registered evidence queries within trusted scope"
-        chatDecisionQuery -> chatDecisionSqlGuard "A18. Validate one approved SELECT"
-        chatDecisionSqlGuard -> chatDecisionQuery "A19. Return approval or refusal"
-        chatDecisionQuery -> chatDecisionPostgres "A20. Execute approved read-only query and retain lineage"
-        chatDecisionAgent -> chatDecisionModel "A21. Request bounded analysis and decision-card draft"
-        chatDecisionModel -> chatDecisionAgent "A22. Return completion or explicit terminal failure"
-        chatDecisionAgent -> chatDecisionAgentRunner "A23. Return structured candidate or failure to job owner"
-        chatDecisionAgentRunner -> chatDecisionPostgres "A24. Persist candidate with awaiting-validation state, or explicit terminal execution failure"
-        chatDecisionAgentRunner -> chatDecisionValidator "A25. Submit persisted candidate/failure for deterministic validation"
-        chatDecisionValidator -> chatDecisionConfirmation "A26. Release only valid card for manager review"
-        chatDecisionConfirmation -> chatDecisionPostgres "A27. Store validated card, evidence references, and review state"
-        chatDecisionUi -> chatDecisionIdentity "A28. Poll job status with authenticated session"
-        chatDecisionIdentity -> chatDecisionAuthorization "A29. Revalidate identity and scope for status read"
-        chatDecisionAuthorization -> chatDecisionRouter "A30. Pass authorized status request"
-        chatDecisionRouter -> chatDecisionStatus "A31. Route status request to fixed handler"
-        chatDecisionStatus -> chatDecisionPostgres "A32. Read authorized job status and persisted result"
-        chatDecisionStatus -> chatDecisionUi "A33. Return queued/running/awaiting-validation state, validated card reference, or explicit failure"
-        chatDecisionUi -> chatDecisionManager "A34. Display pending state or validated card; system does not confirm or execute it"
-        chatDecisionManager -> chatDecisionUi "A35. Choose confirm, edit, or reject"
-        chatDecisionUi -> chatDecisionIdentity "A36. Submit authenticated review command"
-        chatDecisionIdentity -> chatDecisionAuthorization "A37. Revalidate identity and recreate trusted AuthContext"
-        chatDecisionAuthorization -> chatDecisionRouter "A38. Pass authorized review command"
-        chatDecisionRouter -> chatDecisionConfirmation "A39. Route review command to fixed handler"
-        chatDecisionConfirmation -> chatDecisionGateway "A40. On edit, request a new durable revision job"
-        chatDecisionGateway -> chatDecisionPostgres "A41. Commit idempotent revision Agent Job with updated request and pinned scope"
-        chatDecisionGateway -> chatDecisionAgentRunner "A42. Best-effort wake-up for revision job ID"
-        chatDecisionConfirmation -> chatDecisionPostgres "A43. On reject, store terminal review status"
-        chatDecisionConfirmation -> chatDecisionTracker "A44. On confirm only, forward manager-confirmed card"
-        chatDecisionTracker -> chatDecisionAuthorization "A45. Recheck decision authority and affected scope"
-        chatDecisionTracker -> chatDecisionPostgres "A46. Append decision, owner, deadline, success criteria, guardrail, and follow-up; do not execute"
+        chatDecisionManager -> chatDecisionUi "A01. Enter a decision request in manager chat" "Human interaction"
+        chatDecisionUi -> chatDecisionIdentity "A02. Submit session and request over HTTPS/JSON" "HTTPS/JSON"
+        chatDecisionIdentity -> chatDecisionAuthorization "A03. Validate session and create trusted AuthContext" "In-process function call"
+        chatDecisionAuthorization -> chatDecisionRouter "A04. Pass trusted scope and request context" "In-process function call"
+        chatDecisionRouter -> chatDecisionGateway "A05. Route decision-card request for durable enqueue" "In-process function call"
+        chatDecisionGateway -> chatDecisionPostgres "A06. Commit idempotent Agent Job with actor, scope, policy, request, and conversation references; return job ID" "PostgreSQL protocol over TLS"
+        chatDecisionGateway -> chatDecisionAgentRunner "A07. Best-effort authenticated wake-up carrying only job ID" "Authenticated HTTPS wake-up with job_id"
+        chatDecisionGateway -> chatDecisionRouter "A08. Return committed job ID to request handler" "In-process function call"
+        chatDecisionRouter -> chatDecisionUi "A09. Return accepted job ID; request may finish before execution" "HTTPS/JSON"
+        chatDecisionUi -> chatDecisionManager "A10. Display pending job ID" "Human interaction"
+        chatDecisionAgentRunner -> chatDecisionPostgres "A11. Claim and lease Ready job; load canonical pinned inputs and scope" "PostgreSQL protocol over TLS"
+        chatDecisionAgentRunner -> chatDecisionAuthorization "A12. Revalidate pinned scope through Backend policy boundary" "Authenticated HTTPS/JSON"
+        chatDecisionAgentRunner -> chatDecisionAgent "A13. Invoke bounded interactive decision-card graph" "In-process function call"
+        chatDecisionAgent -> chatDecisionConversation "A14. Store manager turn and load bounded history" "In-process function call"
+        chatDecisionConversation -> chatDecisionPostgres "A15. Read/write manager-scoped conversation" "PostgreSQL protocol over TLS"
+        chatDecisionAgent -> chatDecisionEvidence "A16. Request authorized Evidence Bundle from Backend" "Authenticated HTTPS/JSON"
+        chatDecisionEvidence -> chatDecisionQuery "A17. Run registered evidence queries within trusted scope" "In-process function call"
+        chatDecisionQuery -> chatDecisionSqlGuard "A18. Validate one approved SELECT" "In-process function call"
+        chatDecisionSqlGuard -> chatDecisionQuery "A19. Return approval or refusal" "In-process function call"
+        chatDecisionQuery -> chatDecisionPostgres "A20. Execute approved read-only query and retain lineage" "PostgreSQL protocol over TLS"
+        chatDecisionAgent -> chatDecisionModel "A21. Request bounded analysis and decision-card draft" "In-process function call"
+        chatDecisionModel -> chatDecisionAgent "A22. Return completion or explicit terminal failure" "In-process function call"
+        chatDecisionAgent -> chatDecisionAgentRunner "A23. Return structured candidate or failure to job owner" "In-process function call"
+        chatDecisionAgentRunner -> chatDecisionPostgres "A24. Persist candidate with awaiting-validation state, or explicit terminal execution failure" "PostgreSQL protocol over TLS"
+        chatDecisionAgentRunner -> chatDecisionValidator "A25. Submit persisted candidate/failure for deterministic validation" "Authenticated HTTPS/JSON"
+        chatDecisionValidator -> chatDecisionConfirmation "A26. Release only valid card for manager review" "In-process function call"
+        chatDecisionConfirmation -> chatDecisionPostgres "A27. Store validated card, evidence references, and review state" "PostgreSQL protocol over TLS"
+        chatDecisionUi -> chatDecisionIdentity "A28. Poll job status with authenticated session" "HTTPS/JSON"
+        chatDecisionIdentity -> chatDecisionAuthorization "A29. Revalidate identity and scope for status read" "In-process function call"
+        chatDecisionAuthorization -> chatDecisionRouter "A30. Pass authorized status request" "In-process function call"
+        chatDecisionRouter -> chatDecisionStatus "A31. Route status request to fixed handler" "In-process function call"
+        chatDecisionStatus -> chatDecisionPostgres "A32. Read authorized job status and persisted result" "PostgreSQL protocol over TLS"
+        chatDecisionStatus -> chatDecisionUi "A33. Return queued/running/awaiting-validation state, validated card reference, or explicit failure" "HTTPS/JSON"
+        chatDecisionUi -> chatDecisionManager "A34. Display pending state or validated card; system does not confirm or execute it" "Human interaction"
+        chatDecisionManager -> chatDecisionUi "A35. Choose confirm, edit, or reject" "Human interaction"
+        chatDecisionUi -> chatDecisionIdentity "A36. Submit authenticated review command" "HTTPS/JSON"
+        chatDecisionIdentity -> chatDecisionAuthorization "A37. Revalidate identity and recreate trusted AuthContext" "In-process function call"
+        chatDecisionAuthorization -> chatDecisionRouter "A38. Pass authorized review command" "In-process function call"
+        chatDecisionRouter -> chatDecisionConfirmation "A39. Route review command to fixed handler" "In-process function call"
+        chatDecisionConfirmation -> chatDecisionGateway "A40. On edit, request a new durable revision job" "In-process function call"
+        chatDecisionGateway -> chatDecisionPostgres "A41. Commit idempotent revision Agent Job with updated request and pinned scope" "PostgreSQL protocol over TLS"
+        chatDecisionGateway -> chatDecisionAgentRunner "A42. Best-effort wake-up for revision job ID" "Authenticated HTTPS wake-up with job_id"
+        chatDecisionConfirmation -> chatDecisionPostgres "A43. On reject, store terminal review status" "PostgreSQL protocol over TLS"
+        chatDecisionConfirmation -> chatDecisionTracker "A44. On confirm only, forward manager-confirmed card" "In-process function call"
+        chatDecisionTracker -> chatDecisionAuthorization "A45. Recheck decision authority and affected scope" "In-process function call"
+        chatDecisionTracker -> chatDecisionPostgres "A46. Append decision, owner, deadline, success criteria, guardrail, and follow-up; do not execute" "PostgreSQL protocol over TLS"
 
         minutesUploadManager = element "B - Manager" "Scenario B - meeting-minutes upload" "Uploads meeting minutes, then reviews the validated decision card extracted from approved document evidence." "ScenarioStep,ScenarioActor"
         minutesUploadUi = element "B - Conversational Assistant UI" "Web Application" "Submits the authenticated upload, displays a pending analysis job, polls its status, and presents the validated card for manager review." "ScenarioStep,ScenarioWeb"
@@ -286,52 +266,83 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         minutesUploadArchive = element "B - Protected File Archive" "Protected storage" "Stores original upload bytes with their hash and manifest." "ScenarioStep,ScenarioStorage"
         minutesUploadPostgres = element "B - PostgreSQL" "Scenario B state" "Stores immutable fragments, parse receipts, durable document Agent Jobs, pinned scope, outcomes, review state, decisions, and follow-up events." "ScenarioStep,ScenarioDatabase"
 
-        minutesUploadManager -> minutesUploadUi "B01. Select meeting minutes and explicit supported document type"
-        minutesUploadUi -> minutesUploadIdentity "B02. Submit session and upload over HTTPS"
-        minutesUploadIdentity -> minutesUploadAuthorization "B03. Validate session and create trusted AuthContext"
-        minutesUploadAuthorization -> minutesUploadRouter "B04. Pass trusted scope and upload context"
-        minutesUploadRouter -> minutesUploadProcessing "B05. Route authorized document upload"
-        minutesUploadProcessing -> minutesUploadArchive "B06. Preserve original bytes, hash, and manifest"
-        minutesUploadProcessing -> minutesUploadParser "B07. Request deterministic parsing of archived upload"
-        minutesUploadParser -> minutesUploadArchive "B08. Read only approved original upload bytes"
-        minutesUploadParser -> minutesUploadPostgres "B09. On successful parse, store immutable fragments and parse receipt"
-        minutesUploadParser -> minutesUploadProcessing "B10. On unsupported/invalid document, return parse failure; create no Agent Job"
-        minutesUploadProcessing -> minutesUploadPostgres "B11. After parse success, commit one durable document Agent Job with actor, scope, policy, and fragment references"
-        minutesUploadProcessing -> minutesUploadRouter "B12a. On parse failure, return failure without a job ID"
-        minutesUploadProcessing -> minutesUploadGateway "B12b. After job commit, request best-effort Runtime wake-up"
-        minutesUploadGateway -> minutesUploadAgentRunner "B13. Send authenticated wake-up containing job ID only"
-        minutesUploadProcessing -> minutesUploadRouter "B14. Return committed job ID after successful parse and enqueue"
-        minutesUploadRouter -> minutesUploadUi "B15. Return accepted job ID; analysis may continue asynchronously"
-        minutesUploadAgentRunner -> minutesUploadPostgres "B16. Claim and lease Ready document job; load pinned fragments and scope"
-        minutesUploadAgentRunner -> minutesUploadAuthorization "B17. Revalidate pinned actor and document scope"
-        minutesUploadAgentRunner -> minutesUploadAgent "B18. Invoke bounded document decision-card graph"
-        minutesUploadAgent -> minutesUploadModel "B19. Request bounded analysis of approved document evidence"
-        minutesUploadModel -> minutesUploadAgent "B20. Return completion or explicit terminal failure"
-        minutesUploadAgent -> minutesUploadAgentRunner "B21. Return structured decision-card candidate or failure"
-        minutesUploadAgentRunner -> minutesUploadPostgres "B22. Persist candidate with awaiting-validation state, or explicit terminal execution failure"
-        minutesUploadAgentRunner -> minutesUploadValidator "B23. Submit persisted candidate/failure for deterministic validation"
-        minutesUploadValidator -> minutesUploadConfirmation "B24. Release only a valid card for manager review"
-        minutesUploadConfirmation -> minutesUploadPostgres "B25. Store validated card, evidence references, and review status"
-        minutesUploadUi -> minutesUploadIdentity "B26. Poll analysis status using authenticated session"
-        minutesUploadIdentity -> minutesUploadAuthorization "B27. Revalidate identity and scope for status read"
-        minutesUploadAuthorization -> minutesUploadRouter "B28. Pass authorized status request"
-        minutesUploadRouter -> minutesUploadStatus "B29. Route status request to fixed handler"
-        minutesUploadStatus -> minutesUploadPostgres "B30. Read authorized job state and persisted result"
-        minutesUploadStatus -> minutesUploadUi "B31. Return queued/running/awaiting-validation state, validated card reference, or explicit failure"
-        minutesUploadUi -> minutesUploadManager "B32. Display validated card; system does not send or execute it"
-        minutesUploadManager -> minutesUploadUi "B33. Choose confirm, edit, or reject"
-        minutesUploadUi -> minutesUploadIdentity "B34. Submit authenticated review command"
-        minutesUploadIdentity -> minutesUploadAuthorization "B35. Revalidate identity and recreate trusted AuthContext"
-        minutesUploadAuthorization -> minutesUploadRouter "B36. Pass authorized review command"
-        minutesUploadRouter -> minutesUploadConfirmation "B37. Route review command to fixed handler"
-        minutesUploadConfirmation -> minutesUploadProcessing "B38a. On edit, request a document-analysis revision using the existing approved fragments"
-        minutesUploadProcessing -> minutesUploadPostgres "B38b. Commit idempotent revision job with updated request and pinned references"
-        minutesUploadProcessing -> minutesUploadGateway "B38c. Request best-effort wake-up after revision job commit"
-        minutesUploadGateway -> minutesUploadAgentRunner "B38d. Send job-ID-only wake-up for revision"
-        minutesUploadConfirmation -> minutesUploadPostgres "B39. On reject, store terminal review status"
-        minutesUploadConfirmation -> minutesUploadTracker "B40. On confirm only, forward manager-confirmed card"
-        minutesUploadTracker -> minutesUploadAuthorization "B41. Recheck decision authority and affected scope"
-        minutesUploadTracker -> minutesUploadPostgres "B42. Append decision, owner, deadline, success criteria, guardrail, and follow-up; do not execute"
+        minutesUploadManager -> minutesUploadUi "B01. Select meeting minutes and explicit supported document type" "Human interaction"
+        minutesUploadUi -> minutesUploadIdentity "B02. Submit session and upload over HTTPS" "HTTPS/JSON"
+        minutesUploadIdentity -> minutesUploadAuthorization "B03. Validate session and create trusted AuthContext" "In-process function call"
+        minutesUploadAuthorization -> minutesUploadRouter "B04. Pass trusted scope and upload context" "In-process function call"
+        minutesUploadRouter -> minutesUploadProcessing "B05. Route authorized document upload" "In-process function call"
+        minutesUploadProcessing -> minutesUploadArchive "B06. Preserve original bytes, hash, and manifest" "Controlled filesystem I/O"
+        minutesUploadProcessing -> minutesUploadParser "B07. Request deterministic parsing of archived upload" "In-process function call"
+        minutesUploadParser -> minutesUploadArchive "B08. Read only approved original upload bytes" "Controlled filesystem I/O"
+        minutesUploadParser -> minutesUploadPostgres "B09. On successful parse, store immutable fragments and parse receipt" "PostgreSQL protocol over TLS"
+        minutesUploadParser -> minutesUploadProcessing "B10. On unsupported/invalid document, return parse failure; create no Agent Job" "In-process function call"
+        minutesUploadProcessing -> minutesUploadPostgres "B11. After parse success, commit one durable document Agent Job with actor, scope, policy, and fragment references" "PostgreSQL protocol over TLS"
+        minutesUploadProcessing -> minutesUploadRouter "B12a. On parse failure, return failure without a job ID" "In-process function call"
+        minutesUploadProcessing -> minutesUploadGateway "B12b. After job commit, request best-effort Runtime wake-up" "In-process function call"
+        minutesUploadGateway -> minutesUploadAgentRunner "B13. Send authenticated wake-up containing job ID only" "Authenticated HTTPS wake-up with job_id"
+        minutesUploadProcessing -> minutesUploadRouter "B14. Return committed job ID after successful parse and enqueue" "In-process function call"
+        minutesUploadRouter -> minutesUploadUi "B15. Return accepted job ID; analysis may continue asynchronously" "HTTPS/JSON"
+        minutesUploadAgentRunner -> minutesUploadPostgres "B16. Claim and lease Ready document job; load pinned fragments and scope" "PostgreSQL protocol over TLS"
+        minutesUploadAgentRunner -> minutesUploadAuthorization "B17. Revalidate pinned actor and document scope" "Authenticated HTTPS/JSON"
+        minutesUploadAgentRunner -> minutesUploadAgent "B18. Invoke bounded document decision-card graph" "In-process function call"
+        minutesUploadAgent -> minutesUploadModel "B19. Request bounded analysis of approved document evidence" "In-process function call"
+        minutesUploadModel -> minutesUploadAgent "B20. Return completion or explicit terminal failure" "In-process function call"
+        minutesUploadAgent -> minutesUploadAgentRunner "B21. Return structured decision-card candidate or failure" "In-process function call"
+        minutesUploadAgentRunner -> minutesUploadPostgres "B22. Persist candidate with awaiting-validation state, or explicit terminal execution failure" "PostgreSQL protocol over TLS"
+        minutesUploadAgentRunner -> minutesUploadValidator "B23. Submit persisted candidate/failure for deterministic validation" "Authenticated HTTPS/JSON"
+        minutesUploadValidator -> minutesUploadConfirmation "B24. Release only a valid card for manager review" "In-process function call"
+        minutesUploadConfirmation -> minutesUploadPostgres "B25. Store validated card, evidence references, and review status" "PostgreSQL protocol over TLS"
+        minutesUploadUi -> minutesUploadIdentity "B26. Poll analysis status using authenticated session" "HTTPS/JSON"
+        minutesUploadIdentity -> minutesUploadAuthorization "B27. Revalidate identity and scope for status read" "In-process function call"
+        minutesUploadAuthorization -> minutesUploadRouter "B28. Pass authorized status request" "In-process function call"
+        minutesUploadRouter -> minutesUploadStatus "B29. Route status request to fixed handler" "In-process function call"
+        minutesUploadStatus -> minutesUploadPostgres "B30. Read authorized job state and persisted result" "PostgreSQL protocol over TLS"
+        minutesUploadStatus -> minutesUploadUi "B31. Return queued/running/awaiting-validation state, validated card reference, or explicit failure" "HTTPS/JSON"
+        minutesUploadUi -> minutesUploadManager "B32. Display validated card; system does not send or execute it" "Human interaction"
+        minutesUploadManager -> minutesUploadUi "B33. Choose confirm, edit, or reject" "Human interaction"
+        minutesUploadUi -> minutesUploadIdentity "B34. Submit authenticated review command" "HTTPS/JSON"
+        minutesUploadIdentity -> minutesUploadAuthorization "B35. Revalidate identity and recreate trusted AuthContext" "In-process function call"
+        minutesUploadAuthorization -> minutesUploadRouter "B36. Pass authorized review command" "In-process function call"
+        minutesUploadRouter -> minutesUploadConfirmation "B37. Route review command to fixed handler" "In-process function call"
+        minutesUploadConfirmation -> minutesUploadProcessing "B38a. On edit, request a document-analysis revision using the existing approved fragments" "In-process function call"
+        minutesUploadProcessing -> minutesUploadPostgres "B38b. Commit idempotent revision job with updated request and pinned references" "PostgreSQL protocol over TLS"
+        minutesUploadProcessing -> minutesUploadGateway "B38c. Request best-effort wake-up after revision job commit" "In-process function call"
+        minutesUploadGateway -> minutesUploadAgentRunner "B38d. Send job-ID-only wake-up for revision" "Authenticated HTTPS wake-up with job_id"
+        minutesUploadConfirmation -> minutesUploadPostgres "B39. On reject, store terminal review status" "PostgreSQL protocol over TLS"
+        minutesUploadConfirmation -> minutesUploadTracker "B40. On confirm only, forward manager-confirmed card" "In-process function call"
+        minutesUploadTracker -> minutesUploadAuthorization "B41. Recheck decision authority and affected scope" "In-process function call"
+        minutesUploadTracker -> minutesUploadPostgres "B42. Append decision, owner, deadline, success criteria, guardrail, and follow-up; do not execute" "PostgreSQL protocol over TLS"
+
+        // Additional scenario-only mirrors complete the active 16-view set without adding product components.
+        failureService = element "Product Services" "Failure and fallback" "Detect a workflow or model failure and retain durable product state." "ScenarioStep,ScenarioBackend"
+        failureFallback = element "Deterministic Fallback" "Failure and fallback" "Publishes only an authorized deterministic fallback or an explicit failure." "ScenarioStep,ScenarioWorker"
+        failureObservability = element "Optional Observability" "Failure and fallback" "Receives redacted telemetry without controlling product success." "ScenarioStep,ScenarioAgent"
+        failureService -> failureFallback "Use validated fallback rules or return an explicit failure" "In-process function call"
+        failureFallback -> failureObservability "Export redacted failure telemetry when available" "OTLP"
+
+        kpiTranslation = element "KPI Definition Preprocessor" "KPI translation and parity" "Translates an approved KPI candidate to versioned PostgreSQL SQL." "ScenarioStep,ScenarioWorker"
+        kpiValidation = element "Configuration Validation Runner" "KPI translation and parity" "Validates SQL, type, unit, scope, rollup, dependencies, and fixtures." "ScenarioStep,ScenarioWorker"
+        kpiParity = element "KPI Parity Validator" "KPI translation and parity" "Compares equivalent SQLite reference and PostgreSQL results in the acceptance path." "ScenarioStep,ScenarioScheduler"
+        kpiTranslation -> kpiValidation "Validate the translated definition and fixtures" "In-process function call"
+        kpiValidation -> kpiParity "Run acceptance parity after deterministic validation" "Acceptance test interface"
+
+        orgCandidate = element "Inactive Organization Revision Intake" "Organization configuration D+1" "Accepts an authorized organization revision as inactive." "ScenarioStep,ScenarioBackend"
+        orgValidation = element "Organization Revision Validator" "Organization configuration D+1" "Validates the inactive revision before activation." "ScenarioStep,ScenarioWorker"
+        orgActivation = element "D+1 Organization Activator" "Organization configuration D+1" "Activates only an approved valid revision at the D+1 boundary." "ScenarioStep,ScenarioBackend"
+        orgCandidate -> orgValidation "Queue deterministic validation" "PostgreSQL-backed job queue"
+        orgValidation -> orgActivation "Return a durable validation receipt for D+1 activation" "PostgreSQL protocol over TLS"
+
+        scriptedInput = element "Scripted Manager Input Adapter" "Scripted manager input replay" "Reads a versioned evaluation input and approved attachment references." "ScenarioStep,ScenarioScheduler"
+        scriptedApi = element "Backend API" "Scripted manager input replay" "Applies the same identity, authorization, and request boundary used by interactive inputs." "ScenarioStep,ScenarioBackend"
+        scriptedResult = element "Replay Acceptance" "Scripted manager input replay" "Checks durable result and contract evidence." "ScenarioStep,ScenarioScheduler"
+        scriptedInput -> scriptedApi "Submit the pinned scripted input" "HTTPS, REST/JSON"
+        scriptedApi -> scriptedResult "Return job status and validated result references" "HTTPS, REST/JSON"
+
+        restatementIntake = element "Normalized Intake" "Late or corrected data restatement" "Re-ingests and normalizes a late or corrected source batch." "ScenarioStep,ScenarioWorker"
+        restatementCompute = element "Deterministic Recalculation" "Late or corrected data restatement" "Pins corrected inputs and recomputes affected projections, KPIs, workflows, and signals." "ScenarioStep,ScenarioWorker"
+        restatementPublish = element "Validated Republishing" "Late or corrected data restatement" "Publishes only validated restated artifacts and traceable receipts." "ScenarioStep,ScenarioBackend"
+        restatementIntake -> restatementCompute "Recompute affected deterministic results from the corrected snapshot" "In-process function call"
+        restatementCompute -> restatementPublish "Validate and republish affected manager artifacts" "PostgreSQL-backed job queue"
 
         // System-level relationships
         seniorManager -> didrah "Reads organization health, workflows, escalations, and pending decisions" "HTTPS"
@@ -342,6 +353,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         inputDataset -> didrah "Supplies versioned source data and scripted manager activity" "Read-only filesystem: CSV, JSON, and Markdown"
         didrah -> identityProvider "Validates trusted user identities" "OIDC or internal authentication over HTTPS"
         didrah -> llmProvider "Requests bounded model completions" "HTTPS/JSON"
+        didrah -> langfuse "Exports optional redacted agent and model telemetry through the OpenTelemetry Collector" "OTLP export"
 
         // Container-level relationships
         seniorManager -> webApp "Reads organization health, cross-unit workflows, escalations, and decisions" "HTTPS"
@@ -350,28 +362,36 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         evaluator -> schedulerReplay "Starts replay and acceptance checks" "CLI and HTTPS/JSON"
         evaluator -> backendApi "Reads acceptance evidence and exported outputs" "HTTPS/JSON"
         operator -> backendApi "Reads authorized operational status" "HTTPS"
-        inputDataset -> worker "Supplies eligible nightly drops, manifests, and source contracts" "Read-only filesystem: CSV and JSON"
+        inputDataset -> worker "Supplies eligible nightly drops, manifests, and source contracts" "Read-only filesystem"
         inputDataset -> schedulerReplay "Supplies scripted manager inputs, upload attachments, and replay scenarios" "Read-only filesystem: JSON, CSV, and Markdown"
         backendApi -> identityProvider "Validates sessions and trusted identities" "OIDC over HTTPS or internal authentication"
-        webApp -> backendApi "Requests reports, scoped queries, uploads, configuration changes, and decisions" "HTTPS/JSON"
-        schedulerReplay -> backendApi "Starts and monitors pinned runs through the Run Coordinator" "Authenticated HTTPS/JSON"
-        schedulerReplay -> postgres "Reads replay evidence and records acceptance results" "PostgreSQL protocol over TLS"
-        backendApi -> agentRuntime "Sends a best-effort authenticated Agent Runtime wake-up with job ID only; PostgreSQL remains the durable queue and source of job data" "Internal authenticated API"
-        backendApi -> postgres "Reads and writes scoped state; Run Coordinator plans report Agent Jobs, while Gateway and Document Processing Runner create durable interactive and document Agent Jobs" "PostgreSQL protocol over TLS"
-        worker -> postgres "Claims durable jobs and reads or writes deterministic results" "PostgreSQL protocol over TLS"
-        worker -> fileArchive "Archives and reads approved source bytes" "Restricted file system I/O"
-        backendApi -> fileArchive "Archives uploads and reads approved fragments" "Restricted file system I/O"
-        agentRuntime -> postgres "Claims and leases all Ready Agent Jobs, reads pinned inputs, and persists outcomes, terminal status, and checkpoints" "PostgreSQL protocol over TLS"
+        webApp -> backendApi "Requests reports, scoped queries, uploads, configuration changes, and decisions" "HTTPS, REST/JSON, W3C traceparent"
+        schedulerReplay -> backendApi "Starts and monitors pinned runs through the Run Coordinator" "HTTPS, REST/JSON"
+        schedulerReplay -> postgres "Reads replay state and evidence and records acceptance results" "PostgreSQL protocol over TLS"
+        backendApi -> agentRuntime "Sends a best-effort authenticated Agent Runtime wake-up with job_id only; PostgreSQL remains the durable queue and source of job data" "Authenticated HTTPS wake-up with job_id"
+        backendApi -> postgres "Reads and writes scoped state; Run Coordinator plans report Agent Jobs, while Gateway and Document Processing Runner create durable interactive and document Agent Jobs" "PostgreSQL protocol over TLS, EF Core/Npgsql"
+        worker -> postgres "Claims durable jobs and reads or writes deterministic results" "PostgreSQL protocol over TLS, EF Core/Npgsql"
+        worker -> fileArchive "Archives and reads approved source bytes" "Controlled filesystem I/O"
+        backendApi -> fileArchive "Archives uploads and reads approved fragments" "Controlled filesystem API"
+        backendApi -> submissionOutput "Exports validated brief and QA files by a contained direct join under OUTPUT_DIR" "Controlled filesystem I/O"
+        agentRuntime -> postgres "Claims and leases all Ready Agent Jobs through a restricted role, reads pinned job data, and persists outcomes, terminal status, and checkpoints" "Restricted PostgreSQL role"
         agentRuntime -> llmProvider "Calls only through Model Gateway" "HTTPS/JSON"
+        agentRuntime -> backendApi "Requests authorized business evidence, scoped queries, and deterministic validation" "HTTPS Evidence/Query/Validation API"
+        webApp -> otelCollector "Exports browser telemetry when enabled; product flow is fail-open" "OTLP/HTTP"
+        backendApi -> otelCollector "Exports redacted API traces and metrics; product flow is fail-open" "OTLP"
+        worker -> otelCollector "Exports redacted worker traces and metrics; product flow is fail-open" "OTLP"
+        schedulerReplay -> otelCollector "Exports redacted replay traces and metrics; product flow is fail-open" "OTLP"
+        agentRuntime -> otelCollector "Exports allowed agent, model, token, cost, and evaluation telemetry; product flow is fail-open" "OTLP"
+        otelCollector -> langfuse "Exports allowed redacted observability data" "OTLP export"
 
         // Web component relationships
-        seniorManager -> chatUi "Reads executive brief and asks aggregate questions"
-        seniorManager -> dashboardUi "Reads organization health"
-        seniorManager -> workflowUi "Reads WF1-WF3 and escalations"
-        unitManager -> chatUi "Reads unit brief and records decisions"
-        unitManager -> dashboardUi "Reads unit and team aggregates"
-        teamSupervisor -> chatUi "Reads team brief and asks scoped questions"
-        teamSupervisor -> dashboardUi "Reads team KPIs and direct-workload details"
+        seniorManager -> chatUi "Reads executive brief and asks aggregate questions" "Human interaction"
+        seniorManager -> dashboardUi "Reads organization health" "Human interaction"
+        seniorManager -> workflowUi "Reads WF1-WF3 and escalations" "Human interaction"
+        unitManager -> chatUi "Reads unit brief and records decisions" "Human interaction"
+        unitManager -> dashboardUi "Reads unit and team aggregates" "Human interaction"
+        teamSupervisor -> chatUi "Reads team brief and asks scoped questions" "Human interaction"
+        teamSupervisor -> dashboardUi "Reads team KPIs and direct-workload details" "Human interaction"
         chatUi -> backendApi "Submits questions and manager operations; retrieves reports and answers" "HTTPS/JSON"
         dashboardUi -> backendApi "Retrieves authorized metrics, trends, and drill-down results" "HTTPS/JSON"
         workflowUi -> backendApi "Retrieves executive workflow, bottleneck, and escalation results" "HTTPS/JSON"
@@ -600,29 +620,32 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         publisherV2 -> auditService "Records publication mode and artifact failures" "In-process function call" {
             tags "ControlFlow"
         }
-        publisherV2 -> submissionExporter "Forwards each validated final report for /submission export" "In-process function call" {
+        publisherV2 -> submissionExporter "Forwards each validated final report for contract export" "In-process function call" {
             tags "PrimaryFlow"
         }
-        outputValidator -> submissionExporter "Forwards each validated QA result for /submission export" "In-process function call" {
+        outputValidator -> submissionExporter "Forwards each validated QA result for contract export" "In-process function call" {
             tags "PrimaryFlow"
         }
         submissionExporter -> postgres "Reads validated final reports and QA results; records export receipts" "PostgreSQL protocol over TLS" {
             tags "DataFlow"
         }
-        submissionExporter -> submissionOutput "Writes atomic brief and QA files under OUTPUT_DIR/submission/" "Restricted file system I/O" {
+        submissionExporter -> submissionOutput "Writes atomic files to OUTPUT_DIR/briefs/day_XXX/<manager_id>.json and OUTPUT_DIR/qa/<question_id>.json after path-containment validation" "Controlled filesystem I/O" {
             tags "ControlFlow"
         }
 
         // Worker component relationships
         ingestionCoordinator -> inputDataset "Reads expected nightly drops, manifests, and source contracts" "Read-only filesystem: CSV and JSON"
         ingestionCoordinator -> sourceAdapters "Parses each source contract" "In-process function call"
-        sourceAdapters -> fileArchive "Preserves original bytes, headers, and hashes" "Restricted file system I/O"
-        sourceAdapters -> dataQualityService "Submits parsed and rejected rows" "In-process function call"
+        sourceAdapters -> fileArchive "Preserves original bytes, headers, and hashes" "Controlled filesystem I/O"
+        sourceAdapters -> normalizer "Submits parsed source fields for canonical normalization" "In-process function call"
+        normalizer -> dataQualityService "Submits normalized rows and normalization failures for data-quality checks" "In-process function call"
         dataQualityService -> postgres "Writes accepted records, quarantine, and DataIssues" "PostgreSQL protocol over TLS"
         snapshotService -> postgres "Pins committed batches, organization, policy, and configuration versions" "PostgreSQL protocol over TLS"
         snapshotService -> projectionService "Requests reproducible facts and process projections" "In-process function call"
         projectionService -> postgres "Reads events and writes facts and projections" "PostgreSQL protocol over TLS"
         kpiCalculator -> semanticRegistry "Reads approved PostgreSQL SQL and metadata" "In-process function call"
+        configurationValidationRunnerV2 -> kpiDefinitionPreprocessor "Translates an approved KPI candidate to versioned PostgreSQL SQL before validation" "In-process function call"
+        kpiDefinitionPreprocessor -> semanticRegistry "Registers validated PostgreSQL KPI SQL and metadata as a versioned definition" "In-process function call"
         semanticRegistry -> postgres "Reads versioned KPI definitions and dependencies" "PostgreSQL protocol over TLS"
         kpiCalculator -> postgres "Executes KPI SQL and writes observations, QueryRun, and lineage" "PostgreSQL protocol over TLS"
         workflowEngine -> postgres "Reads events and writes case, stage, SLA, and bottleneck observations" "PostgreSQL protocol over TLS"
@@ -632,18 +655,21 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         decisionEffectEvaluator -> reportEvidenceBuilderV2 "Provides the deterministic follow-up assessment for manager reporting" "In-process function call"
 
         // Current run-control, report-evidence, agent, publication, and evaluation flow.
-        evaluator -> replayCommandV2 "Starts a replay range and requests acceptance results"
-        inputDataset -> replayCommandV2 "Supplies scripted replay range and manager-input scenarios" "Read-only JSON"
-        replayCommandV2 -> simulationClockV2 "Requests one pinned business date and source cutoff per day"
-        replayCommandV2 -> evaluationProfileLoaderV2 "Loads the selected evaluation profile"
-        replayCommandV2 -> runStatusClientV2 "Starts or resumes each simulated day with the pinned date, cutoff, profile, and run options"
-        replayCommandV2 -> acceptanceTestHarnessV2 "Starts acceptance checks after the replay range reaches a terminal state"
+        evaluator -> replayCommandV2 "Starts a replay range and requests acceptance results" "Command-line interface"
+        inputDataset -> scriptedManagerInputAdapter "Supplies versioned scripted manager inputs and approved attachment references" "Read-only filesystem"
+        replayCommandV2 -> scriptedManagerInputAdapter "Requests deterministic manager-input replay for the pinned business date" "In-process function call"
+        scriptedManagerInputAdapter -> backendApi "Submits scripted manager inputs through the product API boundary" "HTTPS, REST/JSON"
+        inputDataset -> replayCommandV2 "Supplies scripted replay range" "Read-only JSON"
+        replayCommandV2 -> simulationClockV2 "Requests one pinned business date and source cutoff per day" "In-process function call"
+        replayCommandV2 -> evaluationProfileLoaderV2 "Loads the selected evaluation profile" "In-process function call"
+        replayCommandV2 -> runStatusClientV2 "Starts or resumes each simulated day with the pinned date, cutoff, profile, and run options" "In-process function call"
+        replayCommandV2 -> acceptanceTestHarnessV2 "Starts acceptance checks after the replay range reaches a terminal state" "In-process function call"
         runStatusClientV2 -> runCoordinatorV2 "Starts and monitors runs through the internal Backend API" "Authenticated HTTPS/JSON"
         runCoordinatorV2 -> authorizationService "Validates the Scheduler or Replay service identity and run-control permission" "In-process function call"
-        evaluator -> acceptanceTestHarnessV2 "Starts replay acceptance, hidden-data, and regression checks"
-        acceptanceTestHarnessV2 -> evaluationProfileLoaderV2 "Loads acceptance thresholds and limits"
-        acceptanceTestHarnessV2 -> runStatusClientV2 "Reads terminal replay run status and artifact references"
-        acceptanceTestHarnessV2 -> postgres "Reads replay evidence and writes acceptance results"
+        evaluator -> acceptanceTestHarnessV2 "Starts replay acceptance, hidden-data, and regression checks" "Command-line interface"
+        acceptanceTestHarnessV2 -> evaluationProfileLoaderV2 "Loads acceptance thresholds and limits" "In-process function call"
+        acceptanceTestHarnessV2 -> runStatusClientV2 "Reads terminal replay run status and artifact references" "In-process function call"
+        acceptanceTestHarnessV2 -> postgres "Reads replay evidence and writes acceptance results" "PostgreSQL protocol over TLS"
         acceptanceTestHarnessV2 -> kpiParityValidator "Runs the SQLite/PostgreSQL parity suite" "In-process function call"
 
         runCoordinatorV2 -> postgres "Creates each pinned Run, all Jobs, dependency edges, and manager execution order; monitors terminal states and records final Run status" "PostgreSQL protocol over TLS"
@@ -661,6 +687,41 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         outputValidator -> publisherV2 "Releases a validated package or authorizes deterministic fallback publication" "In-process function call"
 
+        // Defined after the static relationships so Structurizr can replicate them between instances.
+        deploymentEnvironment "Evaluation" {
+            deploymentNode "Evaluation Host and Docker Compose" "Separate service containers started together with one docker compose command." "Docker Compose" {
+                deploymentNode "Web" "User interface" "Docker container" {
+                    containerInstance webApp
+                }
+                deploymentNode "Backend API" "API and deterministic validation" "Docker container" {
+                    containerInstance backendApi
+                }
+                deploymentNode "Background Worker" "Deterministic processing" "Docker container" {
+                    containerInstance worker
+                }
+                deploymentNode "Scheduler" "Replay and acceptance" "Docker container" {
+                    containerInstance schedulerReplay
+                }
+                deploymentNode "Agent Runtime" "Bounded agent graphs" "Docker container" {
+                    containerInstance agentRuntime
+                }
+                deploymentNode "PostgreSQL" "Product database" "Docker container" {
+                    containerInstance postgres
+                }
+                deploymentNode "OpenTelemetry Collector" "Optional, fail-open telemetry relay" "Docker container" {
+                    containerInstance otelCollector
+                }
+                deploymentNode "Mounted Filesystems" "Read-only input, protected archive, and writable evaluator output mounts" "Docker volumes or compatible mounted storage" {
+                    softwareSystemInstance inputDataset
+                    containerInstance fileArchive
+                    softwareSystemInstance submissionOutput
+                }
+            }
+            deploymentNode "External Observability Egress" "Optional managed or separately hosted observability endpoint" "External service" {
+                softwareSystemInstance langfuse
+            }
+        }
+
     }
 
     views {
@@ -671,17 +732,22 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         // C4 core view: one software system and its directly connected people and software systems.
         systemContext didrah L1_SystemContext "Business-facing C4 system context for DIDRAH." {
             title "01 - C4 Level 1 - System Context for DIDRAH"
-            include seniorManager unitManager teamSupervisor evaluator operator didrah inputDataset submissionOutput identityProvider llmProvider
+            include seniorManager unitManager teamSupervisor evaluator operator didrah inputDataset submissionOutput identityProvider llmProvider langfuse
             default
         }
 
         // C4 core view: deployable applications and data stores inside the DIDRAH boundary.
         container didrah L2_Containers "C4 container view of the DIDRAH applications, data stores, users, and external dependencies." {
             title "02 - C4 Level 2 - Containers for DIDRAH"
-            include seniorManager unitManager teamSupervisor evaluator operator inputDataset submissionOutput identityProvider llmProvider webApp backendApi worker schedulerReplay postgres fileArchive agentRuntime
+            include seniorManager unitManager teamSupervisor evaluator operator inputDataset submissionOutput identityProvider llmProvider langfuse webApp backendApi worker schedulerReplay postgres fileArchive agentRuntime otelCollector
         }
 
         // Revised C4 Level 3 views.
+        component webApp L3_2_WebApplicationComponents "Web Application view for the Persian management interfaces and their authenticated Backend API and optional telemetry boundaries." {
+            title "03.2 - C4 Level 3 - Web Application Components"
+            include seniorManager unitManager teamSupervisor backendApi otelCollector chatUi dashboardUi workflowUi
+        }
+
         component backendApi L3_3_RevisedBackendApiComponents "Backend API view with durable agent-job producers, a job-ID-only Runtime wake-up, unified Runtime claiming, status reads, in-process document intake and parsing, manager-confirmed decision cards, scheduler-only run control, validation, publication, delivery, and submission export." {
             title "03.3 - C4 Level 3 - Backend API Components"
             include webApp fileArchive submissionOutput identityProvider llmProvider postgres agentRuntime runStatusClientV2 identityBoundary authorizationService managerInputService configurationService organizationConfigurationService decisionTracker runCoordinatorV2 documentProcessingRunner documentParser agentGateway evidenceService queryGateway sqlGuard outputValidator agentJobStatusService decisionConfirmationService publisherV2 submissionExporter reportApi auditService
@@ -699,17 +765,17 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         component worker L3_4_RevisedBackgroundWorkerComponents "Background Worker view with PostgreSQL-backed run-stage execution, independent configuration validation, deterministic analytics, decision effect evaluation, and one-manager-at-a-time report evidence assembly. Manager document processing remains inside the Backend API." {
             title "03.4 - C4 Level 3 - Background Worker Components"
-            include inputDataset postgres fileArchive configurationService runCoordinatorV2 runStageCoordinatorV2 configurationValidationRunnerV2 ingestionCoordinator sourceAdapters dataQualityService snapshotService projectionService semanticRegistry kpiCalculator workflowEngine signalEngine reportEvidenceBuilderV2 decisionEffectEvaluator
+            include inputDataset postgres fileArchive configurationService runCoordinatorV2 runStageCoordinatorV2 configurationValidationRunnerV2 ingestionCoordinator sourceAdapters normalizer dataQualityService snapshotService projectionService semanticRegistry kpiDefinitionPreprocessor kpiCalculator workflowEngine signalEngine reportEvidenceBuilderV2 decisionEffectEvaluator
         }
 
         component schedulerReplay L3_5_RevisedSchedulerReplayComponents "Revised Scheduler and Replay Runner view that controls simulated time and replay through the Backend Run Coordinator and runs acceptance checks outside the daily publication path." {
             title "03.5 - C4 Level 3 - Revised Scheduler and Replay Runner Components"
-            include evaluator inputDataset postgres runCoordinatorV2 replayCommandV2 simulationClockV2 evaluationProfileLoaderV2 runStatusClientV2 acceptanceTestHarnessV2 kpiParityValidator
+            include evaluator inputDataset backendApi postgres runCoordinatorV2 replayCommandV2 simulationClockV2 evaluationProfileLoaderV2 runStatusClientV2 acceptanceTestHarnessV2 kpiParityValidator scriptedManagerInputAdapter
         }
 
         component agentRuntime L3_6_AgentRuntimeComponents "Agent Runtime view with one PostgreSQL-backed Runner for every report, interactive, and document Agent Job; authenticated wake-ups are hints only, and evidence and validation use Backend services." {
             title "03.6 - C4 Level 3 - Agent Runtime Components"
-            include backendApi postgres llmProvider agentGateway agentOrchestrator agentJobRunner conversationService agentModelGateway checkpointStore evidenceService queryGateway sqlGuard outputValidator agentJobStatusService auditService
+            include postgres llmProvider agentGateway agentOrchestrator agentJobRunner conversationService agentModelGateway checkpointStore evidenceService queryGateway sqlGuard outputValidator agentJobStatusService auditService
         }
 
         deployment didrah "Evaluation" D1_EvaluationCompose "Evaluation deployment using separate Docker Compose services started with one command." {
@@ -719,7 +785,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         // Numbered end-to-end scenario for the revised L3 architecture.
         custom S7_ReportGenerationScenario "04.7 - Scenario - Report Generation" "Primary report-generation path across Scheduler, Backend API, Background Worker, and PostgreSQL." {
-            include reportScenarioReplay reportScenarioRunStatus reportScenarioRunCoordinator reportScenarioPostgres reportScenarioRunStage reportScenarioIngestion reportScenarioSnapshot reportScenarioKpi reportScenarioWorkflow reportScenarioSignal reportScenarioEvidenceBuilder reportScenarioAgentRunner reportScenarioAuthorization reportScenarioAgent reportScenarioValidator reportScenarioPublisher reportScenarioDelivery
+            include reportScenarioReplay reportScenarioRunStatus reportScenarioRunCoordinator reportScenarioPostgres reportScenarioRunStage reportScenarioIngestion reportScenarioSnapshot reportScenarioKpi reportScenarioWorkflow reportScenarioSignal reportScenarioEvidenceBuilder reportScenarioAgentRunner reportScenarioAuthorization reportScenarioAgent reportScenarioModel reportScenarioValidator reportScenarioPublisher reportScenarioDelivery
         }
 
         custom S8_ManagerDecisionScenarios "04.8 - Scenario - Manager Chat Decision" "Human-in-the-loop manager chat decision flow using a durable PostgreSQL Agent Job, a job-ID-only Runtime wake-up, authenticated status polling, deterministic validation, and explicit manager confirmation." {
@@ -729,6 +795,31 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         custom S9_MeetingMinutesUploadScenario "04.9 - Scenario - Meeting-Minutes Upload" "Human-in-the-loop document decision flow: deterministic archive and parsing, durable PostgreSQL Agent Job creation only after successful parsing, job-ID-only Runtime wake-up, authenticated status polling, validation, and manager review." {
             include minutesUploadManager minutesUploadUi minutesUploadIdentity minutesUploadAuthorization minutesUploadRouter minutesUploadProcessing minutesUploadParser minutesUploadGateway minutesUploadAgentRunner minutesUploadStatus minutesUploadAgent minutesUploadModel minutesUploadValidator minutesUploadConfirmation minutesUploadTracker minutesUploadArchive minutesUploadPostgres
+            autoLayout lr 240 160
+        }
+
+        custom S10_FailureAndFallback "04.10 - Scenario - Failure and Fallback" "Fail-closed validation and deterministic publication fallback, with optional fail-open observability." {
+            include failureService failureFallback failureObservability
+            autoLayout lr 240 160
+        }
+
+        custom S11_KpiTranslationAndParity "04.11 - Scenario - KPI Translation and Parity" "Versioned PostgreSQL KPI translation, deterministic validation, and SQLite/PostgreSQL acceptance parity outside the product runtime." {
+            include kpiTranslation kpiValidation kpiParity
+            autoLayout lr 240 160
+        }
+
+        custom S12_OrganizationConfigurationD1 "04.12 - Scenario - Organization Configuration D+1" "Authorized inactive organization revision, deterministic validation, and D+1 activation through the product control boundary." {
+            include orgCandidate orgValidation orgActivation
+            autoLayout lr 240 160
+        }
+
+        custom S13_ScriptedManagerInputReplay "04.13 - Scenario - Scripted Manager Input Replay" "Versioned evaluation inputs enter through the same authenticated Backend API boundary as interactive manager inputs." {
+            include scriptedInput scriptedApi scriptedResult
+            autoLayout lr 240 160
+        }
+
+        custom S14_LateCorrectedDataRestatement "04.14 - Scenario - Late or Corrected Data Restatement" "Corrected source data is re-ingested, normalized, validated, pinned, recomputed, and republished with traceable receipts." {
+            include restatementIntake restatementCompute restatementPublish
             autoLayout lr 240 160
         }
 
