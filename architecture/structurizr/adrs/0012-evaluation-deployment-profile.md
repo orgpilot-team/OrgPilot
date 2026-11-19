@@ -6,7 +6,7 @@ Date: 2026-11-17
 
 Superseded
 
-Superseded by [ADR-0018](0018-adopt-modular-monolith-and-compose-runtime.md).
+Superseded for the graded evaluation profile by [ADR-0021](0021-single-image-evaluation-entrypoint.md). ADR-0018's Compose topology is development-only; the TA runs one `docker run` with no second container guaranteed.
 
 ## Context
 
@@ -40,7 +40,7 @@ In production, the three containers can be deployed separately. In evaluation, t
 - No Docker Compose or second container required for evaluation
 - The `docker run` command starts all three logical components
 
-This deployment profile is historical. ADR-0018 replaces it with separate Docker Compose services and containers.
+This deployment profile is historical. ADR-0021 is the current evaluation entrypoint; ADR-0018's Compose topology applies only to development.
 
 ## Source
 

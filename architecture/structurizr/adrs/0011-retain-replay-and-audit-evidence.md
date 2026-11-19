@@ -4,7 +4,7 @@ Date: 2026-11-14
 
 ## Status
 
-Proposed
+Accepted for the evaluation profile (production retention remains open)
 
 ## Context
 
@@ -18,7 +18,7 @@ Preserve the raw data, configuration, queries, reports, and audit records that a
 
 PostgreSQL backups and Archive manifests must form a consistent recovery point. A restore test must verify file hashes, snapshot reconstruction, sample query parity, and sample report reproduction.
 
-This decision remains proposed. `ISSUE-V3-09` must define the retention matrix, backup schedule, audit access, and restore procedure before acceptance.
+For the evaluation profile, `ISSUE-V3-09` is closed by `docs/15-implementation-contract.md`: source hashes, pinned snapshots, queries and `query_id`s, configuration versions, published report versions, receipts, and logs remain inside the container for the duration of the run; the two-run determinism check (ADR-0026) uses this evidence. Long-term production retention, backup schedule, audit-reader role, and restore procedure remain open and do not affect the graded run.
 
 ## Related requirements
 

@@ -26,7 +26,7 @@ A lost Agent Runtime wake-up must not lose a committed job. Collector or Langfus
 
 ## Performance and cost
 
-The evaluation requirement is at most five minutes for each processing day and at most five US dollars for the complete 30-day run. The model is selected in ADR-0022 (`deepseek/deepseek-v4.1-flash-1017`). Internal budget allocation, retry limits, model call timeout, Agent Job deadline, and fallback content remain open.
+The evaluation requirement is at most five minutes for each processing day and at most five US dollars for the complete 30-day run (not per day). The model is selected in ADR-0022 (`deepseek/deepseek-v4.1-flash-1017`). The model call timeout is a hard 30-second limit with at most two bounded-backoff retries; on exhaustion the report is emitted with correct numbers and no LLM narrative. Two runs of the container must produce identical numbers and signals (ADR-0026). Internal budget allocation and Agent Job deadline remain open.
 
 The Acceptance Test Harness measures replay duration, manager-output coverage, model usage, and total cost without changing the daily product path.
 
@@ -44,7 +44,7 @@ Run, Job, Validation Receipt, Publication Receipt, Parity Receipt, and Export Re
 
 OpenTelemetry is the common instrumentation and trace-correlation standard. REST calls propagate W3C `traceparent`. Asynchronous jobs use persisted trace context or a Span Link.
 
-Langfuse is limited to permitted agent traces, model calls, token usage, cost, agent evaluation, and permitted prompt or model metadata. Telemetry must exclude secrets, raw restricted business data, full documents, and unauthorized manager context. Telemetry export is optional and fail-open.
+Langfuse is limited to permitted agent traces, model calls, token usage, cost, agent evaluation, and permitted prompt or model metadata. Telemetry must exclude secrets, raw restricted business data, full documents, and unauthorized manager context. Telemetry export is optional and fail-open. In the graded Evaluation profile the outbound network is closed except the LLM API, so Langfuse/OTLP export is disabled (ADR-0027); it remains available only in the development profile.
 
 PostgreSQL stores correlation metadata and architecture receipts. It does not store full spans, traces, or general telemetry logs.
 

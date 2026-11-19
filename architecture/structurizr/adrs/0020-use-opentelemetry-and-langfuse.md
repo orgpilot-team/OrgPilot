@@ -21,7 +21,7 @@ OpenTelemetry is the common instrumentation and trace-correlation standard.
 - Asynchronous jobs use a Span Link or persisted trace context.
 - Run, Job, Validation Receipt, Publication Receipt, Parity Receipt, and Export Receipt records include `trace_id` correlation metadata.
 
-An optional `otel-collector` Docker Compose service receives OTLP telemetry and exports permitted telemetry to Langfuse. Product services use fail-open behavior when the collector or Langfuse is unavailable. Collector queues and retries do not replace PostgreSQL job durability.
+An optional `otel-collector` Docker Compose service receives OTLP telemetry and exports permitted telemetry to Langfuse in the **development profile only**. In the graded Evaluation profile, outbound network is closed except the LLM API (ADR-0027): the collector is loopback-only or disabled and no Langfuse export is attempted. Product services use fail-open behavior when the collector or Langfuse is unavailable. Collector queues and retries do not replace PostgreSQL job durability.
 
 Langfuse is the only approved agent-observability backend. It can receive agent traces, model calls, token usage, cost, agent evaluation, and permitted prompt or model metadata. It must not receive secrets, raw restricted business data, full documents, or unauthorized manager context.
 

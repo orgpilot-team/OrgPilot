@@ -17,10 +17,11 @@ The current architecture has "Decision and Follow-Up" but it focuses on recordin
 
 The approved v1 behavior is:
 
-1. At decision registration: record target KPI, comparison period, minimum meaningful change, guardrail KPI with threshold
-2. At follow-up: if evaluation date not reached → `too_early`; if date reached and data sufficient → determine direction (`improved`/`worsened`/`no_change`); if data insufficient → record reason, leave result empty
-3. Store assumptions, confounders, confidence in attribution, guardrail status in separate fields
-4. Keep `no_change` in schema and align with architectural decision
+1. At decision registration: the system **proposes** a success metric on the decision card and the manager **confirms** it. The metric contains a target KPI and target value (preferably return below the `warn` threshold or reach the dictionary `target`, not an arbitrary percentage), a measurement window of **3–5 days**, and a guardrail KPI with its limit. "10% improvement" is only a fallback default when no better metric exists.
+2. At follow-up: if evaluation date not reached → `too_early`; if date reached and data sufficient → determine direction (`improved`/`worsened`/`no_change`); if data insufficient → record reason, leave result empty.
+3. When the decision coincided with a campaign or other concurrent change, a simple before/after comparison is insufficient. Apply **workload normalization** (e.g. orders per picking staff) or **comparison with a similar case without the decision**, and record which method was used.
+4. Store assumptions, confounders, confidence in attribution, guardrail status in separate fields. If the effect cannot be separated, the Persian report states «اثر قابل جدا کردن نیست» — never "no effect".
+5. A guardrail breach is itself a business signal emitted to the Signal Engine. `no_change` remains an internal schema value only and is not exported as `effect_direction` (the permitted exported directions are `improved`, `worsened`, `too_early`).
 
 ## Decision
 

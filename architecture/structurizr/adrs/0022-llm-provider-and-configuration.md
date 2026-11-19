@@ -12,7 +12,7 @@ The TA permits any API-accessible language-model provider. The model and version
 
 The evaluation host has no GPU and only the language-model API is reachable. The Model Gateway already applies token, time, retry, and cost limits (ADR-0008, ADR-0020). A model failure must not stop deterministic calculation or valid canonical JSON (ADR-0009). The TA recommends temperature zero for stable text, and the container is executed twice; generated text must not introduce instability into numbers or discovered signals.
 
-The team has selected a concrete model for the current profile. Remaining operational values are intentionally left at defaults until implementation tuning.
+The team has selected a concrete model for the current profile. Operational values below are accepted evaluation-profile defaults; they are bounded so they cannot break the five-minute/day budget or the two-run determinism contract (ADR-0026).
 
 ## Decision
 
@@ -25,13 +25,13 @@ The evaluation profile uses the following model configuration:
 | `LLM_API_KEY` | Provider key | Injected at run time; never stored |
 | `temperature` | `0` | TA recommendation for stable text |
 | Other generation parameters | Provider and client defaults | Explicitly provisional |
-| Model call timeout | Default client value | Provisional; tune in implementation |
-| Retry count | Default client value | Provisional; tune in implementation |
+| Model call timeout | 30 seconds hard per-call limit | Accepted evaluation default (ADR-0026) |
+| Retry count | At most 2 retries with bounded exponential backoff | Accepted evaluation default (ADR-0026) |
 | Fallback content | No LLM narrative; deterministic canonical JSON remains valid | Required by ADR-0009 |
 
 The three environment variable names are declared in `.env.example` with no secret values. The provider, model identifier, and version are declared in this ADR and in the deployment documentation.
 
-The Model Gateway is the only model path. It applies the approved token, time, retry, and cost controls to every call and records provider, model, token counts, cost, latency, status, and trace context for each call. It does not select scope, calculate numbers, or treat a completion as validated output.
+The Model Gateway is the only model path. It applies the approved token, time, retry, and cost controls to every call and records provider, model, token counts, cost, latency, status, and trace context for each call. Cost is computed from logged input/output tokens at the provider's official rate on the evaluation day and reconciled with the provider dashboard. The ceiling is **five US dollars for the complete 30-day run**, not per day. It does not select scope, calculate numbers, or treat a completion as validated output.
 
 All other generation parameters are defaults for now. They are not accepted architectural values. Implementation may tune them without an ADR change as long as the model identity, environment-variable contract, cost ceiling, and fail-open behavior are preserved.
 
@@ -49,7 +49,7 @@ The provisional values must not be reported as final tuned decisions. Any change
 - Model and version declared in documentation.
 - Timeout and retry behavior on every model call.
 - Model failure must not stop deterministic reports.
-- Daily cost logging and the five-dollar ceiling remain in force.
+- Per-call token logging and the five-dollar ceiling for the complete 30-day run remain in force.
 
 ## Related model elements
 

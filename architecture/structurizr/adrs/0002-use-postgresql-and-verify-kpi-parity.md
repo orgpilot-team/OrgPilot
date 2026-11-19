@@ -12,9 +12,9 @@ DIDRAH needs one product database for runtime state, analytical results, scoped 
 
 ## Decision
 
-PostgreSQL 18 is the only product database. SQLite runs only as an embedded reference oracle inside the Acceptance Test Harness.
+PostgreSQL 18 is the selected product database (the TA permits any engine whose results are identical). SQLite runs only as an embedded reference oracle inside the Acceptance Test Harness.
 
-Each PostgreSQL KPI result must match the SQLite reference result within the accepted evaluation tolerance. SQLite `median()` maps to PostgreSQL `percentile_cont(0.5)`. SQLite day differences map to PostgreSQL epoch calculations with explicit conversion to hours or days. Decimal division, rounding, date types, and timezone behavior must preserve reference semantics.
+Each PostgreSQL KPI result must match the SQLite reference result within the accepted evaluation tolerance of **±1%**. Exact translation rules: SQLite `median()` maps to PostgreSQL `percentile_cont(0.5)`, **not** `percentile_disc`; `julianday(b)-julianday(a)` is in days and maps to `EXTRACT(EPOCH FROM b-a)/86400` with explicit conversion to the KPI unit (hours or days); percentages use `100.0 *` to avoid integer division; timezone (`Asia/Tehran`), date type, and per-KPI rounding must preserve reference semantics. The brief's "zero tolerance" applies only to matching report-text numbers to JSON `value`/`query_id` pairs, not to KPI computation.
 
 The system records the SQL, result, snapshot, scope, and `query_id` for each published number. The language model, UI, and serializer do not recalculate or round KPI values.
 

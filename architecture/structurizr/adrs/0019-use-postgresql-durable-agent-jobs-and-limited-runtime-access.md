@@ -12,7 +12,7 @@ Agent work can continue after the Backend API request ends. A process failure or
 
 ## Decision
 
-PostgreSQL is the source of truth for durable Agent Jobs, leases, attempts, dependencies, checkpoints, conversation state, candidates, failures, and job-scoped evidence references.
+PostgreSQL is the source of truth for durable Agent Jobs, leases, attempts, dependencies, checkpoints, conversation state, candidates, failures, and job-scoped evidence references. The evaluation envelope is fixed: at most 5 minutes per processing day, 4 CPU / 16 GB / no GPU, outbound network to the LLM API only, and identical numbers and discovered signals across two runs (ADR-0026). The Agent Runtime follows the DDD model in `docs/16-domain-model.md` (ADR-0024).
 
 The Backend API creates the Agent Job and its trusted actor, scope, policy, context, and evidence references in one committed transaction. The Backend API returns the `job_id` only after the commit. It can then send an authenticated wake-up that contains the `job_id`. This wake-up is optional and is only a hint.
 

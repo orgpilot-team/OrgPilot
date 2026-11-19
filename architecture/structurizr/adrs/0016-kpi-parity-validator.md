@@ -25,10 +25,10 @@ Tasks:
 3. Compare row sets
 4. Compare nulls
 5. Compare values within ±1% tolerance
-6. Control `median` vs `percentile_cont`
-7. Control time interval calculations
-8. Control decimal division
-9. Control timezone and date boundaries
+6. Assert `median()` maps to `percentile_cont(0.5)` and **reject `percentile_disc`**
+7. Assert `julianday(b)-julianday(a)` (days) maps to `EXTRACT(EPOCH FROM b-a)/86400` with explicit conversion to the KPI unit (hours or days)
+8. Assert percentages use `100.0 *` to avoid integer division
+9. Assert timezone (`Asia/Tehran`), date type, and per-KPI rounding from the dictionary; ±1% is the accepted evaluation tolerance, while brief "zero tolerance" applies only to text-to-JSON number matching
 10. Produce Parity Receipt per KPI
 
 Important: Agent Runtime has NO role in parity. If KPI is wrong, Agent must not fix or reinterpret it.

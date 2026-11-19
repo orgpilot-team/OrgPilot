@@ -40,7 +40,7 @@ Follow-up questions can be answered with execution-derived numbers while the zer
 
 The semantic layer must expose the drill dimensions used by the reference questions. If a dimension such as channel, product, or day is not queryable through an approved view, no SQL contract can answer questions about it. This is a data-contract check for implementation, not a change to this decision.
 
-Every ad-hoc number is traceable from the answer text to a persisted query and result. The daily cost of these calls remains inside the Model Gateway budget and the five-dollar ceiling.
+Every ad-hoc number is traceable from the answer text to a persisted query and result. These calls share the single five-dollar ceiling for the complete 30-day run.
 
 ## Related requirements
 

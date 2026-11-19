@@ -2,12 +2,13 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
     !identifiers flat
     !impliedRelationships false
 
-    // Architecture sources: this DSL, docs/01-purpose-and-scope.md through docs/08-risks-and-open-issues.md, and adrs/.
+    // Architecture sources: this DSL, docs/01-purpose-and-scope.md through docs/16-domain-model.md, and adrs/.
+    // Authoritative implementation contract: docs/15-implementation-contract.md (ADR-0025); TA clarifications win over older brief values.
+    // DDD model for Backend API, Background Worker, and Agent Runtime: docs/16-domain-model.md (ADR-0024).
     // Evaluation references: DataSet/arka_dataset/README_FA.md and output_contract/*.json are read-only.
-    // Team decision: PostgreSQL is the only product database.
+    // PostgreSQL is the selected product database; any engine with identical results is permitted (ADR-0002).
     // SQLite is an external test oracle for reference SQL only. It is not a runtime container.
-    // Status: Proposed. This workspace does not claim implementation.
-    // Open decisions remain in docs/08-risks-and-open-issues.md and the accepted ADR set.
+    // Status: Accepted for implementation under the evaluation profile; open decisions remain in docs/08-risks-and-open-issues.md.
 
     model {
         // People
@@ -25,18 +26,28 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             url "{workspace}/documentation/DIDRAH#submission-output-contract"
         }
         identityProvider = softwareSystem "Identity Provider" "Authenticates users and supplies a trusted identity. The product or internal method is open." "External,Identity,OpenDecision"
-        llmProvider = softwareSystem "Language Model Provider" "Returns bounded language-model completions. The provider and model are open decisions." "External,AI,OpenDecision"
-        langfuse = softwareSystem "Langfuse" "Receives optional redacted telemetry. Core workflows remain fail-open." "External,Observability"
+        llmProvider = softwareSystem "Language Model Provider" "Returns bounded language-model completions. Evaluation profile: deepseek/deepseek-v4.1-flash-1017 via OpenAI-compatible API; only external endpoint reachable in the graded run." "External,AI" {
+            url "{workspace}/documentation/DIDRAH#llm-provider-and-configuration"
+        }
+        langfuse = softwareSystem "Langfuse" "Receives optional redacted telemetry in the development profile only. Disabled in the graded Evaluation profile because outbound network is closed (ADR-0027)." "External,Observability"
 
         didrah = softwareSystem "DIDRAH" "A bounded agentic management assistant. It computes deterministic metrics and supports human decisions." "Target" {
             !docs docs
             !adrs adrs adrtools
 
             properties {
-                "architecture.status" "Proposed"
-                "architecture.style" "Modular Monolith"
-                "database.decision" "PostgreSQL only"
+                "architecture.status" "Accepted for implementation (evaluation profile)"
+                "architecture.style" "Modular Monolith with DDD bounded contexts (ADR-0024)"
+                "implementation.contract" "docs/15-implementation-contract.md (ADR-0025)"
+                "domain.model" "docs/16-domain-model.md (ADR-0024)"
+                "database.decision" "PostgreSQL 18 selected; any engine with identical results permitted"
                 "agent.boundary" "One bounded AI agent; deterministic core outside the agent"
+                "budget.minutes_per_day" "5"
+                "budget.usd_total_30_days" "5"
+                "budget.cost_formula" "logged input+output tokens x provider official rate on evaluation day"
+                "determinism.two_runs" "identical numbers and discovered signals (ADR-0026)"
+                "network.egress.evaluation" "LLM API only (ADR-0027)"
+                "kpi.parity.tolerance" "±1% (dev and evaluation); zero only for text-to-JSON number matching"
             }
 
             webApp = container "Web Application" "Persian RTL web application. It provides the three required management interfaces." "React 19, TypeScript, Vite" "Web" {
@@ -51,7 +62,14 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
             }
 
-            backendApi = container "Backend API" "Authorizes requests, creates durable jobs, validates outcomes, and delivers results." "ASP.NET Core, .NET 10 LTS, REST/JSON, OpenAPI" "API" {
+            backendApi = container "Backend API" "Authorizes requests, creates durable jobs, validates outcomes, and delivers results. DDD contexts: Identity & Access, Manager Interaction, Analysis Coordination, Decision Governance, Publication & Delivery, Audit (docs/16-domain-model.md)." "ASP.NET Core, .NET 10 LTS, REST/JSON, OpenAPI" "API" {
+                properties {
+                    "ddd.contexts" "Identity & Access, Manager Interaction, Analysis Coordination, Decision Governance, Publication & Delivery, Audit"
+                    "ddd.aggregates" "Grant, AccessPolicy, ManagerRequest, ConversationSession, AgentJob, DecisionCard, Decision, ReportVersion, ExportBatch, AuditEntry"
+                    "ddd.use_cases" "SubmitManagerQuestion, SubmitUpload, ConfirmDecision, RecordFollowUp, PublishReport, ExportSubmission, ActivateConfiguration, ActivateOrganizationRevision, StartRun, CloseRun, ReadJobStatus, ReadScopedReport"
+                    "ddd.ports" "IAgentJobRepository, IDecisionRepository, IReportVersionRepository, IAccessPolicyRepository, IAuditLog, IEvidencePort, IScopedQueryPort, IClockPort"
+                    "ddd.anti_corruption" "Source/upload text is data; LLM output is a candidate only; provider API translated at Model Gateway"
+                }
                 group "01 Access" {
                     identityBoundary = component "Identity Boundary" "Validates the session and creates a trusted identity context." "Deterministic module" "Security" {
                         url "{workspace}/documentation/DIDRAH#identity-boundary"
@@ -128,7 +146,16 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
             }
 
-            worker = container "Background Worker" "Executes deterministic processing and validation jobs and stores results in PostgreSQL." ".NET 10 Worker Service" "Worker" {
+            worker = container "Background Worker" "Executes deterministic processing and validation jobs and stores results in PostgreSQL. DDD contexts: Intake & Data Quality, Snapshot & Projection, Semantic & KPI, Workflow & Signal, Decision Effect, Run Orchestration (docs/16-domain-model.md)." ".NET 10 Worker Service" "Worker" {
+                properties {
+                    "ddd.contexts" "Intake & Data Quality, Snapshot & Projection, Semantic & KPI, Workflow & Signal, Decision Effect, Run Orchestration"
+                    "ddd.aggregates" "IngestionBatch, DataIssue, Snapshot, Projection, KpiDefinition, KpiResult, WorkflowObservation, SignalEpisode, EffectAssessment, RunStage"
+                    "ddd.value_objects" "SourceKey, EventKey=(entity_id,event_type,event_time), DedupKey, PinnedVersions, QueryRun, Lineage, SuccessCriterion"
+                    "ddd.domain_services" "DeduplicationService, DataIssueClassifier, KpiParityService, RollupService, WorkflowReconstructionService, SignalDetectionService, EscalationPolicyService, DecisionEffectService, ReportEvidenceAssembler"
+                    "dedup.keys" "order_id,ticket_id,lead_id,task_id; events=(entity_id,event_type,event_time)"
+                    "lead.abandoned_after_days" "14"
+                    "lead.kpi_populations" "K_WF3_SLA_7D and K_ENT_WINRATE_30D: closed leads only; K_ENT_PIPELINE: proposals sent only"
+                }
                 runStageCoordinatorV2 = component "Run Stage Coordinator" "Claims Ready jobs and runs their deterministic stages from stored dependencies." "PostgreSQL-backed deterministic job runner" "Processing" {
                     url "{workspace}/documentation/DIDRAH#run-stage-coordinator"
                 }
@@ -144,7 +171,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 normalizer = component "Normalizer" "Converts parsed fields to canonical types, units, identifiers, and time semantics." "Deterministic normalization module" "Processing" {
                     url "{workspace}/documentation/DIDRAH#normalizer"
                 }
-                dataQualityService = component "Data Quality Service" "Records missing sources, late arrivals, duplicates, corrections, schema changes, and quarantine results." "Deterministic module" "DataQuality" {
+                dataQualityService = component "Data Quality Service" "Records data_issues with exact types: 'missing' every morning until arrival (dependent KPIs null, never zero), one 'late_arrival' the next morning with same-morning recomputation and signal publication, and 'duplicate' with source 'orders' after dedup. A data issue is never a business signal; only a signal created by recomputation is published." "Deterministic module" "DataQuality" {
                     url "{workspace}/documentation/DIDRAH#data-quality-service"
                 }
                 snapshotService = component "Snapshot Service" "Pins committed data, organization, access policy, and configuration versions for a run." "Deterministic module" "Processing" {
@@ -153,7 +180,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 projectionService = component "Projection Service" "Builds reproducible facts and process projections from committed source events." "Deterministic module" "Processing" {
                     url "{workspace}/documentation/DIDRAH#projection-service"
                 }
-                semanticRegistry = component "Semantic Registry" "Versions KPI definitions, PostgreSQL SQL, units, precision, targets, ownership, and dependencies." "Deterministic registry" "Analytics" {
+                semanticRegistry = component "Semantic Registry" "Versions KPI definitions, PostgreSQL SQL, units, precision, targets, ownership, direction (1=more better, -1=less better), escalate_after_days, and dependencies. Includes corrected config/monthly_targets.csv with scope=U_SAL for Q03." "Deterministic registry" "Analytics" {
                     url "{workspace}/documentation/DIDRAH#semantic-registry"
                 }
                 kpiDefinitionPreprocessor = component "KPI Definition Preprocessor" "Translates approved KPI definitions into versioned PostgreSQL SQL before validation and registration." "Deterministic PostgreSQL SQL preprocessor" "Analytics" {
@@ -162,16 +189,16 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 kpiCalculator = component "KPI Calculator" "Executes the 55 approved PostgreSQL KPI queries and records QueryRun and lineage." "PostgreSQL SQL" "Analytics" {
                     url "{workspace}/documentation/DIDRAH#kpi-calculator"
                 }
-                workflowEngine = component "Workflow Engine" "Reconstructs three workflows and calculates stage timing, SLA, backlog, and bottlenecks." "Deterministic process analysis" "Analytics" {
+                workflowEngine = component "Workflow Engine" "Reconstructs three workflows and calculates stage timing, SLA, backlog, and bottlenecks. Stage owner = measuring KPI owner; whole-workflow owner = Senior Manager. Leads with no progress after 14 days are abandoned, not bottlenecks." "Deterministic process analysis" "Analytics" {
                     url "{workspace}/documentation/DIDRAH#workflow-engine"
                 }
-                signalEngine = component "Signal Engine" "Maintains deterministic signal lifecycles, escalation, suppression, and executive grouping." "Deterministic rules" "Analytics" {
+                signalEngine = component "Signal Engine" "Maintains deterministic signal lifecycles (new/ongoing/escalated), escalation by crit or warn dwell time, suppression of unchanged repeats, unfavorable-direction-only R5, and executive co-cause grouping. Guardrail breaches arrive as signals." "Deterministic rules" "Analytics" {
                     url "{workspace}/documentation/DIDRAH#signal-engine"
                 }
                 reportEvidenceBuilderV2 = component "Report Evidence Builder" "Builds one pinned evidence package and model-independent canonical report per job." "Deterministic report evidence assembly" "Reporting" {
                     url "{workspace}/documentation/DIDRAH#report-evidence-builder"
                 }
-                decisionEffectEvaluator = component "Decision Effect Evaluator" "Evaluates KPI change and guardrails and records structured effect evidence. No LLM." "Deterministic evaluation module" "Decision" {
+                decisionEffectEvaluator = component "Decision Effect Evaluator" "Evaluates KPI change and guardrails with workload normalization or comparable-case baseline; exports improved/worsened/too_early; 'not isolatable' is never 'no effect'; guardrail breach emits a signal. No LLM." "Deterministic evaluation module" "Decision" {
                     url "{workspace}/documentation/DIDRAH#decision-effect-evaluator"
                 }
             }
@@ -192,7 +219,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 acceptanceTestHarnessV2 = component "Acceptance Test Harness" "Runs replay, regression, leakage, performance, contract, and KPI parity checks." "Deterministic test harness" "Evaluation,Candidate" {
                     url "{workspace}/documentation/DIDRAH#acceptance-test-harness"
                 }
-                kpiParityValidator = component "KPI Parity Validator" "Compares 55 SQLite reference results with equivalent PostgreSQL results and records receipts." "Deterministic parity module" "Evaluation" {
+                kpiParityValidator = component "KPI Parity Validator" "Compares SQLite reference results with equivalent PostgreSQL results within ±1% and records receipts. Asserts median()→percentile_cont(0.5) not percentile_disc, julianday→EXTRACT(EPOCH)/86400 with unit conversion, 100.0* percentages, timezone and rounding." "Deterministic parity module" "Evaluation" {
                     url "{workspace}/documentation/DIDRAH#kpi-parity-validator"
                 }
                 scriptedManagerInputAdapter = component "Scripted Manager Input Adapter" "Submits versioned replay inputs through the same Backend API as interactive inputs." "Deterministic evaluation input adapter" "Evaluation" {
@@ -214,7 +241,17 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 url "{workspace}/documentation/DIDRAH#protected-file-archive"
             }
 
-            agentRuntime = container "Agent Runtime" "Claims durable Agent Jobs from PostgreSQL and runs bounded graphs. Wake-ups are hints only." "Python 3.12, LangGraph, Pydantic" "AI" {
+            agentRuntime = container "Agent Runtime" "Claims durable Agent Jobs from PostgreSQL and runs bounded graphs. Wake-ups are hints only. DDD contexts: Job Execution, Bounded Reasoning, Model Access, Conversation (docs/16-domain-model.md)." "Python 3.12, LangGraph, Pydantic" "AI" {
+                properties {
+                    "ddd.contexts" "Job Execution, Bounded Reasoning, Model Access, Conversation"
+                    "ddd.aggregates" "AgentJobExecution, Checkpoint, ReasoningSession, Candidate, ModelReservation, ModelCallReceipt, ConversationTurn"
+                    "ddd.domain_services" "JobClaimingService, GraphSelectionService, BudgetSettlementService, RetryPolicyService, CandidateValidationService"
+                    "ddd.ports" "IAgentJobRepository, ICheckpointStore, IModelPort, IEvidencePort, IBudgetLedger, IClockPort"
+                    "model.timeout_seconds" "30"
+                    "model.max_retries" "2 (bounded exponential backoff)"
+                    "model.temperature" "0"
+                    "model.fallback" "Report with correct numbers and no LLM narrative on provider failure"
+                }
                 agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report, interactive, or document decision-card graph. Produces structured candidates only." "LangGraph runtime" "AI" {
                     url "{workspace}/documentation/DIDRAH#bounded-agent-orchestrator"
                 }
@@ -224,7 +261,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 conversationService = component "Conversation Service" "Stores manager-scoped conversation sessions and validated turns, returns bounded history window." "Deterministic conversation module" "AI" {
                     url "{workspace}/documentation/DIDRAH#conversation-service"
                 }
-                agentModelGateway = component "Model Gateway" "Applies token, time, retry, and cost limits to every model call. Reserves and settles budget." "Provider-neutral model client" "AI" {
+                agentModelGateway = component "Model Gateway" "Applies token, time (30s), retry (max 2), and cost limits to every model call. Reserves and settles the single $5/30-day budget using provider official rates; temperature 0; on failure returns no-narrative deterministic report. Only external endpoint in the graded run." "Provider-neutral model client" "AI" {
                     url "{workspace}/documentation/DIDRAH#model-gateway"
                 }
                 checkpointStore = component "PostgreSQL Checkpoint Store" "Stores LangGraph checkpoints in PostgreSQL for resumability and idempotency." "PostgreSQL-backed checkpoint" "AI" {
@@ -739,6 +776,8 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         sourceAdapters -> normalizer "Submit fields for normalization" "In-process function call"
         normalizer -> dataQualityService "Check normalized rows" "In-process function call"
         dataQualityService -> postgres "Store records and data issues" "PostgreSQL protocol over TLS"
+        dataQualityService -> signalEngine "Publish signals created by late-arrival recomputation (same morning)" "In-process domain event"
+        dataQualityService -> projectionService "Trigger corrected snapshot rebuild on late arrival" "In-process domain event"
         snapshotService -> postgres "Pin run snapshot" "PostgreSQL protocol over TLS"
         snapshotService -> projectionService "Build reproducible projections" "In-process function call"
         projectionService -> postgres "Read events; store projections" "PostgreSQL protocol over TLS"
@@ -752,6 +791,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         decisionEffectEvaluator -> postgres "Store decision-effect assessment" "PostgreSQL protocol over TLS"
         runStageCoordinatorV2 -> decisionEffectEvaluator "Evaluate due decision effects" "In-process function call"
         decisionEffectEvaluator -> reportEvidenceBuilderV2 "Add follow-up assessment" "In-process function call"
+        decisionEffectEvaluator -> signalEngine "Emit guardrail-breach signal" "In-process domain event"
 
         // Current run-control, report-evidence, agent, publication, and evaluation flow.
         evaluator -> replayCommandV2 "Start replay range" "Command-line interface"
@@ -791,7 +831,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             // Single-image evaluation profile per ADR-0021. One docker build and one docker run.
             // Logical C4 containers are unchanged; they run as separate processes inside one image.
             // The Web Application is served by the Compose development profile, not the graded run.
-            deploymentNode "Evaluation Host" "Reference host: four CPU cores, sixteen GB RAM, no GPU, read-only /data and writable /submission." "Linux host" {
+            deploymentNode "Evaluation Host" "Reference host: four CPU cores, sixteen GB RAM, no GPU, read-only /data and writable /submission. Network egress: LLM API only (ADR-0027). Max 5 minutes per processing day; container runs twice with identical numbers and signals (ADR-0026)." "Linux host" {
                 deploymentNode "team_x Evaluation Image" "One image built with docker build and started with one docker run. The batch entrypoint orchestrates all product processes; no Compose or second container is required." "Docker image" {
                     deploymentNode "Backend API" "API and deterministic validation process" "Process" {
                         containerInstance backendApi
@@ -808,7 +848,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                     deploymentNode "PostgreSQL" "Local product database process; data directory created fresh at run time" "Process" {
                         containerInstance postgres
                     }
-                    deploymentNode "OpenTelemetry Collector" "Optional, fail-open telemetry relay process" "Process" {
+                    deploymentNode "OpenTelemetry Collector" "Loopback-only, fail-open telemetry relay. Langfuse export disabled in Evaluation (ADR-0027)." "Process" {
                         containerInstance otelCollector
                     }
                 }
@@ -818,7 +858,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                     softwareSystemInstance submissionOutput
                 }
             }
-            deploymentNode "External Observability Egress" "Optional managed or separately hosted observability endpoint" "External service" {
+            deploymentNode "External Observability Egress" "Disabled in the graded Evaluation profile (closed network); development-only Langfuse endpoint" "External service" {
                 softwareSystemInstance langfuse
             }
         }
