@@ -317,3 +317,71 @@ Blocker وجود ندارد.
 ### Resume
 
 نقطه دقیق Resume: **فاز ۵، قبل از نخستین تغییر، از `architecture/structurizr/docs/09-web-application-components.md` و سپس تطبیق ۵۴ Anchor و URL طبق `plan.md` شروع شود.**
+
+## نتیجه فاز اصلاحی ۴.۱ — تثبیت Visual Layout
+
+وضعیت: تکمیل‌شده در 2026-11-19.
+
+### نتیجه
+
+- هر ۱۶ View در Structurizr Local و روی یک کپی موقت از Workspace بازبینی شد.
+- برای هر View، `autoLayout`، جهت، فاصله عناصر، includeها و endpoint رابطه‌ها بررسی شد.
+- متن رابطه‌های بلند کوتاه شد. Technology، endpoint، Tag و معنی معماری ثابت ماند.
+- C2 فقط Containerها، Storeها و سیستم‌های خارجی را نشان می‌دهد. Personها و رابطه‌های جزئی Telemetry در C2 نمایش داده نمی‌شوند.
+- جزئیات OpenTelemetry Collector و Langfuse در Deployment و Viewهای مناسب باقی ماند.
+- L3 Backend همه ۲۰ Product Component را نگه می‌دارد و ۳۲ رابطه اصلی را نشان می‌دهد. مسیرهای Detail و بازگشت در مدل و سناریوهای S8 و S9 باقی مانده‌اند.
+- هیچ Component، Relationship یا تصمیم معماری حذف نشد.
+- `workspace.json` و فایل‌های ممنوع تغییر داده نشدند.
+
+### نتیجه بازبینی هر View
+
+| View | نتیجه | یادداشت |
+|---|---|---|
+| `L1_SystemContext` | پاس | عناصر در قاب هستند و ارتباط‌های سطح سیستم خوانا هستند. |
+| `L2_Containers` | پاس | فقط اطلاعات سطح Container نمایش داده می‌شود؛ جزئیات Observability حذف شده است. |
+| `L3_2_WebApplicationComponents` | پاس | سه UI و Backend endpoint بدون هم‌پوشانی جدی نمایش داده می‌شوند. |
+| `L3_3_RevisedBackendApiComponents` | پاس | ۲۰ Component و endpointهای Web، PostgreSQL و Agent Runtime با مسیرهای اصلی نمایش داده می‌شوند. |
+| `L3_4_RevisedBackgroundWorkerComponents` | پاس | زنجیره Intake، Analytics و Report Evidence در قاب و خوانا است. |
+| `L3_5_RevisedSchedulerReplayComponents` | پاس | Replay، Clock، Run Status و Acceptance path جدا و خوانا هستند. |
+| `L3_6_AgentRuntimeComponents` | پاس | مرز Backend، Runtime، PostgreSQL و Model Provider روشن است. |
+| `D1_EvaluationCompose` | پاس | همه Deployment instanceها در قاب هستند؛ Collector و Langfuse در مرز Observability قرار دارند. |
+| `S7_ReportGenerationScenario` | پاس | ۲۳ گام شماره‌دار بدون فلش معلق نمایش داده می‌شوند. |
+| `S8_ManagerDecisionScenarios` | پاس | ۴۶ گام شماره‌دار و endpointهای review، validation و durable job حفظ شدند. |
+| `S9_MeetingMinutesUploadScenario` | پاس | ۴۶ رابطه سناریو، archive، parse، review و revision را کامل نشان می‌دهند. |
+| `S10_FailureAndFallback` | پاس | مسیر failure، fallback و observability خوانا است. |
+| `S11_KpiTranslationAndParity` | پاس | Translation، validation و parity بدون هم‌پوشانی نمایش داده می‌شوند. |
+| `S12_OrganizationConfigurationD1` | پاس | Intake، validation و D+1 activation خوانا هستند. |
+| `S13_ScriptedManagerInputReplay` | پاس | Adapter، Backend API و acceptance endpoint در یک مسیر روشن هستند. |
+| `S14_LateCorrectedDataRestatement` | پاس | Intake، recalculation و republishing در یک مسیر روشن هستند. |
+
+### فایل‌های تغییرکرده
+
+- `architecture/structurizr/workspace.dsl`
+- `plan-stage.md` — فقط ثبت نتیجه و Resume
+
+### Validation
+
+- MCP parse: پاس.
+- MCP validate: پاس.
+- MCP inspect: صفر Finding عملیاتی.
+- دو Finding مستندات و تصمیم‌ها مصنوعی هستند. علت، حذف موقت و درون‌حافظه‌ای `!docs` و `!adrs` برای MCP است. فایل اصلی هر دو Directive را حفظ می‌کند.
+- Product Component: دقیقاً ۵۰.
+- View: دقیقاً ۱۶.
+- Relationship: تعداد ۲۹۵؛ Relationship بدون Technology برابر صفر.
+- `!impliedRelationships false`: حفظ شد.
+- بازبینی بصری Structurizr Local: ۱۶ از ۱۶ View پاس.
+- عنصر خارج از قاب، فلش معلق، هم‌پوشانی جدی یا متن بریده: مشاهده نشد.
+- `workspace.json`: خارج از Commit و بدون ویرایش دستی در این فاز.
+- `git diff --check`: پاس.
+
+### تصمیم‌های باز
+
+تصمیم‌های باز مصوب تغییر نکردند. مقدار یا الزام جدیدی برای آن‌ها ثبت نشد.
+
+### Blockerها
+
+Blocker وجود ندارد.
+
+### Resume
+
+نقطه دقیق Resume: **فاز ۵، قبل از نخستین تغییر، از `architecture/structurizr/docs/09-web-application-components.md` و سپس تطبیق ۵۴ Anchor و URL طبق `plan.md` شروع شود.**
