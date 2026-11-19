@@ -318,6 +318,63 @@ Blocker وجود ندارد.
 
 نقطه دقیق Resume: **فاز ۵، قبل از نخستین تغییر، از `architecture/structurizr/docs/09-web-application-components.md` و سپس تطبیق ۵۴ Anchor و URL طبق `plan.md` شروع شود.**
 
+## اصلاح تکمیلی فاز ۴.۱ — کنترل Text Fit
+
+وضعیت: تکمیل‌شده در 2026-11-19.
+
+### علت اصلاح
+
+- بازبینی قبلی با زمینه روشن و نمای Fit، خروج متن سفید از کارت را نشان نداد.
+- ارتفاع عمومی کارت با طول توضیح چند Component متناسب نبود.
+
+### تغییر
+
+- توضیح نمایشی کارت‌های بلند کوتاه و دقیق شد.
+- معنی معماری، Componentها، Relationshipها، Technologyها و تصمیم‌ها حفظ شدند.
+- اندازه عمومی کارت به `320 x 190` و کارت Scenario به `300 x 180` تغییر کرد.
+- `workspace.json` تغییر داده نشد.
+
+### بازبینی ۱۶ View با زمینه تیره
+
+| View | کارت بررسی‌شده | Text overflow |
+|---|---:|---:|
+| `L1_SystemContext` | 11 | 0 |
+| `L2_Containers` | 13 | 0 |
+| `L3_2_WebApplicationComponents` | 7 | 0 |
+| `L3_3_RevisedBackendApiComponents` | 24 | 0 |
+| `L3_4_RevisedBackgroundWorkerComponents` | 20 | 0 |
+| `L3_5_RevisedSchedulerReplayComponents` | 11 | 0 |
+| `L3_6_AgentRuntimeComponents` | 10 | 0 |
+| `D1_EvaluationCompose` | 21 | 0 |
+| `S7_ReportGenerationScenario` | 18 | 0 |
+| `S8_ManagerDecisionScenarios` | 18 | 0 |
+| `S9_MeetingMinutesUploadScenario` | 17 | 0 |
+| `S10_FailureAndFallback` | 3 | 0 |
+| `S11_KpiTranslationAndParity` | 3 | 0 |
+| `S12_OrganizationConfigurationD1` | 3 | 0 |
+| `S13_ScriptedManagerInputReplay` | 3 | 0 |
+| `S14_LateCorrectedDataRestatement` | 3 | 0 |
+
+### Validation
+
+- MCP parse: پاس.
+- MCP validate: پاس.
+- MCP inspect: Finding عملیاتی صفر.
+- دو Finding مربوط به documentation و decisions مصنوعی است. علت، حذف موقت `!docs` و `!adrs` فقط در ورودی MCP است.
+- Product Component: دقیقاً ۵۰.
+- View: دقیقاً ۱۶.
+- Relationship: دقیقاً ۲۹۵.
+- اسکن هندسی متن و Shape در همه ۱۶ View: پاس؛ Text overflow برابر صفر.
+- بازبینی تصویر زمینه‌تیره در همه ۱۶ View: پاس.
+
+### Blockerها
+
+Blocker وجود ندارد.
+
+### Resume
+
+نقطه دقیق Resume بدون تغییر است: **فاز ۵، قبل از نخستین تغییر، از `architecture/structurizr/docs/09-web-application-components.md` و سپس تطبیق ۵۴ Anchor و URL طبق `plan.md` شروع شود.**
+
 ## نتیجه فاز اصلاحی ۴.۱ — تثبیت Visual Layout
 
 وضعیت: تکمیل‌شده در 2026-11-19.
