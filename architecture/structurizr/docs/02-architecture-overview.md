@@ -1,6 +1,6 @@
 # Architecture overview
 
-DIDRAH uses a modular monolith. The Backend API, Background Worker, and Scheduler and Replay Runner use shared .NET libraries. They run as separate processes and containers. The Web Application and Agent Runtime also run in separate containers. Docker Compose defines the runtime deployment.
+DIDRAH uses a modular monolith. The Backend API, Background Worker, and Scheduler and Replay Runner use shared .NET libraries. They run as separate processes and containers. The Web Application and Agent Runtime also run in separate containers. Docker Compose defines the local development deployment; the graded evaluation packages all logical containers as separate processes inside one image started with one `docker run` (ADR-0021). The logical C4 model is unchanged in both profiles.
 
 The architecture has seven product containers:
 
@@ -40,7 +40,7 @@ The deterministic core is outside the agent. It owns KPI calculation, workflow r
 | Normal .NET data access | EF Core and Npgsql | CRUD and normal transactions |
 | Direct .NET SQL | Npgsql | Job claims and approved KPI SQL only |
 | API | REST/JSON and OpenAPI | W3C `traceparent` propagation |
-| Deployment | Docker Compose | Separate processes and containers |
+| Deployment | Compose (development); single image + one `docker run` (evaluation) | Separate processes and containers; ADR-0021 |
 | Tracing | OpenTelemetry SDK and OTLP | Optional and fail-open export |
 | Agent observability | Langfuse | Optional and fail-open |
 

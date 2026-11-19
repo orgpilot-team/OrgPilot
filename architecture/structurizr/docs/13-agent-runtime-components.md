@@ -72,7 +72,7 @@ The Runtime claims from PostgreSQL, gets evidence and validation from the Backen
 - **DSL identifier:** `agentModelGateway`; **Display name:** Model Gateway.
 - **Purpose:** Apply token, time, retry, and cost limits to every model call. **Responsibilities:** Reserve budget, redact and send bounded input, call the provider, settle cost, and return completion or failure. **Inputs:** Authorized prompt, evidence subset, model policy, and budget. **Outputs:** Completion metadata and content or explicit failure.
 - **Owned state:** Cost reservation and settlement metadata in PostgreSQL. **Dependencies:** PostgreSQL and Language Model Provider. **Security boundary:** Do not send secrets, full documents, or unauthorized business context. **Forbidden responsibilities:** Select unapproved scope, bypass limits, or treat a completion as validated product output.
-- **Failure behavior:** Return bounded timeout, budget, provider, or validation failure. **Idempotency:** Call ID and reservation state prevent duplicate settlement. **Observability:** Record model metadata, tokens, cost, latency, status, and trace ID with redaction. **Related ADRs:** ADR-0008, ADR-0019, ADR-0020. **Open issues:** Provider, model, timeout, and retry count remain open.
+- **Failure behavior:** Return bounded timeout, budget, provider, or validation failure. **Idempotency:** Call ID and reservation state prevent duplicate settlement. **Observability:** Record model metadata, tokens, cost, latency, status, and trace ID with redaction. **Related ADRs:** ADR-0008, ADR-0019, ADR-0020, ADR-0022. **Open issues:** Timeout and retry count are provisional defaults and are tuned in implementation. The evaluation model is `deepseek/deepseek-v4.1-flash-1017` with temperature zero; `LLM_API_KEY`, `LLM_BASE_URL`, and `LLM_MODEL` are injected at run time (ADR-0022). For ad-hoc SQL generation, the model names only approved semantic views and never supplies a number (ADR-0023).
 
 <a id="postgresql-checkpoint-store"></a>
 
@@ -85,4 +85,4 @@ The Runtime claims from PostgreSQL, gets evidence and validation from the Backen
 
 ## Container-level Open Issues
 
-- Python PostgreSQL driver, model/provider, model timeout, Agent Job deadline, retry count, dead-letter policy, reconciliation cadence, fallback content, and LangGraph node boundaries remain open.
+- Python PostgreSQL driver, Agent Job deadline, dead-letter policy, reconciliation cadence, fallback content, and LangGraph node boundaries remain open. The model/provider is selected in ADR-0022; timeout and retry count are provisional defaults.

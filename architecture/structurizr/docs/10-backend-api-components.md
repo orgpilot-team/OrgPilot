@@ -134,7 +134,7 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 - **DSL identifier:** `queryGateway`; **Display name:** Query Gateway.
 - **Purpose:** Run registered tools and scoped read-only SQL under limits and audit. **Responsibilities:** Load allow-lists, validate SQL, apply scope, execute, and audit. **Inputs:** Authorized Query Specification and trusted scope. **Outputs:** Bounded result and lineage, or refusal.
 - **Owned state:** Query audit records in PostgreSQL. **Dependencies:** Authorization Service, SQL AST Guard, PostgreSQL, and Audit Service. **Security boundary:** Scope and approved views constrain each query. **Forbidden responsibilities:** Unrestricted SQL, RLS bypass, and credential disclosure.
-- **Failure behavior:** Deny when validation is incomplete. **Idempotency:** Reads repeat against pinned versions. **Observability:** Record definition, scope reference, limit, duration, size, and trace ID. **Related ADRs:** ADR-0005, ADR-0011, ADR-0019, ADR-0020. **Open issues:** None.
+- **Failure behavior:** Deny when validation is incomplete. **Idempotency:** Reads repeat against pinned versions. **Observability:** Record definition, scope reference, limit, duration, size, and trace ID. **Related ADRs:** ADR-0005, ADR-0011, ADR-0019, ADR-0020, ADR-0023. **Open issues:** None. For ad-hoc questions, executes model-generated SQL only after AST validation and scope injection, on the pinned snapshot; persists the query with a new `query_id` and result hash (ADR-0023).
 
 <a id="sql-ast-guard"></a>
 
@@ -143,7 +143,7 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 - **DSL identifier:** `sqlGuard`; **Display name:** SQL AST Guard.
 - **Purpose:** Validate one approved read-only SQL statement. **Responsibilities:** Parse SQL and enforce the allow-list. **Inputs:** Candidate SQL and query policy. **Outputs:** Approval constraints or refusal reason.
 - **Owned state:** None. **Dependencies:** Versioned SQL policy. **Security boundary:** Uncertain SQL never reaches PostgreSQL. **Forbidden responsibilities:** Execute SQL, authorize scope, or rewrite unsafe SQL.
-- **Failure behavior:** Reject parse or policy uncertainty. **Idempotency:** Deterministic for the same SQL and policy. **Observability:** Record policy version, decision, refusal class, and trace ID. **Related ADRs:** ADR-0005, ADR-0011. **Open issues:** None.
+- **Failure behavior:** Reject parse or policy uncertainty. **Idempotency:** Deterministic for the same SQL and policy. **Observability:** Record policy version, decision, refusal class, and trace ID. **Related ADRs:** ADR-0005, ADR-0011, ADR-0023. **Open issues:** None. For ad-hoc SQL, enforces SELECT-only, relation and column allowlists, no scope-escaping subqueries or `UNION` smuggling, no side-effecting functions, and row and cost limits (ADR-0023).
 
 <a id="output-validator"></a>
 
@@ -152,7 +152,7 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 - **DSL identifier:** `outputValidator`; **Display name:** Output Validator.
 - **Purpose:** Validate agent output before delivery, publication, review, or export. **Responsibilities:** Check schema, values, evidence, scope, recipient, alternatives, and response rules. **Inputs:** Persisted candidate, reference contract, scope, and evidence references. **Outputs:** Validated result, fallback instruction, or rejection.
 - **Owned state:** Validation state and receipt in PostgreSQL. **Dependencies:** Query Gateway, Authorization Service, Evidence Service, Audit Service, and PostgreSQL. **Security boundary:** Unvalidated model output cannot become a product result. **Forbidden responsibilities:** Repair claims, change schemas, or publish.
-- **Failure behavior:** Persist rejection and release only an approved failure path. **Idempotency:** Candidate hash and validator version make results stable. **Observability:** Record receipt, hash, failed rule, status, and trace ID. **Related ADRs:** ADR-0004, ADR-0005, ADR-0008, ADR-0010, ADR-0013. **Open issues:** Fallback content remains open.
+- **Failure behavior:** Persist rejection and release only an approved failure path. **Idempotency:** Candidate hash and validator version make results stable. **Observability:** Record receipt, hash, failed rule, status, and trace ID. **Related ADRs:** ADR-0004, ADR-0005, ADR-0008, ADR-0010, ADR-0013, ADR-0023. **Open issues:** Fallback content remains open. For ad-hoc answers, checks that every number maps to a `value` and `query_id` pair and applies the `refused_out_of_scope` and `data_unavailable` status rules (ADR-0023).
 
 <a id="agent-job-status-api"></a>
 

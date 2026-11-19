@@ -16,6 +16,8 @@ The Backend API creates a trusted identity context. The Authorization Service de
 
 The Agent Runtime requests business evidence from the Backend API Evidence Service. The Evidence Service sends approved query requests to the Query Gateway. The Query Gateway validates and executes the registered read-only operation. It returns only evidence that is inside the trusted actor, purpose, policy, snapshot, row, and column scope.
 
+Ad-hoc Text-to-SQL questions use the same path with an added generation contract (ADR-0023). Scope is pinned before the model writes SQL. The model may name only approved semantic views and KPI definitions, never raw business tables, and has no database credential. The Backend injects the scope predicate so generated SQL cannot omit it. After validation the query is persisted with a new `query_id`, scope, and result hash and shown beside the answer. "Registered" for an ad-hoc query means persisted, validated, and auditable; it does not mean pre-approved in the KPI Dictionary. A number in the answer must map to a `value` and `query_id` pair. `refused_out_of_scope` is used when data exists outside the manager's subset; `data_unavailable` is used when the data is not in the system sources.
+
 The query path uses defense in depth:
 
 - Registered read-only queries

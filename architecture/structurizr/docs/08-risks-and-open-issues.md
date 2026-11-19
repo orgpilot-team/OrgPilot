@@ -25,14 +25,16 @@ The active risk and decision record is this document together with the ADR Statu
 
 | Decision | Status | Decision location |
 |---|---|---|
+| Evaluation packaging: single image vs Compose | Resolved for evaluation: one image, one `docker run` | ADR-0021 |
+| Ad-hoc Text-to-SQL contract | Resolved | ADR-0023 |
 | Scheduler as .NET Console or Worker Service | Open | ADR-0018 |
 | Final restricted Agent Runtime DB role name | Open | ADR-0019 |
 | Migrate from or retain `agent_query_reader` | Open | ADR-0019 |
 | Python PostgreSQL driver | Open | This document |
 | Langfuse managed or self-hosted | Open | ADR-0020 |
 | OTLP/gRPC or OTLP/HTTP for backend services | Configuration decision | `06-deployment-and-operations.md` |
-| Model and provider | Open | This document |
-| Model call timeout | Open | This document |
+| Model and provider | Selected: `deepseek/deepseek-v4.1-flash-1017` | ADR-0022 |
+| Model call timeout | Provisional default; tune in implementation | ADR-0022 |
 | Agent Job deadline | Open | This document |
 | Retry count | Open | This document |
 | Dead-letter policy | Open | This document |

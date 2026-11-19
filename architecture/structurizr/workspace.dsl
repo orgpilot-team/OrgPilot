@@ -788,27 +788,29 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         // Defined after the static relationships so Structurizr can replicate them between instances.
         deploymentEnvironment "Evaluation" {
-            deploymentNode "Evaluation Host and Docker Compose" "Separate service containers started together with one docker compose command." "Docker Compose" {
-                deploymentNode "Web" "User interface" "Docker container" {
-                    containerInstance webApp
-                }
-                deploymentNode "Backend API" "API and deterministic validation" "Docker container" {
-                    containerInstance backendApi
-                }
-                deploymentNode "Background Worker" "Deterministic processing" "Docker container" {
-                    containerInstance worker
-                }
-                deploymentNode "Scheduler" "Replay and acceptance" "Docker container" {
-                    containerInstance schedulerReplay
-                }
-                deploymentNode "Agent Runtime" "Bounded agent graphs" "Docker container" {
-                    containerInstance agentRuntime
-                }
-                deploymentNode "PostgreSQL" "Product database" "Docker container" {
-                    containerInstance postgres
-                }
-                deploymentNode "OpenTelemetry Collector" "Optional, fail-open telemetry relay" "Docker container" {
-                    containerInstance otelCollector
+            // Single-image evaluation profile per ADR-0021. One docker build and one docker run.
+            // Logical C4 containers are unchanged; they run as separate processes inside one image.
+            // The Web Application is served by the Compose development profile, not the graded run.
+            deploymentNode "Evaluation Host" "Reference host: four CPU cores, sixteen GB RAM, no GPU, read-only /data and writable /submission." "Linux host" {
+                deploymentNode "team_x Evaluation Image" "One image built with docker build and started with one docker run. The batch entrypoint orchestrates all product processes; no Compose or second container is required." "Docker image" {
+                    deploymentNode "Backend API" "API and deterministic validation process" "Process" {
+                        containerInstance backendApi
+                    }
+                    deploymentNode "Background Worker" "Deterministic processing process" "Process" {
+                        containerInstance worker
+                    }
+                    deploymentNode "Scheduler" "Replay and acceptance process" "Process" {
+                        containerInstance schedulerReplay
+                    }
+                    deploymentNode "Agent Runtime" "Bounded agent graph process" "Process" {
+                        containerInstance agentRuntime
+                    }
+                    deploymentNode "PostgreSQL" "Local product database process; data directory created fresh at run time" "Process" {
+                        containerInstance postgres
+                    }
+                    deploymentNode "OpenTelemetry Collector" "Optional, fail-open telemetry relay process" "Process" {
+                        containerInstance otelCollector
+                    }
                 }
                 deploymentNode "Mounted Filesystems" "Read-only input, protected archive, and writable evaluator output mounts" "Docker volumes or compatible mounted storage" {
                     softwareSystemInstance inputDataset
@@ -933,7 +935,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             autoLayout lr 140 100
         }
 
-        deployment didrah "Evaluation" D1_EvaluationCompose "Evaluation deployment using separate Docker Compose services started with one command." {
+        deployment didrah "Evaluation" D1_EvaluationCompose "Evaluation deployment: one team_x image started with one docker run; logical product containers run as separate processes inside the image. Per ADR-0021." {
             include *
             autoLayout tb 100 80
         }

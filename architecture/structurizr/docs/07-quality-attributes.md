@@ -26,7 +26,7 @@ A lost Agent Runtime wake-up must not lose a committed job. Collector or Langfus
 
 ## Performance and cost
 
-The evaluation requirement is at most five minutes for each processing day and at most five US dollars for the complete 30-day run. The selected model, internal budget allocation, retry limits, model call timeout, Agent Job deadline, and fallback content remain open.
+The evaluation requirement is at most five minutes for each processing day and at most five US dollars for the complete 30-day run. The model is selected in ADR-0022 (`deepseek/deepseek-v4.1-flash-1017`). Internal budget allocation, retry limits, model call timeout, Agent Job deadline, and fallback content remain open.
 
 The Acceptance Test Harness measures replay duration, manager-output coverage, model usage, and total cost without changing the daily product path.
 

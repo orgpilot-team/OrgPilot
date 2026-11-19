@@ -22,7 +22,7 @@ The system records the SQL, result, snapshot, scope, and `query_id` for each pub
 
 The product has one operational database and one security boundary for data queries. The team must maintain a parity suite for all approved KPI definitions. A SQL translation is not accepted until its parity evidence passes. SQLite is not available to the product runtime.
 
-The complete contract for ad hoc numbers remains open in `ISSUE-V3-02`.
+The contract for ad hoc numbers is defined in [ADR-0023](0023-adhoc-text-to-sql-contract.md), which closes `ISSUE-V3-02`.
 
 ## Related requirements
 

@@ -1,8 +1,10 @@
 # Deployment and operations
 
-## Docker Compose services
+## Runtime services and deployment profiles
 
-DIDRAH uses Docker Compose on the reference evaluation host. The approved runtime has separate processes and containers:
+DIDRAH has two deployment profiles over the same logical containers and processes. Docker Compose is the local development and UI demonstration profile. A single image with one batch entrypoint is the graded evaluation profile (ADR-0021). The professor runs only the evaluation profile.
+
+The approved runtime has separate processes and containers:
 
 1. **web** serves the React, TypeScript, and Vite application.
 2. **backend-api** runs ASP.NET Core on .NET 10 LTS.
@@ -14,6 +16,30 @@ DIDRAH uses Docker Compose on the reference evaluation host. The approved runtim
 The Scheduler implementation remains open between a console process and a Worker Service. The selected implementation must keep a separate Scheduler process and container.
 
 Docker Compose does not add a message broker, distributed cache, service mesh, or new microservice. Kubernetes is outside the approved scope.
+
+## Evaluation profile: one image, one command
+
+The graded evaluation uses one image and one non-interactive `docker run` (ADR-0021). This supersedes Compose only for evaluation packaging. The logical C4 containers are unchanged and run as separate processes inside the image, with their own database roles and contracts. The Web Application is served only by the Compose development profile; the evaluator reads contract JSON from `OUTPUT_DIR` and does not use the web interfaces.
+
+All dependencies are installed at image build time. Nothing is installed at run time. The entrypoint reads `DATA_DIR` and `OUTPUT_DIR` from environment variables, processes drops from `day_000` through `day_090` in order, applies scripted manager input on its own day, produces the morning reports for days 62 through 91, exports them below `OUTPUT_DIR`, and exits with code zero. The PostgreSQL data directory is created fresh inside the container at run time and is not baked into the image, so both evaluator runs start from identical state.
+
+The command given to the professor is:
+
+```powershell
+docker build -t team_x .
+
+docker run --rm `
+  --cpus=4 --memory=16g `
+  -v /eval/holdout/arka_dataset:/data:ro `
+  -v /eval/results/team_x:/submission `
+  -e LLM_API_KEY=*** -e LLM_BASE_URL=... -e LLM_MODEL=deepseek/deepseek-v4.1-flash-1017 `
+  -e DATA_DIR=/data -e OUTPUT_DIR=/submission `
+  team_x
+```
+
+## LLM configuration
+
+The evaluation profile uses `deepseek/deepseek-v4.1-flash-1017` (ADR-0022). The three variables `LLM_API_KEY`, `LLM_BASE_URL`, and `LLM_MODEL` are injected at run time and declared by name in `.env.example`. No key is stored in the project or repository. `temperature` is zero; other generation parameters, timeout, and retry count are defaults for now and are tuned during implementation. A model failure removes only LLM narrative and leaves deterministic canonical JSON valid.
 
 ## Network and security boundaries
 
@@ -47,7 +73,7 @@ Observability is fail-open. Product services continue their core work when the c
 - Network access only for approved external services
 - Read-only `/data`
 - Writable `/submission`
-- One-command Docker Compose execution
+- One-command non-interactive `docker run` execution
 - Dependencies installed during image build
 - UTF-8 input and output
 - Business timezone `Asia/Tehran`
