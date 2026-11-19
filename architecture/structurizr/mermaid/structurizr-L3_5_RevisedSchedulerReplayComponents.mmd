@@ -1,0 +1,67 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["03.5 - C4 Level 3 - Revised Scheduler and Replay Runner Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    4["<div style='font-weight: bold'>Evaluator</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Runs Docker, replay,<br />hidden-data checks, and<br />acceptance tests.</div>"]
+    style 4 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+
+    6("<div style='font-weight: bold'>DIDRAH Input Dataset</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Provides versioned source,<br />replay, upload,<br />configuration, and history<br />data.</div>")
+    click 6 "{workspace}/documentation/DIDRAH#input-dataset-contract" "{workspace}/documentation/DIDRAH#input-dataset-contract"
+    style 6 fill:#475569,stroke:#313b49,color:#ffffff
+
+    subgraph 11 ["DIDRAH"]
+      style 11 fill:#ffffff,stroke:#152860,color:#152860
+
+      subgraph 53 ["Scheduler and Replay Runner"]
+        style 53 fill:#ffffff,stroke:#095164,color:#095164
+
+        54("<div style='font-weight: bold'>Replay Command</div><div style='font-size: 70%; margin-top: 0px'>[Component: Application command]</div><div style='font-size: 80%; margin-top:10px'>Accepts a replay range,<br />sequences simulated days, and<br />resumes from the last<br />terminal day.</div>")
+        click 54 "{workspace}/documentation/DIDRAH#replay-command" "{workspace}/documentation/DIDRAH#replay-command"
+        style 54 fill:#0e7490,stroke:#095164,color:#ffffff
+        55("<div style='font-weight: bold'>Simulation Clock</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic clock]</div><div style='font-size: 80%; margin-top:10px'>Derives the pinned business<br />date and source cutoff<br />without using the host clock<br />as product time.</div>")
+        click 55 "{workspace}/documentation/DIDRAH#simulation-clock" "{workspace}/documentation/DIDRAH#simulation-clock"
+        style 55 fill:#0e7490,stroke:#095164,color:#ffffff
+        56("<div style='font-weight: bold'>Evaluation Profile Loader</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic configuration reader]</div><div style='font-size: 80%; margin-top:10px'>Loads the selected evaluation<br />limits, acceptance<br />thresholds, and run options.</div>")
+        click 56 "{workspace}/documentation/DIDRAH#evaluation-profile-loader" "{workspace}/documentation/DIDRAH#evaluation-profile-loader"
+        style 56 fill:#475569,stroke:#313b49,color:#ffffff
+        57("<div style='font-weight: bold'>Run Status Client</div><div style='font-size: 70%; margin-top: 0px'>[Component: Internal API client]</div><div style='font-size: 80%; margin-top:10px'>Starts and monitors runs only<br />through the Backend Run<br />Coordinator.</div>")
+        click 57 "{workspace}/documentation/DIDRAH#run-status-client" "{workspace}/documentation/DIDRAH#run-status-client"
+        style 57 fill:#0e7490,stroke:#095164,color:#ffffff
+        58("<div style='font-weight: bold'>Acceptance Test Harness</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic test harness]</div><div style='font-size: 80%; margin-top:10px'>Runs replay, regression,<br />leakage, performance,<br />contract, and KPI parity<br />checks.</div>")
+        click 58 "{workspace}/documentation/DIDRAH#acceptance-test-harness" "{workspace}/documentation/DIDRAH#acceptance-test-harness"
+        style 58 fill:#475569,stroke:#313b49,color:#ffffff
+        59("<div style='font-weight: bold'>KPI Parity Validator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic parity module]</div><div style='font-size: 80%; margin-top:10px'>Compares 55 SQLite reference<br />results with equivalent<br />PostgreSQL results and<br />records receipts.</div>")
+        click 59 "{workspace}/documentation/DIDRAH#kpi-parity-validator" "{workspace}/documentation/DIDRAH#kpi-parity-validator"
+        style 59 fill:#475569,stroke:#313b49,color:#ffffff
+        60("<div style='font-weight: bold'>Scripted Manager Input Adapter</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic evaluation input adapter]</div><div style='font-size: 80%; margin-top:10px'>Submits versioned replay<br />inputs through the same<br />Backend API as interactive<br />inputs.</div>")
+        click 60 "{workspace}/documentation/DIDRAH#scripted-manager-input-adapter" "{workspace}/documentation/DIDRAH#scripted-manager-input-adapter"
+        style 60 fill:#475569,stroke:#313b49,color:#ffffff
+      end
+
+      16("<div style='font-weight: bold'>Backend API</div><div style='font-size: 70%; margin-top: 0px'>[Container: ASP.NET Core, .NET 10 LTS, REST/JSON, OpenAPI]</div><div style='font-size: 80%; margin-top:10px'>Authorizes requests, creates<br />durable jobs, validates<br />outcomes, and delivers<br />results.</div>")
+      style 16 fill:#1d4ed8,stroke:#143697,color:#ffffff
+      61[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL 18]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+      click 61 "{workspace}/documentation/DIDRAH#postgresql-product-database" "{workspace}/documentation/DIDRAH#postgresql-product-database"
+      style 61 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+    end
+
+    4-. "<div>Read acceptance evidence</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->16
+    16-. "<div>Product state</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS, EF Core/Npgsql]</div>" .->61
+    4-. "<div>Start replay range</div><div style='font-size: 70%'>[Command-line interface]</div>" .->54
+    6-. "<div>Supply scripted manager<br />inputs</div><div style='font-size: 70%'>[Read-only filesystem]</div>" .->60
+    54-. "<div>Replay pinned manager inputs</div><div style='font-size: 70%'>[In-process function call]</div>" .->60
+    60-. "<div>Submit scripted product input</div><div style='font-size: 70%'>[HTTPS, REST/JSON]</div>" .->16
+    6-. "<div>Supply replay range</div><div style='font-size: 70%'>[Read-only JSON]</div>" .->54
+    54-. "<div>Pin business date and cutoff</div><div style='font-size: 70%'>[In-process function call]</div>" .->55
+    54-. "<div>Load evaluation profile</div><div style='font-size: 70%'>[In-process function call]</div>" .->56
+    54-. "<div>Start or resume simulated day</div><div style='font-size: 70%'>[In-process function call]</div>" .->57
+    54-. "<div>Start terminal acceptance<br />checks</div><div style='font-size: 70%'>[In-process function call]</div>" .->58
+    4-. "<div>Start acceptance checks</div><div style='font-size: 70%'>[Command-line interface]</div>" .->58
+    58-. "<div>Load acceptance limits</div><div style='font-size: 70%'>[In-process function call]</div>" .->56
+    58-. "<div>Read terminal run status</div><div style='font-size: 70%'>[In-process function call]</div>" .->57
+    58-. "<div>Store acceptance results</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    58-. "<div>Run KPI parity suite</div><div style='font-size: 70%'>[In-process function call]</div>" .->59
+
+  end

@@ -318,6 +318,261 @@ Blocker وجود ندارد.
 
 نقطه دقیق Resume: **فاز ۵، قبل از نخستین تغییر، از `architecture/structurizr/docs/09-web-application-components.md` و سپس تطبیق ۵۴ Anchor و URL طبق `plan.md` شروع شود.**
 
+## وضعیت جاری پس از فاز ۶
+
+- فاز ۶ تکمیل و Validation آن پاس شد.
+- فایل‌های تغییرکرده، نتیجه ۱۶ Export، بازبینی مشکی، Validationها و Blockerها در بخش «نتیجه فاز ۶ — تولید Mermaid Artifactها» ثبت شده است.
+- Blocker وجود ندارد.
+
+### Resume فعال
+
+نقطه دقیق Resume: **فاز ۷، پیش از هر تغییر، فقط Validation نهایی Read-only را اجرا کن: Structurizr Local روی کپی موقت، بررسی ۵۴ لینک، Schema validation، Hash فایل‌های محافظت‌شده و Git diff. در صورت نقص، به فاز مالک همان نقص برگرد.**
+
+## نتیجه فاز ۷ — Final Validation
+
+وضعیت: تکمیل‌شده در 2026-11-19.
+
+نتیجه نهایی: **Conditional Pass — workspace.json local generated deviation**
+
+هیچ نقص عملکردی یا معماری پیدا نشد. همه معیارها به‌جز Hash فایل Generated برابر `architecture/structurizr/workspace.json` پاس شدند. این فایل ویرایش، Stage، Commit، Restore یا Reset نشد.
+
+### نتیجه ۲۴ مرحله Validation
+
+| مرحله | نتیجه | شواهد |
+|---:|---|---|
+| 1 | Conditional | Baseline و Hashها بررسی شدند. فقط `workspace.json` با Baseline برابر نیست. |
+| 2 | پاس | ارجاع فعال به `final review` یا `trash-data` در منابع Structurizr وجود ندارد. |
+| 3 | پاس | گزارش فازها نشان می‌دهد ADRها پیش از همگام‌سازی مستندات و مدل بررسی و اصلاح شدند. |
+| 4 | پاس | `docs/01` تا `docs/08` با ADRها و تصمیم‌های باز هماهنگ هستند. |
+| 5 | پاس | `workspace.dsl` با ADRها هماهنگ است و `!impliedRelationships false` حفظ شده است. |
+| 6 | پاس | Inventory از مدل Parse‌شده دوباره استخراج شد. |
+| 7 | پاس | تعداد Product Component دقیقاً ۵۰ است: Web برابر ۳، Backend برابر ۲۰، Worker برابر ۱۵، Scheduler برابر ۷ و Agent برابر ۵. |
+| 8 | پاس | شش فایل Component Documentation کامل هستند. چهار Store/Contract نیز مستند هستند. |
+| 9 | پاس | ۵۴ Anchor یکتا وجود دارد. توزیع آن‌ها برابر ۳، ۲۰، ۱۵، ۷، ۵ و ۴ است. |
+| 10 | پاس | ۵۴ URL یکتا با ۵۴ Anchor متناظر هستند. URL یا Anchor بدون جفت وجود ندارد. |
+| 11 | پاس | MCP Parse موفق است. |
+| 12 | پاس | MCP Validate مقدار `OK` برگرداند. Structurizr CLI Validate نیز موفق است. |
+| 13 | پاس | MCP Inspect Finding عملیاتی ندارد. |
+| 14 | پاس | برای MCP فقط `!docs` و `!adrs` از کپی درون‌حافظه‌ای حذف شدند. فایل اصلی تغییر نکرد. |
+| 15 | پاس | دو Finding مصنوعی Documentation و Decisions جدا ثبت شدند. |
+| 16 | پاس | هر ۱۶ View با MCP Export شد. |
+| 17 | پاس | هر Artifact فقط Mermaid `definition` را دارد. |
+| 18 | پاس | JSON خام، metadata یا wrapper ابزار در Mermaidها وجود ندارد. |
+| 19 | پاس | Structurizr Local v2026.10.26 روی کپی موقت اجرا شد. |
+| 20 | پاس | Hash مخزن در طول اجرای Local ثابت ماند و برابر `d23e9c6373a086873d366e4708e877f27327cbcc65ac9da5a770dffde2391292` بود. |
+| 21 | پاس | هر ۵۴ لینک در مرورگر واقعی باز شد. هر Anchor وجود داشت و در محل درست نمایش داده شد. |
+| 22 | پاس | `example_brief.json` با `brief_schema.json` و JSON Schema Draft 2020-12 معتبر است. آزمون Read-only بود. |
+| 23 | Conditional | شش Reference با Baseline برابر هستند. فقط Hash `workspace.json` متفاوت است. |
+| 24 | پاس با استثنای شناخته‌شده | تغییر خارج از Scope جدید وجود ندارد. `workspace.json` همان تغییر محلی شناخته‌شده را دارد و `plan-stage.md` تنها فایل گزارش فاز است. |
+
+### MCP، Local و Artifactها
+
+- MCP Parse: پاس.
+- MCP Validate: پاس؛ `OK`.
+- MCP Inspect: صفر Finding عملیاتی و دو Finding مصنوعی ناشی از کپی درون‌حافظه‌ای.
+- Product Component: دقیقاً ۵۰.
+- View: دقیقاً ۱۶؛ شامل پنج Component View، یک Container View، یک System Context View، یک Deployment View و هشت Custom Scenario View.
+- سه Component مصوب `Normalizer`، `KPI Definition Preprocessor` و `Scripted Manager Input Adapter` وجود دارند.
+- هیچ Component با ماهیت State یا Record وجود ندارد.
+- `OpenTelemetry Collector` تنها Infrastructure Container افزوده‌شده است.
+- Structurizr Local: ۱۶ از ۱۶ View، Documentation و Decisions نمایش داده شدند.
+- وضعیت ADR در Local و فایل‌ها: ۱۸ `Accepted`، یک `Proposed` برای ADR-0011 و یک `Superseded` برای ADR-0012.
+- زنجیره Supersession بین ADR-0012 و ADR-0018 در هر دو جهت معتبر است.
+- Mermaid Artifact: ۱۶ از ۱۶ با View Key متناظر است. هر ۱۶ فایل با Mermaid CLI و پس‌زمینه مشکی Parse شد.
+- تفاوت syntax-only مربوط به quote شدن URL دستور `click` در Artifactها کنترل شد. محتوای Export با تعریف MCP متناظر است.
+- فایل Mermaid با JSON خام یا شروع نامعتبر وجود ندارد.
+
+### مرزهای معماری
+
+- Technology Matrix در DSL، docs/02 و ADR-0018 هماهنگ است. Technology ممنوع در مدل وجود ندارد.
+- Wake-up فقط Hint است. PostgreSQL منبع حقیقت Job است. Agent Runtime، Job را از PostgreSQL Claim می‌کند.
+- دسترسی Agent Runtime محدود است. دسترسی مستقیم به جدول‌های تجاری و SQL دلخواه ممنوع است.
+- SQLite فقط در Acceptance Test Harness است. SQLite یک Product Database یا Runtime Container نیست.
+- مسیرهای خروجی مستقیماً زیر `OUTPUT_DIR` هستند. مسیر `submission/submission` تولید نمی‌شود.
+- Submission Exporter کنترل containment، temporary write، flush، close، atomic rename، hash و Export Receipt دارد.
+- Decision Effect فقط یک Internal Record در PostgreSQL است و Output Contract را تغییر نمی‌دهد.
+- OpenTelemetry و Langfuse تنها ابزارهای Observability هستند. Export اختیاری و fail-open است.
+- Inspect هیچ Missing Technology، Deployment Instance جداافتاده یا Element خارج از View گزارش نکرد.
+- لینک Markdown محلی شکسته وجود ندارد.
+- `Docs/final review/` و `Docs/trash-data/` تغییر یا حذف نشده‌اند.
+
+### Hash فایل‌های محافظت‌شده
+
+| فایل | Baseline | فعلی | نتیجه |
+|---|---|---|---|
+| `architecture/structurizr/workspace.json` | `cfd7522b93ecf8cca00dcbbb3ada8911f951dc27467dbfb6d44da64e11a7020b` | `d23e9c6373a086873d366e4708e877f27327cbcc65ac9da5a770dffde2391292` | **Known Local Deviation؛ پاس نیست** |
+| `reference_views.sql` | `8f9e299a3451eba280f3b70688ac796f41c9be27d28ade5c0c13386eafda01b4` | همان | پاس |
+| `kpi_dictionary.csv` | `35406feb924c7239ba017a37417f2074a89a6d9bfe09fcf8733fb5c4b133d2d3` | همان | پاس |
+| `brief_schema.json` | `a8545f2073421db9dd90748087ada0f43e9971516775a5f711a64d8695bafe35` | همان | پاس |
+| `qa_answer_schema.json` | `ea9656df1071b9734f75fbdfb9bf3ef9a0186202689499d2a1d7f5e8f04af426` | همان | پاس |
+| `example_brief.json` | `f277585d9d6a2af98e098a982d7911222b8d43781efe569268b21293ed782ab8` | همان | پاس |
+| `scripted_inputs.json` | `4a33727212f82bd5a30fbd29c1f1eec63fc46264bcf4ee2be92faf795d080d54` | همان | پاس |
+
+### استثناها
+
+- `workspace.json` یک Generated/Layout State محلی دارد.
+- Hash فعلی آن با Baseline برابر نیست.
+- این مورد Pass اعلام نمی‌شود.
+- فاز ۷ درباره حذف، Restore یا Commit این فایل تصمیم نمی‌گیرد.
+
+### فایل‌های تغییرکرده در فاز ۷
+
+- `plan-stage.md` — فقط ثبت نتیجه Final Validation و نقطه تصمیم بعدی.
+
+تغییر محلی موجود و خارج از Commit فاز:
+
+- `architecture/structurizr/workspace.json` — Known Local Deviation؛ بدون Stage و بدون تغییر در فاز ۷.
+
+### Blockerها
+
+Blocker عملکردی یا معماری وجود ندارد. استثنای `workspace.json` مانع نتیجه Conditional Pass نیست، اما مانع نتیجه Pass کامل است.
+
+### نقطه تصمیم بعدی
+
+Resume اجرایی جدید وجود ندارد. نقطه تصمیم بعدی، تصمیم صریح کاربر درباره Generated/Layout State محلی `workspace.json` است. تا آن زمان این فایل بدون Stage و بدون Commit باقی می‌ماند.
+
+## نتیجه فاز ۶ — تولید Mermaid Artifactها
+
+وضعیت: تکمیل‌شده در 2026-11-19.
+
+### نتیجه
+
+- هر ۱۶ View فعال با MCP Structurizr Export شد. Export از `L1_SystemContext` شروع شد.
+- فقط بدنه Mermaid در فایل‌ها ذخیره شد. JSON، metadata و wrapper ابزار ذخیره نشد.
+- نام فایل‌ها با View Keyهای `plan.md` تطبیق دارد.
+- نحو `click` برای URLهای `{workspace}` با کوتیشن معتبر Mermaid ذخیره شد. URL، Anchor و مدل معماری تغییر نکرد.
+- Artifact غیرفعال یا فاقد View فعال Restore یا تولید نشد.
+- `workspace.dsl` و `workspace.json` تغییر داده نشدند.
+
+### فایل‌های تغییرکرده
+
+- `architecture/structurizr/mermaid/structurizr-L1_SystemContext.mmd`
+- `architecture/structurizr/mermaid/structurizr-L2_Containers.mmd`
+- `architecture/structurizr/mermaid/structurizr-L3_2_WebApplicationComponents.mmd`
+- `architecture/structurizr/mermaid/structurizr-L3_3_RevisedBackendApiComponents.mmd`
+- `architecture/structurizr/mermaid/structurizr-L3_4_RevisedBackgroundWorkerComponents.mmd`
+- `architecture/structurizr/mermaid/structurizr-L3_5_RevisedSchedulerReplayComponents.mmd`
+- `architecture/structurizr/mermaid/structurizr-L3_6_AgentRuntimeComponents.mmd`
+- `architecture/structurizr/mermaid/structurizr-D1_EvaluationCompose.mmd`
+- `architecture/structurizr/mermaid/structurizr-S7_ReportGenerationScenario.mmd`
+- `architecture/structurizr/mermaid/structurizr-S8_ManagerDecisionScenarios.mmd`
+- `architecture/structurizr/mermaid/structurizr-S9_MeetingMinutesUploadScenario.mmd`
+- `architecture/structurizr/mermaid/structurizr-S10_FailureAndFallback.mmd`
+- `architecture/structurizr/mermaid/structurizr-S11_KpiTranslationAndParity.mmd`
+- `architecture/structurizr/mermaid/structurizr-S12_OrganizationConfigurationD1.mmd`
+- `architecture/structurizr/mermaid/structurizr-S13_ScriptedManagerInputReplay.mmd`
+- `architecture/structurizr/mermaid/structurizr-S14_LateCorrectedDataRestatement.mmd`
+- `plan-stage.md` — فقط ثبت نتیجه و Resume.
+
+### بازبینی تصویری با پس‌زمینه مشکی
+
+| View | نتیجه | اتصال‌ها و Tagها |
+|---|---|---|
+| `L1_SystemContext` | پاس | خوانا |
+| `L2_Containers` | پاس | خوانا |
+| `L3_2_WebApplicationComponents` | پاس | خوانا |
+| `L3_3_RevisedBackendApiComponents` | پاس | خوانا در تصویر اصلی با وضوح کامل |
+| `L3_4_RevisedBackgroundWorkerComponents` | پاس | خوانا در تصویر اصلی با وضوح کامل |
+| `L3_5_RevisedSchedulerReplayComponents` | پاس | خوانا |
+| `L3_6_AgentRuntimeComponents` | پاس | خوانا |
+| `D1_EvaluationCompose` | پاس | خوانا |
+| `S7_ReportGenerationScenario` | پاس | خوانا |
+| `S8_ManagerDecisionScenarios` | پاس | خوانا در تصویر اصلی با وضوح کامل |
+| `S9_MeetingMinutesUploadScenario` | پاس | خوانا در تصویر اصلی با وضوح کامل |
+| `S10_FailureAndFallback` | پاس | خوانا |
+| `S11_KpiTranslationAndParity` | پاس | خوانا |
+| `S12_OrganizationConfigurationD1` | پاس | خوانا |
+| `S13_ScriptedManagerInputReplay` | پاس | خوانا |
+| `S14_LateCorrectedDataRestatement` | پاس | خوانا |
+
+تصویرهای بازبینی فقط در پوشه موقت سیستم ساخته شدند و وارد Working Tree نشدند.
+
+### Validation
+
+- شمارش Artifactها: دقیقاً ۱۶.
+- تطبیق نام فایل و View Key: ۱۶ از ۱۶ پاس.
+- Mermaid parse و render با Mermaid CLI 12.2.0: ۱۶ از ۱۶ پاس.
+- فایل دارای JSON خام، metadata یا wrapper: صفر.
+- MCP parse: پاس.
+- MCP validate: پاس.
+- MCP inspect: Finding عملیاتی صفر. دو Finding مربوط به Documentation و Decisions مصنوعی است؛ علت، حذف موقت و درون‌حافظه‌ای `!docs` و `!adrs` برای ورودی MCP است.
+- Product Component: دقیقاً ۵۰.
+- View: دقیقاً ۱۶.
+- بازبینی تصویری با پس‌زمینه مشکی: ۱۶ از ۱۶ پاس.
+- `git diff --check`: پاس.
+- تغییر موجود `workspace.json` حفظ شد و Stage نشد.
+
+### تصمیم‌های باز
+
+تصمیم باز جدید ثبت نشد و مقدار یا الزام جدیدی اختراع نشد.
+
+### Blockerها
+
+Blocker وجود ندارد.
+
+### Resume
+
+نقطه دقیق Resume: **فاز ۷، پیش از هر تغییر، فقط Validation نهایی Read-only را اجرا کن: Structurizr Local روی کپی موقت، بررسی ۵۴ لینک، Schema validation، Hash فایل‌های محافظت‌شده و Git diff. در صورت نقص، به فاز مالک همان نقص برگرد.**
+
+## نتیجه فاز ۵ — مستندات Component و URLها
+
+وضعیت: تکمیل‌شده در 2026-11-19.
+
+### نتیجه
+
+- ۵۰ Product Component در شش سند Container مستند شدند.
+- PostgreSQL، Protected File Archive، Input Dataset Contract و Submission Output Contract مستند شدند.
+- هر سند ساختار ثابت Container را دارد.
+- هر Component یا Store/Contract همه ۱۵ فیلد لازم را دارد.
+- ۵۴ Anchor یکتا و ۵۴ URL یکتا ثبت شدند.
+- هر URL در `workspace.dsl` به Anchor متناظر در Documentation اشاره می‌کند.
+- هیچ Component، Store، Contract یا تصمیم معماری جدیدی اضافه نشد.
+- تصمیم‌های باز بدون مقدار یا الزام جدید باقی ماندند.
+
+### فایل‌های تغییرکرده
+
+- `architecture/structurizr/workspace.dsl` — فقط URLهای Documentation.
+- `architecture/structurizr/docs/09-web-application-components.md`
+- `architecture/structurizr/docs/10-backend-api-components.md`
+- `architecture/structurizr/docs/11-background-worker-components.md`
+- `architecture/structurizr/docs/12-scheduler-replay-components.md`
+- `architecture/structurizr/docs/13-agent-runtime-components.md`
+- `architecture/structurizr/docs/14-stores-and-contracts.md`
+- `plan-stage.md` — فقط ثبت نتیجه و Resume.
+
+### Validation
+
+- شمارش Anchorها: پاس؛ Web برابر ۳، Backend برابر ۲۰، Worker برابر ۱۵، Scheduler برابر ۷، Agent برابر ۵ و Stores/Contracts برابر ۴.
+- مجموع Anchorها: دقیقاً ۵۴ و همه یکتا.
+- شمارش URLها: دقیقاً ۵۴ و همه یکتا.
+- تطبیق Anchor و URL: پاس؛ Anchor یا URL بدون جفت وجود ندارد.
+- فیلدهای اجباری Component: هر ۱۵ فیلد برای هر ۵۴ Element ثبت شده است.
+- Structurizr Local: هر شش سند با موفقیت رندر شد.
+- Local link test: هر ۵۴ Anchor در صفحه Documentation پیدا شد؛ Anchor گم‌شده وجود ندارد.
+- MCP parse: پاس.
+- MCP validate: پاس.
+- MCP inspect: صفر Finding عملیاتی.
+- دو Finding مربوط به Documentation و Decisions مصنوعی هستند. علت، حذف موقت و درون‌حافظه‌ای `!docs` و `!adrs` برای ورودی MCP است.
+- ارجاع فعال به `Docs/final review`، `Docs/trash-data` یا `submission/submission`: صفر.
+- Product Component: دقیقاً ۵۰ و بدون تغییر.
+- View: دقیقاً ۱۶ و بدون تغییر.
+- `!impliedRelationships false`: حفظ شد.
+- `workspace.json`: تغییر موجود قبلی حفظ شد و در فاز ۵ ویرایش نشد.
+- فایل‌های Reference و Output Contract: بدون تغییر.
+- `git diff --check` و بررسی whitespace همه فایل‌های فاز: پاس.
+
+### تصمیم‌های باز
+
+تصمیم‌های باز مصوب تغییر نکردند. مقدار یا الزام جدیدی ثبت نشد.
+
+### Blockerها
+
+Blocker وجود ندارد.
+
+### Resume
+
+نقطه دقیق Resume: **فاز ۶، قبل از تولید نخستین Artifact، از MCP export برای View `L1_SystemContext` شروع شود. سپس فقط فیلد `definition` در فایل Mermaid متناظر ذخیره شود و این روند برای هر ۱۶ View طبق `plan.md` ادامه یابد.**
+
 ## اصلاح تکمیلی فاز ۴.۱ — کنترل Text Fit
 
 وضعیت: تکمیل‌شده در 2026-11-19.
@@ -442,3 +697,13 @@ Blocker وجود ندارد.
 ### Resume
 
 نقطه دقیق Resume: **فاز ۵، قبل از نخستین تغییر، از `architecture/structurizr/docs/09-web-application-components.md` و سپس تطبیق ۵۴ Anchor و URL طبق `plan.md` شروع شود.**
+
+## وضعیت نهایی پس از فاز ۷
+
+- فاز ۷ با نتیجه **Conditional Pass — workspace.json local generated deviation** تکمیل شد.
+- نقص عملکردی یا معماری وجود ندارد.
+- `workspace.json` با Baseline برابر نیست و Pass اعلام نشده است.
+- این فایل Stage یا Commit نشده است.
+- Blocker وجود ندارد.
+
+نقطه تصمیم بعدی: **Resume اجرایی جدید وجود ندارد. تصمیم بعدی فقط با دستور صریح کاربر درباره Generated/Layout State محلی `workspace.json` انجام می‌شود.**

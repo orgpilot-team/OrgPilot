@@ -1,0 +1,46 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["03.2 - C4 Level 3 - Web Application Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    1["<div style='font-weight: bold'>Senior Manager</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Reads organization health,<br />workflows, escalations, and<br />pending decisions.</div>"]
+    style 1 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+    2["<div style='font-weight: bold'>Unit Manager</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Reads authorized aggregates<br />and records decisions and<br />follow-up actions.</div>"]
+    style 2 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+    3["<div style='font-weight: bold'>Team Supervisor</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Reads team data and<br />authorized workload details.</div>"]
+    style 3 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+
+    subgraph 11 ["DIDRAH"]
+      style 11 fill:#ffffff,stroke:#152860,color:#152860
+
+      subgraph 12 ["Web Application"]
+        style 12 fill:#ffffff,stroke:#024970,color:#024970
+
+        13("<div style='font-weight: bold'>Conversational Assistant UI</div><div style='font-size: 70%; margin-top: 0px'>[Component: Web UI]</div><div style='font-size: 80%; margin-top:10px'>Shows reports and answers. It<br />accepts scoped questions,<br />uploads, and manager<br />operations.</div>")
+        click 13 "{workspace}/documentation/DIDRAH#conversational-assistant-ui" "{workspace}/documentation/DIDRAH#conversational-assistant-ui"
+        style 13 fill:#0369a1,stroke:#024970,color:#ffffff
+        14("<div style='font-weight: bold'>Role-Based Dashboard UI</div><div style='font-size: 70%; margin-top: 0px'>[Component: Web UI]</div><div style='font-size: 80%; margin-top:10px'>Shows authorized KPIs,<br />targets, trends, drill-downs,<br />decisions, and open actions.</div>")
+        click 14 "{workspace}/documentation/DIDRAH#role-based-dashboard-ui" "{workspace}/documentation/DIDRAH#role-based-dashboard-ui"
+        style 14 fill:#0369a1,stroke:#024970,color:#ffffff
+        15("<div style='font-weight: bold'>Workflow Control Room UI</div><div style='font-size: 70%; margin-top: 0px'>[Component: Web UI]</div><div style='font-size: 80%; margin-top:10px'>Shows WF1-WF3, stage SLA,<br />bottlenecks, escalations, and<br />pending decisions. Senior<br />Manager only.</div>")
+        click 15 "{workspace}/documentation/DIDRAH#workflow-control-room-ui" "{workspace}/documentation/DIDRAH#workflow-control-room-ui"
+        style 15 fill:#0369a1,stroke:#024970,color:#ffffff
+      end
+
+      16("<div style='font-weight: bold'>Backend API</div><div style='font-size: 70%; margin-top: 0px'>[Container: ASP.NET Core, .NET 10 LTS, REST/JSON, OpenAPI]</div><div style='font-size: 80%; margin-top:10px'>Authorizes requests, creates<br />durable jobs, validates<br />outcomes, and delivers<br />results.</div>")
+      style 16 fill:#1d4ed8,stroke:#143697,color:#ffffff
+    end
+
+    1-. "<div>Reads executive brief and<br />asks aggregate questions</div><div style='font-size: 70%'>[Human interaction]</div>" .->13
+    1-. "<div>Reads organization health</div><div style='font-size: 70%'>[Human interaction]</div>" .->14
+    1-. "<div>Reads WF1-WF3 and escalations</div><div style='font-size: 70%'>[Human interaction]</div>" .->15
+    2-. "<div>Reads unit brief and records<br />decisions</div><div style='font-size: 70%'>[Human interaction]</div>" .->13
+    2-. "<div>Reads unit and team<br />aggregates</div><div style='font-size: 70%'>[Human interaction]</div>" .->14
+    3-. "<div>Reads team brief and asks<br />scoped questions</div><div style='font-size: 70%'>[Human interaction]</div>" .->13
+    3-. "<div>Reads team KPIs and<br />direct-workload details</div><div style='font-size: 70%'>[Human interaction]</div>" .->14
+    13-. "<div>Submits questions and manager<br />operations; retrieves reports<br />and answers</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->16
+    14-. "<div>Retrieves authorized metrics,<br />trends, and drill-down<br />results</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->16
+    15-. "<div>Retrieves executive workflow,<br />bottleneck, and escalation<br />results</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->16
+
+  end

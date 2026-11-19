@@ -1,0 +1,89 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.9 - Scenario - Meeting-Minutes Upload"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    175["<div style='font-weight: bold'>B - Manager</div><div style='font-size: 70%; margin-top: 0px'>[Scenario B - meeting-minutes upload]</div><div style='font-size: 80%; margin-top:10px'>Uploads meeting minutes and<br />reviews the validated<br />decision card.</div>"]
+    style 175 fill:#7c2d12,stroke:#561f0c,color:#ffffff
+    176("<div style='font-weight: bold'>B - Conversational Assistant UI</div><div style='font-size: 70%; margin-top: 0px'>[Web Application]</div><div style='font-size: 80%; margin-top:10px'>Submits the upload, polls job<br />status, and presents the<br />validated card.</div>")
+    style 176 fill:#0369a1,stroke:#024970,color:#ffffff
+    177("<div style='font-weight: bold'>B - Identity Boundary</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Validates the manager session<br />and creates trusted identity<br />context.</div>")
+    style 177 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    178("<div style='font-weight: bold'>B - Authorization Service</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Builds and rechecks the<br />permitted data and policy<br />scope.</div>")
+    style 178 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    179("<div style='font-weight: bold'>B - Manager Request Router</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Routes authorized upload,<br />status, and review commands<br />to fixed handlers.</div>")
+    style 179 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    180("<div style='font-weight: bold'>B - Document Processing Runner</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Archives and parses the<br />upload, then creates a<br />durable analysis job.</div>")
+    style 180 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    181("<div style='font-weight: bold'>B - Document Parser</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Validates the contract and<br />treats document content only<br />as data.</div>")
+    style 181 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    182("<div style='font-weight: bold'>B - Agent Runtime Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Sends a best-effort job-ID<br />wake-up after the durable job<br />commit.</div>")
+    style 182 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    183("<div style='font-weight: bold'>B - Agent Job Runner</div><div style='font-size: 70%; margin-top: 0px'>[Agent Runtime]</div><div style='font-size: 80%; margin-top:10px'>Claims analysis jobs, runs<br />the graph, and persists a<br />candidate or failure.</div>")
+    style 183 fill:#a21caf,stroke:#71137a,color:#ffffff
+    184("<div style='font-weight: bold'>B - Agent Job Status API</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Returns authorized job status<br />and persisted document<br />results.</div>")
+    style 184 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    185("<div style='font-weight: bold'>B - Bounded Agent Orchestrator</div><div style='font-size: 70%; margin-top: 0px'>[Agent Runtime]</div><div style='font-size: 80%; margin-top:10px'>Produces a structured<br />document decision-card<br />candidate without confirming<br />or executing it.</div>")
+    style 185 fill:#a21caf,stroke:#71137a,color:#ffffff
+    186("<div style='font-weight: bold'>B - Model Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Agent Runtime]</div><div style='font-size: 80%; margin-top:10px'>Applies token, time, retry,<br />and cost limits to bounded<br />document analysis and<br />drafting.</div>")
+    style 186 fill:#a21caf,stroke:#71137a,color:#ffffff
+    187("<div style='font-weight: bold'>B - Output Validator</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Checks the decision-card<br />contract, document evidence<br />references, scope, and<br />response rules.</div>")
+    style 187 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    188("<div style='font-weight: bold'>B - Decision Confirmation Service</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Stores the validated card and<br />accepts only an authenticated<br />manager review command.</div>")
+    style 188 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    189("<div style='font-weight: bold'>B - Decision and Follow-Up</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Records a confirmed human<br />decision and its follow-up<br />contract without executing<br />the decision.</div>")
+    style 189 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    190["<div style='font-weight: bold'>B - Protected File Archive</div><div style='font-size: 70%; margin-top: 0px'>[Protected storage]</div><div style='font-size: 80%; margin-top:10px'>Stores original upload bytes<br />with their hash and manifest.</div>"]
+    style 190 fill:#6d28d9,stroke:#4c1c97,color:#ffffff
+    191[("<div style='font-weight: bold'>B - PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Scenario B state]</div><div style='font-size: 80%; margin-top:10px'>Stores fragments, receipts,<br />jobs, pinned scope, outcomes,<br />reviews, and decisions.</div>")]
+    style 191 fill:#6d28d9,stroke:#4c1c97,color:#ffffff
+
+    175-. "<div>B01. Select supported<br />document</div><div style='font-size: 70%'>[Human interaction]</div>" .->176
+    176-. "<div>B02. Submit authenticated<br />upload</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->177
+    177-. "<div>B03. Create trusted identity</div><div style='font-size: 70%'>[In-process function call]</div>" .->178
+    178-. "<div>B04. Pass upload scope</div><div style='font-size: 70%'>[In-process function call]</div>" .->179
+    179-. "<div>B05. Route document upload</div><div style='font-size: 70%'>[In-process function call]</div>" .->180
+    180-. "<div>B06. Archive bytes and hash</div><div style='font-size: 70%'>[Controlled filesystem I/O]</div>" .->190
+    180-. "<div>B07. Request deterministic<br />parse</div><div style='font-size: 70%'>[In-process function call]</div>" .->181
+    181-. "<div>B08. Read approved upload<br />bytes</div><div style='font-size: 70%'>[Controlled filesystem I/O]</div>" .->190
+    181-. "<div>B09. Store fragments and<br />receipt</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->191
+    181-. "<div>B10. Return parse failure</div><div style='font-size: 70%'>[In-process function call]</div>" .->180
+    180-. "<div>B11. Commit document job</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->191
+    180-. "<div>B12a. Return parse failure</div><div style='font-size: 70%'>[In-process function call]</div>" .->179
+    180-. "<div>B12b. Request optional<br />wake-up</div><div style='font-size: 70%'>[In-process function call]</div>" .->182
+    182-. "<div>B13. Send job-ID wake-up</div><div style='font-size: 70%'>[Authenticated HTTPS wake-up with job_id]</div>" .->183
+    180-. "<div>B14. Return committed job ID</div><div style='font-size: 70%'>[In-process function call]</div>" .->179
+    179-. "<div>B15. Return accepted job ID</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->176
+    183-. "<div>B16. Claim document job</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->191
+    183-. "<div>B17. Recheck document scope</div><div style='font-size: 70%'>[Authenticated HTTPS/JSON]</div>" .->178
+    183-. "<div>B18. Run document graph</div><div style='font-size: 70%'>[In-process function call]</div>" .->185
+    185-. "<div>B19. Analyze approved<br />evidence</div><div style='font-size: 70%'>[In-process function call]</div>" .->186
+    186-. "<div>B20. Return completion or<br />failure</div><div style='font-size: 70%'>[In-process function call]</div>" .->185
+    185-. "<div>B21. Return candidate or<br />failure</div><div style='font-size: 70%'>[In-process function call]</div>" .->183
+    183-. "<div>B22. Persist candidate or<br />failure</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->191
+    183-. "<div>B23. Validate persisted<br />outcome</div><div style='font-size: 70%'>[Authenticated HTTPS/JSON]</div>" .->187
+    187-. "<div>B24. Release valid card</div><div style='font-size: 70%'>[In-process function call]</div>" .->188
+    188-. "<div>B25. Store card and review<br />state</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->191
+    176-. "<div>B26. Poll analysis status</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->177
+    177-. "<div>B27. Recheck status scope</div><div style='font-size: 70%'>[In-process function call]</div>" .->178
+    178-. "<div>B28. Pass status request</div><div style='font-size: 70%'>[In-process function call]</div>" .->179
+    179-. "<div>B29. Route status read</div><div style='font-size: 70%'>[In-process function call]</div>" .->184
+    184-. "<div>B30. Read job status</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->191
+    184-. "<div>B31. Return status or result</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->176
+    176-. "<div>B32. Show validated card</div><div style='font-size: 70%'>[Human interaction]</div>" .->175
+    175-. "<div>B33. Choose review action</div><div style='font-size: 70%'>[Human interaction]</div>" .->176
+    176-. "<div>B34. Submit review command</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->177
+    177-. "<div>B35. Recreate trusted context</div><div style='font-size: 70%'>[In-process function call]</div>" .->178
+    178-. "<div>B36. Pass review command</div><div style='font-size: 70%'>[In-process function call]</div>" .->179
+    179-. "<div>B37. Route review command</div><div style='font-size: 70%'>[In-process function call]</div>" .->188
+    188-. "<div>B38a. Request fragment-based<br />revision</div><div style='font-size: 70%'>[In-process function call]</div>" .->180
+    180-. "<div>B38b. Commit revision job</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->191
+    180-. "<div>B38c. Request optional<br />wake-up</div><div style='font-size: 70%'>[In-process function call]</div>" .->182
+    182-. "<div>B38d. Send revision job-ID<br />wake-up</div><div style='font-size: 70%'>[Authenticated HTTPS wake-up with job_id]</div>" .->183
+    188-. "<div>B39. Store rejection</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->191
+    188-. "<div>B40. Forward confirmed card</div><div style='font-size: 70%'>[In-process function call]</div>" .->189
+    189-. "<div>B41. Recheck decision<br />authority</div><div style='font-size: 70%'>[In-process function call]</div>" .->178
+    189-. "<div>B42. Record decision and<br />follow-up</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->191
+
+  end

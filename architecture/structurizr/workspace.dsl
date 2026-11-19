@@ -18,8 +18,12 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         operator = person "Operator" "Monitors runs, failures, cost, backup, and restore evidence." "Person,Operator"
 
         // External systems
-        inputDataset = softwareSystem "DIDRAH Input Dataset" "Provides versioned source, replay, upload, configuration, and history data." "External,Source,Evaluation"
-        submissionOutput = softwareSystem "Submission Output Directory" "Writable OUTPUT_DIR mount for approved brief and QA files only." "External,Storage,Evaluation"
+        inputDataset = softwareSystem "DIDRAH Input Dataset" "Provides versioned source, replay, upload, configuration, and history data." "External,Source,Evaluation" {
+            url "{workspace}/documentation/DIDRAH#input-dataset-contract"
+        }
+        submissionOutput = softwareSystem "Submission Output Directory" "Writable OUTPUT_DIR mount for approved brief and QA files only." "External,Storage,Evaluation" {
+            url "{workspace}/documentation/DIDRAH#submission-output-contract"
+        }
         identityProvider = softwareSystem "Identity Provider" "Authenticates users and supplies a trusted identity. The product or internal method is open." "External,Identity,OpenDecision"
         llmProvider = softwareSystem "Language Model Provider" "Returns bounded language-model completions. The provider and model are open decisions." "External,AI,OpenDecision"
         langfuse = softwareSystem "Langfuse" "Receives optional redacted telemetry. Core workflows remain fail-open." "External,Observability"
@@ -36,23 +40,43 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             }
 
             webApp = container "Web Application" "Persian RTL web application. It provides the three required management interfaces." "React 19, TypeScript, Vite" "Web" {
-                chatUi = component "Conversational Assistant UI" "Shows reports and answers. It accepts scoped questions, uploads, and manager operations." "Web UI" "Web"
-                dashboardUi = component "Role-Based Dashboard UI" "Shows authorized KPIs, targets, trends, drill-downs, decisions, and open actions." "Web UI" "Web"
-                workflowUi = component "Workflow Control Room UI" "Shows WF1-WF3, stage SLA, bottlenecks, escalations, and pending decisions. Senior Manager only." "Web UI" "Web,ExecutiveOnly"
+                chatUi = component "Conversational Assistant UI" "Shows reports and answers. It accepts scoped questions, uploads, and manager operations." "Web UI" "Web" {
+                    url "{workspace}/documentation/DIDRAH#conversational-assistant-ui"
+                }
+                dashboardUi = component "Role-Based Dashboard UI" "Shows authorized KPIs, targets, trends, drill-downs, decisions, and open actions." "Web UI" "Web" {
+                    url "{workspace}/documentation/DIDRAH#role-based-dashboard-ui"
+                }
+                workflowUi = component "Workflow Control Room UI" "Shows WF1-WF3, stage SLA, bottlenecks, escalations, and pending decisions. Senior Manager only." "Web UI" "Web,ExecutiveOnly" {
+                    url "{workspace}/documentation/DIDRAH#workflow-control-room-ui"
+                }
             }
 
             backendApi = container "Backend API" "Authorizes requests, creates durable jobs, validates outcomes, and delivers results." "ASP.NET Core, .NET 10 LTS, REST/JSON, OpenAPI" "API" {
                 group "01 Access" {
-                    identityBoundary = component "Identity Boundary" "Validates the session and creates a trusted identity context." "Deterministic module" "Security"
-                    authorizationService = component "Authorization Service" "Builds the permitted row, column, role, purpose, and policy scope." "Deterministic module" "Security"
+                    identityBoundary = component "Identity Boundary" "Validates the session and creates a trusted identity context." "Deterministic module" "Security" {
+                        url "{workspace}/documentation/DIDRAH#identity-boundary"
+                    }
+                    authorizationService = component "Authorization Service" "Builds the permitted row, column, role, purpose, and policy scope." "Deterministic module" "Security" {
+                        url "{workspace}/documentation/DIDRAH#authorization-service"
+                    }
                 }
 
                 group "02 Request Routing" {
-                    managerInputService = component "Manager Request Router" "Routes each authorized request to one fixed handler. It does not execute work." "Deterministic request dispatcher" "API"
-                    configurationService = component "Configuration Service" "Stores inactive candidates and activates only a valid approved version." "Deterministic configuration control" "Governance"
-                    organizationConfigurationService = component "Organization Configuration Service" "Validates versioned organization changes and activates them at D+1." "Deterministic organization control" "Governance"
-                    decisionTracker = component "Decision and Follow-Up" "Records authorized human decisions and their follow-up contracts. It does not execute them." "Deterministic decision control" "Decision"
-                    runCoordinatorV2 = component "Run Coordinator" "Creates pinned run plans, monitors terminal jobs, and closes each run." "Deterministic run control" "Governance"
+                    managerInputService = component "Manager Request Router" "Routes each authorized request to one fixed handler. It does not execute work." "Deterministic request dispatcher" "API" {
+                        url "{workspace}/documentation/DIDRAH#manager-request-router"
+                    }
+                    configurationService = component "Configuration Service" "Stores inactive candidates and activates only a valid approved version." "Deterministic configuration control" "Governance" {
+                        url "{workspace}/documentation/DIDRAH#configuration-service"
+                    }
+                    organizationConfigurationService = component "Organization Configuration Service" "Validates versioned organization changes and activates them at D+1." "Deterministic organization control" "Governance" {
+                        url "{workspace}/documentation/DIDRAH#organization-configuration-service"
+                    }
+                    decisionTracker = component "Decision and Follow-Up" "Records authorized human decisions and their follow-up contracts. It does not execute them." "Deterministic decision control" "Decision" {
+                        url "{workspace}/documentation/DIDRAH#decision-and-follow-up"
+                    }
+                    runCoordinatorV2 = component "Run Coordinator" "Creates pinned run plans, monitors terminal jobs, and closes each run." "Deterministic run control" "Governance" {
+                        url "{workspace}/documentation/DIDRAH#run-coordinator"
+                    }
                 }
 
                 group "03 Bounded Analysis" {
@@ -71,50 +95,113 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
 
                 group "04 Validate and Deliver" {
-                    outputValidator = component "Output Validator" "Checks schema, evidence, scope, and response rules, then records the validation state." "Deterministic validator" "Governance"
-                    agentJobStatusService = component "Agent Job Status API" "Returns authorized persisted job status and result references. It never executes jobs." "Deterministic delivery API" "API"
-                    publisherV2 = component "Publisher" "Atomically publishes validated canonical JSON or deterministic fallback text." "Deterministic publication module" "Processing"
-                    submissionExporter = component "Submission Exporter" "Validates and atomically exports approved brief and QA artifacts under OUTPUT_DIR." "Deterministic export module" "Processing"
-                    reportApi = component "Report and Dashboard API" "Reads published reports and dashboard data, and returns validated interactive answers or explicit failures." "Deterministic delivery API" "API"
-                    auditService = component "Audit Service" "Records query, model, validation, cost, and failure evidence." "Deterministic module" "Governance"
+                    outputValidator = component "Output Validator" "Checks schema, evidence, scope, and response rules, then records the validation state." "Deterministic validator" "Governance" {
+                        url "{workspace}/documentation/DIDRAH#output-validator"
+                    }
+                    agentJobStatusService = component "Agent Job Status API" "Returns authorized persisted job status and result references. It never executes jobs." "Deterministic delivery API" "API" {
+                        url "{workspace}/documentation/DIDRAH#agent-job-status-api"
+                    }
+                    publisherV2 = component "Publisher" "Atomically publishes validated canonical JSON or deterministic fallback text." "Deterministic publication module" "Processing" {
+                        url "{workspace}/documentation/DIDRAH#publisher"
+                    }
+                    submissionExporter = component "Submission Exporter" "Validates and atomically exports approved brief and QA artifacts under OUTPUT_DIR." "Deterministic export module" "Processing" {
+                        url "{workspace}/documentation/DIDRAH#submission-exporter"
+                    }
+                    reportApi = component "Report and Dashboard API" "Reads published reports and dashboard data, and returns validated interactive answers or explicit failures." "Deterministic delivery API" "API" {
+                        url "{workspace}/documentation/DIDRAH#report-and-dashboard-api"
+                    }
+                    auditService = component "Audit Service" "Records query, model, validation, cost, and failure evidence." "Deterministic module" "Governance" {
+                        url "{workspace}/documentation/DIDRAH#audit-service"
+                    }
                 }
 
                 group "05 Document Decision Flow" {
-                    documentProcessingRunner = component "Document Processing Runner" "Archives and parses uploads, then creates durable analysis or revision jobs." "Deterministic document intake and job producer" "Processing"
-                    documentParser = component "Document Parser" "Validates uploads and stores immutable fragments and a parse receipt." "Deterministic document parser" "Processing"
-                    decisionConfirmationService = component "Decision Confirmation Service" "Stores validated cards and handles authenticated confirm, edit, or reject commands." "Deterministic decision review control" "Decision"
+                    documentProcessingRunner = component "Document Processing Runner" "Archives and parses uploads, then creates durable analysis or revision jobs." "Deterministic document intake and job producer" "Processing" {
+                        url "{workspace}/documentation/DIDRAH#document-processing-runner"
+                    }
+                    documentParser = component "Document Parser" "Validates uploads and stores immutable fragments and a parse receipt." "Deterministic document parser" "Processing" {
+                        url "{workspace}/documentation/DIDRAH#document-parser"
+                    }
+                    decisionConfirmationService = component "Decision Confirmation Service" "Stores validated cards and handles authenticated confirm, edit, or reject commands." "Deterministic decision review control" "Decision" {
+                        url "{workspace}/documentation/DIDRAH#decision-confirmation-service"
+                    }
                 }
             }
 
             worker = container "Background Worker" "Executes deterministic processing and validation jobs and stores results in PostgreSQL." ".NET 10 Worker Service" "Worker" {
-                runStageCoordinatorV2 = component "Run Stage Coordinator" "Claims Ready jobs and runs their deterministic stages from stored dependencies." "PostgreSQL-backed deterministic job runner" "Processing"
-                configurationValidationRunnerV2 = component "Configuration Validation Runner" "Validates configuration jobs and stores receipts. It does not activate configuration." "PostgreSQL-backed validation runner" "Governance"
-                ingestionCoordinator = component "Ingestion Coordinator" "Checks manifests, hashes, idempotency keys, source status, and atomic batch commits." "Deterministic module" "Processing"
-                sourceAdapters = component "Source Adapters" "Parse versioned source schemas and preserve the source bytes and headers." "Deterministic adapters" "Processing"
-                normalizer = component "Normalizer" "Converts parsed fields to canonical types, units, identifiers, and time semantics." "Deterministic normalization module" "Processing"
-                dataQualityService = component "Data Quality Service" "Records missing sources, late arrivals, duplicates, corrections, schema changes, and quarantine results." "Deterministic module" "DataQuality"
-                snapshotService = component "Snapshot Service" "Pins committed data, organization, access policy, and configuration versions for a run." "Deterministic module" "Processing"
-                projectionService = component "Projection Service" "Builds reproducible facts and process projections from committed source events." "Deterministic module" "Processing"
-                semanticRegistry = component "Semantic Registry" "Versions KPI definitions, PostgreSQL SQL, units, precision, targets, ownership, and dependencies." "Deterministic registry" "Analytics"
-                kpiDefinitionPreprocessor = component "KPI Definition Preprocessor" "Translates approved KPI definitions into versioned PostgreSQL SQL before validation and registration." "Deterministic PostgreSQL SQL preprocessor" "Analytics"
-                kpiCalculator = component "KPI Calculator" "Executes the 55 approved PostgreSQL KPI queries and records QueryRun and lineage." "PostgreSQL SQL" "Analytics"
-                workflowEngine = component "Workflow Engine" "Reconstructs three workflows and calculates stage timing, SLA, backlog, and bottlenecks." "Deterministic process analysis" "Analytics"
-                signalEngine = component "Signal Engine" "Maintains deterministic signal lifecycles, escalation, suppression, and executive grouping." "Deterministic rules" "Analytics"
-                reportEvidenceBuilderV2 = component "Report Evidence Builder" "Builds one pinned evidence package and model-independent canonical report per job." "Deterministic report evidence assembly" "Reporting"
-                decisionEffectEvaluator = component "Decision Effect Evaluator" "Evaluates KPI change and guardrails and records structured effect evidence. No LLM." "Deterministic evaluation module" "Decision"
+                runStageCoordinatorV2 = component "Run Stage Coordinator" "Claims Ready jobs and runs their deterministic stages from stored dependencies." "PostgreSQL-backed deterministic job runner" "Processing" {
+                    url "{workspace}/documentation/DIDRAH#run-stage-coordinator"
+                }
+                configurationValidationRunnerV2 = component "Configuration Validation Runner" "Validates configuration jobs and stores receipts. It does not activate configuration." "PostgreSQL-backed validation runner" "Governance" {
+                    url "{workspace}/documentation/DIDRAH#configuration-validation-runner"
+                }
+                ingestionCoordinator = component "Ingestion Coordinator" "Checks manifests, hashes, idempotency keys, source status, and atomic batch commits." "Deterministic module" "Processing" {
+                    url "{workspace}/documentation/DIDRAH#ingestion-coordinator"
+                }
+                sourceAdapters = component "Source Adapters" "Parse versioned source schemas and preserve the source bytes and headers." "Deterministic adapters" "Processing" {
+                    url "{workspace}/documentation/DIDRAH#source-adapters"
+                }
+                normalizer = component "Normalizer" "Converts parsed fields to canonical types, units, identifiers, and time semantics." "Deterministic normalization module" "Processing" {
+                    url "{workspace}/documentation/DIDRAH#normalizer"
+                }
+                dataQualityService = component "Data Quality Service" "Records missing sources, late arrivals, duplicates, corrections, schema changes, and quarantine results." "Deterministic module" "DataQuality" {
+                    url "{workspace}/documentation/DIDRAH#data-quality-service"
+                }
+                snapshotService = component "Snapshot Service" "Pins committed data, organization, access policy, and configuration versions for a run." "Deterministic module" "Processing" {
+                    url "{workspace}/documentation/DIDRAH#snapshot-service"
+                }
+                projectionService = component "Projection Service" "Builds reproducible facts and process projections from committed source events." "Deterministic module" "Processing" {
+                    url "{workspace}/documentation/DIDRAH#projection-service"
+                }
+                semanticRegistry = component "Semantic Registry" "Versions KPI definitions, PostgreSQL SQL, units, precision, targets, ownership, and dependencies." "Deterministic registry" "Analytics" {
+                    url "{workspace}/documentation/DIDRAH#semantic-registry"
+                }
+                kpiDefinitionPreprocessor = component "KPI Definition Preprocessor" "Translates approved KPI definitions into versioned PostgreSQL SQL before validation and registration." "Deterministic PostgreSQL SQL preprocessor" "Analytics" {
+                    url "{workspace}/documentation/DIDRAH#kpi-definition-preprocessor"
+                }
+                kpiCalculator = component "KPI Calculator" "Executes the 55 approved PostgreSQL KPI queries and records QueryRun and lineage." "PostgreSQL SQL" "Analytics" {
+                    url "{workspace}/documentation/DIDRAH#kpi-calculator"
+                }
+                workflowEngine = component "Workflow Engine" "Reconstructs three workflows and calculates stage timing, SLA, backlog, and bottlenecks." "Deterministic process analysis" "Analytics" {
+                    url "{workspace}/documentation/DIDRAH#workflow-engine"
+                }
+                signalEngine = component "Signal Engine" "Maintains deterministic signal lifecycles, escalation, suppression, and executive grouping." "Deterministic rules" "Analytics" {
+                    url "{workspace}/documentation/DIDRAH#signal-engine"
+                }
+                reportEvidenceBuilderV2 = component "Report Evidence Builder" "Builds one pinned evidence package and model-independent canonical report per job." "Deterministic report evidence assembly" "Reporting" {
+                    url "{workspace}/documentation/DIDRAH#report-evidence-builder"
+                }
+                decisionEffectEvaluator = component "Decision Effect Evaluator" "Evaluates KPI change and guardrails and records structured effect evidence. No LLM." "Deterministic evaluation module" "Decision" {
+                    url "{workspace}/documentation/DIDRAH#decision-effect-evaluator"
+                }
             }
 
             schedulerReplay = container "Scheduler and Replay Runner" "Owns the simulated clock, run lease, replay range, evaluation profile, and resumable job dispatch." ".NET 10 Console or Worker Process" "Scheduler" {
-                replayCommandV2 = component "Replay Command" "Accepts a replay range, sequences simulated days, and resumes from the last terminal day." "Application command" "Scheduler,Candidate"
-                simulationClockV2 = component "Simulation Clock" "Derives the pinned business date and source cutoff without using the host clock as product time." "Deterministic clock" "Scheduler,Candidate"
-                evaluationProfileLoaderV2 = component "Evaluation Profile Loader" "Loads the selected evaluation limits, acceptance thresholds, and run options." "Deterministic configuration reader" "Evaluation,Candidate"
-                runStatusClientV2 = component "Run Status Client" "Starts and monitors runs only through the Backend Run Coordinator." "Internal API client" "Scheduler,Candidate"
-                acceptanceTestHarnessV2 = component "Acceptance Test Harness" "Runs replay, regression, leakage, performance, contract, and KPI parity checks." "Deterministic test harness" "Evaluation,Candidate"
-                kpiParityValidator = component "KPI Parity Validator" "Compares 55 SQLite reference results with equivalent PostgreSQL results and records receipts." "Deterministic parity module" "Evaluation"
-                scriptedManagerInputAdapter = component "Scripted Manager Input Adapter" "Submits versioned replay inputs through the same Backend API as interactive inputs." "Deterministic evaluation input adapter" "Evaluation"
+                replayCommandV2 = component "Replay Command" "Accepts a replay range, sequences simulated days, and resumes from the last terminal day." "Application command" "Scheduler,Candidate" {
+                    url "{workspace}/documentation/DIDRAH#replay-command"
+                }
+                simulationClockV2 = component "Simulation Clock" "Derives the pinned business date and source cutoff without using the host clock as product time." "Deterministic clock" "Scheduler,Candidate" {
+                    url "{workspace}/documentation/DIDRAH#simulation-clock"
+                }
+                evaluationProfileLoaderV2 = component "Evaluation Profile Loader" "Loads the selected evaluation limits, acceptance thresholds, and run options." "Deterministic configuration reader" "Evaluation,Candidate" {
+                    url "{workspace}/documentation/DIDRAH#evaluation-profile-loader"
+                }
+                runStatusClientV2 = component "Run Status Client" "Starts and monitors runs only through the Backend Run Coordinator." "Internal API client" "Scheduler,Candidate" {
+                    url "{workspace}/documentation/DIDRAH#run-status-client"
+                }
+                acceptanceTestHarnessV2 = component "Acceptance Test Harness" "Runs replay, regression, leakage, performance, contract, and KPI parity checks." "Deterministic test harness" "Evaluation,Candidate" {
+                    url "{workspace}/documentation/DIDRAH#acceptance-test-harness"
+                }
+                kpiParityValidator = component "KPI Parity Validator" "Compares 55 SQLite reference results with equivalent PostgreSQL results and records receipts." "Deterministic parity module" "Evaluation" {
+                    url "{workspace}/documentation/DIDRAH#kpi-parity-validator"
+                }
+                scriptedManagerInputAdapter = component "Scripted Manager Input Adapter" "Submits versioned replay inputs through the same Backend API as interactive inputs." "Deterministic evaluation input adapter" "Evaluation" {
+                    url "{workspace}/documentation/DIDRAH#scripted-manager-input-adapter"
+                }
             }
 
             postgres = container "PostgreSQL" "The only product database. It stores product state, analytical results, access policy, checkpoints, and audit records." "PostgreSQL 18" "Database" {
+                url "{workspace}/documentation/DIDRAH#postgresql-product-database"
                 properties {
                     "schemas.proposed" "ingest, core, org, semantic, analytics, workflow, reporting, document, decision, agent, audit"
                     "security" "RLS, FORCE ROW LEVEL SECURITY, non-owner runtime roles, no BYPASSRLS"
@@ -123,14 +210,26 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
             }
 
-            fileArchive = container "Protected File Archive" "Stores original source and upload bytes with hashes and manifests. It is not a query database." "Protected mounted filesystem or compatible object storage" "Storage"
+            fileArchive = container "Protected File Archive" "Stores original source and upload bytes with hashes and manifests. It is not a query database." "Protected mounted filesystem or compatible object storage" "Storage" {
+                url "{workspace}/documentation/DIDRAH#protected-file-archive"
+            }
 
             agentRuntime = container "Agent Runtime" "Claims durable Agent Jobs from PostgreSQL and runs bounded graphs. Wake-ups are hints only." "Python 3.12, LangGraph, Pydantic" "AI" {
-                agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report, interactive, or document decision-card graph. Produces structured candidates only." "LangGraph runtime" "AI"
-                agentJobRunner = component "Agent Job Runner" "Claims leased jobs, runs the bounded graph, and persists a candidate or terminal failure." "PostgreSQL-backed unified agent job runner" "AI"
-                conversationService = component "Conversation Service" "Stores manager-scoped conversation sessions and validated turns, returns bounded history window." "Deterministic conversation module" "AI"
-                agentModelGateway = component "Model Gateway" "Applies token, time, retry, and cost limits to every model call. Reserves and settles budget." "Provider-neutral model client" "AI"
-                checkpointStore = component "PostgreSQL Checkpoint Store" "Stores LangGraph checkpoints in PostgreSQL for resumability and idempotency." "PostgreSQL-backed checkpoint" "AI"
+                agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report, interactive, or document decision-card graph. Produces structured candidates only." "LangGraph runtime" "AI" {
+                    url "{workspace}/documentation/DIDRAH#bounded-agent-orchestrator"
+                }
+                agentJobRunner = component "Agent Job Runner" "Claims leased jobs, runs the bounded graph, and persists a candidate or terminal failure." "PostgreSQL-backed unified agent job runner" "AI" {
+                    url "{workspace}/documentation/DIDRAH#agent-job-runner"
+                }
+                conversationService = component "Conversation Service" "Stores manager-scoped conversation sessions and validated turns, returns bounded history window." "Deterministic conversation module" "AI" {
+                    url "{workspace}/documentation/DIDRAH#conversation-service"
+                }
+                agentModelGateway = component "Model Gateway" "Applies token, time, retry, and cost limits to every model call. Reserves and settles budget." "Provider-neutral model client" "AI" {
+                    url "{workspace}/documentation/DIDRAH#model-gateway"
+                }
+                checkpointStore = component "PostgreSQL Checkpoint Store" "Stores LangGraph checkpoints in PostgreSQL for resumability and idempotency." "PostgreSQL-backed checkpoint" "AI" {
+                    url "{workspace}/documentation/DIDRAH#postgresql-checkpoint-store"
+                }
             }
 
             otelCollector = container "OpenTelemetry Collector" "Exports optional redacted OTLP data to Langfuse. Product workflows remain fail-open." "OpenTelemetry Collector, optional Compose service" "Observability"

@@ -1,0 +1,68 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.7 - Scenario - Report Generation"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    70("<div style='font-weight: bold'>Replay Command</div><div style='font-size: 70%; margin-top: 0px'>[Scheduler and Replay Runner]</div><div style='font-size: 80%; margin-top:10px'>Resolves clock and profile,<br />then starts one reporting<br />day.</div>")
+    style 70 fill:#0e7490,stroke:#095164,color:#ffffff
+    71("<div style='font-weight: bold'>Run Status Client</div><div style='font-size: 70%; margin-top: 0px'>[Scheduler and Replay Runner]</div><div style='font-size: 80%; margin-top:10px'>Starts and monitors the run<br />through the Backend Run<br />Coordinator.</div>")
+    style 71 fill:#0e7490,stroke:#095164,color:#ffffff
+    72("<div style='font-weight: bold'>Run Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Creates the pinned plan,<br />monitors terminal jobs, and<br />closes the run.</div>")
+    style 72 fill:#1d4ed8,stroke:#143697,color:#ffffff
+    73[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Job and report store]</div><div style='font-size: 80%; margin-top:10px'>Stores jobs, pinned inputs,<br />reports, run status, and<br />receipts.</div>")]
+    style 73 fill:#6d28d9,stroke:#4c1c97,color:#ffffff
+    74("<div style='font-weight: bold'>Run Stage Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Claims Ready jobs and invokes<br />stages from stored<br />dependencies.</div>")
+    style 74 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    75("<div style='font-weight: bold'>Ingestion Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Runs source parsing and<br />data-quality checks through<br />Source Adapters and Data<br />Quality Service.</div>")
+    style 75 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    76("<div style='font-weight: bold'>Snapshot Service</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Creates the pinned Snapshot<br />and requests reproducible<br />projections from Projection<br />Service.</div>")
+    style 76 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    77("<div style='font-weight: bold'>KPI Calculator</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Calculates approved KPIs<br />using definitions from<br />Semantic Registry.</div>")
+    style 77 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    78("<div style='font-weight: bold'>Workflow Engine</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Reconstructs WF1-WF3 and<br />calculates stage, SLA,<br />backlog, and bottleneck<br />observations.</div>")
+    style 78 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    79("<div style='font-weight: bold'>Signal Engine</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Detects, groups, ranks,<br />suppresses, and escalates<br />deterministic signals.</div>")
+    style 79 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    80("<div style='font-weight: bold'>Report Evidence Builder</div><div style='font-size: 70%; margin-top: 0px'>[Background Worker]</div><div style='font-size: 80%; margin-top:10px'>Stores a pinned evidence<br />package and canonical report<br />without a model call.</div>")
+    style 80 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    81("<div style='font-weight: bold'>Agent Job Runner</div><div style='font-size: 70%; margin-top: 0px'>[Agent Runtime]</div><div style='font-size: 80%; margin-top:10px'>Claims leased jobs and<br />persists a candidate or<br />failure before validation.</div>")
+    style 81 fill:#a21caf,stroke:#71137a,color:#ffffff
+    82("<div style='font-weight: bold'>Authorization Service</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Revalidates the pinned<br />manager scope for the agent<br />job.</div>")
+    style 82 fill:#1d4ed8,stroke:#143697,color:#ffffff
+    83("<div style='font-weight: bold'>Bounded Agent Orchestrator</div><div style='font-size: 70%; margin-top: 0px'>[Agent Runtime]</div><div style='font-size: 80%; margin-top:10px'>Runs the bounded report<br />narrative graph and returns a<br />candidate only.</div>")
+    style 83 fill:#a21caf,stroke:#71137a,color:#ffffff
+    84("<div style='font-weight: bold'>Model Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Agent Runtime]</div><div style='font-size: 80%; margin-top:10px'>Applies shared budget and<br />model limits and returns a<br />completion or explicit<br />failure.</div>")
+    style 84 fill:#a21caf,stroke:#71137a,color:#ffffff
+    85("<div style='font-weight: bold'>Output Validator</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Validates the report,<br />evidence, scope, schema, and<br />response rules.</div>")
+    style 85 fill:#1d4ed8,stroke:#143697,color:#ffffff
+    86("<div style='font-weight: bold'>Publisher</div><div style='font-size: 70%; margin-top: 0px'>[Backend API]</div><div style='font-size: 80%; margin-top:10px'>Publishes a validated report<br />or authorized fallback and<br />records a receipt.</div>")
+    style 86 fill:#1d4ed8,stroke:#143697,color:#ffffff
+    87("<div style='font-weight: bold'>Report and Dashboard API / Web Application</div><div style='font-size: 70%; margin-top: 0px'>[Report delivery]</div><div style='font-size: 80%; margin-top:10px'>Reads and delivers each<br />published manager report.</div>")
+    style 87 fill:#0369a1,stroke:#024970,color:#ffffff
+
+    81-. "<div>13. Recheck manager scope</div><div style='font-size: 70%'>[Authenticated HTTPS/JSON]</div>" .->82
+    81-. "<div>14. Run report graph</div><div style='font-size: 70%'>[In-process function call]</div>" .->83
+    83-. "<div>15. Generate bounded<br />narrative</div><div style='font-size: 70%'>[In-process function call]</div>" .->84
+    84-. "<div>16. Return completion or<br />failure</div><div style='font-size: 70%'>[In-process function call]</div>" .->83
+    83-. "<div>17. Return candidate or<br />failure</div><div style='font-size: 70%'>[In-process function call]</div>" .->81
+    81-. "<div>18. Persist agent outcome</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->73
+    81-. "<div>19. Validate persisted<br />outcome</div><div style='font-size: 70%'>[Authenticated HTTPS/JSON]</div>" .->85
+    85-. "<div>20. Release report or<br />fallback</div><div style='font-size: 70%'>[In-process function call]</div>" .->86
+    86-. "<div>21. Publish; unlock next job</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->73
+    73-. "<div>22. Deliver manager report</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->87
+    72-. "<div>23. Close terminal run</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->73
+    70-. "<div>01. Prepare reporting day</div><div style='font-size: 70%'>[In-process function call]</div>" .->71
+    71-. "<div>02. Start pinned run</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->72
+    72-. "<div>03. Plan run jobs</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->73
+    74-. "<div>04. Claim deterministic jobs</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->73
+    74-. "<div>05. Ingest and check quality</div><div style='font-size: 70%'>[In-process function call]</div>" .->75
+    74-. "<div>06. Pin snapshot</div><div style='font-size: 70%'>[In-process function call]</div>" .->76
+    74-. "<div>07. Calculate KPIs</div><div style='font-size: 70%'>[In-process function call]</div>" .->77
+    74-. "<div>08. Rebuild workflows</div><div style='font-size: 70%'>[In-process function call]</div>" .->78
+    74-. "<div>09. Detect and rank signals</div><div style='font-size: 70%'>[In-process function call]</div>" .->79
+    74-. "<div>10. Build manager evidence</div><div style='font-size: 70%'>[In-process function call]</div>" .->80
+    80-. "<div>11. Store package; unlock<br />agent job</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->73
+    81-. "<div>12. Claim agent job</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->73
+
+  end

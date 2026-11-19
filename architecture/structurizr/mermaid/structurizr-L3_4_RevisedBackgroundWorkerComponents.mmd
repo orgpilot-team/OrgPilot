@@ -1,0 +1,121 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["03.4 - C4 Level 3 - Background Worker Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    6("<div style='font-weight: bold'>DIDRAH Input Dataset</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Provides versioned source,<br />replay, upload,<br />configuration, and history<br />data.</div>")
+    click 6 "{workspace}/documentation/DIDRAH#input-dataset-contract" "{workspace}/documentation/DIDRAH#input-dataset-contract"
+    style 6 fill:#475569,stroke:#313b49,color:#ffffff
+
+    subgraph 11 ["DIDRAH"]
+      style 11 fill:#ffffff,stroke:#152860,color:#152860
+
+      subgraph 16 ["Backend API"]
+        style 16 fill:#ffffff,stroke:#143697,color:#143697
+
+        subgraph group1 ["02 Request Routing"]
+          style group1 fill:#ffffff,stroke:#60a5fa,color:#60a5fa,stroke-dasharray:5
+
+          20("<div style='font-weight: bold'>Configuration Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic configuration control]</div><div style='font-size: 80%; margin-top:10px'>Stores inactive candidates<br />and activates only a valid<br />approved version.</div>")
+          click 20 "{workspace}/documentation/DIDRAH#configuration-service" "{workspace}/documentation/DIDRAH#configuration-service"
+          style 20 fill:#334155,stroke:#232d3b,color:#ffffff
+          23("<div style='font-weight: bold'>Run Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic run control]</div><div style='font-size: 80%; margin-top:10px'>Creates pinned run plans,<br />monitors terminal jobs, and<br />closes each run.</div>")
+          click 23 "{workspace}/documentation/DIDRAH#run-coordinator" "{workspace}/documentation/DIDRAH#run-coordinator"
+          style 23 fill:#334155,stroke:#232d3b,color:#ffffff
+        end
+
+      end
+
+      subgraph 37 ["Background Worker"]
+        style 37 fill:#ffffff,stroke:#0a524d,color:#0a524d
+
+        38("<div style='font-weight: bold'>Run Stage Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Component: PostgreSQL-backed deterministic job runner]</div><div style='font-size: 80%; margin-top:10px'>Claims Ready jobs and runs<br />their deterministic stages<br />from stored dependencies.</div>")
+        click 38 "{workspace}/documentation/DIDRAH#run-stage-coordinator" "{workspace}/documentation/DIDRAH#run-stage-coordinator"
+        style 38 fill:#334155,stroke:#232d3b,color:#ffffff
+        39("<div style='font-weight: bold'>Configuration Validation Runner</div><div style='font-size: 70%; margin-top: 0px'>[Component: PostgreSQL-backed validation runner]</div><div style='font-size: 80%; margin-top:10px'>Validates configuration jobs<br />and stores receipts. It does<br />not activate configuration.</div>")
+        click 39 "{workspace}/documentation/DIDRAH#configuration-validation-runner" "{workspace}/documentation/DIDRAH#configuration-validation-runner"
+        style 39 fill:#334155,stroke:#232d3b,color:#ffffff
+        40("<div style='font-weight: bold'>Ingestion Coordinator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Checks manifests, hashes,<br />idempotency keys, source<br />status, and atomic batch<br />commits.</div>")
+        click 40 "{workspace}/documentation/DIDRAH#ingestion-coordinator" "{workspace}/documentation/DIDRAH#ingestion-coordinator"
+        style 40 fill:#334155,stroke:#232d3b,color:#ffffff
+        41("<div style='font-weight: bold'>Source Adapters</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic adapters]</div><div style='font-size: 80%; margin-top:10px'>Parse versioned source<br />schemas and preserve the<br />source bytes and headers.</div>")
+        click 41 "{workspace}/documentation/DIDRAH#source-adapters" "{workspace}/documentation/DIDRAH#source-adapters"
+        style 41 fill:#334155,stroke:#232d3b,color:#ffffff
+        42("<div style='font-weight: bold'>Normalizer</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic normalization module]</div><div style='font-size: 80%; margin-top:10px'>Converts parsed fields to<br />canonical types, units,<br />identifiers, and time<br />semantics.</div>")
+        click 42 "{workspace}/documentation/DIDRAH#normalizer" "{workspace}/documentation/DIDRAH#normalizer"
+        style 42 fill:#334155,stroke:#232d3b,color:#ffffff
+        43("<div style='font-weight: bold'>Data Quality Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Records missing sources, late<br />arrivals, duplicates,<br />corrections, schema changes,<br />and quarantine results.</div>")
+        click 43 "{workspace}/documentation/DIDRAH#data-quality-service" "{workspace}/documentation/DIDRAH#data-quality-service"
+        style 43 fill:#334155,stroke:#232d3b,color:#ffffff
+        44("<div style='font-weight: bold'>Snapshot Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Pins committed data,<br />organization, access policy,<br />and configuration versions<br />for a run.</div>")
+        click 44 "{workspace}/documentation/DIDRAH#snapshot-service" "{workspace}/documentation/DIDRAH#snapshot-service"
+        style 44 fill:#334155,stroke:#232d3b,color:#ffffff
+        45("<div style='font-weight: bold'>Projection Service</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic module]</div><div style='font-size: 80%; margin-top:10px'>Builds reproducible facts and<br />process projections from<br />committed source events.</div>")
+        click 45 "{workspace}/documentation/DIDRAH#projection-service" "{workspace}/documentation/DIDRAH#projection-service"
+        style 45 fill:#334155,stroke:#232d3b,color:#ffffff
+        46("<div style='font-weight: bold'>Semantic Registry</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic registry]</div><div style='font-size: 80%; margin-top:10px'>Versions KPI definitions,<br />PostgreSQL SQL, units,<br />precision, targets,<br />ownership, and dependencies.</div>")
+        click 46 "{workspace}/documentation/DIDRAH#semantic-registry" "{workspace}/documentation/DIDRAH#semantic-registry"
+        style 46 fill:#166534,stroke:#0f4624,color:#ffffff
+        47("<div style='font-weight: bold'>KPI Definition Preprocessor</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic PostgreSQL SQL preprocessor]</div><div style='font-size: 80%; margin-top:10px'>Translates approved KPI<br />definitions into versioned<br />PostgreSQL SQL before<br />validation and registration.</div>")
+        click 47 "{workspace}/documentation/DIDRAH#kpi-definition-preprocessor" "{workspace}/documentation/DIDRAH#kpi-definition-preprocessor"
+        style 47 fill:#166534,stroke:#0f4624,color:#ffffff
+        48("<div style='font-weight: bold'>KPI Calculator</div><div style='font-size: 70%; margin-top: 0px'>[Component: PostgreSQL SQL]</div><div style='font-size: 80%; margin-top:10px'>Executes the 55 approved<br />PostgreSQL KPI queries and<br />records QueryRun and lineage.</div>")
+        click 48 "{workspace}/documentation/DIDRAH#kpi-calculator" "{workspace}/documentation/DIDRAH#kpi-calculator"
+        style 48 fill:#166534,stroke:#0f4624,color:#ffffff
+        49("<div style='font-weight: bold'>Workflow Engine</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic process analysis]</div><div style='font-size: 80%; margin-top:10px'>Reconstructs three workflows<br />and calculates stage timing,<br />SLA, backlog, and<br />bottlenecks.</div>")
+        click 49 "{workspace}/documentation/DIDRAH#workflow-engine" "{workspace}/documentation/DIDRAH#workflow-engine"
+        style 49 fill:#166534,stroke:#0f4624,color:#ffffff
+        50("<div style='font-weight: bold'>Signal Engine</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic rules]</div><div style='font-size: 80%; margin-top:10px'>Maintains deterministic<br />signal lifecycles,<br />escalation, suppression, and<br />executive grouping.</div>")
+        click 50 "{workspace}/documentation/DIDRAH#signal-engine" "{workspace}/documentation/DIDRAH#signal-engine"
+        style 50 fill:#166534,stroke:#0f4624,color:#ffffff
+        51("<div style='font-weight: bold'>Report Evidence Builder</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic report evidence assembly]</div><div style='font-size: 80%; margin-top:10px'>Builds one pinned evidence<br />package and model-independent<br />canonical report per job.</div>")
+        click 51 "{workspace}/documentation/DIDRAH#report-evidence-builder" "{workspace}/documentation/DIDRAH#report-evidence-builder"
+        style 51 fill:#334155,stroke:#232d3b,color:#ffffff
+        52("<div style='font-weight: bold'>Decision Effect Evaluator</div><div style='font-size: 70%; margin-top: 0px'>[Component: Deterministic evaluation module]</div><div style='font-size: 80%; margin-top:10px'>Evaluates KPI change and<br />guardrails and records<br />structured effect evidence.<br />No LLM.</div>")
+        click 52 "{workspace}/documentation/DIDRAH#decision-effect-evaluator" "{workspace}/documentation/DIDRAH#decision-effect-evaluator"
+        style 52 fill:#9a3412,stroke:#6b240c,color:#ffffff
+      end
+
+      61[("<div style='font-weight: bold'>PostgreSQL</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL 18]</div><div style='font-size: 80%; margin-top:10px'>The only product database. It<br />stores product state,<br />analytical results, access<br />policy, checkpoints, and<br />audit records.</div>")]
+      click 61 "{workspace}/documentation/DIDRAH#postgresql-product-database" "{workspace}/documentation/DIDRAH#postgresql-product-database"
+      style 61 fill:#5b21b6,stroke:#3f177f,color:#ffffff
+      62["<div style='font-weight: bold'>Protected File Archive</div><div style='font-size: 70%; margin-top: 0px'>[Container: Protected mounted filesystem or compatible object storage]</div><div style='font-size: 80%; margin-top:10px'>Stores original source and<br />upload bytes with hashes and<br />manifests. It is not a query<br />database.</div>"]
+      click 62 "{workspace}/documentation/DIDRAH#protected-file-archive" "{workspace}/documentation/DIDRAH#protected-file-archive"
+      style 62 fill:#6d28d9,stroke:#4c1c97,color:#ffffff
+    end
+
+    20-- "<div>Store candidate; queue<br />validation</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" -->61
+    40-. "<div>Read nightly source contracts</div><div style='font-size: 70%'>[Read-only filesystem: CSV and JSON]</div>" .->6
+    40-. "<div>Parse source contracts</div><div style='font-size: 70%'>[In-process function call]</div>" .->41
+    41-. "<div>Archive source bytes and<br />hashes</div><div style='font-size: 70%'>[Controlled filesystem I/O]</div>" .->62
+    41-. "<div>Submit fields for<br />normalization</div><div style='font-size: 70%'>[In-process function call]</div>" .->42
+    42-. "<div>Check normalized rows</div><div style='font-size: 70%'>[In-process function call]</div>" .->43
+    43-. "<div>Store records and data issues</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    44-. "<div>Pin run snapshot</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    44-. "<div>Build reproducible<br />projections</div><div style='font-size: 70%'>[In-process function call]</div>" .->45
+    45-. "<div>Read events; store<br />projections</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    48-. "<div>Read approved KPI definitions</div><div style='font-size: 70%'>[In-process function call]</div>" .->46
+    39-. "<div>Translate KPI candidate</div><div style='font-size: 70%'>[In-process function call]</div>" .->47
+    47-. "<div>Register validated KPI<br />definition</div><div style='font-size: 70%'>[In-process function call]</div>" .->46
+    46-. "<div>Read KPI definitions</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    48-. "<div>Calculate KPIs and lineage</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    49-. "<div>Rebuild workflow observations</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    50-. "<div>Detect and store signals</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    52-. "<div>Store decision-effect<br />assessment</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    38-. "<div>Evaluate due decision effects</div><div style='font-size: 70%'>[In-process function call]</div>" .->52
+    52-. "<div>Add follow-up assessment</div><div style='font-size: 70%'>[In-process function call]</div>" .->51
+    23-. "<div>Plan and close pinned run</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    20-. "<div>Queue configuration<br />validation</div><div style='font-size: 70%'>[PostgreSQL-backed job queue]</div>" .->39
+    39-. "<div>Check KPI dependencies</div><div style='font-size: 70%'>[In-process function call]</div>" .->46
+    39-. "<div>Store configuration<br />validation receipt</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    38-. "<div>Claim and record run-stage<br />jobs</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+    38-. "<div>Run pinned intake</div><div style='font-size: 70%'>[In-process function call]</div>" .->40
+    38-. "<div>Create snapshot</div><div style='font-size: 70%'>[In-process function call]</div>" .->44
+    38-. "<div>Calculate approved KPIs</div><div style='font-size: 70%'>[In-process function call]</div>" .->48
+    38-. "<div>Rebuild workflows</div><div style='font-size: 70%'>[In-process function call]</div>" .->49
+    38-. "<div>Detect and rank signals</div><div style='font-size: 70%'>[In-process function call]</div>" .->50
+    38-. "<div>Build manager evidence</div><div style='font-size: 70%'>[In-process function call]</div>" .->51
+    51-. "<div>Store package; unlock agent<br />job</div><div style='font-size: 70%'>[PostgreSQL protocol over TLS]</div>" .->61
+
+  end

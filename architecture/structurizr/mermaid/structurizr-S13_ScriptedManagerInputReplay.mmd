@@ -1,0 +1,17 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.13 - Scenario - Scripted Manager Input Replay"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    253("<div style='font-weight: bold'>Scripted Manager Input Adapter</div><div style='font-size: 70%; margin-top: 0px'>[Scripted manager input replay]</div><div style='font-size: 80%; margin-top:10px'>Reads versioned replay input.</div>")
+    style 253 fill:#0e7490,stroke:#095164,color:#ffffff
+    254("<div style='font-weight: bold'>Backend API</div><div style='font-size: 70%; margin-top: 0px'>[Scripted manager input replay]</div><div style='font-size: 80%; margin-top:10px'>Applies the product request<br />boundary.</div>")
+    style 254 fill:#1d4ed8,stroke:#143697,color:#ffffff
+    255("<div style='font-weight: bold'>Replay Acceptance</div><div style='font-size: 70%; margin-top: 0px'>[Scripted manager input replay]</div><div style='font-size: 80%; margin-top:10px'>Checks result and contract<br />evidence.</div>")
+    style 255 fill:#0e7490,stroke:#095164,color:#ffffff
+
+    253-. "<div>Submit the pinned scripted<br />input</div><div style='font-size: 70%'>[HTTPS, REST/JSON]</div>" .->254
+    254-. "<div>Return validated result<br />references</div><div style='font-size: 70%'>[HTTPS, REST/JSON]</div>" .->255
+
+  end
