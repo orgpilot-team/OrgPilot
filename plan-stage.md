@@ -318,6 +318,65 @@ Blocker وجود ندارد.
 
 نقطه دقیق Resume: **فاز ۵، قبل از نخستین تغییر، از `architecture/structurizr/docs/09-web-application-components.md` و سپس تطبیق ۵۴ Anchor و URL طبق `plan.md` شروع شود.**
 
+## نتیجه فاز ۵ — مستندات Component و URLها
+
+وضعیت: تکمیل‌شده در 2026-11-19.
+
+### نتیجه
+
+- ۵۰ Product Component در شش سند Container مستند شدند.
+- PostgreSQL، Protected File Archive، Input Dataset Contract و Submission Output Contract مستند شدند.
+- هر سند ساختار ثابت Container را دارد.
+- هر Component یا Store/Contract همه ۱۵ فیلد لازم را دارد.
+- ۵۴ Anchor یکتا و ۵۴ URL یکتا ثبت شدند.
+- هر URL در `workspace.dsl` به Anchor متناظر در Documentation اشاره می‌کند.
+- هیچ Component، Store، Contract یا تصمیم معماری جدیدی اضافه نشد.
+- تصمیم‌های باز بدون مقدار یا الزام جدید باقی ماندند.
+
+### فایل‌های تغییرکرده
+
+- `architecture/structurizr/workspace.dsl` — فقط URLهای Documentation.
+- `architecture/structurizr/docs/09-web-application-components.md`
+- `architecture/structurizr/docs/10-backend-api-components.md`
+- `architecture/structurizr/docs/11-background-worker-components.md`
+- `architecture/structurizr/docs/12-scheduler-replay-components.md`
+- `architecture/structurizr/docs/13-agent-runtime-components.md`
+- `architecture/structurizr/docs/14-stores-and-contracts.md`
+- `plan-stage.md` — فقط ثبت نتیجه و Resume.
+
+### Validation
+
+- شمارش Anchorها: پاس؛ Web برابر ۳، Backend برابر ۲۰، Worker برابر ۱۵، Scheduler برابر ۷، Agent برابر ۵ و Stores/Contracts برابر ۴.
+- مجموع Anchorها: دقیقاً ۵۴ و همه یکتا.
+- شمارش URLها: دقیقاً ۵۴ و همه یکتا.
+- تطبیق Anchor و URL: پاس؛ Anchor یا URL بدون جفت وجود ندارد.
+- فیلدهای اجباری Component: هر ۱۵ فیلد برای هر ۵۴ Element ثبت شده است.
+- Structurizr Local: هر شش سند با موفقیت رندر شد.
+- Local link test: هر ۵۴ Anchor در صفحه Documentation پیدا شد؛ Anchor گم‌شده وجود ندارد.
+- MCP parse: پاس.
+- MCP validate: پاس.
+- MCP inspect: صفر Finding عملیاتی.
+- دو Finding مربوط به Documentation و Decisions مصنوعی هستند. علت، حذف موقت و درون‌حافظه‌ای `!docs` و `!adrs` برای ورودی MCP است.
+- ارجاع فعال به `Docs/final review`، `Docs/trash-data` یا `submission/submission`: صفر.
+- Product Component: دقیقاً ۵۰ و بدون تغییر.
+- View: دقیقاً ۱۶ و بدون تغییر.
+- `!impliedRelationships false`: حفظ شد.
+- `workspace.json`: تغییر موجود قبلی حفظ شد و در فاز ۵ ویرایش نشد.
+- فایل‌های Reference و Output Contract: بدون تغییر.
+- `git diff --check` و بررسی whitespace همه فایل‌های فاز: پاس.
+
+### تصمیم‌های باز
+
+تصمیم‌های باز مصوب تغییر نکردند. مقدار یا الزام جدیدی ثبت نشد.
+
+### Blockerها
+
+Blocker وجود ندارد.
+
+### Resume
+
+نقطه دقیق Resume: **فاز ۶، قبل از تولید نخستین Artifact، از MCP export برای View `L1_SystemContext` شروع شود. سپس فقط فیلد `definition` در فایل Mermaid متناظر ذخیره شود و این روند برای هر ۱۶ View طبق `plan.md` ادامه یابد.**
+
 ## اصلاح تکمیلی فاز ۴.۱ — کنترل Text Fit
 
 وضعیت: تکمیل‌شده در 2026-11-19.
