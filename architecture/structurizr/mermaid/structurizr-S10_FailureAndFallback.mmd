@@ -1,0 +1,17 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.10 - Scenario - Failure and Fallback"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    238("<div style='font-weight: bold'>Product Services</div><div style='font-size: 70%; margin-top: 0px'>[Failure and fallback]</div><div style='font-size: 80%; margin-top:10px'>Retains durable failure<br />state.</div>")
+    style 238 fill:#1d4ed8,stroke:#143697,color:#ffffff
+    239("<div style='font-weight: bold'>Deterministic Fallback</div><div style='font-size: 70%; margin-top: 0px'>[Failure and fallback]</div><div style='font-size: 80%; margin-top:10px'>Publishes fallback or<br />explicit failure.</div>")
+    style 239 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    240("<div style='font-weight: bold'>Optional Observability</div><div style='font-size: 70%; margin-top: 0px'>[Failure and fallback]</div><div style='font-size: 80%; margin-top:10px'>Receives redacted failure<br />telemetry.</div>")
+    style 240 fill:#a21caf,stroke:#71137a,color:#ffffff
+
+    238-. "<div>Apply fallback or explicit<br />failure</div><div style='font-size: 70%'>[In-process function call]</div>" .->239
+    239-. "<div>Export redacted failure<br />telemetry</div><div style='font-size: 70%'>[OTLP]</div>" .->240
+
+  end

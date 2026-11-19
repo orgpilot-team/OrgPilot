@@ -1,0 +1,17 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.14 - Scenario - Late or Corrected Data Restatement"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    258("<div style='font-weight: bold'>Normalized Intake</div><div style='font-size: 70%; margin-top: 0px'>[Late or corrected data restatement]</div><div style='font-size: 80%; margin-top:10px'>Normalizes corrected source<br />data.</div>")
+    style 258 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    259("<div style='font-weight: bold'>Deterministic Recalculation</div><div style='font-size: 70%; margin-top: 0px'>[Late or corrected data restatement]</div><div style='font-size: 80%; margin-top:10px'>Recomputes affected<br />deterministic results.</div>")
+    style 259 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    260("<div style='font-weight: bold'>Validated Republishing</div><div style='font-size: 70%; margin-top: 0px'>[Late or corrected data restatement]</div><div style='font-size: 80%; margin-top:10px'>Publishes validated restated<br />artifacts.</div>")
+    style 260 fill:#1d4ed8,stroke:#143697,color:#ffffff
+
+    258-. "<div>Recompute corrected snapshot</div><div style='font-size: 70%'>[In-process function call]</div>" .->259
+    259-. "<div>Validate and republish<br />artifacts</div><div style='font-size: 70%'>[PostgreSQL-backed job queue]</div>" .->260
+
+  end

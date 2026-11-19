@@ -1,0 +1,17 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["04.11 - Scenario - KPI Translation and Parity"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    243("<div style='font-weight: bold'>KPI Definition Preprocessor</div><div style='font-size: 70%; margin-top: 0px'>[KPI translation and parity]</div><div style='font-size: 80%; margin-top:10px'>Translates approved KPI SQL.</div>")
+    style 243 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    244("<div style='font-weight: bold'>Configuration Validation Runner</div><div style='font-size: 70%; margin-top: 0px'>[KPI translation and parity]</div><div style='font-size: 80%; margin-top:10px'>Validates KPI SQL and<br />fixtures.</div>")
+    style 244 fill:#0f766e,stroke:#0a524d,color:#ffffff
+    245("<div style='font-weight: bold'>KPI Parity Validator</div><div style='font-size: 70%; margin-top: 0px'>[KPI translation and parity]</div><div style='font-size: 80%; margin-top:10px'>Checks SQLite and PostgreSQL<br />parity.</div>")
+    style 245 fill:#0e7490,stroke:#095164,color:#ffffff
+
+    243-. "<div>Validate SQL and fixtures</div><div style='font-size: 70%'>[In-process function call]</div>" .->244
+    244-. "<div>Run acceptance parity</div><div style='font-size: 70%'>[Acceptance test interface]</div>" .->245
+
+  end
