@@ -65,31 +65,22 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             backendApi = container "Backend API" "Authorizes requests, creates durable jobs, validates outcomes, and delivers results. DDD contexts: Identity & Access, Manager Interaction, Analysis Coordination, Decision Governance, Publication & Delivery, Audit (docs/16-domain-model.md)." "ASP.NET Core, .NET 10 LTS, REST/JSON, OpenAPI" "API" {
                 properties {
                     "ddd.contexts" "Identity & Access, Manager Interaction, Analysis Coordination, Decision Governance, Publication & Delivery, Audit"
-                    "ddd.aggregates" "Grant, AccessPolicy, ManagerRequest, ConversationSession, AgentJob, DecisionCard, Decision, ReportVersion, ExportBatch, AuditEntry"
-                    "ddd.use_cases" "SubmitManagerQuestion, SubmitUpload, ConfirmDecision, RecordFollowUp, PublishReport, ExportSubmission, ActivateConfiguration, ActivateOrganizationRevision, StartRun, CloseRun, ReadJobStatus, ReadScopedReport"
+                    "ddd.aggregates" "AccessPolicy (Grant[]), AgentJob, Decision (DecisionCard + FollowUp[]), ReportVersion, ExportBatch"
+                    "ddd.use_cases" "SubmitManagerQuestion, SubmitUpload, ConfirmDecision, ReviewDecisionCard, RecordFollowUp, PublishReport, ExportSubmission, ActivateConfiguration, ActivateOrganizationRevision, StartRun, CloseRun, ReadJobStatus, ReadScopedReport"
                     "ddd.ports" "IAgentJobRepository, IDecisionRepository, IReportVersionRepository, IAccessPolicyRepository, IAuditLog, IEvidencePort, IScopedQueryPort, IClockPort"
                     "ddd.anti_corruption" "Source/upload text is data; LLM output is a candidate only; provider API translated at Model Gateway"
                 }
                 group "01 Access" {
-                    identityBoundary = component "Identity Boundary" "Validates the session and creates a trusted identity context." "Deterministic module" "Security" {
-                        url "{workspace}/documentation/DIDRAH#identity-boundary"
-                    }
-                    authorizationService = component "Authorization Service" "Builds the permitted row, column, role, purpose, and policy scope." "Deterministic module" "Security" {
+                    authorizationService = component "Authorization Service" "Validates the session and builds the permitted row, column, role, purpose, and policy scope. Identity validation and request dispatch are in-process functions." "Deterministic module" "Security" {
                         url "{workspace}/documentation/DIDRAH#authorization-service"
                     }
                 }
 
                 group "02 Request Routing" {
-                    managerInputService = component "Manager Request Router" "Routes each authorized request to one fixed handler. It does not execute work." "Deterministic request dispatcher" "API" {
-                        url "{workspace}/documentation/DIDRAH#manager-request-router"
-                    }
-                    configurationService = component "Configuration Service" "Stores inactive candidates and activates only a valid approved version." "Deterministic configuration control" "Governance" {
+                    configurationService = component "Configuration Service" "Stores inactive KPI and organization candidates and activates only approved versions at D+1. Absorbs the former Organization Configuration Service." "Deterministic configuration control" "Governance" {
                         url "{workspace}/documentation/DIDRAH#configuration-service"
                     }
-                    organizationConfigurationService = component "Organization Configuration Service" "Validates versioned organization changes and activates them at D+1." "Deterministic organization control" "Governance" {
-                        url "{workspace}/documentation/DIDRAH#organization-configuration-service"
-                    }
-                    decisionTracker = component "Decision and Follow-Up" "Records authorized human decisions and their follow-up contracts. It does not execute them." "Deterministic decision control" "Decision" {
+                    decisionTracker = component "Decision and Follow-Up" "Stores validated decision cards, handles human confirm/edit/reject review, and records decisions and follow-up contracts. Absorbs the former Decision Confirmation Service. It does not execute decisions." "Deterministic decision control" "Decision" {
                         url "{workspace}/documentation/DIDRAH#decision-and-follow-up"
                     }
                     runCoordinatorV2 = component "Run Coordinator" "Creates pinned run plans, monitors terminal jobs, and closes each run." "Deterministic run control" "Governance" {
@@ -104,11 +95,8 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                     evidenceService = component "Evidence Service" "Builds a traceable Evidence Bundle inside the authorized scope supplied with the request." "Deterministic module" "Evidence" {
                         url "{workspace}/documentation/DIDRAH#evidence-service"
                     }
-                    queryGateway = component "Query Gateway" "Runs registered tools and scoped read-only SQL with limits and audit." "Deterministic query execution" "Query" {
+                    queryGateway = component "Query Gateway" "Runs registered tools and scoped read-only SQL with limits and audit. SQL AST validation is an in-process module." "Deterministic query execution" "Query" {
                         url "{workspace}/documentation/DIDRAH#query-gateway"
-                    }
-                    sqlGuard = component "SQL AST Guard" "Allows one approved SELECT statement and rejects unsafe SQL." "SQL parser and policy" "Security" {
-                        url "{workspace}/documentation/DIDRAH#sql-ast-guard"
                     }
                 }
 
@@ -116,16 +104,13 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                     outputValidator = component "Output Validator" "Checks schema, evidence, scope, and response rules, then records the validation state." "Deterministic validator" "Governance" {
                         url "{workspace}/documentation/DIDRAH#output-validator"
                     }
-                    agentJobStatusService = component "Agent Job Status API" "Returns authorized persisted job status and result references. It never executes jobs." "Deterministic delivery API" "API" {
-                        url "{workspace}/documentation/DIDRAH#agent-job-status-api"
-                    }
                     publisherV2 = component "Publisher" "Atomically publishes validated canonical JSON or deterministic fallback text." "Deterministic publication module" "Processing" {
                         url "{workspace}/documentation/DIDRAH#publisher"
                     }
                     submissionExporter = component "Submission Exporter" "Validates and atomically exports approved brief and QA artifacts under OUTPUT_DIR." "Deterministic export module" "Processing" {
                         url "{workspace}/documentation/DIDRAH#submission-exporter"
                     }
-                    reportApi = component "Report and Dashboard API" "Reads published reports and dashboard data, and returns validated interactive answers or explicit failures." "Deterministic delivery API" "API" {
+                    reportApi = component "Report and Dashboard API" "Reads published reports, dashboards, and authorized agent job status, and returns validated answers or explicit failures. Absorbs the former Agent Job Status API." "Deterministic delivery API" "API" {
                         url "{workspace}/documentation/DIDRAH#report-and-dashboard-api"
                     }
                     auditService = component "Audit Service" "Records query, model, validation, cost, and failure evidence." "Deterministic module" "Governance" {
@@ -134,14 +119,8 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
 
                 group "05 Document Decision Flow" {
-                    documentProcessingRunner = component "Document Processing Runner" "Archives and parses uploads, then creates durable analysis or revision jobs." "Deterministic document intake and job producer" "Processing" {
+                    documentProcessingRunner = component "Document Processing Runner" "Archives uploads, parses them deterministically, and creates durable analysis or revision jobs. Absorbs the former Document Parser." "Deterministic document intake and job producer" "Processing" {
                         url "{workspace}/documentation/DIDRAH#document-processing-runner"
-                    }
-                    documentParser = component "Document Parser" "Validates uploads and stores immutable fragments and a parse receipt." "Deterministic document parser" "Processing" {
-                        url "{workspace}/documentation/DIDRAH#document-parser"
-                    }
-                    decisionConfirmationService = component "Decision Confirmation Service" "Stores validated cards and handles authenticated confirm, edit, or reject commands." "Deterministic decision review control" "Decision" {
-                        url "{workspace}/documentation/DIDRAH#decision-confirmation-service"
                     }
                 }
             }
@@ -149,9 +128,9 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             worker = container "Background Worker" "Executes deterministic processing and validation jobs and stores results in PostgreSQL. DDD contexts: Intake & Data Quality, Snapshot & Projection, Semantic & KPI, Workflow & Signal, Decision Effect, Run Orchestration (docs/16-domain-model.md)." ".NET 10 Worker Service" "Worker" {
                 properties {
                     "ddd.contexts" "Intake & Data Quality, Snapshot & Projection, Semantic & KPI, Workflow & Signal, Decision Effect, Run Orchestration"
-                    "ddd.aggregates" "IngestionBatch, DataIssue, Snapshot, Projection, KpiDefinition, KpiResult, WorkflowObservation, SignalEpisode, EffectAssessment, RunStage"
+                    "ddd.aggregates" "IngestionBatch (DataIssue[]), Snapshot, KpiDefinition, SignalEpisode, EffectAssessment, RunStage"
                     "ddd.value_objects" "SourceKey, EventKey=(entity_id,event_type,event_time), DedupKey, PinnedVersions, QueryRun, Lineage, SuccessCriterion"
-                    "ddd.domain_services" "DeduplicationService, DataIssueClassifier, KpiParityService, RollupService, WorkflowReconstructionService, SignalDetectionService, EscalationPolicyService, DecisionEffectService, ReportEvidenceAssembler"
+                    "ddd.domain_services" "DeduplicationService, DataIssueClassifier, KpiSqlTranslationService, RollupService, WorkflowReconstructionService, SignalDetectionService, EscalationPolicyService, DecisionEffectService, ReportEvidenceAssembler"
                     "dedup.keys" "order_id,ticket_id,lead_id,task_id; events=(entity_id,event_type,event_time)"
                     "lead.abandoned_after_days" "14"
                     "lead.kpi_populations" "K_WF3_SLA_7D and K_ENT_WINRATE_30D: closed leads only; K_ENT_PIPELINE: proposals sent only"
@@ -159,32 +138,14 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 runStageCoordinatorV2 = component "Run Stage Coordinator" "Claims Ready jobs and runs their deterministic stages from stored dependencies." "PostgreSQL-backed deterministic job runner" "Processing" {
                     url "{workspace}/documentation/DIDRAH#run-stage-coordinator"
                 }
-                configurationValidationRunnerV2 = component "Configuration Validation Runner" "Validates configuration jobs and stores receipts. It does not activate configuration." "PostgreSQL-backed validation runner" "Governance" {
-                    url "{workspace}/documentation/DIDRAH#configuration-validation-runner"
-                }
-                ingestionCoordinator = component "Ingestion Coordinator" "Checks manifests, hashes, idempotency keys, source status, and atomic batch commits." "Deterministic module" "Processing" {
+                ingestionCoordinator = component "Ingestion Coordinator" "Parses, normalizes, checks quality, and atomically commits one versioned source intake. Absorbs Source Adapters, Normalizer, and Data Quality Service; DataIssue is an entity of IngestionBatch." "Deterministic module" "Processing" {
                     url "{workspace}/documentation/DIDRAH#ingestion-coordinator"
                 }
-                sourceAdapters = component "Source Adapters" "Parse versioned source schemas and preserve the source bytes and headers." "Deterministic adapters" "Processing" {
-                    url "{workspace}/documentation/DIDRAH#source-adapters"
-                }
-                normalizer = component "Normalizer" "Converts parsed fields to canonical types, units, identifiers, and time semantics." "Deterministic normalization module" "Processing" {
-                    url "{workspace}/documentation/DIDRAH#normalizer"
-                }
-                dataQualityService = component "Data Quality Service" "Records data_issues with exact types: 'missing' every morning until arrival (dependent KPIs null, never zero), one 'late_arrival' the next morning with same-morning recomputation and signal publication, and 'duplicate' with source 'orders' after dedup. A data issue is never a business signal; only a signal created by recomputation is published." "Deterministic module" "DataQuality" {
-                    url "{workspace}/documentation/DIDRAH#data-quality-service"
-                }
-                snapshotService = component "Snapshot Service" "Pins committed data, organization, access policy, and configuration versions for a run." "Deterministic module" "Processing" {
+                snapshotService = component "Snapshot Service" "Pins committed versions for a run and builds derived projections. Absorbs the former Projection Service; projections are read models, not aggregates." "Deterministic module" "Processing" {
                     url "{workspace}/documentation/DIDRAH#snapshot-service"
                 }
-                projectionService = component "Projection Service" "Builds reproducible facts and process projections from committed source events." "Deterministic module" "Processing" {
-                    url "{workspace}/documentation/DIDRAH#projection-service"
-                }
-                semanticRegistry = component "Semantic Registry" "Versions KPI definitions, PostgreSQL SQL, units, precision, targets, ownership, direction (1=more better, -1=less better), escalate_after_days, and dependencies. Includes corrected config/monthly_targets.csv with scope=U_SAL for Q03." "Deterministic registry" "Analytics" {
+                semanticRegistry = component "Semantic Registry" "Owns versioned KPI definitions and their translation, validation, and activation after parity. Absorbs KPI Definition Preprocessor and Configuration Validation Runner. Includes corrected config/monthly_targets.csv with scope=U_SAL for Q03." "Deterministic registry" "Analytics" {
                     url "{workspace}/documentation/DIDRAH#semantic-registry"
-                }
-                kpiDefinitionPreprocessor = component "KPI Definition Preprocessor" "Translates approved KPI definitions into versioned PostgreSQL SQL before validation and registration." "Deterministic PostgreSQL SQL preprocessor" "Analytics" {
-                    url "{workspace}/documentation/DIDRAH#kpi-definition-preprocessor"
                 }
                 kpiCalculator = component "KPI Calculator" "Executes the 55 approved PostgreSQL KPI queries and records QueryRun and lineage." "PostgreSQL SQL" "Analytics" {
                     url "{workspace}/documentation/DIDRAH#kpi-calculator"
@@ -204,23 +165,14 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             }
 
             schedulerReplay = container "Scheduler and Replay Runner" "Owns the simulated clock, run lease, replay range, evaluation profile, and resumable job dispatch." ".NET 10 Console or Worker Process" "Scheduler" {
-                replayCommandV2 = component "Replay Command" "Accepts a replay range, sequences simulated days, and resumes from the last terminal day." "Application command" "Scheduler,Candidate" {
+                replayCommandV2 = component "Replay Command" "Derives the pinned business date, loads the evaluation profile, sequences simulated days, and resumes from the last terminal day. Absorbs Simulation Clock and Evaluation Profile Loader." "Application command" "Scheduler,Candidate" {
                     url "{workspace}/documentation/DIDRAH#replay-command"
-                }
-                simulationClockV2 = component "Simulation Clock" "Derives the pinned business date and source cutoff without using the host clock as product time." "Deterministic clock" "Scheduler,Candidate" {
-                    url "{workspace}/documentation/DIDRAH#simulation-clock"
-                }
-                evaluationProfileLoaderV2 = component "Evaluation Profile Loader" "Loads the selected evaluation limits, acceptance thresholds, and run options." "Deterministic configuration reader" "Evaluation,Candidate" {
-                    url "{workspace}/documentation/DIDRAH#evaluation-profile-loader"
                 }
                 runStatusClientV2 = component "Run Status Client" "Starts and monitors runs only through the Backend Run Coordinator." "Internal API client" "Scheduler,Candidate" {
                     url "{workspace}/documentation/DIDRAH#run-status-client"
                 }
-                acceptanceTestHarnessV2 = component "Acceptance Test Harness" "Runs replay, regression, leakage, performance, contract, and KPI parity checks." "Deterministic test harness" "Evaluation,Candidate" {
+                acceptanceTestHarnessV2 = component "Acceptance Test Harness" "Runs replay, regression, leakage, performance, contract, and KPI parity checks. Absorbs the former KPI Parity Validator; it is the single owner of the SQLite oracle." "Deterministic test harness" "Evaluation,Candidate" {
                     url "{workspace}/documentation/DIDRAH#acceptance-test-harness"
-                }
-                kpiParityValidator = component "KPI Parity Validator" "Compares SQLite reference results with equivalent PostgreSQL results within ±1% and records receipts. Asserts median()→percentile_cont(0.5) not percentile_disc, julianday→EXTRACT(EPOCH)/86400 with unit conversion, 100.0* percentages, timezone and rounding." "Deterministic parity module" "Evaluation" {
-                    url "{workspace}/documentation/DIDRAH#kpi-parity-validator"
                 }
                 scriptedManagerInputAdapter = component "Scripted Manager Input Adapter" "Submits versioned replay inputs through the same Backend API as interactive inputs." "Deterministic evaluation input adapter" "Evaluation" {
                     url "{workspace}/documentation/DIDRAH#scripted-manager-input-adapter"
@@ -244,15 +196,15 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             agentRuntime = container "Agent Runtime" "Claims durable Agent Jobs from PostgreSQL and runs bounded graphs. Wake-ups are hints only. DDD contexts: Job Execution, Bounded Reasoning, Model Access, Conversation (docs/16-domain-model.md)." "Python 3.12, LangGraph, Pydantic" "AI" {
                 properties {
                     "ddd.contexts" "Job Execution, Bounded Reasoning, Model Access, Conversation"
-                    "ddd.aggregates" "AgentJobExecution, Checkpoint, ReasoningSession, Candidate, ModelReservation, ModelCallReceipt, ConversationTurn"
+                    "ddd.aggregates" "AgentJobExecution, ReasoningSession, ModelReservation, ConversationSession (ConversationTurn[])"
                     "ddd.domain_services" "JobClaimingService, GraphSelectionService, BudgetSettlementService, RetryPolicyService, CandidateValidationService"
-                    "ddd.ports" "IAgentJobRepository, ICheckpointStore, IModelPort, IEvidencePort, IBudgetLedger, IClockPort"
+                    "ddd.ports" "IAgentJobRepository, ICheckpointRepository, IModelPort, IEvidencePort, IBudgetLedger, IClockPort, IConversationRepository"
                     "model.timeout_seconds" "30"
                     "model.max_retries" "2 (bounded exponential backoff)"
                     "model.temperature" "0"
                     "model.fallback" "Report with correct numbers and no LLM narrative on provider failure"
                 }
-                agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report, interactive, or document decision-card graph. Produces structured candidates only." "LangGraph runtime" "AI" {
+                agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report, interactive, or document decision-card graph. Produces structured candidates only; checkpoints are written through ICheckpointRepository." "LangGraph runtime" "AI" {
                     url "{workspace}/documentation/DIDRAH#bounded-agent-orchestrator"
                 }
                 agentJobRunner = component "Agent Job Runner" "Claims leased jobs, runs the bounded graph, and persists a candidate or terminal failure." "PostgreSQL-backed unified agent job runner" "AI" {
@@ -263,9 +215,6 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
                 agentModelGateway = component "Model Gateway" "Applies token, time (30s), retry (max 2), and cost limits to every model call. Reserves and settles the single $5/30-day budget using provider official rates; temperature 0; on failure returns no-narrative deterministic report. Only external endpoint in the graded run." "Provider-neutral model client" "AI" {
                     url "{workspace}/documentation/DIDRAH#model-gateway"
-                }
-                checkpointStore = component "PostgreSQL Checkpoint Store" "Stores LangGraph checkpoints in PostgreSQL for resumability and idempotency." "PostgreSQL-backed checkpoint" "AI" {
-                    url "{workspace}/documentation/DIDRAH#postgresql-checkpoint-store"
                 }
             }
 
@@ -279,8 +228,8 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         reportScenarioRunCoordinator = element "Run Coordinator" "Backend API" "Creates the pinned plan, monitors terminal jobs, and closes the run." "ScenarioStep,ScenarioBackend"
         reportScenarioPostgres = element "PostgreSQL" "Job and report store" "Stores jobs, pinned inputs, reports, run status, and receipts." "ScenarioStep,ScenarioDatabase"
         reportScenarioRunStage = element "Run Stage Coordinator" "Background Worker" "Claims Ready jobs and invokes stages from stored dependencies." "ScenarioStep,ScenarioWorker"
-        reportScenarioIngestion = element "Ingestion Coordinator" "Background Worker" "Runs source parsing and data-quality checks through Source Adapters and Data Quality Service." "ScenarioStep,ScenarioWorker"
-        reportScenarioSnapshot = element "Snapshot Service" "Background Worker" "Creates the pinned Snapshot and requests reproducible projections from Projection Service." "ScenarioStep,ScenarioWorker"
+        reportScenarioIngestion = element "Ingestion Coordinator" "Background Worker" "Runs source parsing, normalization, and data-quality checks in-process." "ScenarioStep,ScenarioWorker"
+        reportScenarioSnapshot = element "Snapshot Service" "Background Worker" "Creates the pinned Snapshot and builds reproducible projections in-process." "ScenarioStep,ScenarioWorker"
         reportScenarioKpi = element "KPI Calculator" "Background Worker" "Calculates approved KPIs using definitions from Semantic Registry." "ScenarioStep,ScenarioWorker"
         reportScenarioWorkflow = element "Workflow Engine" "Background Worker" "Reconstructs WF1-WF3 and calculates stage, SLA, backlog, and bottleneck observations." "ScenarioStep,ScenarioWorker"
         reportScenarioSignal = element "Signal Engine" "Background Worker" "Detects, groups, ranks, suppresses, and escalates deterministic signals." "ScenarioStep,ScenarioWorker"
@@ -320,20 +269,20 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         // Scenario-only mirrors: durable jobs are committed before any Runtime wake-up.
         chatDecisionManager = element "A - Manager" "Scenario A - decision in manager chat" "Submits a request and confirms, edits, or rejects the validated card." "ScenarioStep,ScenarioActor"
         chatDecisionUi = element "A - Conversational Assistant UI" "Web Application" "Submits requests, shows the job ID, and polls for a validated card." "ScenarioStep,ScenarioWeb"
-        chatDecisionIdentity = element "A - Identity Boundary" "Backend API" "Validates the manager session and creates trusted identity context." "ScenarioStep,ScenarioChat"
+        chatDecisionIdentity = element "A - Identity Validation" "Backend API" "Validates the manager session and creates a trusted identity context inside Authorization Service." "ScenarioStep,ScenarioChat"
         chatDecisionAuthorization = element "A - Authorization Service" "Backend API" "Builds and rechecks the permitted data and policy scope." "ScenarioStep,ScenarioChat"
-        chatDecisionRouter = element "A - Manager Request Router" "Backend API" "Routes authorized chat, status, and review requests to fixed handlers." "ScenarioStep,ScenarioChat"
+        chatDecisionRouter = element "A - Fixed Handler Dispatch" "Backend API" "In-process dispatch of authorized chat, status, and review requests to fixed handlers." "ScenarioStep,ScenarioChat"
         chatDecisionGateway = element "A - Agent Runtime Gateway" "Backend API" "Creates an interactive job and sends a best-effort job-ID wake-up." "ScenarioStep,ScenarioChat"
         chatDecisionAgentRunner = element "A - Agent Job Runner" "Agent Runtime" "Claims leased jobs, runs the graph, and persists a candidate or failure." "ScenarioStep,ScenarioAgent"
-        chatDecisionStatus = element "A - Agent Job Status API" "Backend API" "Returns authorized job status and persisted result references." "ScenarioStep,ScenarioChat"
+        chatDecisionStatus = element "A - Report & Dashboard API (job status)" "Backend API" "Returns authorized job status and persisted result references." "ScenarioStep,ScenarioChat"
         chatDecisionConversation = element "A - Conversation Service" "Agent Runtime" "Stores manager-scoped turns and supplies bounded history; conversation text is not business evidence." "ScenarioStep,ScenarioAgent"
         chatDecisionEvidence = element "A - Evidence Service" "Backend API" "Builds a traceable Evidence Bundle inside the trusted scope." "ScenarioStep,ScenarioChat"
         chatDecisionQuery = element "A - Query Gateway" "Backend API" "Runs registered tools and scoped read-only SQL with limits and audit." "ScenarioStep,ScenarioChat"
-        chatDecisionSqlGuard = element "A - SQL AST Guard" "Backend API" "Allows one approved SELECT statement and rejects unsafe SQL." "ScenarioStep,ScenarioChat"
+        chatDecisionSqlGuard = element "A - SQL AST validation" "Backend API" "In-process AST module inside Query Gateway; allows one approved SELECT and rejects unsafe SQL." "ScenarioStep,ScenarioChat"
         chatDecisionAgent = element "A - Bounded Agent Orchestrator" "Agent Runtime" "Produces a structured interactive decision-card candidate; it cannot confirm or execute it." "ScenarioStep,ScenarioAgent"
         chatDecisionModel = element "A - Model Gateway" "Agent Runtime" "Applies token, time, retry, and cost limits to bounded analysis and drafting." "ScenarioStep,ScenarioAgent"
         chatDecisionValidator = element "A - Output Validator" "Backend API" "Checks decision-card contract, cited values, evidence, scope, and response rules." "ScenarioStep,ScenarioChat"
-        chatDecisionConfirmation = element "A - Decision Confirmation Service" "Backend API" "Stores the validated card and accepts only an authenticated manager review command." "ScenarioStep,ScenarioChat"
+        chatDecisionConfirmation = element "A - Decision & Follow-Up (card review)" "Backend API" "Stores the validated card and accepts only an authenticated manager review command." "ScenarioStep,ScenarioChat"
         chatDecisionTracker = element "A - Decision and Follow-Up" "Backend API" "Records a confirmed human decision and follow-up contract without executing the decision." "ScenarioStep,ScenarioChat"
         chatDecisionPostgres = element "A - PostgreSQL" "Scenario A state" "Stores jobs, pinned scope, conversations, outcomes, reviews, and decisions." "ScenarioStep,ScenarioDatabase"
 
@@ -386,18 +335,18 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         minutesUploadManager = element "B - Manager" "Scenario B - meeting-minutes upload" "Uploads meeting minutes and reviews the validated decision card." "ScenarioStep,ScenarioActor"
         minutesUploadUi = element "B - Conversational Assistant UI" "Web Application" "Submits the upload, polls job status, and presents the validated card." "ScenarioStep,ScenarioWeb"
-        minutesUploadIdentity = element "B - Identity Boundary" "Backend API" "Validates the manager session and creates trusted identity context." "ScenarioStep,ScenarioDocument"
+        minutesUploadIdentity = element "B - Identity Validation" "Backend API" "Validates the manager session and creates a trusted identity context inside Authorization Service." "ScenarioStep,ScenarioDocument"
         minutesUploadAuthorization = element "B - Authorization Service" "Backend API" "Builds and rechecks the permitted data and policy scope." "ScenarioStep,ScenarioDocument"
-        minutesUploadRouter = element "B - Manager Request Router" "Backend API" "Routes authorized upload, status, and review commands to fixed handlers." "ScenarioStep,ScenarioDocument"
+        minutesUploadRouter = element "B - Fixed Handler Dispatch" "Backend API" "In-process dispatch of authorized upload, status, and review commands to fixed handlers." "ScenarioStep,ScenarioDocument"
         minutesUploadProcessing = element "B - Document Processing Runner" "Backend API" "Archives and parses the upload, then creates a durable analysis job." "ScenarioStep,ScenarioDocument"
-        minutesUploadParser = element "B - Document Parser" "Backend API" "Validates the contract and treats document content only as data." "ScenarioStep,ScenarioDocument"
+        minutesUploadParser = element "B - In-process Document Parser" "Backend API" "Parsing function inside Document Processing Runner; validates the contract and treats content only as data." "ScenarioStep,ScenarioDocument"
         minutesUploadGateway = element "B - Agent Runtime Gateway" "Backend API" "Sends a best-effort job-ID wake-up after the durable job commit." "ScenarioStep,ScenarioDocument"
         minutesUploadAgentRunner = element "B - Agent Job Runner" "Agent Runtime" "Claims analysis jobs, runs the graph, and persists a candidate or failure." "ScenarioStep,ScenarioAgent"
-        minutesUploadStatus = element "B - Agent Job Status API" "Backend API" "Returns authorized job status and persisted document results." "ScenarioStep,ScenarioDocument"
+        minutesUploadStatus = element "B - Report & Dashboard API (job status)" "Backend API" "Returns authorized job status and persisted document results." "ScenarioStep,ScenarioDocument"
         minutesUploadAgent = element "B - Bounded Agent Orchestrator" "Agent Runtime" "Produces a structured document decision-card candidate without confirming or executing it." "ScenarioStep,ScenarioAgent"
         minutesUploadModel = element "B - Model Gateway" "Agent Runtime" "Applies token, time, retry, and cost limits to bounded document analysis and drafting." "ScenarioStep,ScenarioAgent"
         minutesUploadValidator = element "B - Output Validator" "Backend API" "Checks the decision-card contract, document evidence references, scope, and response rules." "ScenarioStep,ScenarioDocument"
-        minutesUploadConfirmation = element "B - Decision Confirmation Service" "Backend API" "Stores the validated card and accepts only an authenticated manager review command." "ScenarioStep,ScenarioDocument"
+        minutesUploadConfirmation = element "B - Decision & Follow-Up (card review)" "Backend API" "Stores the validated card and accepts only an authenticated manager review command." "ScenarioStep,ScenarioDocument"
         minutesUploadTracker = element "B - Decision and Follow-Up" "Backend API" "Records a confirmed human decision and its follow-up contract without executing the decision." "ScenarioStep,ScenarioDocument"
         minutesUploadArchive = element "B - Protected File Archive" "Protected storage" "Stores original upload bytes with their hash and manifest." "ScenarioStep,ScenarioStorage"
         minutesUploadPostgres = element "B - PostgreSQL" "Scenario B state" "Stores fragments, receipts, jobs, pinned scope, outcomes, reviews, and decisions." "ScenarioStep,ScenarioDatabase"
@@ -456,9 +405,9 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         failureService -> failureFallback "Apply fallback or explicit failure" "In-process function call"
         failureFallback -> failureObservability "Export redacted failure telemetry" "OTLP"
 
-        kpiTranslation = element "KPI Definition Preprocessor" "KPI translation and parity" "Translates approved KPI SQL." "ScenarioStep,ScenarioWorker"
-        kpiValidation = element "Configuration Validation Runner" "KPI translation and parity" "Validates KPI SQL and fixtures." "ScenarioStep,ScenarioWorker"
-        kpiParity = element "KPI Parity Validator" "KPI translation and parity" "Checks SQLite and PostgreSQL parity." "ScenarioStep,ScenarioScheduler"
+        kpiTranslation = element "KPI translation (in Semantic Registry)" "KPI translation and parity" "Translates approved KPI SQL inside Semantic Registry." "ScenarioStep,ScenarioWorker"
+        kpiValidation = element "KPI validation (in Semantic Registry)" "KPI translation and parity" "Validates KPI SQL and fixtures inside Semantic Registry." "ScenarioStep,ScenarioWorker"
+        kpiParity = element "KPI parity (in Acceptance Harness)" "KPI translation and parity" "Checks SQLite and PostgreSQL parity inside the Acceptance Test Harness." "ScenarioStep,ScenarioScheduler"
         kpiTranslation -> kpiValidation "Validate SQL and fixtures" "In-process function call"
         kpiValidation -> kpiParity "Run acceptance parity" "Acceptance test interface"
 
@@ -534,73 +483,43 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         // API component relationships.
         // Request path: Web -> Identity -> Authorization -> Router -> durable Agent Job -> Runtime Runner -> persisted outcome -> validation/status/delivery.
-        webApp -> identityBoundary "Submit authenticated request" "HTTPS/JSON" {
-            tags "PrimaryFlow"
-        }
-        identityBoundary -> identityProvider "Validate identity" "OIDC over HTTPS or internal authentication" {
-            tags "ExternalFlow"
-        }
-        identityBoundary -> authorizationService "Create trusted context" "In-process function call" {
-            tags "PrimaryFlow"
-        }
         authorizationService -> postgres "Read grants and policy" "PostgreSQL protocol over TLS" {
             tags "DataFlow"
         }
-        authorizationService -> managerInputService "Pass trusted scope" "In-process function call" {
+        webApp -> authorizationService "Submit authenticated request; validate session and scope" "HTTPS/JSON" {
             tags "PrimaryFlow"
         }
 
         // Request routing and manager commands.
-        managerInputService -> reportApi "Route report reads" "In-process function call" {
+        webApp -> reportApi "Request report reads" "HTTPS/JSON" {
             tags "ControlFlow"
         }
-        managerInputService -> configurationService "Route configuration candidate" "In-process function call" {
+        webApp -> configurationService "Submit configuration or organization candidate" "HTTPS/JSON" {
             tags "ControlFlow"
         }
-        managerInputService -> organizationConfigurationService "Route organization change" "In-process function call" {
-            tags "ControlFlow"
-        }
-        managerInputService -> agentGateway "Route durable agent job" "In-process function call" {
+        webApp -> agentGateway "Request durable agent job" "HTTPS/JSON" {
             tags "PrimaryFlow"
         }
         agentGateway -> postgres "Commit interactive job" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
-        agentGateway -> managerInputService "Return committed job ID" "In-process function call" {
-            tags "Feedback"
-        }
-        managerInputService -> webApp "Return accepted job ID" "HTTPS/JSON" {
-            tags "PrimaryFlow"
-        }
         agentGateway -> agentJobRunner "Send optional job-ID wake-up" "Internal authenticated API" {
             tags "PrimaryFlow"
         }
-        managerInputService -> agentJobStatusService "Route job-status read" "In-process function call" {
+        webApp -> reportApi "Request agent job status read" "HTTPS/JSON" {
             tags "ControlFlow"
         }
-        managerInputService -> documentProcessingRunner "Route document upload" "In-process function call" {
+        webApp -> documentProcessingRunner "Submit document upload" "HTTPS/JSON" {
             tags "PrimaryFlow"
         }
-        managerInputService -> decisionConfirmationService "Route review command" "In-process function call" {
+        webApp -> decisionTracker "Submit decision-card review command" "HTTPS/JSON" {
             tags "ControlFlow"
         }
-        documentProcessingRunner -> fileArchive "Archive upload bytes and hash" "Restricted file system I/O" {
-            tags "ControlFlow"
-        }
-        documentProcessingRunner -> documentParser "Request deterministic parse" "In-process function call" {
-            tags "PrimaryFlow"
-        }
-        documentParser -> fileArchive "Read approved upload bytes" "Restricted file system I/O" {
-            tags "DataFlow"
-        }
-        documentParser -> postgres "Store fragments and parse receipt" "PostgreSQL protocol over TLS" {
+        documentProcessingRunner -> fileArchive "Archive upload; read approved bytes for in-process parse" "Restricted file system I/O" {
             tags "ControlFlow"
         }
         documentProcessingRunner -> postgres "Commit document-analysis job" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
-        }
-        documentProcessingRunner -> managerInputService "Return document job ID" "In-process function call" {
-            tags "Feedback"
         }
         documentProcessingRunner -> agentGateway "Request optional Runtime wake-up" "In-process function call" {
             tags "ControlFlow"
@@ -609,12 +528,6 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             tags "PolicyCheck"
         }
         configurationService -> postgres "Store candidate; queue validation" "PostgreSQL protocol over TLS" {
-            tags "ControlFlow"
-        }
-        organizationConfigurationService -> authorizationService "Check organization authority" "In-process function call" {
-            tags "PolicyCheck"
-        }
-        organizationConfigurationService -> postgres "Store revision; activate at D+1" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
         decisionTracker -> authorizationService "Check decision authority" "In-process function call" {
@@ -649,12 +562,6 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         queryGateway -> authorizationService "Get scope and allowlists" "In-process function call" {
             tags "PolicyCheck"
         }
-        queryGateway -> sqlGuard "Validate one SELECT" "In-process function call" {
-            tags "DataFlow"
-        }
-        sqlGuard -> queryGateway "Return approval or refusal" "In-process function call" {
-            tags "Feedback"
-        }
         queryGateway -> postgres "Run scoped read-only query" "PostgreSQL protocol over TLS" {
             tags "DataFlow"
         }
@@ -682,18 +589,6 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         agentModelGateway -> agentOrchestrator "Return completion or failure" "In-process function call" {
             tags "Feedback"
         }
-        checkpointStore -> postgres "Read and write checkpoints" "PostgreSQL protocol over TLS" {
-            tags "DataFlow"
-        }
-        agentJobStatusService -> authorizationService "Check job-result access" "In-process function call" {
-            tags "PolicyCheck"
-        }
-        agentJobStatusService -> postgres "Read authorized job status" "PostgreSQL protocol over TLS" {
-            tags "DataFlow"
-        }
-        agentJobStatusService -> webApp "Return authorized job result" "HTTPS/JSON" {
-            tags "PrimaryFlow"
-        }
 
         // Validation, delivery, and accountability.
         outputValidator -> postgres "Store validation result" "PostgreSQL protocol over TLS" {
@@ -714,23 +609,17 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         outputValidator -> conversationService "Store validated answer or failure" "Internal authenticated API" {
             tags "ControlFlow"
         }
-        outputValidator -> decisionConfirmationService "Release valid decision card" "In-process function call" {
+        outputValidator -> decisionTracker "Release valid card; store review state; forward confirmed decision" "In-process function call" {
             tags "PrimaryFlow"
         }
-        decisionConfirmationService -> postgres "Store card and review state" "PostgreSQL protocol over TLS" {
-            tags "ControlFlow"
-        }
-        decisionConfirmationService -> webApp "Return card or review status" "HTTPS/JSON" {
+        decisionTracker -> webApp "Return card or review status" "HTTPS/JSON" {
             tags "PrimaryFlow"
         }
-        decisionConfirmationService -> agentGateway "Request interactive revision" "In-process function call" {
+        decisionTracker -> agentGateway "Request interactive revision" "In-process function call" {
             tags "Feedback"
         }
-        decisionConfirmationService -> documentProcessingRunner "Request document revision" "In-process function call" {
+        decisionTracker -> documentProcessingRunner "Request document revision" "In-process function call" {
             tags "Feedback"
-        }
-        decisionConfirmationService -> decisionTracker "Forward confirmed decision card" "In-process function call" {
-            tags "ControlFlow"
         }
         outputValidator -> reportApi "Release valid result or failure" "In-process function call" {
             tags "PrimaryFlow"
@@ -771,20 +660,13 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         // Worker component relationships
         ingestionCoordinator -> inputDataset "Read nightly source contracts" "Read-only filesystem: CSV and JSON"
-        ingestionCoordinator -> sourceAdapters "Parse source contracts" "In-process function call"
-        sourceAdapters -> fileArchive "Archive source bytes and hashes" "Controlled filesystem I/O"
-        sourceAdapters -> normalizer "Submit fields for normalization" "In-process function call"
-        normalizer -> dataQualityService "Check normalized rows" "In-process function call"
-        dataQualityService -> postgres "Store records and data issues" "PostgreSQL protocol over TLS"
-        dataQualityService -> signalEngine "Publish signals created by late-arrival recomputation (same morning)" "In-process domain event"
-        dataQualityService -> projectionService "Trigger corrected snapshot rebuild on late arrival" "In-process domain event"
-        snapshotService -> postgres "Pin run snapshot" "PostgreSQL protocol over TLS"
-        snapshotService -> projectionService "Build reproducible projections" "In-process function call"
-        projectionService -> postgres "Read events; store projections" "PostgreSQL protocol over TLS"
+        ingestionCoordinator -> fileArchive "Archive source bytes and hashes" "Controlled filesystem I/O"
+        ingestionCoordinator -> postgres "Store records and data issues" "PostgreSQL protocol over TLS"
+        ingestionCoordinator -> signalEngine "Publish signals created by late-arrival recomputation (same morning)" "In-process domain event"
+        ingestionCoordinator -> snapshotService "Trigger corrected snapshot rebuild on late arrival" "In-process domain event"
+        snapshotService -> postgres "Pin run snapshot; read events; store projections" "PostgreSQL protocol over TLS"
         kpiCalculator -> semanticRegistry "Read approved KPI definitions" "In-process function call"
-        configurationValidationRunnerV2 -> kpiDefinitionPreprocessor "Translate KPI candidate" "In-process function call"
-        kpiDefinitionPreprocessor -> semanticRegistry "Register validated KPI definition" "In-process function call"
-        semanticRegistry -> postgres "Read KPI definitions" "PostgreSQL protocol over TLS"
+        semanticRegistry -> postgres "Store translated and validated KPI definitions" "PostgreSQL protocol over TLS"
         kpiCalculator -> postgres "Calculate KPIs and lineage" "PostgreSQL protocol over TLS"
         workflowEngine -> postgres "Rebuild workflow observations" "PostgreSQL protocol over TLS"
         signalEngine -> postgres "Detect and store signals" "PostgreSQL protocol over TLS"
@@ -799,22 +681,18 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         replayCommandV2 -> scriptedManagerInputAdapter "Replay pinned manager inputs" "In-process function call"
         scriptedManagerInputAdapter -> backendApi "Submit scripted product input" "HTTPS, REST/JSON"
         inputDataset -> replayCommandV2 "Supply replay range" "Read-only JSON"
-        replayCommandV2 -> simulationClockV2 "Pin business date and cutoff" "In-process function call"
-        replayCommandV2 -> evaluationProfileLoaderV2 "Load evaluation profile" "In-process function call"
+        replayCommandV2 -> inputDataset "Derive pinned business date and load evaluation profile" "Read-only filesystem: JSON, CSV, and Markdown"
         replayCommandV2 -> runStatusClientV2 "Start or resume simulated day" "In-process function call"
         replayCommandV2 -> acceptanceTestHarnessV2 "Start terminal acceptance checks" "In-process function call"
         runStatusClientV2 -> runCoordinatorV2 "Start and monitor runs" "Authenticated HTTPS/JSON"
         runCoordinatorV2 -> authorizationService "Validate run-control identity" "In-process function call"
         evaluator -> acceptanceTestHarnessV2 "Start acceptance checks" "Command-line interface"
-        acceptanceTestHarnessV2 -> evaluationProfileLoaderV2 "Load acceptance limits" "In-process function call"
+        acceptanceTestHarnessV2 -> inputDataset "Load acceptance limits from the versioned profile" "Read-only filesystem"
         acceptanceTestHarnessV2 -> runStatusClientV2 "Read terminal run status" "In-process function call"
-        acceptanceTestHarnessV2 -> postgres "Store acceptance results" "PostgreSQL protocol over TLS"
-        acceptanceTestHarnessV2 -> kpiParityValidator "Run KPI parity suite" "In-process function call"
+        acceptanceTestHarnessV2 -> postgres "Store acceptance and parity results" "PostgreSQL protocol over TLS"
 
         runCoordinatorV2 -> postgres "Plan and close pinned run" "PostgreSQL protocol over TLS"
-        configurationService -> configurationValidationRunnerV2 "Queue configuration validation" "PostgreSQL-backed job queue"
-        configurationValidationRunnerV2 -> semanticRegistry "Check KPI dependencies" "In-process function call"
-        configurationValidationRunnerV2 -> postgres "Store configuration validation receipt" "PostgreSQL protocol over TLS"
+        configurationService -> semanticRegistry "Validate and register configuration/KPI candidate" "In-process function call"
         runStageCoordinatorV2 -> postgres "Claim and record run-stage jobs" "PostgreSQL protocol over TLS"
         runStageCoordinatorV2 -> ingestionCoordinator "Run pinned intake" "In-process function call"
         runStageCoordinatorV2 -> snapshotService "Create snapshot" "In-process function call"
@@ -903,40 +781,28 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         component backendApi L3_3_RevisedBackendApiComponents "Backend API view with durable agent-job producers, a job-ID-only Runtime wake-up, unified Runtime claiming, status reads, in-process document intake and parsing, manager-confirmed decision cards, scheduler-only run control, validation, publication, delivery, and submission export." {
             title "03.3 - C4 Level 3 - Backend API Components"
-            include webApp postgres agentJobRunner agentOrchestrator identityBoundary authorizationService managerInputService configurationService organizationConfigurationService decisionTracker runCoordinatorV2 documentProcessingRunner documentParser agentGateway evidenceService queryGateway sqlGuard outputValidator agentJobStatusService decisionConfirmationService publisherV2 submissionExporter reportApi auditService
+            include webApp postgres agentJobRunner agentOrchestrator authorizationService configurationService decisionTracker runCoordinatorV2 documentProcessingRunner agentGateway evidenceService queryGateway outputValidator publisherV2 submissionExporter reportApi auditService
             exclude "configurationService -> authorizationService"
-            exclude "organizationConfigurationService -> authorizationService"
             exclude "decisionTracker -> authorizationService"
             exclude "evidenceService -> authorizationService"
             exclude "queryGateway -> authorizationService"
-            exclude "sqlGuard -> queryGateway"
             exclude "outputValidator -> queryGateway"
             exclude "outputValidator -> authorizationService"
             exclude "outputValidator -> evidenceService"
             exclude "reportApi -> authorizationService"
-            exclude "agentGateway -> managerInputService"
-            exclude "documentProcessingRunner -> managerInputService"
             exclude "decisionTracker -> agentGateway"
             exclude "queryGateway -> auditService"
             exclude "outputValidator -> auditService"
-            exclude "decisionConfirmationService -> agentGateway"
-            exclude "decisionConfirmationService -> documentProcessingRunner"
-            exclude "managerInputService -> webApp"
-            exclude "agentJobStatusService -> authorizationService"
             exclude "reportApi -> queryGateway"
             exclude "authorizationService -> postgres"
             exclude "documentProcessingRunner -> postgres"
             exclude "configurationService -> postgres"
-            exclude "organizationConfigurationService -> postgres"
             exclude "decisionTracker -> postgres"
             exclude "queryGateway -> postgres"
             exclude "agentJobRunner -> postgres"
-            exclude "agentJobStatusService -> postgres"
-            exclude "decisionConfirmationService -> postgres"
             exclude "reportApi -> postgres"
             exclude "auditService -> postgres"
             exclude "submissionExporter -> postgres"
-            exclude "runCoordinatorV2 -> authorizationService"
             exclude "outputValidator -> submissionExporter"
             exclude "webApp -> backendApi"
             exclude "backendApi -> agentRuntime"
@@ -948,7 +814,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         component worker L3_4_RevisedBackgroundWorkerComponents "Background Worker view with PostgreSQL-backed run-stage execution, independent configuration validation, deterministic analytics, decision effect evaluation, and one-manager-at-a-time report evidence assembly. Manager document processing remains inside the Backend API." {
             title "03.4 - C4 Level 3 - Background Worker Components"
-            include inputDataset postgres fileArchive configurationService runCoordinatorV2 runStageCoordinatorV2 configurationValidationRunnerV2 ingestionCoordinator sourceAdapters normalizer dataQualityService snapshotService projectionService semanticRegistry kpiDefinitionPreprocessor kpiCalculator workflowEngine signalEngine reportEvidenceBuilderV2 decisionEffectEvaluator
+            include inputDataset postgres fileArchive configurationService runCoordinatorV2 runStageCoordinatorV2 ingestionCoordinator snapshotService semanticRegistry kpiCalculator workflowEngine signalEngine reportEvidenceBuilderV2 decisionEffectEvaluator
             exclude "inputDataset -> worker"
             exclude "worker -> postgres"
             exclude "worker -> fileArchive"
@@ -957,7 +823,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         component schedulerReplay L3_5_RevisedSchedulerReplayComponents "Revised Scheduler and Replay Runner view that controls simulated time and replay through the Backend Run Coordinator and runs acceptance checks outside the daily publication path." {
             title "03.5 - C4 Level 3 - Revised Scheduler and Replay Runner Components"
-            include evaluator inputDataset backendApi postgres runCoordinatorV2 replayCommandV2 simulationClockV2 evaluationProfileLoaderV2 runStatusClientV2 acceptanceTestHarnessV2 kpiParityValidator scriptedManagerInputAdapter
+            include evaluator inputDataset backendApi postgres runCoordinatorV2 replayCommandV2 runStatusClientV2 acceptanceTestHarnessV2 scriptedManagerInputAdapter
             exclude "evaluator -> schedulerReplay"
             exclude "inputDataset -> schedulerReplay"
             exclude "schedulerReplay -> backendApi"
@@ -967,7 +833,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         component agentRuntime L3_6_AgentRuntimeComponents "Agent Runtime view with one PostgreSQL-backed Runner for every report, interactive, and document Agent Job; authenticated wake-ups are hints only, and evidence and validation use Backend services." {
             title "03.6 - C4 Level 3 - Agent Runtime Components"
-            include postgres llmProvider agentGateway evidenceService outputValidator agentOrchestrator agentJobRunner conversationService agentModelGateway checkpointStore
+            include postgres llmProvider agentGateway evidenceService outputValidator agentOrchestrator agentJobRunner conversationService agentModelGateway
             exclude "backendApi -> agentRuntime"
             exclude "agentRuntime -> postgres"
             exclude "agentRuntime -> llmProvider"
