@@ -6,7 +6,7 @@ The active risk and decision record is this document together with the ADR Statu
 
 | Risk | Boundary owner | Required control |
 |---|---|---|
-| SQLite and PostgreSQL KPI results differ | Scheduler and Replay Runner | KPI Parity Validator and Parity Receipt |
+| SQLite and PostgreSQL KPI results differ | Scheduler and Replay Runner | Parity check in Acceptance Test Harness and Parity Receipt |
 | Scoped query leaks rows or columns | Backend API security boundary | Query Gateway controls and negative leakage tests |
 | Agent Runtime reads unrestricted business data | Backend API and PostgreSQL boundary | Restricted role and Evidence Service path |
 | Source content or an upload injects instructions | Document and agent boundary | Treat content as data and validate bounded evidence |

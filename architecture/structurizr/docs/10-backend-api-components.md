@@ -26,19 +26,23 @@ All browser, scheduler, runtime, and file input is untrusted until validation. P
 - Treat a wake-up call as a queue or source of truth.
 - Change the reference output contracts.
 
-## Component Map
+> **Target model note.** This document describes the **target component set** after the DDD consolidation in `16-domain-model.md` §6. `workspace.dsl` still shows the pre-consolidation inventory; it will be synchronized in the next phase. Read §6 of doc 16 for the reasoning behind each merge.
+
+## Component Map (target)
 
 | Group | Components |
 |---|---|
-| Access | Identity Boundary; Authorization Service |
-| Request Routing | Manager Request Router; Configuration Service; Organization Configuration Service; Decision and Follow-Up; Run Coordinator |
-| Bounded Analysis | Agent Runtime Gateway; Evidence Service; Query Gateway; SQL AST Guard |
-| Validate and Deliver | Output Validator; Agent Job Status API; Publisher; Submission Exporter; Report and Dashboard API; Audit Service |
-| Document Decision Flow | Document Processing Runner; Document Parser; Decision Confirmation Service |
+| Access | Authorization Service (includes identity validation) |
+| Request Routing | Configuration Service (KPI + organization); Decision and Follow-Up (includes card review); Run Coordinator |
+| Bounded Analysis | Agent Runtime Gateway; Evidence Service; Query Gateway (includes SQL AST validation) |
+| Validate and Deliver | Output Validator; Publisher; Submission Exporter; Report and Dashboard API (includes job status); Audit Service |
+| Document Decision Flow | Document Processing Runner (includes parsing) |
+
+Removed as separate components: Identity Boundary and Manager Request Router (functions inside Authorization Service and the fixed handlers), Organization Configuration Service (merged into Configuration Service), SQL AST Guard (module inside Query Gateway), Agent Job Status API (merged into Report and Dashboard API), Decision Confirmation Service (merged into Decision and Follow-Up), Document Parser (merged into Document Processing Runner).
 
 ## Internal Relationships
 
-Calls are in-process unless the model states an authenticated Runtime call. The request path is Identity Boundary, Authorization Service, Manager Request Router, fixed handler, and persisted outcome.
+Calls are in-process unless the model states an authenticated Runtime call. The request path is Authorization Service (identity + scope), fixed handler, and persisted outcome. Routing is a function, not a component.
 
 ## External Relationships
 
@@ -46,58 +50,31 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 
 ## Component Sections
 
-<a id="identity-boundary"></a>
-
-### Identity Boundary
-
-- **DSL identifier:** `identityBoundary`; **Display name:** Identity Boundary.
-- **Purpose:** Validate a session and create trusted identity context. **Responsibilities:** Validate identity and pass a trusted principal to authorization. **Inputs:** Authenticated request and identity-provider result. **Outputs:** Trusted identity context or rejection.
-- **Owned state:** None. **Dependencies:** Identity Provider and Authorization Service. **Security boundary:** User identity entry point. **Forbidden responsibilities:** Business authorization, request routing, and anonymous trust.
-- **Failure behavior:** Reject absent or invalid identity. **Idempotency:** Validation has no product side effect. **Observability:** Record redacted outcome and correlation data. **Related ADRs:** ADR-0005, ADR-0011, ADR-0020. **Open issues:** Authentication product and method remain open.
-
 <a id="authorization-service"></a>
 
 ### Authorization Service
 
 - **DSL identifier:** `authorizationService`; **Display name:** Authorization Service.
-- **Purpose:** Build and verify row, column, role, purpose, and policy scope. **Responsibilities:** Read grants and check authority. **Inputs:** Trusted identity, purpose, resource, and policy request. **Outputs:** Authorized scope or denial.
-- **Owned state:** Grants and policy in PostgreSQL. **Dependencies:** PostgreSQL and Identity Boundary. **Security boundary:** Product authorization decision point. **Forbidden responsibilities:** UI-only control, scope widening, and agent execution.
+- **Purpose:** Validate the session, then build and verify row, column, role, purpose, and policy scope. **Responsibilities:** Validate identity, read grants, and check authority. **Inputs:** Authenticated request, identity-provider result, purpose, resource, and policy request. **Outputs:** Authorized scope or denial. Identity validation (`identityBoundary` in the current DSL) is a function inside this component, not a separate box.
+- **Owned state:** Grants and policy in PostgreSQL. **Dependencies:** PostgreSQL and Identity Provider (identity validation is in-process). **Security boundary:** Product authorization decision point. **Forbidden responsibilities:** UI-only control, scope widening, and agent execution.
 - **Failure behavior:** Deny when a policy fact is missing. **Idempotency:** Checks are stable for a pinned policy version. **Observability:** Record outcome, policy version, purpose, and trace ID. **Related ADRs:** ADR-0005, ADR-0019, ADR-0020. **Open issues:** Final Runtime database role names remain open.
-
-<a id="manager-request-router"></a>
-
-### Manager Request Router
-
-- **DSL identifier:** `managerInputService`; **Display name:** Manager Request Router.
-- **Purpose:** Route an authorized request to one fixed handler. **Responsibilities:** Dispatch reads, configuration, organization, agent, status, upload, and review requests. **Inputs:** Trusted scope and validated request envelope. **Outputs:** One handler call and its accepted result.
-- **Owned state:** None. **Dependencies:** Authorization Service and selected handlers. **Security boundary:** Accept trusted scope only. **Forbidden responsibilities:** Execute work, infer scope, or fan out unrelated work.
-- **Failure behavior:** Reject unknown request types. **Idempotency:** Preserve command idempotency data. **Observability:** Record route, result, latency, and correlation IDs. **Related ADRs:** ADR-0005, ADR-0008, ADR-0010, ADR-0019. **Open issues:** None.
 
 <a id="configuration-service"></a>
 
 ### Configuration Service
 
 - **DSL identifier:** `configurationService`; **Display name:** Configuration Service.
-- **Purpose:** Store inactive configuration candidates and activate only approved valid versions. **Responsibilities:** Check authority, persist candidates, and queue deterministic validation. **Inputs:** Authorized candidate and version metadata. **Outputs:** Candidate ID, validation job, and activation state.
-- **Owned state:** Versioned candidates and activation state in PostgreSQL. **Dependencies:** Authorization Service, PostgreSQL, and Configuration Validation Runner. **Security boundary:** Authorized configuration actors only. **Forbidden responsibilities:** Activate invalid candidates or calculate KPIs.
+- **Purpose:** Store inactive KPI and organization configuration candidates and activate only approved valid versions at D+1. **Responsibilities:** Check authority, persist candidates, queue deterministic validation, and activate approved versions. **Inputs:** Authorized KPI or organization candidate and version metadata. **Outputs:** Candidate ID, validation job, and activation state. This component absorbs Organization Configuration Service (`organizationConfigurationService` in the current DSL); org changes are one candidate class, not a separate aggregate (ADR-0014 amended).
+- **Owned state:** Versioned KPI and organization candidates and activation state in PostgreSQL. **Dependencies:** Authorization Service and PostgreSQL. **Security boundary:** Authorized configuration and organization administrators only. **Forbidden responsibilities:** Activate invalid candidates, same-day org activation, historical mutation, or KPI calculation.
 - **Failure behavior:** Keep the active version and record failed validation. **Idempotency:** Candidate version and key prevent duplicate activation. **Observability:** Record version, job, receipt, status, and trace ID. **Related ADRs:** ADR-0011, ADR-0014, ADR-0018. **Open issues:** None.
-
-<a id="organization-configuration-service"></a>
-
-### Organization Configuration Service
-
-- **DSL identifier:** `organizationConfigurationService`; **Display name:** Organization Configuration Service.
-- **Purpose:** Validate versioned organization changes and activate them at D+1. **Responsibilities:** Check authority, store a revision, and schedule activation. **Inputs:** Authorized revision and effective date. **Outputs:** Version, validation result, and activation state.
-- **Owned state:** Organization versions in PostgreSQL. **Dependencies:** Authorization Service and PostgreSQL. **Security boundary:** Authorized organization administrators only. **Forbidden responsibilities:** Silent same-day activation and historical mutation.
-- **Failure behavior:** Keep the prior version and return errors. **Idempotency:** Revision ID and version prevent duplication. **Observability:** Record actor, version, date, result, and trace ID. **Related ADRs:** ADR-0011, ADR-0014. **Open issues:** None.
 
 <a id="decision-and-follow-up"></a>
 
 ### Decision and Follow-Up
 
 - **DSL identifier:** `decisionTracker`; **Display name:** Decision and Follow-Up.
-- **Purpose:** Record authorized human decisions and follow-up contracts. **Responsibilities:** Verify authority, store decisions, owners, actions, and deadlines, and request drafts. **Inputs:** Confirmed card or authorized manual decision. **Outputs:** Versioned decision and follow-up records.
-- **Owned state:** Decision and follow-up state in PostgreSQL. **Dependencies:** Authorization Service, PostgreSQL, and Agent Runtime Gateway. **Security boundary:** An authorized human confirms decisions. **Forbidden responsibilities:** Execute actions or auto-confirm drafts.
+- **Purpose:** Store validated decision cards, process human review, and record confirmed decisions and follow-up contracts. **Responsibilities:** Verify authority, release valid cards, process confirm/edit/reject commands, store decisions, owners, actions, and deadlines, and request drafts. **Inputs:** Validated card, authenticated review command, or authorized manual decision. **Outputs:** Review state, revision job, and versioned decision and follow-up records. This component absorbs Decision Confirmation Service (`decisionConfirmationService` in the current DSL): card and review state belong to the `Decision` aggregate.
+- **Owned state:** Card versions, review state, and decision/follow-up state in PostgreSQL. **Dependencies:** Authorization Service, PostgreSQL, Agent Runtime Gateway, and Document Processing Runner. **Security boundary:** An authorized human reviews and confirms each card. **Forbidden responsibilities:** Execute actions or auto-confirm drafts.
 - **Failure behavior:** Reject incomplete or unauthorized input. **Idempotency:** Decision ID and command version prevent duplicate confirmation. **Observability:** Record state changes, actor, receipt, and trace ID. **Related ADRs:** ADR-0010, ADR-0011, ADR-0015, ADR-0017. **Open issues:** None.
 
 <a id="run-coordinator"></a>
@@ -132,18 +109,9 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 ### Query Gateway
 
 - **DSL identifier:** `queryGateway`; **Display name:** Query Gateway.
-- **Purpose:** Run registered tools and scoped read-only SQL under limits and audit. **Responsibilities:** Load allow-lists, validate SQL, apply scope, execute, and audit. **Inputs:** Authorized Query Specification and trusted scope. **Outputs:** Bounded result and lineage, or refusal.
-- **Owned state:** Query audit records in PostgreSQL. **Dependencies:** Authorization Service, SQL AST Guard, PostgreSQL, and Audit Service. **Security boundary:** Scope and approved views constrain each query. **Forbidden responsibilities:** Unrestricted SQL, RLS bypass, and credential disclosure.
+- **Purpose:** Run registered tools and scoped read-only SQL under limits and audit. **Responsibilities:** Load allow-lists, validate SQL (AST validation is a module inside this component), apply scope, execute, and audit. **Inputs:** Authorized Query Specification and trusted scope. **Outputs:** Bounded result and lineage, or refusal. SQL AST Guard (`sqlGuard` in the current DSL) is demoted to a stateless validator module here, not a separate component.
+- **Owned state:** Query audit records in PostgreSQL. **Dependencies:** Authorization Service, PostgreSQL, and Audit Service. **Security boundary:** Scope and approved views constrain each query. **Forbidden responsibilities:** Unrestricted SQL, RLS bypass, and credential disclosure.
 - **Failure behavior:** Deny when validation is incomplete. **Idempotency:** Reads repeat against pinned versions. **Observability:** Record definition, scope reference, limit, duration, size, and trace ID. **Related ADRs:** ADR-0005, ADR-0011, ADR-0019, ADR-0020, ADR-0023. **Open issues:** None. For ad-hoc questions, executes model-generated SQL only after AST validation and scope injection, on the pinned snapshot; persists the query with a new `query_id` and result hash (ADR-0023).
-
-<a id="sql-ast-guard"></a>
-
-### SQL AST Guard
-
-- **DSL identifier:** `sqlGuard`; **Display name:** SQL AST Guard.
-- **Purpose:** Validate one approved read-only SQL statement. **Responsibilities:** Parse SQL and enforce the allow-list. **Inputs:** Candidate SQL and query policy. **Outputs:** Approval constraints or refusal reason.
-- **Owned state:** None. **Dependencies:** Versioned SQL policy. **Security boundary:** Uncertain SQL never reaches PostgreSQL. **Forbidden responsibilities:** Execute SQL, authorize scope, or rewrite unsafe SQL.
-- **Failure behavior:** Reject parse or policy uncertainty. **Idempotency:** Deterministic for the same SQL and policy. **Observability:** Record policy version, decision, refusal class, and trace ID. **Related ADRs:** ADR-0005, ADR-0011, ADR-0023. **Open issues:** None. For ad-hoc SQL, enforces SELECT-only, relation and column allowlists, no scope-escaping subqueries or `UNION` smuggling, no side-effecting functions, and row and cost limits (ADR-0023).
 
 <a id="output-validator"></a>
 
@@ -153,15 +121,6 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 - **Purpose:** Validate agent output before delivery, publication, review, or export. **Responsibilities:** Check schema, values, evidence, scope, recipient, alternatives, and response rules. **Inputs:** Persisted candidate, reference contract, scope, and evidence references. **Outputs:** Validated result, fallback instruction, or rejection.
 - **Owned state:** Validation state and receipt in PostgreSQL. **Dependencies:** Query Gateway, Authorization Service, Evidence Service, Audit Service, and PostgreSQL. **Security boundary:** Unvalidated model output cannot become a product result. **Forbidden responsibilities:** Repair claims, change schemas, or publish.
 - **Failure behavior:** Persist rejection and release only an approved failure path. **Idempotency:** Candidate hash and validator version make results stable. **Observability:** Record receipt, hash, failed rule, status, and trace ID. **Related ADRs:** ADR-0004, ADR-0005, ADR-0008, ADR-0010, ADR-0013, ADR-0023. **Open issues:** Fallback content remains open. For ad-hoc answers, checks that every number maps to a `value` and `query_id` pair and applies the `refused_out_of_scope` and `data_unavailable` status rules (ADR-0023).
-
-<a id="agent-job-status-api"></a>
-
-### Agent Job Status API
-
-- **DSL identifier:** `agentJobStatusService`; **Display name:** Agent Job Status API.
-- **Purpose:** Return authorized persisted Agent Job state and result references. **Responsibilities:** Check access, read state, and return a bounded response. **Inputs:** Trusted identity, scope, and job ID. **Outputs:** Authorized status, result reference, failure, or denial.
-- **Owned state:** None. **Dependencies:** Authorization Service, PostgreSQL, and Web Application. **Security boundary:** Job ID does not grant result access. **Forbidden responsibilities:** Execute, retry, wake, or mutate a job.
-- **Failure behavior:** Do not disclose cross-scope state. **Idempotency:** Reads are safe to repeat. **Observability:** Record job ID, access result, returned state, and trace ID. **Related ADRs:** ADR-0005, ADR-0011, ADR-0019. **Open issues:** None.
 
 <a id="publisher"></a>
 
@@ -186,8 +145,8 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 ### Report and Dashboard API
 
 - **DSL identifier:** `reportApi`; **Display name:** Report and Dashboard API.
-- **Purpose:** Deliver authorized reports, dashboards, workflows, answers, or failures. **Responsibilities:** Recheck audience and purpose, run approved reads, and return bounded responses. **Inputs:** Trusted scope and product read request. **Outputs:** Authorized response or explicit failure.
-- **Owned state:** None. **Dependencies:** Authorization Service, Query Gateway, PostgreSQL, and Web Application. **Security boundary:** Recheck audience and purpose before delivery. **Forbidden responsibilities:** Generate unvalidated answers, bypass scope, or read arbitrary tables.
+- **Purpose:** Deliver authorized reports, dashboards, workflows, answers, agent job status, or failures. **Responsibilities:** Recheck audience and purpose, run approved reads, and return bounded responses. **Inputs:** Trusted scope and product read request (including job ID for status). **Outputs:** Authorized response or explicit failure. This component absorbs Agent Job Status API (`agentJobStatusService` in the current DSL): job status is an authorized read with no owned state. A job ID never grants result access.
+- **Owned state:** None. **Dependencies:** Authorization Service, Query Gateway, PostgreSQL, and Web Application. **Security boundary:** Recheck audience and purpose before delivery; do not disclose cross-scope job state. **Forbidden responsibilities:** Generate unvalidated answers, bypass scope, read arbitrary tables, or mutate jobs.
 - **Failure behavior:** Return explicit unavailable, incomplete, forbidden, or failed state. **Idempotency:** Reads repeat for the same version. **Observability:** Record type, version, scope reference, result, latency, and trace ID. **Related ADRs:** ADR-0003, ADR-0004, ADR-0005, ADR-0009. **Open issues:** None.
 
 <a id="audit-service"></a>
@@ -204,27 +163,23 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 ### Document Processing Runner
 
 - **DSL identifier:** `documentProcessingRunner`; **Display name:** Document Processing Runner.
-- **Purpose:** Archive and parse uploads and create durable analysis or revision jobs. **Responsibilities:** Store bytes and hash, request parsing, commit a scoped job, return its ID, and request wake-up. **Inputs:** Authorized upload or revision request. **Outputs:** Archive reference, parse result, job ID, and optional wake-up.
-- **Owned state:** Job and upload references in PostgreSQL; bytes in archive. **Dependencies:** Protected File Archive, Document Parser, PostgreSQL, and Agent Runtime Gateway. **Security boundary:** Uploads stay untrusted until validation. **Forbidden responsibilities:** Run a graph, trust file names, or send bytes in wake-up.
+- **Purpose:** Archive uploads, parse them deterministically, and create durable analysis or revision jobs. **Responsibilities:** Store bytes and hash, validate format/size limits, extract immutable fragments and a parse receipt, commit a scoped job, return its ID, and request wake-up. **Inputs:** Authorized upload or revision request and parsing policy. **Outputs:** Archive reference, fragments, parse receipt, job ID, and optional wake-up. This component absorbs Document Parser (`documentParser` in the current DSL): parsing is a bounded function over archived bytes, and fragments/receipts belong to this job.
+- **Owned state:** Job and upload references, fragments, and receipts in PostgreSQL; bytes in archive. **Dependencies:** Protected File Archive, PostgreSQL, and Agent Runtime Gateway. **Security boundary:** Uploads stay untrusted until validation; content is data, never instructions. **Forbidden responsibilities:** Run a graph, trust file names, call a model, execute content, or send bytes in wake-up.
 - **Failure behavior:** Record the failed stage and do not analyze an invalid parse. **Idempotency:** Upload hash and request key prevent duplication. **Observability:** Record hash, archive reference, receipt, job ID, and trace ID. **Related ADRs:** ADR-0008, ADR-0010, ADR-0011, ADR-0019. **Open issues:** None.
 
-<a id="document-parser"></a>
+## Consolidation log (target model)
 
-### Document Parser
+The following components from the current DSL inventory are intentionally absent here. See `16-domain-model.md` §6 for the reasoning.
 
-- **DSL identifier:** `documentParser`; **Display name:** Document Parser.
-- **Purpose:** Validate uploads and produce immutable fragments and a parse receipt. **Responsibilities:** Read bytes, enforce format and size limits, extract fragments, and persist the receipt. **Inputs:** Archive reference and parsing policy. **Outputs:** Fragments, metadata, and parse receipt.
-- **Owned state:** Fragments and receipts in PostgreSQL. **Dependencies:** Protected File Archive and PostgreSQL. **Security boundary:** Handle untrusted content under fixed limits. **Forbidden responsibilities:** Execute content, call a model, infer decisions, or overwrite source bytes.
-- **Failure behavior:** Store deterministic failure and emit no analysis fragments. **Idempotency:** Archive hash and parser version identify one result. **Observability:** Record version, hash, limits, result, and trace ID. **Related ADRs:** ADR-0010, ADR-0011. **Open issues:** None.
-
-<a id="decision-confirmation-service"></a>
-
-### Decision Confirmation Service
-
-- **DSL identifier:** `decisionConfirmationService`; **Display name:** Decision Confirmation Service.
-- **Purpose:** Store validated cards and process confirm, edit, or reject commands. **Responsibilities:** Release valid cards, store review state, request revisions, and forward confirmed cards. **Inputs:** Validated card and authenticated review command. **Outputs:** Review state, revision job, or confirmed decision.
-- **Owned state:** Card versions and review state in PostgreSQL. **Dependencies:** PostgreSQL, Web Application, Agent Runtime Gateway, Document Processing Runner, and Decision and Follow-Up. **Security boundary:** An authorized human reviews each card. **Forbidden responsibilities:** Auto-confirm, execute decisions, or bypass validation.
-- **Failure behavior:** Keep the last valid state and return conflict or denial. **Idempotency:** Card version and command ID prevent duplicate transitions. **Observability:** Record version, command, actor, transition, and trace ID. **Related ADRs:** ADR-0008, ADR-0010, ADR-0011, ADR-0019. **Open issues:** None.
+| Removed component | Disposition |
+|---|---|
+| Identity Boundary | Function inside Authorization Service |
+| Manager Request Router | Function inside the fixed handlers |
+| Organization Configuration Service | Merged into Configuration Service |
+| SQL AST Guard | Module inside Query Gateway |
+| Agent Job Status API | Merged into Report and Dashboard API |
+| Document Parser | Merged into Document Processing Runner |
+| Decision Confirmation Service | Merged into Decision and Follow-Up |
 
 ## Container-level Open Issues
 

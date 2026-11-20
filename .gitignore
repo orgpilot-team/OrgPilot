@@ -45,3 +45,5 @@ Desktop.ini
 
 architecture/structurizr/.perch
 /.perch
+
+node_modules/

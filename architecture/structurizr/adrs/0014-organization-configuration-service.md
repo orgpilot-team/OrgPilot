@@ -49,6 +49,15 @@ Agent must NOT participate in organization changes.
 - All downstream effects (RLS, scope, recipients, cache) handled deterministically
 - Clear separation from KPI configuration changes
 
+## Amendment (2026-11-20)
+
+The separate `Organization Configuration Service` component is **folded into `Configuration Service`** in the target component model. The decision above remains valid in substance: organization changes are still versioned, validated, and activated at D+1, and the agent is still excluded. What changes is the component boundary, not the behavior.
+
+Reason: both KPI configuration and organization configuration are versioned candidates with the same activation state machine. Organization config is a candidate class, not a separate invariant-bearing aggregate, so a separate component did not earn its own box under the scoping rule in `docs/16-domain-model.md` §0. The single Configuration Service now owns both candidate classes.
+
+- `docs/10-backend-api-components.md` and `docs/16-domain-model.md` §6.1 describe the target model.
+- `workspace.dsl` still shows the pre-consolidation inventory and will be synchronized in the next phase.
+
 ## Source
 
 Addresses Gap 3 from architectural review: "تغییر سازمان"

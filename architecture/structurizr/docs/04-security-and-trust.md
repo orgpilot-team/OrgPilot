@@ -65,7 +65,7 @@ The Agent Runtime does not perform migrations, grant permissions, change policie
 ## Other trust boundaries
 
 - Protected uploads are treated as data, not instructions.
-- The Document Parser reads only archived bytes with an approved contract.
+- The Document Processing Runner parses only archived bytes with an approved contract (the former Document Parser is a function inside it).
 - Output Validator verifies schema, scope, and evidence before publication or export.
 - Submission Exporter writes only validated contract fields to a contained path below `OUTPUT_DIR`.
 - OpenTelemetry and Langfuse instrumentation must remove secrets, raw restricted business data, full documents, and unauthorized manager context.

@@ -24,13 +24,17 @@ The Runtime has limited database access to Agent Job, Lease, Attempt, Checkpoint
 - Calculate KPIs, change policy, run migrations, publish results, or confirm decisions.
 - Treat wake-ups as durable jobs.
 
-## Component Map
+> **Target model note.** This document describes the **target component set** after the DDD consolidation in `16-domain-model.md` §6. `workspace.dsl` still shows the pre-consolidation inventory; it will be synchronized in the next phase. DDD rigour here is limited to the four aggregates in doc 16 §3; checkpoint state is a repository adapter, not a component.
 
-Agent Job Runner claims work and invokes Bounded Agent Orchestrator. The orchestrator uses Conversation Service and Model Gateway. PostgreSQL Checkpoint Store supports resume.
+## Component Map (target)
+
+Agent Job Runner claims work and invokes Bounded Agent Orchestrator. The orchestrator uses Conversation Service and Model Gateway. Checkpoint persistence is a repository adapter (`ICheckpointRepository`) behind the Runner and Orchestrator, not a component.
+
+Removed as a component: PostgreSQL Checkpoint Store (demoted to a repository adapter; `Checkpoint` is resume state, not an aggregate).
 
 ## Internal Relationships
 
-The Runner invokes one bounded graph. The graph uses the model through Model Gateway and persists checkpoints and turns through deterministic components.
+The Runner invokes one bounded graph. The graph uses the model through Model Gateway and persists checkpoints and conversation turns through repository adapters. `ConversationSession`/`ConversationTurn` are owned here, in the Conversation Service, not in the Backend Manager Interaction context.
 
 ## External Relationships
 
@@ -44,7 +48,7 @@ The Runtime claims from PostgreSQL, gets evidence and validation from the Backen
 
 - **DSL identifier:** `agentOrchestrator`; **Display name:** Bounded Agent Orchestrator.
 - **Purpose:** Coordinate one bounded report, interactive, or decision-card graph. **Responsibilities:** Load authorized evidence, manage bounded steps, use conversation context, request model work, and return structured candidates. **Inputs:** Claimed job, scope, evidence references, and graph configuration. **Outputs:** Structured candidate or terminal graph failure.
-- **Owned state:** Graph state through PostgreSQL checkpoints. **Dependencies:** Evidence Service, Conversation Service, Model Gateway, and Checkpoint Store. **Security boundary:** Job scope and evidence references bound every graph. **Forbidden responsibilities:** Direct business SQL, KPI calculation, publication, or decision confirmation.
+- **Owned state:** Graph state through checkpoint records written via `ICheckpointRepository`. **Dependencies:** Evidence Service, Conversation Service, Model Gateway, and the checkpoint repository adapter. **Security boundary:** Job scope and evidence references bound every graph. **Forbidden responsibilities:** Direct business SQL, KPI calculation, publication, or decision confirmation.
 - **Failure behavior:** Persist a bounded failure and resumable checkpoint where allowed. **Idempotency:** Job attempt and checkpoint state control replay. **Observability:** Record graph, node, job, attempt, model calls, and trace ID with redaction. **Related ADRs:** ADR-0005, ADR-0008, ADR-0019, ADR-0020. **Open issues:** LangGraph node boundaries remain open.
 
 <a id="agent-job-runner"></a>
@@ -62,7 +66,7 @@ The Runtime claims from PostgreSQL, gets evidence and validation from the Backen
 
 - **DSL identifier:** `conversationService`; **Display name:** Conversation Service.
 - **Purpose:** Store manager-scoped sessions and validated turns. **Responsibilities:** Append validated turns and return a bounded authorized history window. **Inputs:** Manager scope, session ID, validated turn, and history limit. **Outputs:** Stored turn receipt and bounded history.
-- **Owned state:** Conversation sessions and turns in PostgreSQL. **Dependencies:** PostgreSQL. **Security boundary:** Sessions are manager-scoped and contain only validated content. **Forbidden responsibilities:** Treat chat as business evidence or cross manager scope.
+- **Owned state:** `ConversationSession` aggregate with `ConversationTurn[]` entities in PostgreSQL. **Dependencies:** PostgreSQL. **Security boundary:** Sessions are manager-scoped and contain only validated content; history is truncated to a bounded window. This component owns conversation state; the Backend commits the job and pins the conversation reference but does not own the history. **Forbidden responsibilities:** Treat chat as business evidence or cross manager scope.
 - **Failure behavior:** Return explicit storage or scope failure and omit unvalidated turns. **Idempotency:** Turn ID prevents duplicate append. **Observability:** Record session, turn ID, result, window size, and trace ID without full content. **Related ADRs:** ADR-0005, ADR-0008, ADR-0011, ADR-0019. **Open issues:** Retention remains open.
 
 <a id="model-gateway"></a>
@@ -74,14 +78,15 @@ The Runtime claims from PostgreSQL, gets evidence and validation from the Backen
 - **Owned state:** Cost reservation and settlement metadata in PostgreSQL. **Dependencies:** PostgreSQL and Language Model Provider. **Security boundary:** Do not send secrets, full documents, or unauthorized business context. **Forbidden responsibilities:** Select unapproved scope, bypass limits, or treat a completion as validated product output.
 - **Failure behavior:** Return bounded timeout, budget, provider, or validation failure. **Idempotency:** Call ID and reservation state prevent duplicate settlement. **Observability:** Record model metadata, tokens, cost, latency, status, and trace ID with redaction. **Related ADRs:** ADR-0008, ADR-0019, ADR-0020, ADR-0022. **Open issues:** Timeout and retry count are provisional defaults and are tuned in implementation. The evaluation model is `deepseek/deepseek-v4.1-flash-1017` with temperature zero; `LLM_API_KEY`, `LLM_BASE_URL`, and `LLM_MODEL` are injected at run time (ADR-0022). For ad-hoc SQL generation, the model names only approved semantic views and never supplies a number (ADR-0023).
 
-<a id="postgresql-checkpoint-store"></a>
+## Consolidation log (target model)
 
-### PostgreSQL Checkpoint Store
+The following component from the current DSL inventory is intentionally absent here. See `16-domain-model.md` §6 for the reasoning.
 
-- **DSL identifier:** `checkpointStore`; **Display name:** PostgreSQL Checkpoint Store.
-- **Purpose:** Store LangGraph checkpoints for resume and idempotency. **Responsibilities:** Read and write job-scoped checkpoint versions. **Inputs:** Job ID, graph version, checkpoint key, and state. **Outputs:** Stored checkpoint receipt or authorized checkpoint state.
-- **Owned state:** Agent checkpoints in PostgreSQL. **Dependencies:** PostgreSQL. **Security boundary:** Access is limited to the claimed job and approved checkpoint schema. **Forbidden responsibilities:** Store unrestricted business data or read another job scope.
-- **Failure behavior:** Fail the graph step and preserve the last complete checkpoint. **Idempotency:** Job, graph, and checkpoint version control writes. **Observability:** Record job, checkpoint key, version, result, and trace ID without full state. **Related ADRs:** ADR-0008, ADR-0011, ADR-0019. **Open issues:** Python PostgreSQL driver remains open.
+| Removed component | Disposition |
+|---|---|
+| PostgreSQL Checkpoint Store | Demoted to `ICheckpointRepository` adapter; `Checkpoint` is resume state, not an aggregate or a component |
+
+`ModelCallReceipt` is likewise an append-only audit record inside Model Gateway, not an aggregate or a component. The job claim/lease/attempt contract is shared with the Worker stage runner through one specified durable-job contract (doc 16 §0.1), so the two runners do not duplicate that semantics.
 
 ## Container-level Open Issues
 

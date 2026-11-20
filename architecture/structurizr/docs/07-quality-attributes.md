@@ -4,7 +4,7 @@
 
 Published numbers come from registered deterministic queries. The system stores the SQL, result, snapshot, scope, and `query_id` for each published number. The UI, serializer, and language model do not recalculate or round a KPI.
 
-The KPI Parity Validator compares PostgreSQL results with the SQLite reference oracle inside the Acceptance Test Harness. It checks row sets, nulls, values, translation semantics, timezone behavior, and date boundaries. A translation needs a Parity Receipt before acceptance.
+The parity check inside the Acceptance Test Harness compares PostgreSQL results with the SQLite reference oracle. It checks row sets, nulls, values, translation semantics, timezone behavior, and date boundaries. A translation needs a Parity Receipt before acceptance. Parity is owned by the harness, not a separate component (ADR-0016 amended).
 
 ## Security
 

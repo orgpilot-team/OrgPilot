@@ -22,7 +22,7 @@ Ad-hoc questions use a deterministic, scoped Text-to-SQL lifecycle. The language
 
 2. **Generate against a restricted semantic layer.** The model may name only approved semantic views and KPI definitions: the drill dimensions exposed by the KPI Dictionary, such as team, channel, product, and day. It has no access to raw business tables and no database credential.
 
-3. **Validate before execution.** The SQL AST Guard and Query Gateway enforce SELECT-only statements, relation and column allowlists, scope predicate injection, rejection of scope-escaping subqueries and `UNION` smuggling, no side-effecting functions, and a row and cost limit. The Backend injects the scope predicate so the model cannot omit it. PostgreSQL row-level security with `FORCE ROW LEVEL SECURITY` and a non-owner role is the physical backstop from ADR-0005.
+3. **Validate before execution.** The SQL AST validator (a module inside the Query Gateway in the target model) and the Query Gateway enforce SELECT-only statements, relation and column allowlists, scope predicate injection, rejection of scope-escaping subqueries and `UNION` smuggling, no side-effecting functions, and a row and cost limit. The Backend injects the scope predicate so the model cannot omit it. PostgreSQL row-level security with `FORCE ROW LEVEL SECURITY` and a non-owner role is the physical backstop from ADR-0005. The controls are unchanged; only the component boundary changes (doc 16 §6.2).
 
 4. **Execute on the pinned snapshot.** The Query Gateway executes the validated SQL on the pinned snapshot. The number comes only from execution. The model never supplies, estimates, or rounds a value.
 
@@ -54,8 +54,7 @@ Every ad-hoc number is traceable from the answer text to a persisted query and r
 
 - Backend API: Authorization Service
 - Backend API: Evidence Service
-- Backend API: Query Gateway
-- Backend API: SQL AST Guard
+- Backend API: Query Gateway (includes SQL AST validation)
 - Backend API: Output Validator
 - Agent Runtime: Bounded Agent Orchestrator
 - Agent Runtime: Model Gateway

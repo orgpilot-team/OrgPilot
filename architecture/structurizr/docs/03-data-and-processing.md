@@ -52,12 +52,12 @@ Equivalent pinned snapshot
   -> product result
 
 Reference result + product result
-  -> KPI Parity Validator
+  -> Acceptance Test Harness (parity check)
   -> Parity Receipt
 ```
 
 SQLite is embedded only in the Acceptance Test Harness. It is not a product database, product container, or daily runtime dependency. The reference SQL and KPI Dictionary remain read-only.
 
-The KPI Parity Validator compares row sets, nulls, values, median translation, time intervals, decimal division, timezone behavior, and date boundaries. The maximum accepted evaluation tolerance is one percent. A PostgreSQL translation is not accepted until its parity evidence passes.
+The parity check inside the Acceptance Test Harness compares row sets, nulls, values, median translation, time intervals, decimal division, timezone behavior, and date boundaries. The maximum accepted evaluation tolerance is one percent. A PostgreSQL translation is not accepted until its parity evidence passes. Parity is one acceptance check, not a separate product component; the former KPI Parity Validator is folded into the harness (ADR-0016 amended, doc 16 §6.3).
 
 Agent Runtime has no role in SQL translation, KPI calculation, or parity repair.

@@ -31,6 +31,17 @@ We adopt Domain-Driven Design as the implementation model for the Backend API, B
 - More upfront structure than a flat CRUD design; justified by the correctness, determinism, and audit requirements.
 - DDD names supplement, not replace, the C4 component names in the DSL and docs 10/11/13.
 
+## Amendment (2026-11-20): scope DDD rigour to where invariants live
+
+This ADR is refined, not reversed. Full tactical DDD applies **only where an invariant is atomic, acceptance-tested, and mutated from more than one place**. Derived read models, append-only records, stateless validators, and persistence wrappers are folded into their owning components rather than modelled as aggregates or given their own C4 box. `docs/16-domain-model.md` §0 states the test and §6 lists every merge, demotion, and elimination with its reasoning.
+
+Key consequences of the refinement:
+
+- Aggregate roots are kept only for genuine invariants (`AccessPolicy`, `AgentJob`, `Decision`, `ReportVersion`, `IngestionBatch`, `Snapshot`, `KpiDefinition`, `SignalEpisode`, `EffectAssessment`, `RunStage`, `ReasoningSession`, `ModelReservation`, `ConversationSession`, `ExportBatch`).
+- `DataIssue`, `DecisionCard`, follow-ups, and conversation turns are entities inside their roots; `Projection`, `KpiResult`, `WorkflowObservation`, `ManagerRequest`, `ModelCallReceipt`, and `Checkpoint` are derived/value/append-only records, not aggregates.
+- Stateless helpers and duplicate owners are removed as components (see doc 16 §6); the Worker stage runner and the Agent Runtime job runner share one durable-job contract.
+- The target component set is documented in docs 10–13 and 16. `workspace.dsl` still shows the pre-consolidation inventory and will be synchronized in the next phase.
+
 ## Related
 
 - `docs/16-domain-model.md` (authoritative model)

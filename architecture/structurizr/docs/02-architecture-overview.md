@@ -26,6 +26,8 @@ The DIDRAH Input Dataset is one versioned `DATA_DIR` package. It contains nightl
 
 The deterministic core is outside the agent. It owns KPI calculation, workflow reconstruction, signal rules, authorization, validation, and publication. The bounded agent analyzes only authorized evidence and can produce a narrative candidate or a decision-card candidate.
 
+**Component consolidation (target model).** The component inventory in docs 10–13 and the DDD model in doc 16 define a consolidated target set: stateless helpers (identity validation, request routing, SQL AST guard, simulation clock, evaluation profile loader, document parser, source adapters, normalizer, data-quality service, projection service, KPI preprocessor, configuration validation runner) are folded into their owning components; Decision Confirmation Service, Organization Configuration Service, Agent Job Status API, and KPI Parity Validator are merged into their natural owners; the Checkpoint Store is demoted to a repository adapter. The DSL and generated views still show the pre-consolidation inventory and will be synchronized in the next phase. No invariant is removed. See doc 16 §6 for the per-component reasoning.
+
 ## Technology matrix
 
 | Element | Technology | Constraint |
