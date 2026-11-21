@@ -10,7 +10,7 @@ The active architecture sources are:
 
 `workspace.dsl` is the only DSL entry point. The README explains the workflow. It is not an architecture source of truth.
 
-`workspace.json` contains generated layout data. It is read-only for this architecture update. Do not edit, regenerate, reset, or delete it.
+`workspace.json` is the generated Structurizr Local snapshot. It contains the imported model, documentation, decisions, and layout data. Do not edit it by hand. Regenerate and commit it after an accepted change to `workspace.dsl`, `docs/`, or `adrs/` so that a direct local mount shows the same accepted sources.
 
 The official project brief, TA clarifications, and machine-readable evaluation contracts can be used to verify the active architecture sources. Do not copy an unverified historical statement into the active architecture.
 
@@ -43,6 +43,7 @@ Run these commands from the repository root in PowerShell:
 $structurizrTemp = Join-Path ([IO.Path]::GetTempPath()) ([IO.Path]::GetRandomFileName())
 New-Item -ItemType Directory -Path $structurizrTemp | Out-Null
 Copy-Item -Recurse -Path "${PWD}/architecture/structurizr/*" -Destination $structurizrTemp
+Remove-Item -LiteralPath (Join-Path $structurizrTemp "workspace.json") -ErrorAction SilentlyContinue
 docker run --rm -it -p 8080:8080 -v "${structurizrTemp}:/usr/local/structurizr" structurizr/structurizr local
 ```
 
@@ -54,7 +55,7 @@ Run CLI validation against the same temporary copy:
 docker run --rm -v "${structurizrTemp}:/usr/local/structurizr" structurizr/structurizr validate -workspace /usr/local/structurizr/workspace.dsl
 ```
 
-A successful command returns without a validation error. After validation, confirm that the repository `workspace.json` hash is unchanged.
+A successful command returns without a validation error. After visual and CLI validation, stop Structurizr Local and copy the generated `workspace.json` from the temporary directory to `architecture/structurizr/workspace.json`. Review it and commit it with the accepted source changes or in an immediately following generated-artifact commit.
 
 ## Mermaid generation
 
@@ -88,7 +89,7 @@ For each URL:
 - Keep `!impliedRelationships false`.
 - Keep stable view keys unless the approved plan requires a new view.
 - Do not hand-edit generated artifacts as model sources.
-- Do not change `workspace.json` to repair a DSL error.
+- Do not change `workspace.json` to repair a DSL error. Correct the active sources, validate them, and then regenerate the snapshot.
 - Validate the DSL, documentation links, ADR links, and protected-file hashes before a phase exits.
 
 ## Troubleshooting
