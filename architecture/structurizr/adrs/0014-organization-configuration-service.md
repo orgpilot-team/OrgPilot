@@ -55,8 +55,7 @@ The separate `Organization Configuration Service` component is **folded into `Co
 
 Reason: both KPI configuration and organization configuration are versioned candidates with the same activation state machine. Organization config is a candidate class, not a separate invariant-bearing aggregate, so a separate component did not earn its own box under the scoping rule in `docs/16-domain-model.md` §0. The single Configuration Service now owns both candidate classes.
 
-- `docs/10-backend-api-components.md` and `docs/16-domain-model.md` §6.1 describe the target model.
-- `workspace.dsl` still shows the pre-consolidation inventory and will be synchronized in the next phase.
+- `docs/10-backend-api-components.md` and `docs/16-domain-model.md` §6.1 define the implementation boundary. The DSL is a visual overview of those documents.
 
 ## Source
 

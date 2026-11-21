@@ -21,7 +21,7 @@ The approved v1 behavior is:
 2. At follow-up: if evaluation date not reached → `too_early`; if date reached and data sufficient → determine direction (`improved`/`worsened`/`no_change`); if data insufficient → record reason, leave result empty.
 3. When the decision coincided with a campaign or other concurrent change, a simple before/after comparison is insufficient. Apply **workload normalization** (e.g. orders per picking staff) or **comparison with a similar case without the decision**, and record which method was used.
 4. Store assumptions, confounders, confidence in attribution, guardrail status in separate fields. If the effect cannot be separated, the Persian report states «اثر قابل جدا کردن نیست» — never "no effect".
-5. A guardrail breach is itself a business signal emitted to the Signal Engine. `no_change` remains an internal schema value only and is not exported as `effect_direction` (the permitted exported directions are `improved`, `worsened`, `too_early`).
+5. A guardrail breach is itself a business signal emitted to the Signal Engine. The permitted exported `effect_direction` values are `improved`, `worsened`, `no_change`, and `too_early`, as defined by the reference schema.
 
 ## Decision
 

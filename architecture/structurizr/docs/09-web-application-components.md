@@ -49,7 +49,7 @@ Each component calls the Backend API over HTTPS/JSON. The Web Application can se
 - **DSL identifier:** `chatUi`
 - **Display name:** Conversational Assistant UI
 - **Purpose:** Display reports and bounded answers and collect scoped manager input.
-- **Responsibilities:** Show briefs, submit questions, upload documents, submit manager operations, and show job or review state.
+- **Responsibilities:** Show briefs, submit questions, upload documents, submit `CloseSignal`, `ReferSignal`, `SetManagerPriority`, `ChangeKpiTarget`, and `ChangeKpiThreshold` operations, and show job or review state.
 - **Inputs:** User actions and authorized Backend API responses.
 - **Outputs:** Authenticated HTTPS/JSON requests and rendered results.
 - **Owned state:** Temporary browser view state only.
@@ -69,13 +69,13 @@ Each component calls the Backend API over HTTPS/JSON. The Web Application can se
 - **DSL identifier:** `dashboardUi`
 - **Display name:** Role-Based Dashboard UI
 - **Purpose:** Display authorized KPIs, targets, trends, drill-downs, decisions, and open actions.
-- **Responsibilities:** Request and render role-scoped management data and direct-workload detail when allowed.
+- **Responsibilities:** Request and render role-scoped management data, deterministic chart specifications, and direct-workload detail when allowed.
 - **Inputs:** Trusted session context and authorized report or dashboard responses.
 - **Outputs:** HTTPS/JSON read requests and rendered dashboards.
 - **Owned state:** Temporary filters and presentation state only.
 - **Dependencies:** Backend Report and Dashboard API.
 - **Security boundary:** The Backend API enforces row, column, role, purpose, and policy scope.
-- **Forbidden responsibilities:** Direct database access, access-policy decisions, KPI calculation, and data correction.
+- **Forbidden responsibilities:** Direct database access, access-policy decisions, KPI or chart-data calculation, and data correction.
 - **Failure behavior:** Show an explicit unavailable or forbidden state. Do not reuse data from another scope.
 - **Idempotency:** Read operations are safe to repeat.
 - **Observability:** Emit redacted page, request, latency, and error telemetry when collection is active.

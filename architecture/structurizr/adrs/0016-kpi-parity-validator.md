@@ -45,8 +45,7 @@ Important: Agent Runtime has NO role in parity. If KPI is wrong, Agent must not 
 
 The standalone `KPI Parity Validator` component is **folded into the `Acceptance Test Harness`**. Every task and requirement in this ADR remains in force; only the component boundary changes. The harness already owns the SQLite execution boundary, so a separate parity component duplicated that ownership. Parity is one acceptance check inside the harness, not a product component, and `KpiParityService` is removed from the Worker domain services.
 
-- `docs/12-scheduler-replay-components.md` and `docs/16-domain-model.md` §6.3 describe the target model.
-- `workspace.dsl` still shows the pre-consolidation inventory and will be synchronized in the next phase.
+- `docs/12-scheduler-replay-components.md` and `docs/16-domain-model.md` §6.3 define the implementation boundary. The DSL is a visual overview of those documents.
 
 ## Related requirements
 

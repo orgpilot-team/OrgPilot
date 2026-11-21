@@ -52,11 +52,15 @@ PostgreSQL stores correlation metadata and architecture receipts. It does not st
 
 The Acceptance Test Harness covers:
 
-- Ordered replay and restart behavior
-- SQLite-to-PostgreSQL KPI parity
-- Hidden-data and regression tests
-- Cross-scope leakage tests
-- Output-contract validation
-- Path-containment and atomic-export checks
-- Performance and cost checks
-- Trace-correlation checks
+- Ordered replay, restart behavior, and an organization change during replay without a code change.
+- SQLite-to-PostgreSQL KPI parity, zero incorrect published numbers, hidden-data tests, and regression tests.
+- Ten morning reports before 07:30, with no more than five items in each report.
+- At least 90% of required signals detected within 24 hours, with the correct owner and cause.
+- All three workflows reconstructed with SLA and bottleneck results.
+- At least 85% acceptance accuracy for scoped manager questions.
+- Zero cross-scope leakage and explicit prompt-injection tests for ticket, file, and upload text.
+- Fairness checks that prevent unsupported individual blame and restrict individual data to an approved direct-supervisor workload purpose.
+- Q03 checks for the `U_SAL` monthly target, net revenue through yesterday, and proportional target attainment.
+- Output-contract validation, path containment, atomic export, and trace correlation.
+- At most five minutes per processing day and at most five US dollars for the complete 30-day run.
+- Equal numbers and discovered signals in two runs with the same inputs.

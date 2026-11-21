@@ -39,7 +39,7 @@ docker run --rm `
 
 ## LLM configuration
 
-The evaluation profile uses `deepseek/deepseek-v4.1-flash-1017` (ADR-0022). The three variables `LLM_API_KEY`, `LLM_BASE_URL`, and `LLM_MODEL` are injected at run time and declared by name in `.env.example`. No key is stored in the project or repository. `temperature` is zero; other generation parameters, timeout, and retry count are defaults for now and are tuned during implementation. A model failure removes only LLM narrative and leaves deterministic canonical JSON valid.
+The evaluation profile uses `deepseek/deepseek-v4.1-flash-1017` (ADR-0022). The three variables `LLM_API_KEY`, `LLM_BASE_URL`, and `LLM_MODEL` are injected at run time and declared by name in `.env.example`. No key is stored in the project or repository. `temperature` is zero. Each model call has a hard 30-second timeout and at most two retries with bounded backoff. A model failure removes only LLM narrative and leaves deterministic canonical JSON valid. Other generation parameters remain implementation configuration.
 
 ## Network and security boundaries
 
@@ -70,7 +70,7 @@ Observability is fail-open. Product services continue their core work when the c
 - Four CPU cores
 - Sixteen GB RAM
 - No GPU
-- Network access only for approved external services
+- Network access only to the configured LLM API
 - Read-only `/data`
 - Writable `/submission`
 - One-command non-interactive `docker run` execution
@@ -82,6 +82,6 @@ Observability is fail-open. Product services continue their core work when the c
 
 The system records stage duration, accepted and rejected rows, query results, KPI counts, signal changes, report results, model tokens, model cost, retries, access denials, result hashes, and artifact versions. W3C `traceparent` is propagated across REST calls. Asynchronous jobs persist trace context or use Span Links. Receipts store `trace_id` for correlation.
 
-Failed jobs record an explicit terminal failure when the approved policy requires it. Retry count, model call timeout, Agent Job deadline, dead-letter policy, reconciliation cadence, and fallback content remain open. Documentation must not assign values to these decisions.
+Failed jobs record an explicit terminal failure when the approved policy requires it. Model-call timeout, retry, and no-narrative fallback follow ADR-0022. Agent Job deadline, dead-letter policy, and reconciliation cadence remain open implementation decisions.
 
-Retention periods, backup frequency, RPO, RTO, audit access, and the restore procedure remain open. ADR-0011 remains Proposed.
+ADR-0011 is accepted for the Evaluation profile. Evidence required for replay and the two-run check remains available for the duration of an evaluation run. Production retention periods, backup frequency, RPO, RTO, audit access, and the restore procedure remain open.

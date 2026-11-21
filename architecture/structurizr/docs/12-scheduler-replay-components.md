@@ -24,7 +24,7 @@ Replay input and evaluation configuration are versioned inputs. The Scheduler do
 - Use SQLite as a product database.
 - Bypass the Backend API for scripted manager input.
 
-> **Target model note.** This document describes the **target component set** after the DDD consolidation in `16-domain-model.md` §6. `workspace.dsl` still shows the pre-consolidation inventory; it will be synchronized in the next phase. This container coordinates no invariant-bearing aggregate, so DDD rigour does not apply here; the merges below remove stateless helpers and a duplicated parity owner.
+> **Implementation source note.** This document and `16-domain-model.md` define the Scheduler and Replay Runner boundaries used for implementation. The DSL is a visual overview. This container coordinates no invariant-bearing aggregate, so the merges below remove stateless helpers and a duplicated parity owner.
 
 ## Component Map (target)
 
@@ -78,9 +78,9 @@ The container reads the DIDRAH Input Dataset, calls the Backend API over authent
 - **Owned state:** None. **Dependencies:** DIDRAH Input Dataset and Backend API. **Security boundary:** Scripts do not bypass authentication, authorization, or validation. **Forbidden responsibilities:** Write product state directly or call internal Backend components.
 - **Failure behavior:** Record the rejected input and stop or continue under the evaluation profile. **Idempotency:** Script event ID and replay day prevent duplicate submission. **Observability:** Record event ID, request type, result, job ID, and trace ID. **Related ADRs:** ADR-0010, ADR-0011, ADR-0012, ADR-0018. **Open issues:** None.
 
-## Consolidation log (target model)
+## Consolidation log (implementation model)
 
-The following components from the current DSL inventory are intentionally absent here. See `16-domain-model.md` §6 for the reasoning.
+The following former components are intentionally absent from the implementation model. See `16-domain-model.md` §6 for the reasoning.
 
 | Removed component | Disposition |
 |---|---|

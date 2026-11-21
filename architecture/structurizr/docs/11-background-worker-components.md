@@ -24,7 +24,7 @@ The Worker accepts only persisted jobs and pinned dependencies. Source data is u
 - Publish reports or process manager commands.
 - Change reference KPI SQL or output contracts.
 
-> **Target model note.** This document describes the **target component set** after the DDD consolidation in `16-domain-model.md` §6. `workspace.dsl` still shows the pre-consolidation inventory; it will be synchronized in the next phase. The Worker is a deterministic pipeline, so most absorbed components were stateless functions or derived read models, not aggregates.
+> **Implementation source note.** This document and `16-domain-model.md` define the Background Worker boundaries used for implementation. The DSL is a visual overview. The Worker is a deterministic pipeline, so most absorbed components are stateless functions or derived read models, not aggregates.
 
 ## Component Map (target)
 
@@ -80,9 +80,9 @@ The Worker reads the DIDRAH Input Dataset, writes original bytes to the Protecte
 ### Semantic Registry
 
 - **DSL identifier:** `semanticRegistry`; **Display name:** Semantic Registry.
-- **Purpose:** Own the single versioned KPI definition: translate reference SQL, validate it, and activate it only after parity passes. **Responsibilities:** Apply deterministic translation rules (median, date intervals, percentage, timezone), produce a validation candidate and receipt, store PostgreSQL SQL, units, precision, targets, direction, ownership, and dependencies. **Inputs:** Validated KPI definition, translation version, and Parity Receipt. **Outputs:** Approved version for calculation and dependency checks. This component absorbs KPI Definition Preprocessor and Configuration Validation Runner (`kpiDefinitionPreprocessor`, `configurationValidationRunnerV2` in the current DSL): translation and validation produce one definition, and the registry is the single owner of the active version.
-- **Owned state:** Semantic versions, translation artifacts, and validation receipts in PostgreSQL. **Dependencies:** PostgreSQL. **Security boundary:** Only validated approved definitions with a passing Parity Receipt can become active; reference SQL is read-only. **Forbidden responsibilities:** Execute SQL at registration, translate arbitrary text at calculation time, change reference SQLite SQL, or activate configuration.
-- **Failure behavior:** Keep the last active version and reject invalid registration. **Idempotency:** Definition ID and version prevent duplicate registration. **Observability:** Record version, owner, status, dependencies, and trace ID. **Related ADRs:** ADR-0002, ADR-0007, ADR-0014, ADR-0016. **Open issues:** None.
+- **Purpose:** Own immutable KPI definition versions, SQL translation, semantic validation, and parity eligibility. **Responsibilities:** Apply deterministic translation rules (median, date intervals, percentage, timezone), store PostgreSQL SQL and KPI metadata, accept a Parity Receipt from the Acceptance Test Harness, and mark a definition version as eligible for activation. **Inputs:** Authorized KPI candidate reference, translation version, and Parity Receipt. **Outputs:** Validated definition version, eligibility state, and dependency checks. This component absorbs KPI Definition Preprocessor and Configuration Validation Runner (`kpiDefinitionPreprocessor`, `configurationValidationRunnerV2` in the current DSL): translation and validation produce one immutable definition version.
+- **Owned state:** Semantic definition versions, translation artifacts, eligibility state, and validation receipts in PostgreSQL. **Dependencies:** Configuration-candidate contract, Parity Receipt contract, and PostgreSQL. **Security boundary:** Only validated definitions with a passing Parity Receipt are eligible for activation; reference SQL is read-only. **Forbidden responsibilities:** Execute SQL at registration, translate arbitrary text at calculation time, change reference SQLite SQL, or control the active-version pointer.
+- **Failure behavior:** Reject the candidate version and preserve the current eligible definition. Configuration Service leaves its active-version pointer unchanged. **Idempotency:** Definition ID and version prevent duplicate registration. **Observability:** Record version, owner, eligibility, dependencies, receipt, and trace ID. **Related ADRs:** ADR-0002, ADR-0007, ADR-0014, ADR-0016. **Open issues:** None.
 
 <a id="kpi-calculator"></a>
 
@@ -107,7 +107,7 @@ The Worker reads the DIDRAH Input Dataset, writes original bytes to the Protecte
 ### Signal Engine
 
 - **DSL identifier:** `signalEngine`; **Display name:** Signal Engine.
-- **Purpose:** Maintain deterministic signal lifecycles and escalation. **Responsibilities:** Detect, group, suppress, rank, escalate, and close signals under approved rules. **Inputs:** KPI and workflow facts and signal-rule version. **Outputs:** Versioned signal episodes and recipient state.
+- **Purpose:** Maintain deterministic signal lifecycles and escalation. **Responsibilities:** Detect, group, suppress, rank, escalate, and close signals under approved rules. **Inputs:** KPI and workflow facts, signal-rule version, and manager-priority configuration. **Outputs:** Versioned signal episodes and recipient state.
 - **Owned state:** Signal episodes and recipient state in PostgreSQL. **Dependencies:** PostgreSQL. **Security boundary:** Rules and recipient scope are deterministic and versioned. **Forbidden responsibilities:** Generate model content or auto-create human decisions.
 - **Failure behavior:** Preserve the prior episode state and fail the stage. **Idempotency:** Signal key, observation, and rule version make retry stable. **Observability:** Record lifecycle transition, rule, recipients, status, and trace ID. **Related ADRs:** ADR-0006, ADR-0007, ADR-0017. **Open issues:** None.
 
@@ -116,9 +116,9 @@ The Worker reads the DIDRAH Input Dataset, writes original bytes to the Protecte
 ### Report Evidence Builder
 
 - **DSL identifier:** `reportEvidenceBuilderV2`; **Display name:** Report Evidence Builder.
-- **Purpose:** Build one pinned evidence package and canonical report per manager job. **Responsibilities:** Collect approved facts, signals, follow-up assessments, citations, and scope references. **Inputs:** Pinned run results and authorized manager scope. **Outputs:** Evidence package, canonical report, and unlocked Agent Job.
-- **Owned state:** Evidence package and report candidate in PostgreSQL. **Dependencies:** PostgreSQL and Decision Effect Evaluator. **Security boundary:** Package content cannot exceed manager scope. **Forbidden responsibilities:** Call a model, publish, or merge managers.
-- **Failure behavior:** Record an incomplete package or explicit failure under policy. **Idempotency:** Run, manager, and package version identify one result. **Observability:** Record package, manager scope reference, source versions, status, and trace ID. **Related ADRs:** ADR-0004, ADR-0008, ADR-0009, ADR-0011. **Open issues:** Fallback content remains open.
+- **Purpose:** Build one pinned evidence package and canonical report per manager job. **Responsibilities:** Collect approved facts, signals, stored follow-up assessments, citations, and scope references. Build an internal deterministic chart specification when the UI needs a chart. The specification contains the chart type, KPI, time range, breakdown, and target line. **Inputs:** Pinned run results, stored Decision Effect records, and authorized manager scope. **Outputs:** Evidence package, canonical report, internal chart specification, and unlocked Agent Job.
+- **Owned state:** Evidence package and report candidate in PostgreSQL. **Dependencies:** PostgreSQL and stored Decision Effect records. **Security boundary:** Package content cannot exceed manager scope. **Forbidden responsibilities:** Call a model, publish, merge managers, or add a chart field to the formal submission contract.
+- **Failure behavior:** Record an incomplete package or explicit failure under policy. If model narrative is unavailable later, the deterministic canonical report remains valid without narrative. **Idempotency:** Run, manager, and package version identify one result. **Observability:** Record package, manager scope reference, source versions, status, and trace ID. **Related ADRs:** ADR-0004, ADR-0008, ADR-0009, ADR-0011, ADR-0022. **Open issues:** None.
 
 <a id="decision-effect-evaluator"></a>
 
@@ -126,12 +126,12 @@ The Worker reads the DIDRAH Input Dataset, writes original bytes to the Protecte
 
 - **DSL identifier:** `decisionEffectEvaluator`; **Display name:** Decision Effect Evaluator.
 - **Purpose:** Evaluate KPI change and guardrails for due decisions. **Responsibilities:** Compare pinned before and after evidence and record a structured internal assessment. **Inputs:** Due decision, KPI facts, guardrails, and evaluation window. **Outputs:** Internal Decision Effect and follow-up evidence.
-- **Owned state:** Versioned Decision Effect record in PostgreSQL. **Dependencies:** PostgreSQL and Report Evidence Builder. **Security boundary:** Assessment is deterministic and internal. **Forbidden responsibilities:** Change the output schema, claim causality without evidence, or call a model.
+- **Owned state:** Versioned Decision Effect record in PostgreSQL. **Dependencies:** PostgreSQL and persisted decision, KPI, guardrail, evaluation-window, and comparison-context records. **Security boundary:** Assessment is deterministic and internal. **Forbidden responsibilities:** Change the output schema, claim causality without evidence, depend on Report Evidence Builder, or call a model.
 - **Failure behavior:** Record `too_early`, `insufficient_data`, `not_isolatable`, or explicit failure as allowed. **Idempotency:** Decision and evidence-window versions identify one assessment. **Observability:** Record decision, window, result, limitation, and trace ID. **Related ADRs:** ADR-0010, ADR-0011, ADR-0015. **Open issues:** None.
 
-## Consolidation log (target model)
+## Consolidation log (implementation model)
 
-The following components from the current DSL inventory are intentionally absent here. See `16-domain-model.md` §6 for the reasoning.
+The following former components are intentionally absent from the implementation model. See `16-domain-model.md` §6 for the reasoning.
 
 | Removed component | Disposition |
 |---|---|
@@ -142,7 +142,7 @@ The following components from the current DSL inventory are intentionally absent
 | Data Quality Service | Merged into Ingestion Coordinator (`DataIssue` is an entity of `IngestionBatch`) |
 | Projection Service | Merged into Snapshot Service (derived read model) |
 
-`KpiParityService` is not a Worker domain service in the target model; parity is owned by the Acceptance Test Harness in the Scheduler and Replay Runner (doc 12, ADR-0016).
+`KpiParityService` is not a Worker domain service in the implementation model; parity is owned by the Acceptance Test Harness in the Scheduler and Replay Runner (doc 12, ADR-0016).
 
 ## Container-level Open Issues
 

@@ -39,7 +39,7 @@ The active risk and decision record is this document together with the ADR Statu
 | Retry count | Accepted: at most 2 retries, bounded backoff | ADR-0022 |
 | Dead-letter policy | Open | This document |
 | Reconciliation cadence | Open | This document |
-| Fallback content | Open | This document |
+| Model-call fallback | Resolved: valid deterministic output with no LLM narrative | ADR-0022 |
 | LangGraph node boundaries | Open | This document |
 | Retention and backup frequency | Open | ADR-0011 |
 | RPO and RTO | Open | ADR-0011 |

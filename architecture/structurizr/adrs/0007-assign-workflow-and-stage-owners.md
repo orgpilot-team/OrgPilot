@@ -31,9 +31,9 @@ The accepted stage ownership is:
 
 ## Consequences
 
-Every workflow observation and escalation has a deterministic owner. `workflow_definitions.csv` must contain the accepted stage owners.
+Every workflow observation and escalation has a deterministic owner. `workflow_definitions.csv.owner` stores the workflow owner. The stage owner is derived from the owner of the KPI that measures the stage, as defined by the active KPI dictionary. A stage owner is not duplicated in `workflow_definitions.csv`.
 
 ## Related requirements
 
 - Workflow stage ownership must follow the official KPI ownership data.
-- The active workflow definition contract must contain the accepted stage owners.
+- The active workflow definition contract stores the workflow owner and derives each stage owner from active KPI ownership.

@@ -6,7 +6,7 @@ PostgreSQL is the authoritative job and state store for all report, interactive,
 
 ## Nightly report flow
 
-The Replay Command selects a business day, derives the pinned business date and cutoff, and loads acceptance limits and run options. (In the target model the former Simulation Clock and Evaluation Profile Loader are functions inside the Replay Command; doc 16 §6.1.)
+The Replay Command selects a business day, derives the pinned business date and cutoff, and loads acceptance limits and run options. In the implementation model, the former Simulation Clock and Evaluation Profile Loader are functions inside the Replay Command (doc 16 §6.1).
 
 The Run Status Client asks the Backend Run Coordinator to create a pinned run and its complete job plan. PostgreSQL stores job dependencies, manager order, and durable job state.
 
@@ -36,7 +36,7 @@ The Agent Runtime Runner claims and leases the job from PostgreSQL, reloads its 
 
 ## Document decision flow
 
-The Document Processing Runner archives the original upload and runs deterministic parsing internally (the former Document Parser is a function inside it, doc 16 §6.1). On unsupported or invalid content, parsing returns an explicit failure and no Agent Job is created. On successful parsing, immutable fragments and a parse receipt are stored, then the Document Processing Runner commits one durable document-analysis Agent Job with pinned actor, scope, policy, and fragment references. It returns the job ID to the request handler and may request a best-effort job-ID-only wake-up through the Gateway; the Runtime Runner still claims canonical job data from PostgreSQL. The same Agent Runtime Runner claims and leases the job, executes the bounded document graph, and persists its candidate or execution failure before validation. The UI polls authorized job status. The Decision Confirmation Service presents only a valid card for manager review. A manager edit creates a revision through the Document Processing Runner using the approved fragments; only a confirmed card can enter Decision and Follow-Up.
+The Document Processing Runner archives the original upload and runs deterministic parsing internally (the former Document Parser is a function inside it, doc 16 §6.1). On unsupported or invalid content, parsing returns an explicit failure and no Agent Job is created. On successful parsing, immutable fragments and a parse receipt are stored, then the Document Processing Runner commits one durable document-analysis Agent Job with pinned actor, scope, policy, and fragment references. It returns the job ID to the request handler and may request a best-effort job-ID-only wake-up through the Gateway; the Runtime Runner still claims canonical job data from PostgreSQL. The same Agent Runtime Runner claims and leases the job, executes the bounded document graph, and persists its candidate or execution failure before validation. The UI polls authorized job status. Decision and Follow-Up presents only a valid card for manager review. A manager edit creates a revision through the Document Processing Runner using the approved fragments; only a confirmed card can enter the decision record.
 
 ## Replay and evaluation
 

@@ -26,7 +26,7 @@ All browser, scheduler, runtime, and file input is untrusted until validation. P
 - Treat a wake-up call as a queue or source of truth.
 - Change the reference output contracts.
 
-> **Target model note.** This document describes the **target component set** after the DDD consolidation in `16-domain-model.md` §6. `workspace.dsl` still shows the pre-consolidation inventory; it will be synchronized in the next phase. Read §6 of doc 16 for the reasoning behind each merge.
+> **Implementation source note.** This document and `16-domain-model.md` define the Backend API boundaries used for implementation. The DSL is a visual overview. Read §6 of doc 16 for the reasoning behind each merge.
 
 ## Component Map (target)
 
@@ -64,8 +64,8 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 ### Configuration Service
 
 - **DSL identifier:** `configurationService`; **Display name:** Configuration Service.
-- **Purpose:** Store inactive KPI and organization configuration candidates and activate only approved valid versions at D+1. **Responsibilities:** Check authority, persist candidates, queue deterministic validation, and activate approved versions. **Inputs:** Authorized KPI or organization candidate and version metadata. **Outputs:** Candidate ID, validation job, and activation state. This component absorbs Organization Configuration Service (`organizationConfigurationService` in the current DSL); org changes are one candidate class, not a separate aggregate (ADR-0014 amended).
-- **Owned state:** Versioned KPI and organization candidates and activation state in PostgreSQL. **Dependencies:** Authorization Service and PostgreSQL. **Security boundary:** Authorized configuration and organization administrators only. **Forbidden responsibilities:** Activate invalid candidates, same-day org activation, historical mutation, or KPI calculation.
+- **Purpose:** Store inactive KPI, organization, and manager-priority configuration candidates and activate only approved valid versions at D+1. **Responsibilities:** Check authority, persist candidates, request deterministic semantic or organization validation, require a passing Parity Receipt for a KPI definition, and control approval, scheduling, and activation state. **Inputs:** Authorized KPI, organization, target, threshold, or manager-priority candidate and version metadata. **Outputs:** Candidate ID, validation job, activation state, and the active-version pointer consumed by Snapshot Service. This component absorbs Organization Configuration Service (`organizationConfigurationService` in the current DSL); org changes are one candidate class, not a separate aggregate (ADR-0014 amended).
+- **Owned state:** Versioned configuration candidates, approval state, activation schedule, manager-priority settings, and active-version pointers in PostgreSQL. **Dependencies:** Authorization Service, Semantic Registry, and PostgreSQL. **Security boundary:** Authorized configuration and organization administrators only. **Forbidden responsibilities:** Translate KPI SQL, issue a Parity Receipt, activate invalid candidates, perform same-day org activation, mutate history, or calculate KPIs.
 - **Failure behavior:** Keep the active version and record failed validation. **Idempotency:** Candidate version and key prevent duplicate activation. **Observability:** Record version, job, receipt, status, and trace ID. **Related ADRs:** ADR-0011, ADR-0014, ADR-0018. **Open issues:** None.
 
 <a id="decision-and-follow-up"></a>
@@ -73,7 +73,7 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 ### Decision and Follow-Up
 
 - **DSL identifier:** `decisionTracker`; **Display name:** Decision and Follow-Up.
-- **Purpose:** Store validated decision cards, process human review, and record confirmed decisions and follow-up contracts. **Responsibilities:** Verify authority, release valid cards, process confirm/edit/reject commands, store decisions, owners, actions, and deadlines, and request drafts. **Inputs:** Validated card, authenticated review command, or authorized manual decision. **Outputs:** Review state, revision job, and versioned decision and follow-up records. This component absorbs Decision Confirmation Service (`decisionConfirmationService` in the current DSL): card and review state belong to the `Decision` aggregate.
+- **Purpose:** Store validated decision cards, process human review, and record confirmed decisions, signal disposition, and follow-up contracts. **Responsibilities:** Verify authority, release valid cards, process confirm/edit/reject commands, record authorized `CloseSignal` and `ReferSignal` commands, store decisions, owners, actions, and deadlines, and request drafts. **Inputs:** Validated card, authenticated review or signal-disposition command, or authorized manual decision. **Outputs:** Review state, signal-disposition record, revision job, and versioned decision and follow-up records. This component absorbs Decision Confirmation Service (`decisionConfirmationService` in the current DSL): card and review state belong to the `Decision` aggregate.
 - **Owned state:** Card versions, review state, and decision/follow-up state in PostgreSQL. **Dependencies:** Authorization Service, PostgreSQL, Agent Runtime Gateway, and Document Processing Runner. **Security boundary:** An authorized human reviews and confirms each card. **Forbidden responsibilities:** Execute actions or auto-confirm drafts.
 - **Failure behavior:** Reject incomplete or unauthorized input. **Idempotency:** Decision ID and command version prevent duplicate confirmation. **Observability:** Record state changes, actor, receipt, and trace ID. **Related ADRs:** ADR-0010, ADR-0011, ADR-0015, ADR-0017. **Open issues:** None.
 
@@ -120,7 +120,7 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 - **DSL identifier:** `outputValidator`; **Display name:** Output Validator.
 - **Purpose:** Validate agent output before delivery, publication, review, or export. **Responsibilities:** Check schema, values, evidence, scope, recipient, alternatives, and response rules. **Inputs:** Persisted candidate, reference contract, scope, and evidence references. **Outputs:** Validated result, fallback instruction, or rejection.
 - **Owned state:** Validation state and receipt in PostgreSQL. **Dependencies:** Query Gateway, Authorization Service, Evidence Service, Audit Service, and PostgreSQL. **Security boundary:** Unvalidated model output cannot become a product result. **Forbidden responsibilities:** Repair claims, change schemas, or publish.
-- **Failure behavior:** Persist rejection and release only an approved failure path. **Idempotency:** Candidate hash and validator version make results stable. **Observability:** Record receipt, hash, failed rule, status, and trace ID. **Related ADRs:** ADR-0004, ADR-0005, ADR-0008, ADR-0010, ADR-0013, ADR-0023. **Open issues:** Fallback content remains open. For ad-hoc answers, checks that every number maps to a `value` and `query_id` pair and applies the `refused_out_of_scope` and `data_unavailable` status rules (ADR-0023).
+- **Failure behavior:** Persist rejection and release the deterministic no-narrative fallback required by ADR-0022 when model content is unavailable. **Idempotency:** Candidate hash and validator version make results stable. **Observability:** Record receipt, hash, failed rule, status, and trace ID. **Related ADRs:** ADR-0004, ADR-0005, ADR-0008, ADR-0010, ADR-0013, ADR-0022, ADR-0023. **Open issues:** None. For ad-hoc answers, check that every number maps to a `value` and `query_id` pair and apply the `refused_out_of_scope` and `data_unavailable` status rules (ADR-0023). For a reported cause, require at least two independent evidence references before validation.
 
 <a id="publisher"></a>
 
@@ -167,9 +167,9 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 - **Owned state:** Job and upload references, fragments, and receipts in PostgreSQL; bytes in archive. **Dependencies:** Protected File Archive, PostgreSQL, and Agent Runtime Gateway. **Security boundary:** Uploads stay untrusted until validation; content is data, never instructions. **Forbidden responsibilities:** Run a graph, trust file names, call a model, execute content, or send bytes in wake-up.
 - **Failure behavior:** Record the failed stage and do not analyze an invalid parse. **Idempotency:** Upload hash and request key prevent duplication. **Observability:** Record hash, archive reference, receipt, job ID, and trace ID. **Related ADRs:** ADR-0008, ADR-0010, ADR-0011, ADR-0019. **Open issues:** None.
 
-## Consolidation log (target model)
+## Consolidation log (implementation model)
 
-The following components from the current DSL inventory are intentionally absent here. See `16-domain-model.md` §6 for the reasoning.
+The following former components are intentionally absent from the implementation model. See `16-domain-model.md` §6 for the reasoning.
 
 | Removed component | Disposition |
 |---|---|
@@ -185,4 +185,4 @@ The following components from the current DSL inventory are intentionally absent
 
 - Authentication product and method remain open.
 - OTLP/gRPC or OTLP/HTTP for Backend telemetry remains a configuration decision.
-- Agent Job deadline, retry count, dead-letter policy, reconciliation cadence, and fallback content remain open.
+- Agent Job deadline, Agent Job retry policy, dead-letter policy, and reconciliation cadence remain open. Model-call timeout, retry limit, and no-narrative fallback are fixed by ADR-0022.

@@ -4,7 +4,7 @@ This document defines the tactical Domain-Driven Design model for the three runt
 
 Status: **Accepted for implementation**.
 
-> **Phase note.** `workspace.dsl` still contains the pre-consolidation component inventory. The merges and eliminations in this document and in docs 10–13 are the **target model**. The DSL and its generated Mermaid views will be synchronized in the next phase; until then this document and docs 10–13 are authoritative for the target component set, and the DSL is authoritative only for the current deployed inventory.
+> **Implementation source note.** This document and docs 10–13 define the component and domain boundaries used for implementation. The DSL is a visual overview of these documents. It does not define a separate implementation model.
 
 ## 0. Scoping rule (read first)
 
@@ -41,7 +41,7 @@ A component earns its own box only if it coordinates at least one invariant-bear
 | Analysis Coordination | Creates and leases durable agent jobs; never executes them | `AgentJob` | Agent Runtime Gateway |
 | Decision Governance | Decision cards, manager confirmation, follow-up contracts | `Decision` (includes card + follow-ups) | Decision and Follow-Up (includes card review) |
 | Publication & Delivery | Immutable report versions, validation receipts, export | `ReportVersion`, `ExportBatch` | Output Validator, Publisher, Submission Exporter, Report and Dashboard API (includes job status) |
-| Configuration | Versioned KPI and organization configuration, activation at D+1 | none (versioned candidates with state machine) | Configuration Service (single, covers KPI and organization) |
+| Configuration | Versioned KPI, organization, and manager-priority configuration; approval and activation at D+1 | none (versioned candidates with state machine) | Configuration Service (single, covers KPI, organization, and manager priority) |
 | Audit | Append-only evidence, cost, validation, and failure records | none (append-only) | Audit Service (repository adapter) |
 
 ### Aggregates and value objects
@@ -55,7 +55,9 @@ A component earns its own box only if it coordinates at least one invariant-bear
 
 ### Application use cases
 
-`SubmitManagerQuestion`, `SubmitUpload`, `ConfirmDecision`, `ReviewDecisionCard`, `RecordFollowUp`, `PublishReport`, `ExportSubmission`, `ActivateConfiguration`, `ActivateOrganizationRevision`, `StartRun`, `CloseRun`, `ReadJobStatus`, `ReadScopedReport`.
+`SubmitManagerQuestion`, `SubmitUpload`, `ConfirmDecision`, `ReviewDecisionCard`, `RecordFollowUp`, `CloseSignal`, `ReferSignal`, `SetManagerPriority`, `ChangeKpiTarget`, `ChangeKpiThreshold`, `PublishReport`, `ExportSubmission`, `ActivateConfiguration`, `ActivateOrganizationRevision`, `StartRun`, `CloseRun`, `ReadJobStatus`, `ReadScopedReport`.
+
+`CloseSignal` and `ReferSignal` enter through Decision and Follow-Up and create an authorized disposition record. `SetManagerPriority`, `ChangeKpiTarget`, and `ChangeKpiThreshold` enter through Configuration Service and follow its validation and activation rules. Manager priority is ranking input for Signal Engine. It is not part of `KpiDefinition`.
 
 ### Ports and adapters
 
@@ -83,9 +85,9 @@ A component earns its own box only if it coordinates at least one invariant-bear
 
 - `IngestionBatch` (root): `SourceStatus`, `IntakeReceipt`, `DataIssue[]`, canonical rows. Value objects: `SourceKey`, `EventKey = (entity_id, event_type, event_time)`, `DedupKey`. Invariants: dedup by `order_id`/`ticket_id`/`lead_id`/`task_id` before any KPI; a missing source produces `null` KPIs, never `0`; a `missing` issue repeats each morning until arrival; a `late_arrival` is emitted exactly once the next morning and triggers recomputation. `DataIssue` is an entity of this root, not a separate aggregate or component.
 - `Snapshot` (root): `PinnedVersions` (source hashes, schema, organization, policy, configuration, business date). Invariant: immutable and complete; all downstream computation reads one snapshot. Projections are derived read models rebuilt from the snapshot, not aggregates.
-- `KpiDefinition` (root): `KpiId`, `ReferenceSql`, `TranslatedSql`, `Unit`, `Precision`, `Target`, `Direction`, `Owner`, `Dependencies`, `Version`. Invariant: a definition becomes active only after a passing Parity Receipt; reference SQL is read-only; the translation is a value object produced by a deterministic function inside the registry. `KpiResult` is a result record (value + `QueryRun` + lineage), not an aggregate.
-- `SignalEpisode` (root): `SignalId`, `Status` (`new`/`ongoing`/`escalated`), `Owner`, `Cause[]` with confidence, `History[]`, `EscalationReason`. Invariants: only unfavorable direction per `direction` column; no re-`new` without meaningful change; escalation requires history and reason; co-cause signals group into one Senior Manager item; guardrail breach creates a signal.
-- `EffectAssessment` (root): `DecisionRef`, `SuccessMetric`, `ObservedValues`, `Method` (workload normalization or comparable case), `Confounders`, `Confidence`, `EffectDirection` (`improved`/`worsened`/`too_early`/internal `not_isolatable`). Invariant: "not isolatable" is never exported as "no effect".
+- `KpiDefinition` (root): `KpiId`, `ReferenceSql`, `TranslatedSql`, `Unit`, `Precision`, `Target`, `Warn`, `Crit`, `EscalateAfterDays`, `Direction`, `Owner`, `Dependencies`, `Version`. Invariant: a definition becomes eligible for activation only after a passing Parity Receipt; Configuration Service controls activation state and the active-version pointer; reference SQL is read-only; the translation is a value object produced by a deterministic function inside the registry. `KpiResult` is a result record (value + `QueryRun` + lineage), not an aggregate.
+- `SignalEpisode` (root): `SignalId`, `Status` (`new`/`ongoing`/`escalated`), `Owner`, `Cause[]` with confidence, `History[]`, `EscalationReason`. Manager priority is a separate versioned configuration input used during ranking. Invariants: only unfavorable direction per `direction` column; no re-`new` without meaningful change; escalation requires history and reason; co-cause signals group into one Senior Manager item; guardrail breach creates a signal.
+- `EffectAssessment` (root): `DecisionRef`, `SuccessMetric`, `ObservedValues`, `Method` (workload normalization or comparable case), `Confounders`, `Confidence`, `EffectDirection` (`improved`/`worsened`/`no_change`/`too_early`/internal `not_isolatable`). Invariant: "not isolatable" is never exported as "no effect".
 - `RunStage` (root): `JobId`, `Dependencies`, `StageStatus`, `Receipt`. Invariant: stages run only from stored dependencies; a failed stage is terminal for that job, not for the run.
 
 `WorkflowObservation` is a derived read model of pinned projections, not an aggregate root; it has no invariant that is mutated from more than one place. It is produced by the Workflow Engine and consumed by the Signal Engine and Report Evidence Builder.
@@ -146,9 +148,9 @@ Each transition crosses a context boundary through an application service and an
 - **Maintainability:** new sources/KPIs/manager levels are new adapters or registry entries, not pipeline rewrites; DDD module boundaries keep changes local.
 - **Testability:** domain services and value objects are pure and deterministic; parity, determinism, leakage, and cost checks are acceptance tests against domain contracts.
 
-## 6. Component consolidation decisions (target model)
+## 6. Component consolidation decisions (implementation model)
 
-The following merges, demotions, and eliminations are **accepted for the target model**. They reduce the component count without removing any invariant. The DSL still shows the pre-consolidation inventory and will be updated in the next phase.
+The following merges, demotions, and eliminations are accepted for implementation. They reduce the component count without removing an invariant. The DSL is a visual overview of this model.
 
 ### 6.1 Merges
 
@@ -158,7 +160,7 @@ The following merges, demotions, and eliminations are **accepted for the target 
 | `DataIssue` → `IngestionBatch` | Ingestion Coordinator | Data Quality Service | Issues are produced inside one atomic intake; they are entities of the batch, not a separately coordinated state. |
 | Source Adapters + Normalizer → Ingestion Coordinator | Ingestion Coordinator | Source Adapters, Normalizer | Parse and normalize are deterministic functions on the same pinned input; no invariant is mutated across them. |
 | Configuration Service + Organization Configuration Service | Configuration Service | Organization Configuration Service | Both manage versioned candidates with activation at D+1; org config is a candidate class, not a separate aggregate. ADR-0014 is amended. |
-| KPI Definition Preprocessor + Configuration Validation Runner → Semantic Registry | Semantic Registry | KPI Definition Preprocessor, Configuration Validation Runner | Translation and validation produce one versioned definition; the registry is the single owner of the active version. |
+| KPI Definition Preprocessor + Configuration Validation Runner → Semantic Registry | Semantic Registry | KPI Definition Preprocessor, Configuration Validation Runner | Translation and validation produce one immutable definition version. The registry owns parity eligibility. Configuration Service owns activation state and the active-version pointer. |
 | Snapshot Service + Projection Service | Snapshot Service | Projection Service | Projection is a derived read model of one immutable snapshot; it has no invariant mutated from more than one place. |
 | Document Processing Runner + Document Parser | Document Processing Runner | Document Parser | Parsing is a bounded function over archived bytes; fragments and receipts belong to the runner's job. |
 | Agent Job Status API + Report and Dashboard API | Report and Dashboard API | Agent Job Status API | Both are authorized reads of persisted state with no owned state; job status is one more read handler. |
@@ -192,13 +194,13 @@ These are the seams the build team implements against. Each row is one owner; cr
 |---|---|---|---|
 | Authorization Service | `AccessPolicy`, `Grant`, scope/purpose/predicate | trusted scope to handlers and query ports | widen scope, execute work |
 | Agent Runtime Gateway | `AgentJob` creation and wake-up | committed `job_id` | run graphs, carry evidence |
-| Decision and Follow-Up | `Decision` (card, review, follow-ups) | confirm/review commands | execute the decision, auto-confirm |
-| Configuration Service | versioned KPI + org candidates, activation | active version to Snapshot | activate invalid candidates, same-day org activation |
+| Decision and Follow-Up | `Decision` (card, review, follow-ups), authorized signal dispositions | confirm/review/close/refer commands | execute the decision, auto-confirm, change signal rules |
+| Configuration Service | versioned KPI, organization, and manager-priority candidates; approval, schedule, activation state, active-version pointer | active version reference to Snapshot | translate KPI SQL, issue a Parity Receipt, activate invalid candidates, use same-day org activation |
 | Output Validator / Publisher / Submission Exporter | `ReportVersion`, `ExportBatch` | validated, published, exported artifacts | generate content, mutate old versions, escape `OUTPUT_DIR` |
 | Report and Dashboard API | authorized reads (reports, dashboards, job status) | bounded responses | bypass scope, read arbitrary tables |
 | Ingestion Coordinator | `IngestionBatch`, `DataIssue[]`, canonical rows | committed batch | interpret business meaning before normalization, calculate KPIs |
 | Snapshot Service | `Snapshot`, derived projections | one pinned snapshot | mix unpinned versions, mutate source history |
-| Semantic Registry | `KpiDefinition`, translation, parity gate | active definition + SQL | execute unregistered SQL, change reference SQL |
+| Semantic Registry | immutable `KpiDefinition` versions, translation, semantic validation, parity eligibility | eligible definition + SQL | control activation state, execute unregistered SQL, change reference SQL |
 | Workflow Engine / Signal Engine | `SignalEpisode`, workflow read models | signals with owner + history | generate model content, auto-create decisions |
 | Decision Effect Evaluator | `EffectAssessment` | internal effect record | claim causality without evidence |
 | Run Stage Coordinator | `RunStage` | stage results | create ad hoc work, publish |

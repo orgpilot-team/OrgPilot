@@ -24,7 +24,7 @@ The Agent Runtime database role is limited to Agent Job, Lease, Attempt, Checkpo
 
 The language model never receives unrestricted business data or a credential that can read business tables. All business query and evidence paths go through the Backend API. They must carry trusted principal, purpose, policy, and snapshot context. Negative leakage tests are required for each manager role.
 
-The complete shared-resource projection matrix remains open in `ISSUE-V3-01`.
+`docs/04-security-and-trust.md`, section **Other trust boundaries**, defines a minimal access projection matrix as an implementation prerequisite. This ADR does not define the matrix entries. They remain open in `ISSUE-V3-01`.
 
 ## Related requirements
 

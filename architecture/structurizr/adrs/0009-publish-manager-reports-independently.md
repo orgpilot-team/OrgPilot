@@ -20,7 +20,7 @@ A language-model API failure does not stop deterministic calculation or valid ca
 
 Run status and report status are separate. The system needs manager-level job state, validation state, publication receipts, and daily coverage records. Publication must be atomic for the artifacts of one manager.
 
-The exact retry count, timeout, and fallback content remain open in `ISSUE-V3-06`.
+ADR-0022 fixes the model-call timeout at 30 seconds, permits at most two retries with bounded backoff, and requires valid deterministic JSON without LLM narrative after model failure. Agent Job deadline, dead-letter policy, and reconciliation cadence remain separate implementation decisions.
 
 ## Related requirements
 

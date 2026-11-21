@@ -70,4 +70,4 @@ The Agent Runtime does not perform migrations, grant permissions, change policie
 - Submission Exporter writes only validated contract fields to a contained path below `OUTPUT_DIR`.
 - OpenTelemetry and Langfuse instrumentation must remove secrets, raw restricted business data, full documents, and unauthorized manager context.
 
-The complete projection matrix for shared resources remains open. This document does not approve a new database-role name or a wider data projection.
+A minimal access projection matrix is required before authorization and scoped-query implementation. It must cover Senior Manager, Unit Manager, and Team Supervisor and specify Resource, Row scope, Allowed columns, Purpose, and individual-data access. This document does not define the matrix entries and does not approve a new database-role name or a wider data projection.

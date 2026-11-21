@@ -40,7 +40,7 @@ Key consequences of the refinement:
 - Aggregate roots are kept only for genuine invariants (`AccessPolicy`, `AgentJob`, `Decision`, `ReportVersion`, `IngestionBatch`, `Snapshot`, `KpiDefinition`, `SignalEpisode`, `EffectAssessment`, `RunStage`, `ReasoningSession`, `ModelReservation`, `ConversationSession`, `ExportBatch`).
 - `DataIssue`, `DecisionCard`, follow-ups, and conversation turns are entities inside their roots; `Projection`, `KpiResult`, `WorkflowObservation`, `ManagerRequest`, `ModelCallReceipt`, and `Checkpoint` are derived/value/append-only records, not aggregates.
 - Stateless helpers and duplicate owners are removed as components (see doc 16 §6); the Worker stage runner and the Agent Runtime job runner share one durable-job contract.
-- The target component set is documented in docs 10–13 and 16. `workspace.dsl` still shows the pre-consolidation inventory and will be synchronized in the next phase.
+- The implementation component set is documented in docs 10–13 and 16. The DSL is a visual overview of those documents.
 
 ## Related
 

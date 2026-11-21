@@ -20,7 +20,7 @@ The project brief contains several values that were later corrected by the instr
 - A late-arrival recomputation that creates a genuine signal publishes it that same morning; the data issue itself is never a business signal.
 - All other TA rules (dedup keys, missing-file cadence, abandoned leads, direction-based R5, workflow stage owners, Q03 `U_SAL` target, `data_unavailable` vs `refused_out_of_scope`, decision-effect confounders and success metrics) are captured verbatim in the contract.
 
-The brief was updated to remove the contradictions. Open gaps `ISSUE-V3-01`, `ISSUE-V3-02`, `DOC-GAP-V3-04`, and `ISSUE-V3-09` are closed for the evaluation profile by this contract.
+The brief was updated to remove the contradictions. Gaps `ISSUE-V3-02`, `DOC-GAP-V3-04`, and `ISSUE-V3-09` are closed for the Evaluation profile by this contract. `ISSUE-V3-01` remains open only for the access projection matrix entries required by `docs/04-security-and-trust.md`.
 
 ## Consequences
 

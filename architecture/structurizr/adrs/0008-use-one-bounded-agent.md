@@ -26,7 +26,7 @@ The system records token use, retry count, cache use, model, model version, and 
 
 Model variation cannot change the deterministic management record. PostgreSQL is the durable source of truth for Agent Job, Lease, Attempt, Dependency, Checkpoint, Candidate, and Failure state. The Model Gateway and Output Validator are mandatory boundaries. A failed wake-up does not lose a committed job. A model failure can remove optional narrative text, but it cannot invalidate deterministic canonical JSON.
 
-The selected model and budget allocation remain open in `ISSUE-V3-07`. Detailed LangGraph nodes, state, checkpoints, retries, and interrupts remain open in `ISSUE-V3-08`.
+ADR-0022 selects the evaluation model and fixes the model-call timeout, retry limit, and no-narrative fallback. Internal budget allocation remains open in `ISSUE-V3-07`. Detailed LangGraph nodes, state, checkpoints, and interrupts remain open in `ISSUE-V3-08`.
 
 ## Related requirements
 

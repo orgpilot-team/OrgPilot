@@ -1,6 +1,6 @@
 # 15. Implementation Contract (authoritative TA clarifications)
 
-This document is the single implementation-ready contract derived from the instructor Q&A in `ta.txt`. Where an older brief statement disagrees with this document, **this document wins**. It closes the open gaps `ISSUE-V3-01`, `ISSUE-V3-02`, `DOC-GAP-V3-04`, and `ISSUE-V3-09` for the evaluation profile.
+This document is the single implementation-ready contract derived from the instructor Q&A in `ta.txt`. Where an older brief statement disagrees with this document, **this document wins**. It closes `ISSUE-V3-02`, `DOC-GAP-V3-04`, and `ISSUE-V3-09` for the Evaluation profile. `ISSUE-V3-01` remains open only for the access projection matrix entries required by `04-security-and-trust.md`.
 
 Status: **Accepted for implementation**. Every rule below is testable by the Acceptance Test Harness.
 
@@ -114,12 +114,12 @@ A stage bottleneck goes first to the stage owner. If the whole-workflow KPI (`K_
 - Every effect result states: whether the success metric was met; the effect estimate with method and assumptions; confidence level and confounding factors. If data cannot separate the effect, say «اثر قابل جدا کردن نیست» — not "no effect".
 - The system proposes a success metric on the decision card; the manager confirms it at decision time. "10% improvement" is only a fallback default when no better metric exists.
 - Success metric components: target KPI and target value (preferably return below the `warn` threshold or reach the dictionary `target`, not an arbitrary percentage); measurement window (3–5 days); guardrail KPI with its limit.
-- Track both target and guardrail on following days. `decision_followups` reports effect direction as `improved`, `worsened`, or `too_early`. A guardrail breach is itself a business signal.
+- Track both target and guardrail on following days. `decision_followups` reports effect direction as `improved`, `worsened`, `no_change`, or `too_early`. A guardrail breach is itself a business signal.
 
 ## 11. Output contract
 
-One JSON file per manager per day with `date`, `manager_id`, and `items[]`. Each item carries `signal_id`, `kpi_id`, `entity`, `value`, `query_id`, `owner`, `cause`, `confidence`, and `status`. Statuses are exactly `new`, `escalated`, `ongoing`. Reports and UI are Persian and RTL.
+The read-only `DataSet/arka_dataset/output_contract/brief_schema.json` file is the field-level source of truth. Do not redefine or extend that schema in architecture documents. Each manager-day JSON requires `report_day`, `manager_id`, `items`, `numbers`, `data_issues`, and `text_fa`. Optional fields, including `open_items`, `decision_followups`, and `mentioned_staff_ids`, are used only as the schema permits. Item statuses are exactly `new`, `escalated`, and `ongoing`. Reports and UI are Persian and RTL. Internal chart specifications and narrative-generation state are not new submission fields.
 
 ## 12. Design quality bar
 
-Backend API, Background Worker, and Agent Runtime follow the DDD model in `16-domain-model.md`: explicit bounded contexts, aggregates and invariants, value objects, domain services, repositories as ports, application use cases, ports-and-adapters at every external boundary, domain events, and anti-corruption layers for source data, LLM output, and provider APIs. Performance budget, determinism, row-level security, and fail-open behavior are non-negotiable acceptance gates, not tuning items.
+Backend API, Background Worker, and Agent Runtime follow the scoping rule in `16-domain-model.md`, section **Scoping rule (read first)**. Full tactical DDD applies only to an atomic, acceptance-tested invariant that is mutated from more than one place. Other concepts remain entities, value objects, commands, derived read models, append-only records, or functions inside an owning component. This contract does not require a new component, service, broker, or deployment boundary. Performance budget, determinism, row-level security, and fail-open behavior are acceptance gates, not tuning items.

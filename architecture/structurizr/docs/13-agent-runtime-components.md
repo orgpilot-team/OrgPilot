@@ -24,7 +24,7 @@ The Runtime has limited database access to Agent Job, Lease, Attempt, Checkpoint
 - Calculate KPIs, change policy, run migrations, publish results, or confirm decisions.
 - Treat wake-ups as durable jobs.
 
-> **Target model note.** This document describes the **target component set** after the DDD consolidation in `16-domain-model.md` §6. `workspace.dsl` still shows the pre-consolidation inventory; it will be synchronized in the next phase. DDD rigour here is limited to the four aggregates in doc 16 §3; checkpoint state is a repository adapter, not a component.
+> **Implementation source note.** This document and `16-domain-model.md` define the Agent Runtime boundaries used for implementation. The DSL is a visual overview. DDD rigour is limited to the invariants in doc 16 §3; checkpoint state is a repository adapter, not a component.
 
 ## Component Map (target)
 
@@ -76,11 +76,11 @@ The Runtime claims from PostgreSQL, gets evidence and validation from the Backen
 - **DSL identifier:** `agentModelGateway`; **Display name:** Model Gateway.
 - **Purpose:** Apply token, time, retry, and cost limits to every model call. **Responsibilities:** Reserve budget, redact and send bounded input, call the provider, settle cost, and return completion or failure. **Inputs:** Authorized prompt, evidence subset, model policy, and budget. **Outputs:** Completion metadata and content or explicit failure.
 - **Owned state:** Cost reservation and settlement metadata in PostgreSQL. **Dependencies:** PostgreSQL and Language Model Provider. **Security boundary:** Do not send secrets, full documents, or unauthorized business context. **Forbidden responsibilities:** Select unapproved scope, bypass limits, or treat a completion as validated product output.
-- **Failure behavior:** Return bounded timeout, budget, provider, or validation failure. **Idempotency:** Call ID and reservation state prevent duplicate settlement. **Observability:** Record model metadata, tokens, cost, latency, status, and trace ID with redaction. **Related ADRs:** ADR-0008, ADR-0019, ADR-0020, ADR-0022. **Open issues:** Timeout and retry count are provisional defaults and are tuned in implementation. The evaluation model is `deepseek/deepseek-v4.1-flash-1017` with temperature zero; `LLM_API_KEY`, `LLM_BASE_URL`, and `LLM_MODEL` are injected at run time (ADR-0022). For ad-hoc SQL generation, the model names only approved semantic views and never supplies a number (ADR-0023).
+- **Failure behavior:** Enforce the 30-second timeout and at most two bounded-backoff retries, then return an explicit no-narrative failure result while deterministic output remains valid. **Idempotency:** Call ID and reservation state prevent duplicate settlement. **Observability:** Record model metadata, tokens, cost, latency, status, and trace ID with redaction. **Related ADRs:** ADR-0008, ADR-0019, ADR-0020, ADR-0022. **Open issues:** Other generation parameters remain implementation configuration. The evaluation model is `deepseek/deepseek-v4.1-flash-1017` with temperature zero; `LLM_API_KEY`, `LLM_BASE_URL`, and `LLM_MODEL` are injected at run time (ADR-0022). For ad-hoc SQL generation, the model names only approved semantic views and never supplies a number (ADR-0023).
 
-## Consolidation log (target model)
+## Consolidation log (implementation model)
 
-The following component from the current DSL inventory is intentionally absent here. See `16-domain-model.md` §6 for the reasoning.
+The following former component is intentionally absent from the implementation model. See `16-domain-model.md` §6 for the reasoning.
 
 | Removed component | Disposition |
 |---|---|
@@ -90,4 +90,4 @@ The following component from the current DSL inventory is intentionally absent h
 
 ## Container-level Open Issues
 
-- Python PostgreSQL driver, Agent Job deadline, dead-letter policy, reconciliation cadence, fallback content, and LangGraph node boundaries remain open. The model/provider is selected in ADR-0022; timeout and retry count are provisional defaults.
+- Python PostgreSQL driver, Agent Job deadline, dead-letter policy, reconciliation cadence, and LangGraph node boundaries remain open. The model/provider, model-call timeout, retry limit, and no-narrative fallback are fixed by ADR-0022.

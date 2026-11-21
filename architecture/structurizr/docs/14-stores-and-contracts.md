@@ -68,7 +68,7 @@ The DIDRAH Input Dataset is read-only. The Submission Output Directory accepts a
 - **DSL identifier:** `inputDataset`; **Display name:** DIDRAH Input Dataset.
 - **Purpose:** Supply versioned source, replay, upload, configuration, and history data. **Responsibilities:** Define evaluation input files and versions. **Inputs:** Formal evaluation dataset contents. **Outputs:** Read-only CSV and JSON files for ingestion, replay, and acceptance.
 - **Owned state:** External versioned evaluation data. **Dependencies:** Formal dataset and machine-readable contracts. **Security boundary:** Product containers mount input read-only. **Forbidden responsibilities:** Accept product writes or become product truth after ingestion.
-- **Failure behavior:** Missing or invalid input produces explicit ingestion or evaluation failure. **Idempotency:** Dataset version and file hashes identify the input. **Observability:** Record version, file hash, read result, and trace ID. **Related ADRs:** ADR-0001, ADR-0002, ADR-0011, ADR-0012. **Open issues:** None.
+- **Failure behavior:** A missing expected source file creates a `missing` data issue, makes dependent KPIs `null`, and does not stop publication. An invalid dataset root, manifest, or global contract produces a terminal input failure. Invalid source records remain outside the valid snapshot and are reported explicitly. **Idempotency:** Dataset version and file hashes identify the input. **Observability:** Record version, file hash, read result, and trace ID. **Related ADRs:** ADR-0001, ADR-0002, ADR-0004, ADR-0011, ADR-0012. **Open issues:** None.
 
 <a id="submission-output-contract"></a>
 
