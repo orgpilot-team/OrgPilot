@@ -40,7 +40,7 @@ Effect Assessment → Report (Decision Follow-up)
 
 Agent only uses the deterministic result for narrative; it cannot guess effect from free text.
 
-The complete Decision Effect is an internal, versioned PostgreSQL record. It does not add fields or enum values to the read-only output contract.
+The complete Decision Effect is an internal, versioned PostgreSQL record. Export uses only fields and enum values that the read-only reference schema already permits; internal fields do not extend the output contract.
 
 Export mapping is limited to fields that the reference schema already permits:
 

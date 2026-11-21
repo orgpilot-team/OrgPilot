@@ -62,11 +62,11 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
             }
 
-            backendApi = container "Backend API" "Authorizes requests, creates durable jobs, validates outcomes, and delivers results. DDD contexts: Identity & Access, Manager Interaction, Analysis Coordination, Decision Governance, Publication & Delivery, Audit (docs/16-domain-model.md)." "ASP.NET Core, .NET 10 LTS, REST/JSON, OpenAPI" "API" {
+            backendApi = container "Backend API" "Authorizes requests, creates durable jobs, validates outcomes, and delivers results. DDD contexts: Identity & Access, Manager Interaction, Analysis Coordination, Decision Governance, Publication & Delivery, Configuration, Audit (docs/16-domain-model.md)." "ASP.NET Core, .NET 10 LTS, REST/JSON, OpenAPI" "API" {
                 properties {
-                    "ddd.contexts" "Identity & Access, Manager Interaction, Analysis Coordination, Decision Governance, Publication & Delivery, Audit"
+                    "ddd.contexts" "Identity & Access, Manager Interaction, Analysis Coordination, Decision Governance, Publication & Delivery, Configuration, Audit"
                     "ddd.aggregates" "AccessPolicy (Grant[]), AgentJob, Decision (DecisionCard + FollowUp[]), ReportVersion, ExportBatch"
-                    "ddd.use_cases" "SubmitManagerQuestion, SubmitUpload, ConfirmDecision, ReviewDecisionCard, RecordFollowUp, PublishReport, ExportSubmission, ActivateConfiguration, ActivateOrganizationRevision, StartRun, CloseRun, ReadJobStatus, ReadScopedReport"
+                    "ddd.use_cases" "SubmitManagerQuestion, SubmitUpload, ConfirmDecision, ReviewDecisionCard, RecordFollowUp, CloseSignal, ReferSignal, SetManagerPriority, ChangeKpiTarget, ChangeKpiThreshold, PublishReport, ExportSubmission, ActivateConfiguration, ActivateOrganizationRevision, StartRun, CloseRun, ReadJobStatus, ReadScopedReport"
                     "ddd.ports" "IAgentJobRepository, IDecisionRepository, IReportVersionRepository, IAccessPolicyRepository, IAuditLog, IEvidencePort, IScopedQueryPort, IClockPort"
                     "ddd.anti_corruption" "Source/upload text is data; LLM output is a candidate only; provider API translated at Model Gateway"
                 }
@@ -77,10 +77,10 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
 
                 group "02 Request Routing" {
-                    configurationService = component "Configuration Service" "Stores inactive KPI and organization candidates and activates only approved versions at D+1. Absorbs the former Organization Configuration Service." "Deterministic configuration control" "Governance" {
+                    configurationService = component "Configuration Service" "Stores versioned KPI, organization, and manager-priority candidates. It controls approval, D+1 activation state, and active-version pointers after required parity passes. Absorbs the former Organization Configuration Service." "Deterministic configuration control" "Governance" {
                         url "{workspace}/documentation/DIDRAH#configuration-service"
                     }
-                    decisionTracker = component "Decision and Follow-Up" "Stores validated decision cards, handles human confirm/edit/reject review, and records decisions and follow-up contracts. Absorbs the former Decision Confirmation Service. It does not execute decisions." "Deterministic decision control" "Decision" {
+                    decisionTracker = component "Decision and Follow-Up" "Stores validated decision cards, handles human confirm/edit/reject review, records authorized signal close or referral dispositions, and records decisions and follow-up contracts. Absorbs the former Decision Confirmation Service. It does not execute decisions." "Deterministic decision control" "Decision" {
                         url "{workspace}/documentation/DIDRAH#decision-and-follow-up"
                     }
                     runCoordinatorV2 = component "Run Coordinator" "Creates pinned run plans, monitors terminal jobs, and closes each run." "Deterministic run control" "Governance" {
@@ -101,7 +101,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
 
                 group "04 Validate and Deliver" {
-                    outputValidator = component "Output Validator" "Checks schema, evidence, scope, and response rules, then records the validation state." "Deterministic validator" "Governance" {
+                    outputValidator = component "Output Validator" "Checks schema, values, evidence, scope, recipient, and response rules. It requires two independent evidence references for a reported cause and can release the deterministic no-narrative fallback." "Deterministic validator" "Governance" {
                         url "{workspace}/documentation/DIDRAH#output-validator"
                     }
                     publisherV2 = component "Publisher" "Atomically publishes validated canonical JSON or deterministic fallback text." "Deterministic publication module" "Processing" {
@@ -144,7 +144,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 snapshotService = component "Snapshot Service" "Pins committed versions for a run and builds derived projections. Absorbs the former Projection Service; projections are read models, not aggregates." "Deterministic module" "Processing" {
                     url "{workspace}/documentation/DIDRAH#snapshot-service"
                 }
-                semanticRegistry = component "Semantic Registry" "Owns versioned KPI definitions and their translation, validation, and activation after parity. Absorbs KPI Definition Preprocessor and Configuration Validation Runner. Includes corrected config/monthly_targets.csv with scope=U_SAL for Q03." "Deterministic registry" "Analytics" {
+                semanticRegistry = component "Semantic Registry" "Owns immutable KPI definition versions, SQL translation, semantic validation, and parity eligibility. Configuration Service controls activation state and the active-version pointer. Absorbs KPI Definition Preprocessor and Configuration Validation Runner. Includes corrected config/monthly_targets.csv with scope=U_SAL for Q03." "Deterministic registry" "Analytics" {
                     url "{workspace}/documentation/DIDRAH#semantic-registry"
                 }
                 kpiCalculator = component "KPI Calculator" "Executes the 55 approved PostgreSQL KPI queries and records QueryRun and lineage." "PostgreSQL SQL" "Analytics" {
@@ -153,13 +153,13 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 workflowEngine = component "Workflow Engine" "Reconstructs three workflows and calculates stage timing, SLA, backlog, and bottlenecks. Stage owner = measuring KPI owner; whole-workflow owner = Senior Manager. Leads with no progress after 14 days are abandoned, not bottlenecks." "Deterministic process analysis" "Analytics" {
                     url "{workspace}/documentation/DIDRAH#workflow-engine"
                 }
-                signalEngine = component "Signal Engine" "Maintains deterministic signal lifecycles (new/ongoing/escalated), escalation by crit or warn dwell time, suppression of unchanged repeats, unfavorable-direction-only R5, and executive co-cause grouping. Guardrail breaches arrive as signals." "Deterministic rules" "Analytics" {
+                signalEngine = component "Signal Engine" "Maintains deterministic signal lifecycles (new/ongoing/escalated), ranks with versioned manager-priority configuration, escalates by crit or warn dwell time, suppresses unchanged repeats, applies unfavorable-direction-only R5, and groups executive co-causes. Guardrail breaches arrive as signals." "Deterministic rules" "Analytics" {
                     url "{workspace}/documentation/DIDRAH#signal-engine"
                 }
-                reportEvidenceBuilderV2 = component "Report Evidence Builder" "Builds one pinned evidence package and model-independent canonical report per job." "Deterministic report evidence assembly" "Reporting" {
+                reportEvidenceBuilderV2 = component "Report Evidence Builder" "Builds one pinned evidence package and model-independent canonical report per job from approved facts, signals, and stored follow-up assessments. It can build an internal deterministic chart specification." "Deterministic report evidence assembly" "Reporting" {
                     url "{workspace}/documentation/DIDRAH#report-evidence-builder"
                 }
-                decisionEffectEvaluator = component "Decision Effect Evaluator" "Evaluates KPI change and guardrails with workload normalization or comparable-case baseline; exports improved/worsened/too_early; 'not isolatable' is never 'no effect'; guardrail breach emits a signal. No LLM." "Deterministic evaluation module" "Decision" {
+                decisionEffectEvaluator = component "Decision Effect Evaluator" "Evaluates KPI change and guardrails with workload normalization or a comparable-case baseline. The reference schema permits improved, worsened, no_change, and too_early; internal not_isolatable is never reported as no effect. A guardrail breach emits a signal. No LLM." "Deterministic evaluation module" "Decision" {
                     url "{workspace}/documentation/DIDRAH#decision-effect-evaluator"
                 }
             }
@@ -494,7 +494,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         webApp -> reportApi "Request report reads" "HTTPS/JSON" {
             tags "ControlFlow"
         }
-        webApp -> configurationService "Submit configuration or organization candidate" "HTTPS/JSON" {
+        webApp -> configurationService "Submit KPI, organization, or manager-priority candidate" "HTTPS/JSON" {
             tags "ControlFlow"
         }
         webApp -> agentGateway "Request durable agent job" "HTTPS/JSON" {
@@ -512,7 +512,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         webApp -> documentProcessingRunner "Submit document upload" "HTTPS/JSON" {
             tags "PrimaryFlow"
         }
-        webApp -> decisionTracker "Submit decision-card review command" "HTTPS/JSON" {
+        webApp -> decisionTracker "Submit decision review or signal disposition command" "HTTPS/JSON" {
             tags "ControlFlow"
         }
         documentProcessingRunner -> fileArchive "Archive upload; read approved bytes for in-process parse" "Restricted file system I/O" {
@@ -527,13 +527,13 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         configurationService -> authorizationService "Check configuration authority" "In-process function call" {
             tags "PolicyCheck"
         }
-        configurationService -> postgres "Store candidate; queue validation" "PostgreSQL protocol over TLS" {
+        configurationService -> postgres "Store candidate, approval, activation state, and active-version pointer" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
         decisionTracker -> authorizationService "Check decision authority" "In-process function call" {
             tags "PolicyCheck"
         }
-        decisionTracker -> postgres "Record decision and follow-up" "PostgreSQL protocol over TLS" {
+        decisionTracker -> postgres "Record decision, signal disposition, and follow-up" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
         decisionTracker -> agentGateway "Request draft only" "In-process function call" {
@@ -672,7 +672,6 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         signalEngine -> postgres "Detect and store signals" "PostgreSQL protocol over TLS"
         decisionEffectEvaluator -> postgres "Store decision-effect assessment" "PostgreSQL protocol over TLS"
         runStageCoordinatorV2 -> decisionEffectEvaluator "Evaluate due decision effects" "In-process function call"
-        decisionEffectEvaluator -> reportEvidenceBuilderV2 "Add follow-up assessment" "In-process function call"
         decisionEffectEvaluator -> signalEngine "Emit guardrail-breach signal" "In-process domain event"
 
         // Current run-control, report-evidence, agent, publication, and evaluation flow.
@@ -692,7 +691,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         acceptanceTestHarnessV2 -> postgres "Store acceptance and parity results" "PostgreSQL protocol over TLS"
 
         runCoordinatorV2 -> postgres "Plan and close pinned run" "PostgreSQL protocol over TLS"
-        configurationService -> semanticRegistry "Validate and register configuration/KPI candidate" "In-process function call"
+        configurationService -> semanticRegistry "Register and validate KPI candidate for parity eligibility" "In-process function call"
         runStageCoordinatorV2 -> postgres "Claim and record run-stage jobs" "PostgreSQL protocol over TLS"
         runStageCoordinatorV2 -> ingestionCoordinator "Run pinned intake" "In-process function call"
         runStageCoordinatorV2 -> snapshotService "Create snapshot" "In-process function call"
@@ -700,7 +699,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         runStageCoordinatorV2 -> workflowEngine "Rebuild workflows" "In-process function call"
         runStageCoordinatorV2 -> signalEngine "Detect and rank signals" "In-process function call"
         runStageCoordinatorV2 -> reportEvidenceBuilderV2 "Build manager evidence" "In-process function call"
-        reportEvidenceBuilderV2 -> postgres "Store package; unlock agent job" "PostgreSQL protocol over TLS"
+        reportEvidenceBuilderV2 -> postgres "Read stored follow-up assessments; store package; unlock agent job" "PostgreSQL protocol over TLS"
 
         outputValidator -> publisherV2 "Release package or fallback" "In-process function call"
 
