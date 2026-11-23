@@ -6,9 +6,9 @@ DIDRAH is a bounded management assistant. It produces traceable management repor
 
 The active architecture sources are:
 
-- `architecture/structurizr/workspace.dsl`
-- `architecture/structurizr/docs/`
-- `architecture/structurizr/adrs/`
+- `docs/Analytics/workspace.dsl`
+- `docs/Analytics/docs/`
+- `docs/Analytics/adrs/`
 
 The official project brief, TA clarifications, and machine-readable evaluation contracts verify these sources. A historical document is not an active architecture source. An unclear statement becomes an open decision. It does not become an accepted requirement.
 

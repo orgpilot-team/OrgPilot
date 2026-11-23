@@ -42,7 +42,7 @@ Run these commands from the repository root in PowerShell:
 ```powershell
 $structurizrTemp = Join-Path ([IO.Path]::GetTempPath()) ([IO.Path]::GetRandomFileName())
 New-Item -ItemType Directory -Path $structurizrTemp | Out-Null
-Copy-Item -Recurse -Path "${PWD}/architecture/structurizr/*" -Destination $structurizrTemp
+Copy-Item -Recurse -Path "${PWD}/docs/Analytics/*" -Destination $structurizrTemp
 Remove-Item -LiteralPath (Join-Path $structurizrTemp "workspace.json") -ErrorAction SilentlyContinue
 docker run --rm -it -p 8080:8080 -v "${structurizrTemp}:/usr/local/structurizr" structurizr/structurizr local
 ```
@@ -55,7 +55,7 @@ Run CLI validation against the same temporary copy:
 docker run --rm -v "${structurizrTemp}:/usr/local/structurizr" structurizr/structurizr validate -workspace /usr/local/structurizr/workspace.dsl
 ```
 
-A successful command returns without a validation error. After visual and CLI validation, stop Structurizr Local and copy the generated `workspace.json` from the temporary directory to `architecture/structurizr/workspace.json`. Review it and commit it with the accepted source changes or in an immediately following generated-artifact commit.
+A successful command returns without a validation error. After visual and CLI validation, stop Structurizr Local and copy the generated `workspace.json` from the temporary directory to `docs/Analytics/workspace.json`. Review it and commit it with the accepted source changes or in an immediately following generated-artifact commit.
 
 ## Mermaid generation
 
@@ -95,6 +95,6 @@ For each URL:
 ## Troubleshooting
 
 - If the browser shows an old model, stop and restart the temporary Local container.
-- If Docker cannot mount the directory, enable file sharing for drive `D:` in Docker Desktop.
+- If Docker cannot mount the directory, check Docker Desktop's file sharing settings for the drive containing this repository.
 - If the page is unavailable, confirm that the container is running and that port 8080 is free.
 - If a diagram loses its layout, confirm that its view key did not change.
