@@ -35,6 +35,14 @@ The query path uses defense in depth:
 
 The language model has no database credential. It has no direct file credential. The Model Gateway is the only external model path. It applies the approved token, time, retry, and cost controls.
 
+## Chart presentation boundary
+
+`ChartIntent` is an optional presentation request. It can select an allowed chart type, KPI, time range, and grouping. It cannot supply chart values, widen scope, select an unapproved relation, or replace query lineage. Language-model output that contains a `ChartIntent` remains an untrusted candidate until Output Validator checks it.
+
+`ChartSpec` is built only from pinned report evidence or a validated bounded query result. Every series carries its source references, including the applicable `query_id`. A report chart is also bound to its report version, snapshot, and manager scope. The Report and Dashboard API rechecks audience, purpose, and scope before it returns a chart. A chart identifier or report identifier never grants access by itself.
+
+The Web Application receives only the authorized points required for the requested chart. It does not receive unrestricted facts and does not calculate a wider aggregation. ECharts options are created in the Web Application from the authorized `ChartSpec`; they are not accepted from the language model or stored as business evidence.
+
 ## Agent Runtime database boundary
 
 ADR-0019 permits a restricted Agent Runtime PostgreSQL role. The final role name is open. Migration from the existing `agent_query_reader` role, or continued use of that role, is also open.
@@ -68,6 +76,7 @@ The Agent Runtime does not perform migrations, grant permissions, change policie
 - The Document Processing Runner parses only archived bytes with an approved contract (the former Document Parser is a function inside it).
 - Output Validator verifies schema, scope, and evidence before publication or export.
 - Submission Exporter writes only validated contract fields to a contained path below `OUTPUT_DIR`.
+- Submission Exporter excludes `ChartIntent`, `ChartSpec`, Presentation responses, and ECharts options from formal output.
 - OpenTelemetry and Langfuse instrumentation must remove secrets, raw restricted business data, full documents, and unauthorized manager context.
 
 A minimal access projection matrix is required before authorization and scoped-query implementation. It must cover Senior Manager, Unit Manager, and Team Supervisor and specify Resource, Row scope, Allowed columns, Purpose, and individual-data access. This document does not define the matrix entries and does not approve a new database-role name or a wider data projection.

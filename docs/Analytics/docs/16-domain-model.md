@@ -31,6 +31,7 @@ A component earns its own box only if it coordinates at least one invariant-bear
 - **Determinism:** the domain clock is injected; no ambient time, randomness, or unordered iteration enters a domain decision. A domain event's payload is immutable and fully derived from pinned inputs.
 - **Naming convention:** a use case is `VerbObject` (e.g. `ConfirmDecision`); a domain event is past tense (e.g. `DecisionConfirmed`).
 - **One job contract.** There is a single durable-job contract for claim/lease/attempt/terminal semantics, shared by the Worker stage runner and the Agent Runtime job runner. Both consume it; neither redefines it (see §6.4).
+- **One chart-presentation contract.** `ChartIntent`, `ChartSpec`, and `PresentationResponse` are immutable internal types supplied by the Shared Chart Presentation Library. The library is not a bounded context, component, process, data owner, or authorization boundary. Report Evidence Builder and Report and Dashboard API consume the same contract; neither redefines it.
 
 ## 1. Backend API bounded contexts
 
@@ -48,14 +49,17 @@ A component earns its own box only if it coordinates at least one invariant-bear
 
 - `AgentJob` (root): `JobId`, `JobType`, `ScopeSnapshot`, `Lease`, `Attempt[]`, `JobStatus`. Invariant: a job is claimed by at most one runner; a terminal job is immutable; wake-ups are hints and never change state.
 - `Decision` (root): `DecisionCardId`, `ChosenOption`, `SuccessCriterion` (value object: target KPI, target value, measurement window 3–5 days, guardrail KPI + limit), `FollowUp[]`, `ConfirmationReceipt`, `ReviewState`. Invariant: a decision cannot be recorded without manager confirmation and a complete success criterion; the system never executes the action. The card and its review state are entities of this root, not a separate aggregate or component.
-- `ReportVersion` (root): `as_reported` or `restated` state, `PublicationReceipt`, `ScopeSnapshot`, `QueryRef[]`. Invariant: published reports are immutable; a late-arrival recomputation creates a new `restated` version and never overwrites the original.
+- `ReportVersion` (root): `as_reported` or `restated` state, `PublicationReceipt`, `ScopeSnapshot`, `QueryRef[]`, `ChartSpecRef[]`. Invariant: published reports and their chart references are immutable; a late-arrival recomputation creates a new `restated` version and never overwrites the original.
 - `AccessPolicy` (root): `Grant[]` with `Scope`, `Purpose`, `Predicate` value objects. Invariant: undefined access is denied; row-level predicates are attached before any query port is called.
 - `ExportBatch` (root): `OutputDir`, `FileRef[]`, `AtomicRenameReceipt`. Invariant: every path is contained in `OUTPUT_DIR`; export is atomic.
 - `ManagerRequest` is a command/value object, not an aggregate: it is validated and dispatched to one fixed handler, and carries no invariant across calls.
+- `ChartIntent` is an untrusted candidate value object: allowed chart type, KPI, time range, and grouping only. It never carries authoritative values.
+- `ChartSpec` is an immutable internal presentation value object or derived read record: contract version, chart ID, source kind and version, scope reference, snapshot reference, ordered series and points, unit, optional target line, and query references. It is not an aggregate and has no repository or component of its own.
+- `PresentationResponse` is an internal API DTO that contains validated content and zero or more authorized `ChartSpec` values. It is not a Submission contract.
 
 ### Application use cases
 
-`SubmitManagerQuestion`, `SubmitUpload`, `ConfirmDecision`, `ReviewDecisionCard`, `RecordFollowUp`, `CloseSignal`, `ReferSignal`, `SetManagerPriority`, `ChangeKpiTarget`, `ChangeKpiThreshold`, `PublishReport`, `ExportSubmission`, `ActivateConfiguration`, `ActivateOrganizationRevision`, `StartRun`, `CloseRun`, `ReadJobStatus`, `ReadScopedReport`.
+`SubmitManagerQuestion`, `SubmitUpload`, `ConfirmDecision`, `ReviewDecisionCard`, `RecordFollowUp`, `CloseSignal`, `ReferSignal`, `SetManagerPriority`, `ChangeKpiTarget`, `ChangeKpiThreshold`, `PublishReport`, `ExportSubmission`, `ActivateConfiguration`, `ActivateOrganizationRevision`, `StartRun`, `CloseRun`, `ReadJobStatus`, `ReadScopedReport`, `ReadScopedPresentation`.
 
 `CloseSignal` and `ReferSignal` enter through Decision and Follow-Up and create an authorized disposition record. `SetManagerPriority`, `ChangeKpiTarget`, and `ChangeKpiThreshold` enter through Configuration Service and follow its validation and activation rules. Manager priority is ranking input for Signal Engine. It is not part of `KpiDefinition`.
 
@@ -92,9 +96,11 @@ A component earns its own box only if it coordinates at least one invariant-bear
 
 `WorkflowObservation` is a derived read model of pinned projections, not an aggregate root; it has no invariant that is mutated from more than one place. It is produced by the Workflow Engine and consumed by the Signal Engine and Report Evidence Builder.
 
+A report-linked `ChartSpec` is a derived read record of one pinned Evidence Package and chart-policy version. Report Evidence Builder creates it through the Shared Chart Presentation Library and stores it with the report candidate. Restatement creates new chart records for the new report version and never mutates the records of the previous version.
+
 ### Domain services
 
-`DeduplicationService`, `DataIssueClassifier`, `KpiSqlTranslationService`, `RollupService`, `WorkflowReconstructionService`, `SignalDetectionService` (rules R1–R5), `EscalationPolicyService`, `DecisionEffectService`, `ReportEvidenceAssembler`. `KpiParityService` is not a Worker domain service; parity is owned by the Acceptance Test Harness (see §6.3).
+`DeduplicationService`, `DataIssueClassifier`, `KpiSqlTranslationService`, `RollupService`, `WorkflowReconstructionService`, `SignalDetectionService` (rules R1–R5), `EscalationPolicyService`, `DecisionEffectService`, `ReportEvidenceAssembler`. `ReportEvidenceAssembler` uses the shared deterministic chart builder; the builder is a stateless library function, not a domain service or component. `KpiParityService` is not a Worker domain service; parity is owned by the Acceptance Test Harness (see §6.3).
 
 ### Ports and adapters
 
@@ -197,11 +203,12 @@ These are the seams the build team implements against. Each row is one owner; cr
 | Decision and Follow-Up | `Decision` (card, review, follow-ups), authorized signal dispositions | confirm/review/close/refer commands | execute the decision, auto-confirm, change signal rules |
 | Configuration Service | versioned KPI, organization, and manager-priority candidates; approval, schedule, activation state, active-version pointer | active version reference to Snapshot | translate KPI SQL, issue a Parity Receipt, activate invalid candidates, use same-day org activation |
 | Output Validator / Publisher / Submission Exporter | `ReportVersion`, `ExportBatch` | validated, published, exported artifacts | generate content, mutate old versions, escape `OUTPUT_DIR` |
-| Report and Dashboard API | authorized reads (reports, dashboards, job status) | bounded responses | bypass scope, read arbitrary tables |
+| Report and Dashboard API | authorized reads (reports, dashboards, answers, job status); interactive chart assembly from validated bounded results | bounded Presentation and status responses | bypass scope, read arbitrary tables, recalculate stored report charts, accept model values as chart data |
 | Ingestion Coordinator | `IngestionBatch`, `DataIssue[]`, canonical rows | committed batch | interpret business meaning before normalization, calculate KPIs |
 | Snapshot Service | `Snapshot`, derived projections | one pinned snapshot | mix unpinned versions, mutate source history |
 | Semantic Registry | immutable `KpiDefinition` versions, translation, semantic validation, parity eligibility | eligible definition + SQL | control activation state, execute unregistered SQL, change reference SQL |
 | Workflow Engine / Signal Engine | `SignalEpisode`, workflow read models | signals with owner + history | generate model content, auto-create decisions |
+| Report Evidence Builder | evidence package, report candidate, report-linked `ChartSpec` derived records | pinned report evidence and chart specifications | publish, call a model, add chart fields to Submission output |
 | Decision Effect Evaluator | `EffectAssessment` | internal effect record | claim causality without evidence |
 | Run Stage Coordinator | `RunStage` | stage results | create ad hoc work, publish |
 | Agent Job Runner | `AgentJobExecution`, lease/attempt | candidate or terminal failure | execute unclaimed jobs, publish |
@@ -211,3 +218,5 @@ These are the seams the build team implements against. Each row is one owner; cr
 | Acceptance Test Harness | parity, replay, regression, leakage, contract checks | receipts | act as product runtime, publish output |
 
 The shared durable-job contract (claim/lease/attempt/terminal) is owned jointly by the Backend `AgentJob` aggregate and the Runtime `AgentJobExecution` aggregate through one specified interface; both runners consume it and neither redefines it.
+
+The Shared Chart Presentation Library contains only the chart contract, deterministic construction rules, validation, and serialization. It contains no persistence, authorization, query execution, KPI calculation, job control, React, or ECharts code. Report Evidence Builder owns creation of stored report charts. Report and Dashboard API owns authorized delivery and creation of interactive charts from validated query results. The Web Application owns conversion from `ChartSpec` to ECharts options.

@@ -50,9 +50,9 @@ The DIDRAH Input Dataset is read-only. The Submission Output Directory accepts a
 - **DSL identifier:** `postgres`;
 - **Display name:** PostgreSQL.
 - **Purpose:** Be the only product database and source of truth for durable state.
-- **Responsibilities:** Store product, analytical, access, job, checkpoint, receipt, and audit records.
+- **Responsibilities:** Store product, analytical, access, job, checkpoint, receipt, audit, and internal chart-presentation records.
 - **Inputs:** Authorized product writes and approved queries.
-- **Outputs:** Scoped records, projections, job state, and receipts.
+- **Outputs:** Scoped records, projections, job state, versioned `ChartSpec` records, and receipts.
 - **Owned state:** Product state in proposed versioned schemas.
 - **Dependencies:** PostgreSQL 18 runtime and controlled migrations.
 - **Security boundary:** Roles, grants, views, RLS, and purpose checks limit access.
@@ -60,7 +60,7 @@ The DIDRAH Input Dataset is read-only. The Submission Output Directory accepts a
 - **Failure behavior:** Product operations fail explicitly and recover from durable state.
 - **Idempotency:** Keys, versions, leases, and receipts control retries.
 - **Observability:** Record database health and correlation metadata, not full telemetry.
-- **Related ADRs:** ADR-0002, ADR-0005, ADR-0011, ADR-0018, ADR-0019.
+- **Related ADRs:** ADR-0002, ADR-0005, ADR-0011, ADR-0018, ADR-0019, ADR-0028.
 - **Open issues:** Runtime role names, retention, backup frequency, RPO, and RTO remain open.
 
 <a id="protected-file-archive"></a>
@@ -116,7 +116,7 @@ The DIDRAH Input Dataset is read-only. The Submission Output Directory accepts a
 - **Owned state:** External output files and their filesystem metadata.
 - **Dependencies:** Read-only formal schemas and writable evaluator output mount.
 - **Security boundary:** Only resolved contained paths and approved schemas can be written.
-- **Forbidden responsibilities:** Accept internal fields, partial files, or `OUTPUT_DIR/submission/...` paths.
+- **Forbidden responsibilities:** Accept internal fields, `ChartIntent`, `ChartSpec`, Presentation responses, ECharts options, partial files, or `OUTPUT_DIR/submission/...` paths.
 - **Failure behavior:** Export fails without a partial final file and stores an Export Receipt failure.
 - **Idempotency:** Relative path, version, and content hash control replacement.
 - **Observability:** Record relative path, hash, receipt, result, and trace ID.

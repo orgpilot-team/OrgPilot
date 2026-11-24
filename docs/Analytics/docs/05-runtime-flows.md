@@ -10,7 +10,7 @@ The Replay Command selects a business day, derives the pinned business date and 
 
 The Run Status Client asks the Backend Run Coordinator to create a pinned run and its complete job plan. PostgreSQL stores job dependencies, manager order, and durable job state.
 
-The Background Worker claims ready deterministic jobs. It runs ingestion, snapshot, KPI, workflow, signal, and report-evidence stages. A Report Evidence Job creates one manager-scoped Evidence Package and Canonical Report JSON, then unlocks its preplanned Agent Job.
+The Background Worker claims ready deterministic jobs. It runs ingestion, snapshot, KPI, workflow, signal, and report-evidence stages. A Report Evidence Job creates one manager-scoped Evidence Package and Canonical Report JSON. It also uses the Shared Chart Presentation Library to create the deterministic `ChartSpec` records required by the report presentation policy. Each record is bound to the pinned snapshot, manager scope, query lineage, and report candidate version. The job stores these internal records, then unlocks its preplanned Agent Job.
 
 One PostgreSQL-backed Agent Job Runner in Agent Runtime claims and leases every Ready report, interactive, or document-analysis Agent Job. It reloads the pinned actor, scope, policy, and workload-specific inputs from PostgreSQL, runs the bounded graph, persists the candidate or explicit failure, and only then submits the outcome for deterministic validation. The bounded agent cannot change canonical numbers or widen scope.
 
@@ -26,13 +26,21 @@ Publisher records the valid product result in PostgreSQL. Submission Exporter re
 
 For `OUTPUT_DIR=/submission`, the exporter writes directly below `/submission`. It does not create `/submission/submission`.
 
-The complete Decision Effect remains an internal versioned PostgreSQL record. Export uses only fields and values that the reference output schema permits.
+The complete Decision Effect and every `ChartSpec` remain internal versioned PostgreSQL records. Export uses only fields and values that the reference output schema permits. Submission Exporter never adds `chart_specs`, `ChartIntent`, presentation metadata, or ECharts options to the formal brief or QA files.
 
 ## Interactive question and manager decision flow
 
 The Web Application sends an authenticated request to the Backend API. The fixed handler is selected by in-process dispatch (the former Manager Request Router is a function, doc 16 §6.2) and the Authorization Service pins the permitted scope. The Agent Runtime Gateway commits an idempotent interactive Agent Job to PostgreSQL with actor, policy, scope, request, and conversation references. It returns the committed job ID to the request handler, which returns it to the UI; the Gateway may also send the Agent Runtime an authenticated wake-up containing only the job ID.
 
-The Agent Runtime Runner claims and leases the job from PostgreSQL, reloads its canonical inputs and pinned scope, and invokes the bounded graph. Conversation and evidence tools use their explicitly authorized Backend services. The Runner persists its candidate or explicit execution failure before submitting the outcome to Output Validator. The validator persists its receipt and transitions the job to validated or rejected. The UI polls the Backend status API, which returns only the owning manager's authorized status and validated result reference. Editing an interactive decision card creates a new idempotent revision job through the Agent Runtime Gateway; confirm, edit, or reject remains a human command, and only a confirmed card enters Decision and Follow-Up.
+The Agent Runtime Runner claims and leases the job from PostgreSQL, reloads its canonical inputs and pinned scope, and invokes the bounded graph. Conversation and evidence tools use their explicitly authorized Backend services. For a chart request, the structured candidate can contain an optional `ChartIntent`, but it cannot contain authoritative chart values. The Runner persists its candidate or explicit execution failure before submitting the outcome to Output Validator. The validator checks the answer, evidence, query lineage, scope, and optional `ChartIntent`, then persists its receipt and transitions the job to validated or rejected.
+
+For a validated interactive answer, the Report and Dashboard API uses the Shared Chart Presentation Library to combine the validated `ChartIntent` with the persisted bounded query result. The library creates a deterministic `ChartSpec`; the API stores it with the answer version and returns the authorized Presentation response. The UI polls the Backend status API, which returns only the owning manager's authorized status and validated result reference. Editing an interactive decision card creates a new idempotent revision job through the Agent Runtime Gateway; confirm, edit, or reject remains a human command, and only a confirmed card enters Decision and Follow-Up.
+
+## UI chart delivery flow
+
+The Report and Dashboard API rechecks audience, purpose, and scope for every report, answer, dashboard, or workflow read. For a published report it reads the immutable report version and the `ChartSpec` records stored for that same version. For an interactive answer it reads the validated answer and its versioned `ChartSpec` records. It returns one internal Presentation response containing the validated content and zero or more chart specifications.
+
+The Web Application maps each `ChartSpec` to an ECharts option and renders it beside the related report item or chat answer. This mapping controls visual presentation only. It cannot calculate a KPI, regroup rows, change a target, fill a missing value, or widen the authorized scope. If a chart is unavailable or invalid, the validated text or report remains available and the UI shows an explicit chart-unavailable state.
 
 ## Document decision flow
 

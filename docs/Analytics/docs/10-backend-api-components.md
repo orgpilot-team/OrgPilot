@@ -6,7 +6,7 @@ The Backend API authenticates requests, applies access policy, creates durable j
 
 ## Runtime Technology
 
-ASP.NET Core on .NET 10 LTS, REST/JSON, OpenAPI, EF Core, and Npgsql. Direct Npgsql use is limited to job claim and approved SQL execution.
+ASP.NET Core on .NET 10 LTS, REST/JSON, OpenAPI, EF Core, Npgsql, and the Shared Chart Presentation Library. Direct Npgsql use is limited to job claim and approved SQL execution.
 
 ## Trust Boundary
 
@@ -18,6 +18,7 @@ All browser, scheduler, runtime, and file input is untrusted until validation. P
 - Route each request to one fixed handler.
 - Create durable jobs and return persisted identifiers.
 - Validate, publish, deliver, audit, and export approved results.
+- Deliver internal Presentation responses with authorized `ChartSpec` values without changing the formal Submission contract.
 
 ## Forbidden Responsibilities
 
@@ -25,6 +26,7 @@ All browser, scheduler, runtime, and file input is untrusted until validation. P
 - Run deterministic daily processing or KPI calculation.
 - Treat a wake-up call as a queue or source of truth.
 - Change the reference output contracts.
+- Accept language-model chart values or ECharts options as authoritative product data.
 
 > **Implementation source note.** This document and `16-domain-model.md` define the Backend API boundaries used for implementation. The DSL is a visual overview. Read §6 of doc 16 for the reasoning behind each merge.
 
@@ -256,18 +258,18 @@ The container uses the Identity Provider, PostgreSQL, Protected File Archive, Ag
 
 - **DSL identifier:** `reportApi`;
 - **Display name:** Report and Dashboard API.
-- **Purpose:** Deliver authorized reports, dashboards, workflows, answers, agent job status, or failures.
-- **Responsibilities:** Recheck audience and purpose, run approved reads, and return bounded responses.
-- **Inputs:** Trusted scope and product read request (including job ID for status).
-- **Outputs:** Authorized response or explicit failure. This component absorbs Agent Job Status API (`agentJobStatusService` in the current DSL): job status is an authorized read with no owned state. A job ID never grants result access.
-- **Owned state:** None.
-- **Dependencies:** Authorization Service, Query Gateway, PostgreSQL, and Web Application.
-- **Security boundary:** Recheck audience and purpose before delivery; do not disclose cross-scope job state.
-- **Forbidden responsibilities:** Generate unvalidated answers, bypass scope, read arbitrary tables, or mutate jobs.
+- **Purpose:** Deliver authorized reports, dashboards, workflows, answers, chart specifications, agent job status, or failures.
+- **Responsibilities:** Recheck audience and purpose, run approved reads, return bounded responses, and assemble the internal Presentation response. For a published report, read the stored `ChartSpec` records for the same immutable report version. For a validated interactive answer, use the Shared Chart Presentation Library to create a deterministic `ChartSpec` from the validated `ChartIntent` and persisted bounded query result.
+- **Inputs:** Trusted scope and product read request (including job ID for status), validated content reference, stored report `ChartSpec`, or validated interactive `ChartIntent` plus bounded query result.
+- **Outputs:** Authorized Presentation response, authorized status response, or explicit failure. A Presentation response contains validated content and zero or more `ChartSpec` values. This component absorbs Agent Job Status API (`agentJobStatusService` in the current DSL): job status is an authorized read with no owned state. A job ID never grants result access.
+- **Owned state:** None. An interactive `ChartSpec` is a derived read record persisted with its validated answer; it is not component-owned state.
+- **Dependencies:** Authorization Service, Query Gateway, PostgreSQL, Shared Chart Presentation Library, and Web Application.
+- **Security boundary:** Recheck audience, purpose, and scope before delivery. Chart points and query lineage cannot exceed the authorized content scope. Do not disclose cross-scope job state.
+- **Forbidden responsibilities:** Generate unvalidated answers, use language-model values as chart data, recalculate a stored report chart, bypass scope, read arbitrary tables, mutate jobs, or add presentation fields to formal Submission output.
 - **Failure behavior:** Return explicit unavailable, incomplete, forbidden, or failed state.
-- **Idempotency:** Reads repeat for the same version.
+- **Idempotency:** Reads repeat for the same version. Interactive chart construction is stable for the same validated result, `ChartIntent`, and chart-contract version.
 - **Observability:** Record type, version, scope reference, result, latency, and trace ID.
-- **Related ADRs:** ADR-0003, ADR-0004, ADR-0005, ADR-0009.
+- **Related ADRs:** ADR-0003, ADR-0004, ADR-0005, ADR-0009, ADR-0028.
 - **Open issues:** None.
 
 <a id="audit-service"></a>

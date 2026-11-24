@@ -16,12 +16,14 @@ The Runtime has limited database access to Agent Job, Lease, Attempt, Checkpoint
 
 - Claim leased Agent Jobs and persist candidate or terminal failure state.
 - Run bounded report, interactive, or document decision-card graphs.
+- Propose an optional structured `ChartIntent` for an interactive answer without supplying authoritative chart values.
 - Apply model limits and store resumable checkpoints and scoped conversation turns.
 
 ## Forbidden Responsibilities
 
 - Run arbitrary SQL against business tables.
 - Calculate KPIs, change policy, run migrations, publish results, or confirm decisions.
+- Produce authoritative chart values, `ChartSpec`, or ECharts options.
 - Treat wake-ups as durable jobs.
 
 > **Implementation source note.** This document and `16-domain-model.md` define the Agent Runtime boundaries used for implementation. The DSL is a visual overview. DDD rigour is limited to the invariants in doc 16 §3; checkpoint state is a repository adapter, not a component.
@@ -49,17 +51,17 @@ The Runtime claims from PostgreSQL, gets evidence and validation from the Backen
 - **DSL identifier:** `agentOrchestrator`;
 - **Display name:** Bounded Agent Orchestrator.
 - **Purpose:** Coordinate one bounded report, interactive, or decision-card graph.
-- **Responsibilities:** Load authorized evidence, manage bounded steps, use conversation context, request model work, and return structured candidates.
+- **Responsibilities:** Load authorized evidence, manage bounded steps, use conversation context, request model work, and return structured candidates. An interactive candidate can contain an optional `ChartIntent` with an allowed measure, time range, grouping, and chart type.
 - **Inputs:** Claimed job, scope, evidence references, and graph configuration.
-- **Outputs:** Structured candidate or terminal graph failure.
+- **Outputs:** Structured candidate, optional untrusted `ChartIntent`, or terminal graph failure.
 - **Owned state:** Graph state through checkpoint records written via `ICheckpointRepository`.
 - **Dependencies:** Evidence Service, Conversation Service, Model Gateway, and the checkpoint repository adapter.
 - **Security boundary:** Job scope and evidence references bound every graph.
-- **Forbidden responsibilities:** Direct business SQL, KPI calculation, publication, or decision confirmation.
+- **Forbidden responsibilities:** Direct business SQL, KPI or chart-data calculation, `ChartSpec` construction, ECharts option construction, publication, or decision confirmation.
 - **Failure behavior:** Persist a bounded failure and resumable checkpoint where allowed.
 - **Idempotency:** Job attempt and checkpoint state control replay.
 - **Observability:** Record graph, node, job, attempt, model calls, and trace ID with redaction.
-- **Related ADRs:** ADR-0005, ADR-0008, ADR-0019, ADR-0020.
+- **Related ADRs:** ADR-0005, ADR-0008, ADR-0019, ADR-0020, ADR-0028.
 - **Open issues:** LangGraph node boundaries remain open.
 
 <a id="agent-job-runner"></a>

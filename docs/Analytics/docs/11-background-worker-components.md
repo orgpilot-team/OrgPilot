@@ -6,7 +6,7 @@ The Background Worker runs deterministic ingestion, validation, analytics, workf
 
 ## Runtime Technology
 
-.NET 10 Worker Service with shared modular-monolith libraries, EF Core, and Npgsql.
+.NET 10 Worker Service with shared modular-monolith libraries, the Shared Chart Presentation Library, EF Core, and Npgsql.
 
 ## Trust Boundary
 
@@ -195,17 +195,17 @@ The Worker reads the DIDRAH Input Dataset, writes original bytes to the Protecte
 - **DSL identifier:** `reportEvidenceBuilderV2`;
 - **Display name:** Report Evidence Builder.
 - **Purpose:** Build one pinned evidence package and canonical report per manager job.
-- **Responsibilities:** Collect approved facts, signals, stored follow-up assessments, citations, and scope references. Build an internal deterministic chart specification when the UI needs a chart. The specification contains the chart type, KPI, time range, breakdown, and target line.
-- **Inputs:** Pinned run results, stored Decision Effect records, and authorized manager scope.
-- **Outputs:** Evidence package, canonical report, internal chart specification, and unlocked Agent Job.
-- **Owned state:** Evidence package and report candidate in PostgreSQL.
-- **Dependencies:** PostgreSQL and stored Decision Effect records.
-- **Security boundary:** Package content cannot exceed manager scope.
+- **Responsibilities:** Collect approved facts, signals, stored follow-up assessments, citations, and scope references. Apply the versioned report chart policy. Use the Shared Chart Presentation Library to build each deterministic `ChartSpec` from pinned values and query lineage. A specification contains its chart type, KPI, ordered points, unit, time range, breakdown, optional target line, source references, snapshot, report candidate version, and manager scope reference.
+- **Inputs:** Pinned run results, stored Decision Effect records, authorized manager scope, and chart-policy version.
+- **Outputs:** Evidence package, canonical report, zero or more internal versioned `ChartSpec` records, and unlocked Agent Job.
+- **Owned state:** Evidence package, report candidate, and report-linked `ChartSpec` records in PostgreSQL.
+- **Dependencies:** PostgreSQL, stored Decision Effect records, and Shared Chart Presentation Library.
+- **Security boundary:** Package and chart content cannot exceed manager scope. Every chart series must map to pinned approved values and query lineage.
 - **Forbidden responsibilities:** Call a model, publish, merge managers, or add a chart field to the formal submission contract.
-- **Failure behavior:** Record an incomplete package or explicit failure under policy. If model narrative is unavailable later, the deterministic canonical report remains valid without narrative.
-- **Idempotency:** Run, manager, and package version identify one result.
-- **Observability:** Record package, manager scope reference, source versions, status, and trace ID.
-- **Related ADRs:** ADR-0004, ADR-0008, ADR-0009, ADR-0011, ADR-0022.
+- **Failure behavior:** Record an incomplete package or explicit chart failure under policy. A chart failure does not change canonical report numbers. If model narrative is unavailable later, the deterministic canonical report remains valid without narrative.
+- **Idempotency:** Run, manager, package version, chart-policy version, and chart-contract version identify one result.
+- **Observability:** Record package, chart identifier, chart-contract version, manager scope reference, source versions, status, and trace ID.
+- **Related ADRs:** ADR-0004, ADR-0008, ADR-0009, ADR-0011, ADR-0022, ADR-0028.
 - **Open issues:** None.
 
 <a id="decision-effect-evaluator"></a>

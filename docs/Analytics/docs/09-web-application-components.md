@@ -6,7 +6,7 @@ The Web Application supplies the three Persian RTL management interfaces. It dis
 
 ## Runtime Technology
 
-React 19, TypeScript, and Vite.
+React 19, TypeScript, Vite, and Apache ECharts.
 
 ## Trust Boundary
 
@@ -15,12 +15,14 @@ The browser is not trusted. The Backend API authenticates and authorizes every r
 ## Allowed Responsibilities
 
 - Display authorized reports, metrics, workflow state, and decision state.
+- Map authorized `ChartSpec` values to ECharts options and render them.
 - Collect scoped questions, uploads, and manager commands.
 - Send requests to the Backend API over HTTPS/JSON.
 
 ## Forbidden Responsibilities
 
 - Run business rules, KPI calculations, or agent graphs.
+- Calculate, regroup, complete, or correct chart data.
 - Read PostgreSQL, the protected archive, or input contracts directly.
 - Treat hidden UI state as an authorization control.
 
@@ -40,6 +42,12 @@ The three components share the same Web Application runtime. They do not call ea
 
 Each component calls the Backend API over HTTPS/JSON. The Web Application can send redacted telemetry to the optional OpenTelemetry Collector.
 
+## Chart Rendering Boundary
+
+The Web Application receives the internal Presentation response defined in doc 17. It contains validated content and zero or more `ChartSpec` values. A frontend mapping function converts each `ChartSpec` to an ECharts option. The mapping owns layout, RTL labels, typography, color, tooltip, legend, responsive behavior, and accessible text. It does not own chart values, KPI rules, grouping, targets, evidence, or authorization.
+
+The frontend mapping function is not part of the Shared Chart Presentation Library because that library is .NET and contains no ECharts or React code. The `ChartSpec` contract remains independent of the rendering library.
+
 ## Component Sections
 
 <a id="conversational-assistant-ui"></a>
@@ -49,13 +57,13 @@ Each component calls the Backend API over HTTPS/JSON. The Web Application can se
 - **DSL identifier:** `chatUi`
 - **Display name:** Conversational Assistant UI
 - **Purpose:** Display reports and bounded answers and collect scoped manager input.
-- **Responsibilities:** Show briefs, submit questions, upload documents, submit `CloseSignal`, `ReferSignal`, `SetManagerPriority`, `ChangeKpiTarget`, and `ChangeKpiThreshold` operations, and show job or review state.
-- **Inputs:** User actions and authorized Backend API responses.
+- **Responsibilities:** Show briefs and bounded answers, render authorized `ChartSpec` values beside their related message or report item, submit questions, upload documents, submit `CloseSignal`, `ReferSignal`, `SetManagerPriority`, `ChangeKpiTarget`, and `ChangeKpiThreshold` operations, and show job or review state.
+- **Inputs:** User actions and authorized Backend API Presentation responses.
 - **Outputs:** Authenticated HTTPS/JSON requests and rendered results.
 - **Owned state:** Temporary browser view state only.
 - **Dependencies:** Backend API and the trusted browser session.
 - **Security boundary:** Treat all browser input as untrusted and do not store secrets in client state.
-- **Forbidden responsibilities:** KPI calculation, evidence access, authorization, agent execution, and publication.
+- **Forbidden responsibilities:** KPI or chart-data calculation, evidence access, authorization, agent execution, and publication.
 - **Failure behavior:** Show an explicit error or persisted job state. Do not invent an answer.
 - **Idempotency:** Use server-issued identifiers and idempotency data for repeated commands.
 - **Observability:** Emit redacted UI request and error telemetry when collection is active.
@@ -69,7 +77,7 @@ Each component calls the Backend API over HTTPS/JSON. The Web Application can se
 - **DSL identifier:** `dashboardUi`
 - **Display name:** Role-Based Dashboard UI
 - **Purpose:** Display authorized KPIs, targets, trends, drill-downs, decisions, and open actions.
-- **Responsibilities:** Request and render role-scoped management data, deterministic chart specifications, and direct-workload detail when allowed.
+- **Responsibilities:** Request and render role-scoped management data, deterministic `ChartSpec` values, and direct-workload detail when allowed.
 - **Inputs:** Trusted session context and authorized report or dashboard responses.
 - **Outputs:** HTTPS/JSON read requests and rendered dashboards.
 - **Owned state:** Temporary filters and presentation state only.

@@ -32,7 +32,7 @@ The deterministic core is outside the agent. It owns KPI calculation, workflow r
 
 | Element | Technology | Constraint |
 |---|---|---|
-| Web Application | React, TypeScript, Vite | No business calculation |
+| Web Application | React, TypeScript, Vite, Apache ECharts | No business or chart-data calculation |
 | Backend API | ASP.NET Core on .NET 10 LTS | Modular monolith process |
 | Background Worker | .NET 10 Worker Service | Deterministic processing |
 | Scheduler and Replay Runner | .NET 10 console or Worker Service | The implementation choice is open |
@@ -54,13 +54,18 @@ Shared .NET libraries can contain:
 - Authorization primitives
 - Job-state contracts
 - Output-validation interfaces
+- Internal chart-presentation contracts, deterministic builders, validators, and serializers
 - Observability conventions
 
 A shared library does not give shared ownership of data. It does not make separate runtime processes an in-process deployment.
 
+The Shared Chart Presentation Library is one such .NET library. The Report Evidence Builder uses it to create a versioned `ChartSpec` from pinned report evidence. The Report and Dashboard API uses the same contract to validate, serialize, and deliver stored report charts and to create an interactive chart from a validated bounded query result. The library does not access PostgreSQL, execute queries, calculate KPIs, authorize requests, or contain React or ECharts code.
+
 ## API and process contracts
 
 The Web Application calls the Backend API through HTTPS REST/JSON. The Backend API is the identity, authorization, evidence, validation, publication, and export boundary. The Background Worker owns deterministic daily processing. The Scheduler and Replay Runner owns time, replay, acceptance, and parity work. The Agent Runtime owns bounded graph execution and agent-owned job state.
+
+The product has two separate response contracts. The Submission contract contains only the approved brief and QA fields written below `OUTPUT_DIR`. The internal Presentation contract combines one validated report or answer with zero or more versioned `ChartSpec` values for the Web Application. A `ChartSpec` is independent of ECharts. The Web Application maps it to an ECharts option and renders it. Internal presentation fields never enter the Submission contract.
 
 All report, interactive, and document-analysis Agent Jobs use one durable PostgreSQL queue. The Backend producer commits an idempotent job with pinned actor, scope, policy, and input references before sending an optional authenticated wake-up containing only the job ID. The Agent Runtime Runner claims and leases the canonical job from PostgreSQL, executes it, and persists its outcome. A missed wake-up cannot lose work; polling and lease recovery remain authoritative. The Backend validates persisted outcomes and exposes authorized job status/results to the Web Application. The Agent Runtime Gateway produces interactive jobs; the Document Processing Runner produces document jobs only after a successful parse; an edit revision is created by the producer for that workload type.
 
