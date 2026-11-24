@@ -2,9 +2,10 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
     !identifiers flat
     !impliedRelationships false
 
-    // Architecture sources: this DSL, docs/01-purpose-and-scope.md through docs/16-domain-model.md, and adrs/.
+    // Architecture sources: this DSL, docs/01-purpose-and-scope.md through docs/17-chart-presentation-contract.md, and adrs/.
     // Authoritative implementation contract: docs/15-implementation-contract.md (ADR-0025); TA clarifications win over older brief values.
     // DDD model for Backend API, Background Worker, and Agent Runtime: docs/16-domain-model.md (ADR-0024).
+    // Internal chart contract and Web rendering boundary: docs/17-chart-presentation-contract.md (ADR-0028).
     // Evaluation references: docs/arka_dataset/README_FA.md and output_contract/*.json are read-only.
     // PostgreSQL is the selected product database; any engine with identical results is permitted (ADR-0002).
     // SQLite is an external test oracle for reference SQL only. It is not a runtime container.
@@ -40,6 +41,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 "architecture.style" "Modular Monolith with DDD bounded contexts (ADR-0024)"
                 "implementation.contract" "docs/15-implementation-contract.md (ADR-0025)"
                 "domain.model" "docs/16-domain-model.md (ADR-0024)"
+                "chart.presentation.contract" "docs/17-chart-presentation-contract.md (ADR-0028)"
                 "database.decision" "PostgreSQL 18 selected; any engine with identical results permitted"
                 "agent.boundary" "One bounded AI agent; deterministic core outside the agent"
                 "budget.minutes_per_day" "5"
@@ -50,14 +52,14 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 "kpi.parity.tolerance" "±1% (dev and evaluation); zero only for text-to-JSON number matching"
             }
 
-            webApp = container "Web Application" "Persian RTL web application. It provides the three required management interfaces." "React 19, TypeScript, Vite" "Web" {
-                chatUi = component "Conversational Assistant UI" "Shows reports and answers. It accepts scoped questions, uploads, and manager operations." "Web UI" "Web" {
+            webApp = container "Web Application" "Persian RTL management UI. Maps authorized ChartSpec records to ECharts options in the browser and preserves values, ordering, units, targets, and lineage. Shows validated content when a chart is unavailable." "React 19, TypeScript, Vite, Apache ECharts" "Web" {
+                chatUi = component "Conversational Assistant UI" "Shows validated reports and answers with optional authorized charts. Accepts scoped questions, uploads, and manager operations." "Web UI" "Web" {
                     url "{workspace}/documentation/DIDRAH#conversational-assistant-ui"
                 }
-                dashboardUi = component "Role-Based Dashboard UI" "Shows authorized KPIs, targets, trends, drill-downs, decisions, and open actions." "Web UI" "Web" {
+                dashboardUi = component "Role-Based Dashboard UI" "Shows authorized KPIs, targets, trends, drill-downs, decisions, and open actions. Renders the ChartSpec records returned with dashboard data." "Web UI" "Web" {
                     url "{workspace}/documentation/DIDRAH#role-based-dashboard-ui"
                 }
-                workflowUi = component "Workflow Control Room UI" "Shows WF1-WF3, stage SLA, bottlenecks, escalations, and pending decisions. Senior Manager only." "Web UI" "Web,ExecutiveOnly" {
+                workflowUi = component "Workflow Control Room UI" "Shows WF1-WF3, stage SLA, bottlenecks, escalations, and pending decisions with authorized charts when available. Senior Manager only." "Web UI" "Web,ExecutiveOnly" {
                     url "{workspace}/documentation/DIDRAH#workflow-control-room-ui"
                 }
             }
@@ -65,7 +67,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             backendApi = container "Backend API" "Authorizes requests, creates durable jobs, validates outcomes, and delivers results. DDD contexts: Identity & Access, Manager Interaction, Analysis Coordination, Decision Governance, Publication & Delivery, Configuration, Audit (docs/16-domain-model.md)." "ASP.NET Core, .NET 10 LTS, REST/JSON, OpenAPI" "API" {
                 properties {
                     "ddd.contexts" "Identity & Access, Manager Interaction, Analysis Coordination, Decision Governance, Publication & Delivery, Configuration, Audit"
-                    "ddd.aggregates" "AccessPolicy (Grant[]), AgentJob, Decision (DecisionCard + FollowUp[]), ReportVersion, ExportBatch"
+                    "ddd.aggregates" "AccessPolicy (Grant[]), AgentJob, Decision (DecisionCard + FollowUp[]), ReportVersion (ChartSpecRef[]), ExportBatch"
                     "ddd.use_cases" "SubmitManagerQuestion, SubmitUpload, ConfirmDecision, ReviewDecisionCard, RecordFollowUp, CloseSignal, ReferSignal, SetManagerPriority, ChangeKpiTarget, ChangeKpiThreshold, PublishReport, ExportSubmission, ActivateConfiguration, ActivateOrganizationRevision, StartRun, CloseRun, ReadJobStatus, ReadScopedReport"
                     "ddd.ports" "IAgentJobRepository, IDecisionRepository, IReportVersionRepository, IAccessPolicyRepository, IAuditLog, IEvidencePort, IScopedQueryPort, IClockPort"
                     "ddd.anti_corruption" "Source/upload text is data; LLM output is a candidate only; provider API translated at Model Gateway"
@@ -101,16 +103,16 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
 
                 group "04 Validate and Deliver" {
-                    outputValidator = component "Output Validator" "Checks schema, values, evidence, scope, recipient, and response rules. It requires two independent evidence references for a reported cause and can release the deterministic no-narrative fallback." "Deterministic validator" "Governance" {
+                    outputValidator = component "Output Validator" "Checks schema, values, evidence, scope, recipient, and response rules. Validates optional ChartIntent against permitted chart type, measure, period, grouping, and approved query lineage. Requires two independent evidence references for a reported cause and can release the deterministic no-narrative fallback." "Deterministic validator" "Governance" {
                         url "{workspace}/documentation/DIDRAH#output-validator"
                     }
-                    publisherV2 = component "Publisher" "Atomically publishes validated canonical JSON or deterministic fallback text." "Deterministic publication module" "Processing" {
+                    publisherV2 = component "Publisher" "Atomically publishes validated canonical JSON or deterministic fallback text. Links internal report charts to the immutable report version. Restatements get new version-linked charts." "Deterministic publication module" "Processing" {
                         url "{workspace}/documentation/DIDRAH#publisher"
                     }
-                    submissionExporter = component "Submission Exporter" "Validates and atomically exports approved brief and QA artifacts under OUTPUT_DIR." "Deterministic export module" "Processing" {
+                    submissionExporter = component "Submission Exporter" "Validates and atomically exports only formal brief and QA fields under OUTPUT_DIR." "Deterministic export module" "Processing" {
                         url "{workspace}/documentation/DIDRAH#submission-exporter"
                     }
-                    reportApi = component "Report and Dashboard API" "Reads published reports, dashboards, and authorized agent job status, and returns validated answers or explicit failures. Absorbs the former Agent Job Status API." "Deterministic delivery API" "API" {
+                    reportApi = component "Report and Dashboard API" "Rechecks audience, purpose, and scope. Reads report charts for the exact published version. Builds and stores deterministic interactive ChartSpec records from validated ChartIntent and persisted bounded results. Returns a PresentationResponse with validated content and optional charts, authorized job status, or an explicit failure." "Deterministic delivery API" "API" {
                         url "{workspace}/documentation/DIDRAH#report-and-dashboard-api"
                     }
                     auditService = component "Audit Service" "Records query, model, validation, cost, and failure evidence." "Deterministic module" "Governance" {
@@ -156,7 +158,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 signalEngine = component "Signal Engine" "Maintains deterministic signal lifecycles (new/ongoing/escalated), ranks with versioned manager-priority configuration, escalates by crit or warn dwell time, suppresses unchanged repeats, applies unfavorable-direction-only R5, and groups executive co-causes. Guardrail breaches arrive as signals." "Deterministic rules" "Analytics" {
                     url "{workspace}/documentation/DIDRAH#signal-engine"
                 }
-                reportEvidenceBuilderV2 = component "Report Evidence Builder" "Builds one pinned evidence package and model-independent canonical report per job from approved facts, signals, and stored follow-up assessments. It can build an internal deterministic chart specification." "Deterministic report evidence assembly" "Reporting" {
+                reportEvidenceBuilderV2 = component "Report Evidence Builder" "Builds a pinned evidence package and model-independent canonical report from approved facts, signals, and follow-up assessments. Builds ordered ChartSpec records from pinned values and approved query lineage under a versioned chart policy. Stores them with the report candidate, snapshot, and manager scope." "Deterministic report evidence assembly" "Reporting" {
                     url "{workspace}/documentation/DIDRAH#report-evidence-builder"
                 }
                 decisionEffectEvaluator = component "Decision Effect Evaluator" "Evaluates KPI change and guardrails with workload normalization or a comparable-case baseline. The reference schema permits improved, worsened, no_change, and too_early; internal not_isolatable is never reported as no effect. A guardrail breach emits a signal. No LLM." "Deterministic evaluation module" "Decision" {
@@ -179,7 +181,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
             }
 
-            postgres = container "PostgreSQL" "The only product database. It stores product state, analytical results, access policy, checkpoints, and audit records." "PostgreSQL 18" "Database" {
+            postgres = container "PostgreSQL" "The only product database. Stores product state, analytical results, access policy, checkpoints, audit records, persisted bounded query results, and scoped ChartSpec records linked to report or answer versions." "PostgreSQL 18" "Database" {
                 url "{workspace}/documentation/DIDRAH#postgresql-product-database"
                 properties {
                     "schemas.proposed" "ingest, core, org, semantic, analytics, workflow, reporting, document, decision, agent, audit"
@@ -204,7 +206,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                     "model.temperature" "0"
                     "model.fallback" "Report with correct numbers and no LLM narrative on provider failure"
                 }
-                agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report, interactive, or document decision-card graph. Produces structured candidates only; checkpoints are written through ICheckpointRepository." "LangGraph runtime" "AI" {
+                agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report, interactive, or document decision-card graph. Produces structured candidates and may propose a ChartIntent with chart type, measure, period, and grouping for interactive answers. Authoritative chart values come from approved deterministic data. Writes checkpoints through ICheckpointRepository." "LangGraph runtime" "AI" {
                     url "{workspace}/documentation/DIDRAH#bounded-agent-orchestrator"
                 }
                 agentJobRunner = component "Agent Job Runner" "Claims leased jobs, runs the bounded graph, and persists a candidate or terminal failure." "PostgreSQL-backed unified agent job runner" "AI" {
@@ -226,21 +228,22 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         reportScenarioReplay = element "Replay Command" "Scheduler and Replay Runner" "Resolves clock and profile, then starts one reporting day." "ScenarioStep,ScenarioScheduler"
         reportScenarioRunStatus = element "Run Status Client" "Scheduler and Replay Runner" "Starts and monitors the run through the Backend Run Coordinator." "ScenarioStep,ScenarioScheduler"
         reportScenarioRunCoordinator = element "Run Coordinator" "Backend API" "Creates the pinned plan, monitors terminal jobs, and closes the run." "ScenarioStep,ScenarioBackend"
-        reportScenarioPostgres = element "PostgreSQL" "Job and report store" "Stores jobs, pinned inputs, reports, run status, and receipts." "ScenarioStep,ScenarioDatabase"
+        reportScenarioPostgres = element "PostgreSQL" "Job and report store" "Stores jobs, pinned inputs, reports, version-linked ChartSpec records, run status, and receipts." "ScenarioStep,ScenarioDatabase"
         reportScenarioRunStage = element "Run Stage Coordinator" "Background Worker" "Claims Ready jobs and invokes stages from stored dependencies." "ScenarioStep,ScenarioWorker"
         reportScenarioIngestion = element "Ingestion Coordinator" "Background Worker" "Runs source parsing, normalization, and data-quality checks in-process." "ScenarioStep,ScenarioWorker"
         reportScenarioSnapshot = element "Snapshot Service" "Background Worker" "Creates the pinned Snapshot and builds reproducible projections in-process." "ScenarioStep,ScenarioWorker"
         reportScenarioKpi = element "KPI Calculator" "Background Worker" "Calculates approved KPIs using definitions from Semantic Registry." "ScenarioStep,ScenarioWorker"
         reportScenarioWorkflow = element "Workflow Engine" "Background Worker" "Reconstructs WF1-WF3 and calculates stage, SLA, backlog, and bottleneck observations." "ScenarioStep,ScenarioWorker"
         reportScenarioSignal = element "Signal Engine" "Background Worker" "Detects, groups, ranks, suppresses, and escalates deterministic signals." "ScenarioStep,ScenarioWorker"
-        reportScenarioEvidenceBuilder = element "Report Evidence Builder" "Background Worker" "Stores a pinned evidence package and canonical report without a model call." "ScenarioStep,ScenarioWorker"
+        reportScenarioEvidenceBuilder = element "Report Evidence Builder" "Background Worker" "Stores a pinned evidence package, canonical report, and deterministic ChartSpec records without a model call." "ScenarioStep,ScenarioWorker"
         reportScenarioAgentRunner = element "Agent Job Runner" "Agent Runtime" "Claims leased jobs and persists a candidate or failure before validation." "ScenarioStep,ScenarioAgent"
         reportScenarioAuthorization = element "Authorization Service" "Backend API" "Revalidates the pinned manager scope for the agent job." "ScenarioStep,ScenarioBackend"
         reportScenarioAgent = element "Bounded Agent Orchestrator" "Agent Runtime" "Runs the bounded report narrative graph and returns a candidate only." "ScenarioStep,ScenarioAgent"
         reportScenarioModel = element "Model Gateway" "Agent Runtime" "Applies shared budget and model limits and returns a completion or explicit failure." "ScenarioStep,ScenarioAgent"
         reportScenarioValidator = element "Output Validator" "Backend API" "Validates the report, evidence, scope, schema, and response rules." "ScenarioStep,ScenarioBackend"
-        reportScenarioPublisher = element "Publisher" "Backend API" "Publishes a validated report or authorized fallback and records a receipt." "ScenarioStep,ScenarioBackend"
-        reportScenarioDelivery = element "Report and Dashboard API / Web Application" "Report delivery" "Reads and delivers each published manager report." "ScenarioStep,ScenarioWeb"
+        reportScenarioPublisher = element "Publisher" "Backend API" "Publishes a validated report or authorized fallback, links chart records to the report version, and records a receipt." "ScenarioStep,ScenarioBackend"
+        reportScenarioDelivery = element "Report and Dashboard API" "Backend API" "Rechecks audience and scope and reads the requested report with its exact-version charts." "ScenarioStep,ScenarioBackend"
+        reportScenarioWeb = element "Web Application" "Report delivery" "Renders the published content and maps authorized ChartSpec records to ECharts options." "ScenarioStep,ScenarioWeb"
 
         reportScenarioReplay -> reportScenarioRunStatus "01. Prepare reporting day" "In-process function call"
         reportScenarioRunStatus -> reportScenarioRunCoordinator "02. Start pinned run" "HTTPS/JSON"
@@ -252,7 +255,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         reportScenarioRunStage -> reportScenarioWorkflow "08. Rebuild workflows" "In-process function call"
         reportScenarioRunStage -> reportScenarioSignal "09. Detect and rank signals" "In-process function call"
         reportScenarioRunStage -> reportScenarioEvidenceBuilder "10. Build manager evidence" "In-process function call"
-        reportScenarioEvidenceBuilder -> reportScenarioPostgres "11. Store package; unlock agent job" "PostgreSQL protocol over TLS"
+        reportScenarioEvidenceBuilder -> reportScenarioPostgres "11. Store evidence and ChartSpec; unlock agent job" "PostgreSQL protocol over TLS"
         reportScenarioAgentRunner -> reportScenarioPostgres "12. Claim agent job" "PostgreSQL protocol over TLS"
         reportScenarioAgentRunner -> reportScenarioAuthorization "13. Recheck manager scope" "Authenticated HTTPS/JSON"
         reportScenarioAgentRunner -> reportScenarioAgent "14. Run report graph" "In-process function call"
@@ -262,9 +265,11 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         reportScenarioAgentRunner -> reportScenarioPostgres "18. Persist agent outcome" "PostgreSQL protocol over TLS"
         reportScenarioAgentRunner -> reportScenarioValidator "19. Validate persisted outcome" "Authenticated HTTPS/JSON"
         reportScenarioValidator -> reportScenarioPublisher "20. Release report or fallback" "In-process function call"
-        reportScenarioPublisher -> reportScenarioPostgres "21. Publish; unlock next job" "PostgreSQL protocol over TLS"
-        reportScenarioPostgres -> reportScenarioDelivery "22. Deliver manager report" "PostgreSQL protocol over TLS"
-        reportScenarioRunCoordinator -> reportScenarioPostgres "23. Close terminal run" "PostgreSQL protocol over TLS"
+        reportScenarioPublisher -> reportScenarioPostgres "21. Publish report version with chart links; unlock next job" "PostgreSQL protocol over TLS"
+        reportScenarioRunCoordinator -> reportScenarioPostgres "22. Close terminal run" "PostgreSQL protocol over TLS"
+        reportScenarioWeb -> reportScenarioDelivery "23. Request published manager report" "HTTPS/JSON"
+        reportScenarioDelivery -> reportScenarioPostgres "24. Read authorized report and exact-version ChartSpec" "PostgreSQL protocol over TLS"
+        reportScenarioDelivery -> reportScenarioWeb "25. Return PresentationResponse for rendering" "HTTPS/JSON"
 
         // Scenario-only mirrors: durable jobs are committed before any Runtime wake-up.
         chatDecisionManager = element "A - Manager" "Scenario A - decision in manager chat" "Submits a request and confirms, edits, or rejects the validated card." "ScenarioStep,ScenarioActor"
@@ -450,7 +455,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         inputDataset -> worker "Nightly source drops" "Read-only filesystem"
         inputDataset -> schedulerReplay "Replay inputs" "Read-only filesystem: JSON, CSV, and Markdown"
         backendApi -> identityProvider "Validate identity" "OIDC over HTTPS or internal authentication"
-        webApp -> backendApi "Product API" "HTTPS, REST/JSON, W3C traceparent"
+        webApp -> backendApi "Product API and authorized presentation reads" "HTTPS, REST/JSON, W3C traceparent"
         schedulerReplay -> backendApi "Run control" "HTTPS, REST/JSON"
         schedulerReplay -> postgres "Replay state" "PostgreSQL protocol over TLS"
         backendApi -> agentRuntime "Optional job-ID wake-up" "Authenticated HTTPS wake-up with job_id"
@@ -491,7 +496,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         }
 
         // Request routing and manager commands.
-        webApp -> reportApi "Request report reads" "HTTPS/JSON" {
+        webApp -> reportApi "Request report, dashboard, workflow, or answer presentation" "HTTPS/JSON" {
             tags "ControlFlow"
         }
         webApp -> configurationService "Submit KPI, organization, or manager-priority candidate" "HTTPS/JSON" {
@@ -574,7 +579,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         agentJobRunner -> agentOrchestrator "Run bounded job graph" "In-process function call" {
             tags "PrimaryFlow"
         }
-        agentJobRunner -> outputValidator "Validate persisted outcome" "Internal authenticated API" {
+        agentJobRunner -> outputValidator "Validate persisted candidate and optional ChartIntent" "Internal authenticated API" {
             tags "PrimaryFlow"
         }
         agentOrchestrator -> agentModelGateway "Request bounded model work" "In-process function call" {
@@ -621,34 +626,34 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         decisionTracker -> documentProcessingRunner "Request document revision" "In-process function call" {
             tags "Feedback"
         }
-        outputValidator -> reportApi "Release valid result or failure" "In-process function call" {
+        outputValidator -> reportApi "Make validated answer and optional validated ChartIntent or failure available for delivery" "In-process function call" {
             tags "PrimaryFlow"
         }
-        reportApi -> authorizationService "Recheck audience and purpose" "In-process function call" {
+        reportApi -> authorizationService "Recheck audience, purpose, and scope" "In-process function call" {
             tags "PolicyCheck"
         }
         reportApi -> queryGateway "Run dashboard or workflow query" "In-process function call" {
             tags "DataFlow"
         }
-        reportApi -> postgres "Read reports and failure states" "PostgreSQL protocol over TLS" {
+        reportApi -> postgres "Read scoped versions, chart records, and bounded results; store answer-linked ChartSpec" "PostgreSQL protocol over TLS" {
             tags "DataFlow"
         }
-        reportApi -> webApp "Return response or failure" "HTTPS/JSON" {
+        reportApi -> webApp "Return PresentationResponse, authorized job status, or failure" "HTTPS/JSON" {
             tags "PrimaryFlow"
         }
         auditService -> postgres "Store restricted audit evidence" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
-        publisherV2 -> postgres "Publish report; unlock next job" "PostgreSQL protocol over TLS" {
+        publisherV2 -> postgres "Publish report with version-linked chart references; unlock next job" "PostgreSQL protocol over TLS" {
             tags "ControlFlow"
         }
         publisherV2 -> auditService "Record publication evidence" "In-process function call" {
             tags "ControlFlow"
         }
-        publisherV2 -> submissionExporter "Forward validated report" "In-process function call" {
+        publisherV2 -> submissionExporter "Forward formal validated brief payload" "In-process function call" {
             tags "PrimaryFlow"
         }
-        outputValidator -> submissionExporter "Forward validated QA result" "In-process function call" {
+        outputValidator -> submissionExporter "Forward formal validated QA payload" "In-process function call" {
             tags "PrimaryFlow"
         }
         submissionExporter -> postgres "Read results; store export receipt" "PostgreSQL protocol over TLS" {
@@ -699,7 +704,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         runStageCoordinatorV2 -> workflowEngine "Rebuild workflows" "In-process function call"
         runStageCoordinatorV2 -> signalEngine "Detect and rank signals" "In-process function call"
         runStageCoordinatorV2 -> reportEvidenceBuilderV2 "Build manager evidence" "In-process function call"
-        reportEvidenceBuilderV2 -> postgres "Read stored follow-up assessments; store package; unlock agent job" "PostgreSQL protocol over TLS"
+        reportEvidenceBuilderV2 -> postgres "Read stored follow-up assessments; store evidence and report-linked ChartSpec; unlock agent job" "PostgreSQL protocol over TLS"
 
         outputValidator -> publisherV2 "Release package or fallback" "In-process function call"
 
@@ -788,7 +793,6 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             exclude "outputValidator -> queryGateway"
             exclude "outputValidator -> authorizationService"
             exclude "outputValidator -> evidenceService"
-            exclude "reportApi -> authorizationService"
             exclude "decisionTracker -> agentGateway"
             exclude "queryGateway -> auditService"
             exclude "outputValidator -> auditService"
@@ -799,7 +803,6 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             exclude "decisionTracker -> postgres"
             exclude "queryGateway -> postgres"
             exclude "agentJobRunner -> postgres"
-            exclude "reportApi -> postgres"
             exclude "auditService -> postgres"
             exclude "submissionExporter -> postgres"
             exclude "outputValidator -> submissionExporter"
@@ -847,7 +850,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
         // Numbered end-to-end scenario for the revised L3 architecture.
         custom S7_ReportGenerationScenario "04.7 - Scenario - Report Generation" "Primary report-generation path across Scheduler, Backend API, Background Worker, and PostgreSQL." {
-            include reportScenarioReplay reportScenarioRunStatus reportScenarioRunCoordinator reportScenarioPostgres reportScenarioRunStage reportScenarioIngestion reportScenarioSnapshot reportScenarioKpi reportScenarioWorkflow reportScenarioSignal reportScenarioEvidenceBuilder reportScenarioAgentRunner reportScenarioAuthorization reportScenarioAgent reportScenarioModel reportScenarioValidator reportScenarioPublisher reportScenarioDelivery
+            include reportScenarioReplay reportScenarioRunStatus reportScenarioRunCoordinator reportScenarioPostgres reportScenarioRunStage reportScenarioIngestion reportScenarioSnapshot reportScenarioKpi reportScenarioWorkflow reportScenarioSignal reportScenarioEvidenceBuilder reportScenarioAgentRunner reportScenarioAuthorization reportScenarioAgent reportScenarioModel reportScenarioValidator reportScenarioPublisher reportScenarioDelivery reportScenarioWeb
             autoLayout tb 50 40
         }
 

@@ -93,7 +93,7 @@ The shared library must not:
 - Contain React or ECharts code
 - Select colors, fonts, spacing, or responsive layout
 
-The implementation location is `src/shared-dotnet/chart-presentation`. The physical location does not make the library a C4 component.
+The repository location and folder layout are pending a separate architecture decision. The library remains a build-time dependency of Backend API and Background Worker. Its future physical location will not make it a C4 component.
 
 ## 4. Scheduled report chart flow
 
