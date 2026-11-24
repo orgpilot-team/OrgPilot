@@ -46,3 +46,4 @@ architecture/structurizr/.perch
 /.perch
 
 node_modules/
+docs/Analytics/mermaid
