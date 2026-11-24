@@ -5,7 +5,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
     // Architecture sources: this DSL, docs/01-purpose-and-scope.md through docs/16-domain-model.md, and adrs/.
     // Authoritative implementation contract: docs/15-implementation-contract.md (ADR-0025); TA clarifications win over older brief values.
     // DDD model for Backend API, Background Worker, and Agent Runtime: docs/16-domain-model.md (ADR-0024).
-    // Evaluation references: DataSet/arka_dataset/README_FA.md and output_contract/*.json are read-only.
+    // Evaluation references: docs/arka_dataset/README_FA.md and output_contract/*.json are read-only.
     // PostgreSQL is the selected product database; any engine with identical results is permitted (ADR-0002).
     // SQLite is an external test oracle for reference SQL only. It is not a runtime container.
     // Status: Accepted for implementation under the evaluation profile; open decisions remain in docs/08-risks-and-open-issues.md.

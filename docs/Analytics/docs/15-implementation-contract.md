@@ -118,7 +118,7 @@ A stage bottleneck goes first to the stage owner. If the whole-workflow KPI (`K_
 
 ## 11. Output contract
 
-The read-only `DataSet/arka_dataset/output_contract/brief_schema.json` file is the field-level source of truth. Do not redefine or extend that schema in architecture documents. Each manager-day JSON requires `report_day`, `manager_id`, `items`, `numbers`, `data_issues`, and `text_fa`. Optional fields, including `open_items`, `decision_followups`, and `mentioned_staff_ids`, are used only as the schema permits. Item statuses are exactly `new`, `escalated`, and `ongoing`. Reports and UI are Persian and RTL. Internal chart specifications and narrative-generation state are not new submission fields.
+The read-only `docs/arka_dataset/output_contract/brief_schema.json` file is the field-level source of truth. Do not redefine or extend that schema in architecture documents. Each manager-day JSON requires `report_day`, `manager_id`, `items`, `numbers`, `data_issues`, and `text_fa`. Optional fields, including `open_items`, `decision_followups`, and `mentioned_staff_ids`, are used only as the schema permits. Item statuses are exactly `new`, `escalated`, and `ongoing`. Reports and UI are Persian and RTL. Internal chart specifications and narrative-generation state are not new submission fields.
 
 ## 12. Design quality bar
 

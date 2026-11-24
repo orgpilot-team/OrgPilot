@@ -8,7 +8,6 @@ playwright-report/
 test-results/
 
 # Temporary and generated output
-tmp/
 output/
 *.tmp
 *.log
