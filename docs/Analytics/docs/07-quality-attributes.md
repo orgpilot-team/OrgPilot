@@ -36,11 +36,51 @@ The evaluation requirement is at most five minutes for each processing day and a
 
 The Acceptance Test Harness measures replay duration, manager-output coverage, model usage, and total cost without changing the daily product path.
 
+The five-minute daily Evaluation limit does not define Web Application performance. The graded Evaluation does not execute the Web Application.
+
+## Frontend quality attributes
+
+Frontend quality applies to the complete Classic experience. Numeric load, navigation, chart-rendering, and memory budgets remain open until the team approves a measurement profile for ordinary office hardware, browser, network, viewport, and data size. Proposed values must not be recorded as measured results.
+
+| Attribute | Required quality rule |
+|---|---|
+| Initial application load | Classic Mode does not load Three.js, 3D models, or Modern-only assets. Core fonts, icons, and required runtime assets do not depend on a runtime CDN. Measure transferred assets and time to usable content on the approved profile. |
+| Navigation responsiveness | Show immediate pending feedback. Cancel old requests when possible. Ignore responses from an old session or scope. Preserve keyboard focus or move it to a documented destination. |
+| Chart rendering | Validate the response before mapping. Test each supported chart type with the largest permitted series and point limits. A slow or failed chart does not block validated content. |
+| Memory | Caches are bounded. Repeated route entry and exit must not retain ECharts instances, React Flow listeners, observers, subscriptions, or abandoned responses. |
+| CPU and GPU | Classic Mode has no continuous render loop. Nonessential animation stops when content is hidden. Reduced-motion preferences are respected. |
+| Resource disposal | Dispose ECharts instances, resize observers, subscriptions, timers, event listeners, animation controls, and future renderer resources when their owner unmounts or changes. |
+| Responsive layout | Test an approved viewport matrix. A responsive change must not remove required information or actions or change business meaning. The exact matrix remains open. |
+| Accessibility | Keyboard operation, visible focus, screen-reader names, non-color status cues, reduced motion, accessible errors, and text or table alternatives for charts are required. WCAG 2.2 AA is proposed in doc 18; final acceptance remains open. |
+| Persian and RTL | Test Persian-first layouts, mixed-direction content, technical identifiers, numbers, long labels, truncation, and zoom. The UI does not round an authoritative KPI independently. |
+| Failure isolation | A visualization error boundary isolates chart or workflow rendering failures. Validated report, answer, and allowed actions remain available. |
+| Scope isolation | Cache and pending-request tests prove that identity or scope changes cannot display data from the previous principal or scope. |
+
+Frontend quality tests must cover loading, empty, unavailable, forbidden, incomplete, validation-failed, and service-failed states. These states must not be merged into one generic empty state.
+
+Mock-based Design System, RTL, layout, interaction, accessibility, and UX work can start before production API and authentication contracts are complete. Production contract tests, session tests, scope-isolation tests, and security-sensitive command tests wait for their owning decisions.
+
+## Future Modern quality attributes
+
+Modern Mode remains deferred. When approved, it must add these gates without weakening Classic Mode:
+
+- Renderer and assets are lazy-loaded only for a selected Modern area.
+- Rendering starts only when required and stops when the scene is hidden or inactive.
+- A configurable initial 30 FPS target applies only to active 3D rendering.
+- The target is measured with an approved profile for ordinary office hardware and browsers.
+- Scene, texture, geometry, material, listener, and GPU resources are disposed.
+- Unsupported hardware, browser failure, renderer failure, or asset failure returns the complete Classic experience.
+- Modern code and assets are absent from the Classic initial-load path.
+
+The 30 FPS value is a proposed target, not a measured result and not a target for React, ECharts, or Motion.
+
 ## Maintainability
 
 A new source, KPI, organization node, or manager level should use a versioned adapter, registry entry, or configuration change. It should not require a pipeline redesign.
 
 Backend chart contracts remain independent of ECharts. A renderer change does not change pinned chart values, lineage, authorization, or Submission schemas.
+
+Frontend API types are generated from the versioned Backend OpenAPI contract. A build or CI check must detect contract-generation drift. Renderer-neutral types do not import frontend rendering libraries.
 
 ## Auditability
 

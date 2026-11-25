@@ -17,6 +17,12 @@ The active risk and decision record is this document together with the ADR Statu
 | Export escapes `OUTPUT_DIR` or leaves a partial file | Backend API | Path containment and atomic rename |
 | Telemetry exposes restricted information | All instrumented services | Data minimization and telemetry leakage tests |
 | Observability failure stops core work | Runtime operations | Optional fail-open collector and Langfuse path |
+| Browser cache exposes data after an identity or scope change | Web Application and Backend API security boundary | Scope-keyed cache, invalidation, request cancellation, stale-response rejection, and leakage tests |
+| Unsafe report, label, tooltip, or assistant content executes in the browser | Web Application | Text-first rendering, fixed local renderers, runtime validation, length limits, and production security headers |
+| Frontend wire types drift from Backend responses | Backend API and Web Application | Versioned OpenAPI authority, generated TypeScript types, runtime validation, and contract-drift checks |
+| An unsupported or oversized chart changes or hides validated content | Backend API and Web Application | Finite allowlist, accepted limits, explicit unavailable state, and visualization failure isolation |
+| UI framework defaults replace DIDRAH identity or weaken RTL and accessibility | Web Application | Central Design System, semantic tokens, RTL tests, accessibility gates, and UX review |
+| Deferred Modern code increases Classic load or creates a hardware dependency | Web Application | No first-release Three.js dependency, lazy loading, visibility-aware rendering, resource disposal, and complete Classic fallback |
 | Hardcoded behavior fails on hidden data | All deterministic services | Contract-driven processing and hidden-data tests |
 | Replay reads future data | Scheduler and Replay Runner | Pinned cutoff and ordered replay tests |
 | Retention or restore evidence is incomplete | Operations | ADR-0011 accepted for evaluation; production retention open |
@@ -43,6 +49,17 @@ The active risk and decision record is this document together with the ADR Statu
 | LangGraph node boundaries | Open | This document |
 | Retention and backup frequency | Open | ADR-0011 |
 | RPO and RTO | Open | ADR-0011 |
+| Frontend authentication product and protocol | Open | `04-security-and-trust.md`, `09-web-application-components.md` |
+| Frontend credential and token storage | Open; do not select before authentication decision | `04-security-and-trust.md` |
+| Access Projection Matrix entries | Open; blocks production scoped integration | `04-security-and-trust.md` |
+| Exact OpenAPI Presentation wire schema and artifact path | Open; blocks production API integration | `17-chart-presentation-contract.md` |
+| Initial chart-type allowlist | Open; arbitrary types forbidden | `17-chart-presentation-contract.md` |
+| Chart series, point, label, and response limits | Open; silent truncation forbidden | `17-chart-presentation-contract.md` |
+| Approved numeric display contract for chart labels and tooltips | Open | `17-chart-presentation-contract.md` |
+| Frontend measurement profile and numeric performance budgets | Open | `07-quality-attributes.md` |
+| Accessibility conformance target | Proposed WCAG 2.2 AA; not yet accepted | `18-ux-and-design-system.md` |
+| Design System tokens and detailed component specifications | Open | `18-ux-and-design-system.md` |
+| Modern renderer, hardware profile, asset format, and activation policy | Deferred until Classic is complete | ADR-0029 |
 
 ## Decision rules
 

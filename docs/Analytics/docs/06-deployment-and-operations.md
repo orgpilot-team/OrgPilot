@@ -6,7 +6,7 @@ DIDRAH has two deployment profiles over the same logical containers and processe
 
 The approved runtime has separate processes and containers:
 
-1. **web** serves the React, TypeScript, Vite, and Apache ECharts application.
+1. **web** serves the React 19, TypeScript, Vite, Ant Design, Motion, Apache ECharts, React Flow, CSS, and SVG application.
 2. **backend-api** runs ASP.NET Core on .NET 10 LTS.
 3. **background-worker** runs the .NET 10 Worker Service.
 4. **scheduler-replay** runs a .NET 10 console or Worker Service process.
@@ -21,7 +21,9 @@ Docker Compose does not add a message broker, distributed cache, service mesh, o
 
 The graded evaluation uses one image and one non-interactive `docker run` (ADR-0021). This supersedes Compose only for evaluation packaging. The logical C4 containers are unchanged and run as separate processes inside the image, with their own database roles and contracts. The Web Application is served only by the Compose development profile; the evaluator reads contract JSON from `OUTPUT_DIR` and does not use the web interfaces.
 
-ECharts is a Web Application build dependency. The built Web Application contains the required chart code and does not load ECharts from a run-time CDN. The Shared Chart Presentation Library is a build dependency of Backend API and Background Worker. Neither dependency changes the evaluation output paths or requires chart rendering during the graded run.
+ECharts, Ant Design, Motion, and React Flow are Web Application build dependencies. The built Web Application contains required Classic code and core presentation assets. It does not load required UI, chart, font, or icon dependencies from a run-time CDN. The Shared Chart Presentation Library is a build dependency of Backend API and Background Worker. These dependencies do not change the evaluation output paths or require Web Application execution during the graded run.
+
+Classic Mode is the complete first-release experience and does not load Three.js, 3D models, or Modern-only assets. Modern Mode is deferred. If it is approved later, its renderer code and assets are lazy-loaded from the same Web deployment. Modern does not add a container, process, deployment node, network relationship, or required hardware capability. Renderer or asset failure returns the complete Classic experience.
 
 All dependencies are installed at image build time. Nothing is installed at run time. The entrypoint reads `DATA_DIR` and `OUTPUT_DIR` from environment variables, processes drops from `day_000` through `day_090` in order, applies scripted manager input on its own day, produces the morning reports for days 62 through 91, exports them below `OUTPUT_DIR`, and exits with code zero. The PostgreSQL data directory is created fresh inside the container at run time and is not baked into the image, so both evaluator runs start from identical state.
 

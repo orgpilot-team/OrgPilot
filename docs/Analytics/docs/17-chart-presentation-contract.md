@@ -70,6 +70,10 @@ It contains:
 
 The content object remains the source of report or answer text. A chart does not add a new business claim. The response is not written to `OUTPUT_DIR`.
 
+Chart capability is mandatory for the product. A specific response can contain zero charts when no chart is requested, the result shape is incompatible, or chart construction or rendering fails. Validated content remains available.
+
+The exact versioned JSON wire schema for `PresentationResponse`, `ChartSpec`, series, points, targets, states, and lineage must be published through the Backend OpenAPI contract before production frontend integration. This document defines semantic authority. OpenAPI defines exact wire names, required fields, nullability, formats, enumerations, and compatibility metadata.
+
 ## 3. Shared Chart Presentation Library boundary
 
 The shared library provides:
@@ -125,8 +129,11 @@ The Web Application maps `ChartSpec` to an ECharts option. The mapping owns:
 - Responsive layout
 - Keyboard and screen-reader support
 - Loading, empty, unavailable, and error states
+- ECharts initialization, update, resize, failure isolation, and disposal
 
 The mapping must preserve point order, values, units, target values, and evidence identity. It must not calculate, regroup, interpolate, or correct business data.
+
+The mapping must not round an authoritative KPI. If a tooltip, label, or table needs formatted numeric text, it uses the approved display representation or formatting metadata from the accepted wire contract. The exact numeric display contract remains open.
 
 ## 7. Security and validation
 
@@ -140,8 +147,12 @@ The following checks are required before delivery:
 - Point and series limits are applied.
 - Labels and text are treated as data and cannot execute code.
 - The response contains no cross-scope series or unrestricted raw rows.
+- The OpenAPI response version is supported by the Web Application.
+- The complete response passes runtime validation before it enters a cache or renderer.
 
 The browser is not an authorization boundary. Hidden series, disabled controls, or frontend filters do not replace Backend authorization.
+
+If one chart fails browser validation, the Web Application isolates that chart and shows its explicit unavailable state. It preserves the validated content and any other independently valid chart. Browser validation does not replace Backend validation or authorization.
 
 ## 8. Submission separation
 
@@ -170,4 +181,81 @@ A chart construction or rendering failure does not change the canonical report o
 | Web Application | Map `ChartSpec` to ECharts and render the chart. |
 | Submission Exporter | Export only formal brief and QA fields. |
 | Agent Runtime | Produce a candidate answer and optional `ChartIntent`; never produce authoritative chart values. |
+
+## 11. OpenAPI wire contract and TypeScript generation
+
+The Backend owns one versioned OpenAPI contract for Web Application requests and responses. The contract includes `PresentationResponse` and every nested chart type that crosses the HTTP boundary.
+
+Frontend TypeScript request and response types are generated from that contract. Do not maintain an independent handwritten TypeScript copy of `ChartIntent`, `ChartSpec`, `PresentationResponse`, series, point, target, or response-state wire types.
+
+Static TypeScript types do not validate network data. The Web Application must use runtime validation derived from the same accepted machine-readable contract before a Presentation response enters scope-sensitive cache or rendering code. The exact generator and validation library are implementation decisions. They must not create a second contract authority.
+
+The Shared Chart Presentation Library remains the semantic and deterministic construction authority for Backend and Worker code. The OpenAPI artifact is the exact Web wire authority. Contract tests must prove that serialized .NET responses conform to the published OpenAPI schema.
+
+Renderer-neutral generated types must not import React, Ant Design, Motion, ECharts, React Flow, or a future 3D renderer. ECharts-specific types begin only at the frontend mapper boundary.
+
+A build or CI check must detect a changed Backend wire contract that has not produced the corresponding generated frontend artifacts and contract tests.
+
+The exact OpenAPI file path, generation command, schema version value, and compatibility window remain open until the Backend API project structure exists. This document does not invent those values.
+
+## 12. Chart-type policy, structures, and limits
+
+The chart-type allowlist is finite and versioned. It uses DIDRAH semantic chart types, not arbitrary ECharts series names. An unlisted type is unsupported.
+
+Each allowlisted type must define:
+
+- Compatible result shapes.
+- Required category, time, series, point, target, and lineage semantics.
+- Null behavior.
+- Ordering rules.
+- Whether stacking, comparison, targets, thresholds, or multiple axes are permitted.
+- Its fixed local mapper and accessible alternative.
+
+An ECharts Custom Series is permitted only behind an approved semantic chart type. Custom rendering code is fixed frontend code. A response cannot supply JavaScript, callbacks, drawing commands, HTML, or ECharts option fragments.
+
+The exact initial allowlist remains open. It must be derived from approved manager scenarios before production chart integration. The frontend must not accept an arbitrary type while this decision is open.
+
+Exact limits are also open and must be accepted before production integration:
+
+- Maximum charts per response.
+- Maximum series per chart.
+- Maximum points per series and per chart.
+- Maximum categories, targets, lineage references, and label lengths.
+- Maximum response size where applicable.
+
+Limits are enforced during construction, before persistence, before delivery, and during browser validation. The frontend does not silently truncate, sample, regroup, or aggregate an oversized chart. The product returns an explicit chart-unavailable state unless an approved Backend policy creates a new valid bounded specification from authorized data.
+
+The exact series and point wire structures belong to OpenAPI. They must include stable identity, ordered values, nullability, unit or approved display semantics, and applicable evidence lineage. This document does not invent field names that are not yet approved.
+
+## 13. Compatibility and unsupported behavior
+
+The wire contract must define a supported-version policy before production integration. An unknown incompatible version is not mapped by best effort. It produces an explicit chart-unavailable state while validated content remains visible.
+
+An unsupported chart type is not changed automatically to another type because that change can alter meaning. The response produces an explicit unsupported state. A different chart type requires a new valid `ChartSpec` from an approved Backend policy.
+
+Additive compatibility, required-field changes, enumerations, and version retirement rules belong to the accepted OpenAPI contract. Their exact values remain open.
+
+## 14. Safe labels, tooltips, and mapping tests
+
+Labels, titles, series names, categories, empty-state text, evidence labels, and tooltip values are untrusted text.
+
+- Use fixed local tooltip and label formatters.
+- Treat response strings as text, not HTML.
+- Do not use raw HTML or executable formatter content from a response.
+- Apply approved length limits.
+- Preserve bidirectional isolation for mixed Persian and technical identifiers.
+- Do not create a new factual statement in a label, legend, tooltip, annotation, or accessible description.
+
+Frontend mapping tests are required for every allowlisted chart type. They must prove:
+
+- Input immutability.
+- Stable point and series order.
+- Exact preservation of values, `null`, units, targets, and evidence identity.
+- No browser-side KPI calculation, rounding, regrouping, interpolation, or aggregation.
+- Safe behavior for unknown versions, unsupported types, invalid labels, oversized input, and renderer failure.
+- Loading, empty, unavailable, forbidden, incomplete, and error states.
+- Keyboard and screen-reader behavior.
+- Correct initialization, update, resize, and disposal without retained renderer resources.
+
+Production API integration and mapping against real responses remain blocked until the OpenAPI schema, allowlist, limits, numeric display contract, and compatibility policy are approved. Mapper prototypes can use clearly separated non-production mock contracts and must not establish an alternative wire authority.
 
