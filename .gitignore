@@ -1,6 +1,8 @@
 # Local editor settings
 .vscode/
 .idea/
+.roo/mcp.json
+/.perch
 
 # Test and browser automation artifacts
 .playwright-cli/
@@ -32,18 +34,8 @@ venv/
 Thumbs.db
 Desktop.ini
 
-
-# Structurizr generated thumbnails and images
-/architecture/structurizr/.structurizr/**/images/
-
-# Structurizr runtime logs
-/architecture/structurizr/.structurizr/**/logs/
-.roo/mcp.json
-
-
-
-architecture/structurizr/.perch
-/.perch
-
 node_modules/
+
+# Program Specific
 docs/Analytics/mermaid
+/docs/Analytics/workspace.json
