@@ -7,7 +7,7 @@ The first four stages build the deterministic backend and its replay mechanism. 
 | No. | Stage | Main implementation scope | Completion evidence | Status |
 |---:|---|---|---|---|
 | 1 | Foundation and persistence (Walking Skeleton) | Minimal runnable .NET processes; module boundaries; PostgreSQL 18; migrations; shared contracts and infrastructure conventions | The foundational services start together, database connectivity and migrations work, and module/process boundaries are visible in code | Completed — 2026-11-26 |
-| 2 | Intake, snapshots, and KPIs | Versioned source intake; protected raw archive; canonical facts; data issues; immutable snapshots; KPI definitions, calculations, and SQLite parity | Pinned-day ingestion is repeatable; missing/late/duplicate cases behave correctly; every activated KPI translation has a passing Parity Receipt | Not started |
+| 2 | Intake, snapshots, and KPIs | Versioned source intake; protected raw archive; canonical facts; data issues; immutable snapshots; KPI definitions, calculations, and SQLite parity | Pinned-day ingestion is repeatable; missing/late/duplicate cases behave correctly; every activated KPI translation has a passing Parity Receipt | In progress — build and acceptance pending |
 | 3 | Workflows, signals, and report evidence | WF1–WF3 reconstruction; deterministic signal lifecycle, ownership, escalation, ranking; internal canonical report and evidence packages | Repeated pinned inputs produce the same workflow facts, signals, owners, ranking, numbers, and evidence references | Not started |
 | 4 | Durable execution and replay | PostgreSQL job plans and stage jobs; claim/lease/attempt/terminal state; Backend Run Coordinator; Worker stage runner; ordered replay and recovery | A deterministic replay resumes safely, survives a lost wake-up or interrupted worker, and does not read future data | Not started; job policy decision required |
 
@@ -57,6 +57,15 @@ The subsequent OrgPilot naming refactor was verified with another clean .NET bui
 - Build the **minimal Acceptance Test Harness parity path now**, not at the end of the project. Run the reference SQL in harness-only SQLite against equivalent pinned data, compare PostgreSQL results using the accepted ±1% KPI tolerance and exact null/population rules, and issue a Parity Receipt before a translated definition becomes eligible for activation.
 
 **Exit gate:** Re-ingesting the same drop is idempotent; the same pinned inputs produce the same canonical facts, snapshot and KPI results; missing/late/duplicate fixtures meet doc 15; all baseline KPI translations used by the product have passing parity evidence. The harness is an acceptance tool, not a product database or daily runtime stage.
+
+**Remaining work (2026-11-26; implementation in progress):**
+
+- Complete active configuration version selection and pinning in Snapshot Service.
+- Complete and verify schema-version/alias handling, late-arrival coverage, correction handling, and data-issue timing and null behavior.
+- Restore/build the .NET solution, apply the new EF Core migrations to PostgreSQL, and run intake, snapshot, and D+1 configuration checks.
+- Execute the Acceptance Harness for all 55 baseline KPIs, resolve parity failures, and verify repeatability and passing Parity Receipts before activation.
+
+Stage 2 code is committed, but its exit gate has not been verified. Build and test execution are deferred to a separate session.
 
 ## 3. Workflows, signals, and report evidence
 
