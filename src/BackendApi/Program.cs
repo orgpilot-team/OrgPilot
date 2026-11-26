@@ -1,3 +1,4 @@
+using OrgPilot.BackendApi.Modules.Configuration;
 using OrgPilot.Foundation.Archive;
 using OrgPilot.Foundation.Observability;
 using OrgPilot.Foundation.Persistence;
@@ -33,6 +34,10 @@ var builder = WebApplication.CreateBuilder(migrate ? [] : args);
 builder.Services.AddFoundationObservability(builder.Logging, builder.Configuration,
     migrate ? "orgpilot-database-migrate" : "orgpilot-backend-api", tracing => tracing.AddAspNetCoreInstrumentation());
 builder.Services.AddFoundationPersistence(builder.Configuration);
+var productConnection = builder.Configuration.GetConnectionString("Product")!;
+builder.Services.AddDbContext<ConfigurationDbContext>(options => ConfigurationDbContext.Configure(options, productConnection));
+builder.Services.AddScoped(_ => new ConfigurationValidator(productConnection));
+// ConfigurationService is instantiated with a trusted IConfigurationAuthority by the later authorized command path.
 
 if (migrate)
 {
@@ -41,6 +46,7 @@ if (migrate)
     await using var scope = migrationApp.Services.CreateAsyncScope();
     var db = scope.ServiceProvider.GetRequiredService<FoundationDbContext>();
     await db.Database.MigrateAsync();
+    await scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.MigrateAsync();
     migrationApp.Logger.LogInformation("Foundation migrations are applied.");
     return 0;
 }

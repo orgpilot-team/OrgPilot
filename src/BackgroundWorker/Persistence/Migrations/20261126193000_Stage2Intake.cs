@@ -40,6 +40,8 @@ public sealed class Stage2Intake : Migration
             GRANT USAGE ON SCHEMA intake, snapshots, kpi TO orgpilot_worker;
             GRANT SELECT, INSERT ON intake.batches, snapshots.snapshots, kpi.definitions, kpi.query_runs TO orgpilot_worker;
             GRANT SELECT ON kpi.parity_receipts TO orgpilot_worker;
+            GRANT USAGE ON SCHEMA kpi TO orgpilot_api;
+            GRANT SELECT ON kpi.definitions, kpi.parity_receipts TO orgpilot_api;
             """);
     }
 
