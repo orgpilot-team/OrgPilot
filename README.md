@@ -14,6 +14,8 @@
 4. برای شناخت داده‌ها، [راهنمای فارسی دیتاست آرکا](docs/arka_dataset/README_FA.md) و قراردادهای `docs/arka_dataset/output_contract/` را بخوانید.
 5. پیش از تغییر معماری، فرایند اعتبارسنجی در [راهنمای workspace معماری](docs/Analytics/README.md) را اجرا کنید.
 
+برنامهٔ ترتیبی چهار مرحلهٔ نخست پیاده‌سازی بک‌اند در [Backend development stages](docs/DEVELOPMENT_STAGES.md) ثبت شده است. وضعیت و شواهد تکمیل هر مرحله در همان سند به‌روز می‌شود.
+
 ## نقشه مخزن
 
 | مسیر | محتوا و کاربرد |
