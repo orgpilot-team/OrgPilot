@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-DIDRAH must present charts in the Web Application for reports, chat answers, dashboards, and workflow views. The graded evaluation does not run the Web Application and accepts only the formal brief and QA JSON files below `OUTPUT_DIR`. The formal schemas do not contain chart fields.
+OrgPilot must present charts in the Web Application for reports, chat answers, dashboards, and workflow views. The graded evaluation does not run the Web Application and accepts only the formal brief and QA JSON files below `OUTPUT_DIR`. The formal schemas do not contain chart fields.
 
 The Web Application is forbidden to calculate KPI or chart data. Report Evidence Builder already owns deterministic report evidence. Query Gateway already owns bounded query execution for interactive answers. Backend API and Background Worker both use .NET 10 and can consume one shared .NET contract.
 

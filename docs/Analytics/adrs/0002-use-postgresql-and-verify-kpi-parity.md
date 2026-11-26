@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-DIDRAH needs one product database for runtime state, analytical results, scoped queries, jobs, checkpoints, reports, and audit records. The evaluation data includes reference KPI SQL for SQLite. SQLite is not a product database or a runtime container.
+OrgPilot needs one product database for runtime state, analytical results, scoped queries, jobs, checkpoints, reports, and audit records. The evaluation data includes reference KPI SQL for SQLite. SQLite is not a product database or a runtime container.
 
 ## Decision
 

@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-DIDRAH needs trace correlation across synchronous REST calls, asynchronous jobs, validation, publication, parity checks, and exports. Agent and model activity also needs bounded cost and evaluation visibility. Observability must not become a dependency of the core workflow or a new store for restricted business data.
+OrgPilot needs trace correlation across synchronous REST calls, asynchronous jobs, validation, publication, parity checks, and exports. Agent and model activity also needs bounded cost and evaluation visibility. Observability must not become a dependency of the core workflow or a new store for restricted business data.
 
 ## Decision
 

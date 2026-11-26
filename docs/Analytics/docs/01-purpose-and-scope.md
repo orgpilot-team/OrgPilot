@@ -1,6 +1,6 @@
 # Purpose and scope
 
-DIDRAH is a bounded management assistant. It produces traceable management reports from supplied organization data. It also supports scoped questions, manager decisions, and follow-up work.
+OrgPilot is a bounded management assistant. It produces traceable management reports from supplied organization data. It also supports scoped questions, manager decisions, and follow-up work.
 
 ## Source policy
 

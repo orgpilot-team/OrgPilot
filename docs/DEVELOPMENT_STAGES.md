@@ -6,7 +6,7 @@ The first four stages build the deterministic backend and its replay mechanism. 
 
 | No. | Stage | Main implementation scope | Completion evidence | Status |
 |---:|---|---|---|---|
-| 1 | Foundation and persistence (Walking Skeleton) | Minimal runnable .NET processes; module boundaries; PostgreSQL 18; migrations; shared contracts and infrastructure conventions | The foundational services start together, database connectivity and migrations work, and module/process boundaries are visible in code | Not started |
+| 1 | Foundation and persistence (Walking Skeleton) | Minimal runnable .NET processes; module boundaries; PostgreSQL 18; migrations; shared contracts and infrastructure conventions | The foundational services start together, database connectivity and migrations work, and module/process boundaries are visible in code | Completed — 2026-11-26 |
 | 2 | Intake, snapshots, and KPIs | Versioned source intake; protected raw archive; canonical facts; data issues; immutable snapshots; KPI definitions, calculations, and SQLite parity | Pinned-day ingestion is repeatable; missing/late/duplicate cases behave correctly; every activated KPI translation has a passing Parity Receipt | Not started |
 | 3 | Workflows, signals, and report evidence | WF1–WF3 reconstruction; deterministic signal lifecycle, ownership, escalation, ranking; internal canonical report and evidence packages | Repeated pinned inputs produce the same workflow facts, signals, owners, ranking, numbers, and evidence references | Not started |
 | 4 | Durable execution and replay | PostgreSQL job plans and stage jobs; claim/lease/attempt/terminal state; Backend Run Coordinator; Worker stage runner; ordered replay and recovery | A deterministic replay resumes safely, survives a lost wake-up or interrupted worker, and does not read future data | Not started; job policy decision required |
@@ -26,6 +26,25 @@ The objective is a minimal runnable system that verifies the architecture, proce
 **Scope boundary:** The Identity & Access module is a structural boundary only. Authentication providers, JWT or other token handling, authorization rules, the Access Projection Matrix, and business features belong to subsequent stages. Stage 1 does not introduce placeholder security behavior or business endpoints.
 
 **Exit gate:** A clean checkout can build the solution, start the foundational services together, verify health and configuration, apply migrations to an empty PostgreSQL database, and verify process connectivity and the database and archive adapters with a small smoke check. No business-output claim is made at this stage.
+
+**Completion evidence (2026-11-26):**
+
+| Check | Result |
+|---|---|
+| [`OrgPilot.slnx`](../OrgPilot.slnx) restore and build with .NET SDK 10.0.303 | Passed; zero build warnings and errors |
+| [`compose.yaml`](../compose.yaml) validation, Linux image builds, and fresh-volume startup | Passed; PostgreSQL 18.7 and Backend API healthy; Worker and Scheduler processes running |
+| Initial EF Core migration | Passed; `20261126114934_InitialFoundation` persisted in `foundation.__EFMigrationsHistory`; repeat startup succeeded |
+| Separate database principals | Passed; API and Worker are non-superuser, non-owner roles without `BYPASSRLS`, role-creation, database-creation, or migration-schema access |
+| Backend health and development OpenAPI | Passed; `/health/live` and `/health/ready` returned `Healthy`; `/openapi/v1.json` returned an OpenAPI 3.1.1 document |
+| Worker database and archive smoke check | Passed; database connection, hash-verified round trip, repeated storage, and isolated fixture cleanup |
+| Scheduler-to-Backend HTTP check | Passed; Scheduler reached Backend readiness over the Compose network |
+| Structured logs and trace IDs | Passed; Worker and Scheduler smoke logs included W3C trace and span IDs; optional external export remained disabled |
+
+The repeatable startup and smoke-check procedure is documented in the [Backend Development Setup](../README.md#backend-development-setup-stage-1). The Scheduler uses a Generic Host console shell; its final scheduling policy and process-type decision remain open. The evaluation image and application-level authentication remain outside this completed stage.
+
+The source directory naming refactor under [Coding conventions](CODING_CONVENTIONS.md) was also verified: the .NET solution rebuilt with zero warnings or errors, the React production build passed, and Docker Compose rebuilt and restarted the existing development stack successfully. Database and archive volumes were preserved.
+
+The subsequent OrgPilot naming refactor was verified with another clean .NET build, React build, local Structurizr validation, and Docker Compose startup against a fresh database. The initial migration and least-privilege runtime roles were present, and the Worker and Scheduler startup checks passed. The obsolete verification database volume was removed after the new database passed its checks.
 
 ## 2. Intake, snapshots, and KPIs
 

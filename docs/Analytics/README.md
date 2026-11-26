@@ -42,7 +42,7 @@ Structurizr Local can write the ignored `workspace.json` file in the mounted dir
 Run these commands from the repository root in PowerShell:
 
 ```powershell
-docker run --rm -it --name didrah-structurizr -p 8180:8080 -v "${PWD}/docs/Analytics:/usr/local/structurizr" structurizr/structurizr local
+docker run --rm -it --name orgpilot-structurizr -p 8180:8080 -v "${PWD}/docs/Analytics:/usr/local/structurizr" structurizr/structurizr local
 ```
 
 Open <http://localhost:8180>. Stop the server with `Ctrl+C`.
@@ -74,7 +74,7 @@ Do not restore an old Mermaid file unless its matching view key is active.
 Documented elements use this URL form:
 
 ```dsl
-url "{workspace}/documentation/DIDRAH#<anchor>"
+url "{workspace}/documentation/OrgPilot#<anchor>"
 ```
 
 For each URL:

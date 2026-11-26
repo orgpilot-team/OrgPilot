@@ -8,7 +8,7 @@ Accepted for the evaluation profile (production retention remains open)
 
 ## Context
 
-DIDRAH needs replay, audit, and recovery evidence. The team has not approved the retention periods, backup frequency, audit-reader role, or complete restore policy.
+OrgPilot needs replay, audit, and recovery evidence. The team has not approved the retention periods, backup frequency, audit-reader role, or complete restore policy.
 
 ## Decision
 

@@ -38,7 +38,7 @@ All internal calls are in-process. The replay command derives the pinned busines
 
 ## External Relationships
 
-The container reads the DIDRAH Input Dataset, calls the Backend API over authenticated HTTPS/JSON, and stores acceptance results in PostgreSQL.
+The container reads the OrgPilot Input Dataset, calls the Backend API over authenticated HTTPS/JSON, and stores acceptance results in PostgreSQL.
 
 ## Component Sections
 
@@ -53,7 +53,7 @@ The container reads the DIDRAH Input Dataset, calls the Backend API over authent
 - **Inputs:** Versioned replay range, evaluation calendar rules, profile identifier, and evaluator command.
 - **Outputs:** Ordered simulated-day execution and final replay status. This component absorbs Simulation Clock and Evaluation Profile Loader (`simulationClockV2`, `evaluationProfileLoaderV2` in the current DSL): both are stateless derivations of pinned evaluation input with no owned state.
 - **Owned state:** Replay progress in persisted product and acceptance records.
-- **Dependencies:** DIDRAH Input Dataset, Run Status Client, Scripted Manager Input Adapter, and Acceptance Test Harness.
+- **Dependencies:** OrgPilot Input Dataset, Run Status Client, Scripted Manager Input Adapter, and Acceptance Test Harness.
 - **Security boundary:** Only versioned evaluation input is accepted; profile values do not change product architecture decisions.
 - **Forbidden responsibilities:** Run product stages, use host time as product time, invent missing thresholds, or change product configuration.
 - **Failure behavior:** Stop at the failed day and preserve the resume point.
@@ -113,7 +113,7 @@ The container reads the DIDRAH Input Dataset, calls the Backend API over authent
 - **Inputs:** Versioned scripted manager input and replay day.
 - **Outputs:** Backend API request and accepted result or job ID.
 - **Owned state:** None.
-- **Dependencies:** DIDRAH Input Dataset and Backend API.
+- **Dependencies:** OrgPilot Input Dataset and Backend API.
 - **Security boundary:** Scripts do not bypass authentication, authorization, or validation.
 - **Forbidden responsibilities:** Write product state directly or call internal Backend components.
 - **Failure behavior:** Record the rejected input and stop or continue under the evaluation profile.

@@ -2,7 +2,7 @@
 
 ## Runtime services and deployment profiles
 
-DIDRAH has two deployment profiles over the same logical containers and processes. Docker Compose is the local development and UI demonstration profile. A single image with one batch entrypoint is the graded evaluation profile (ADR-0021). The professor runs only the evaluation profile.
+OrgPilot has two deployment profiles over the same logical containers and processes. Docker Compose is the local development and UI demonstration profile. A single image with one batch entrypoint is the graded evaluation profile (ADR-0021). The professor runs only the evaluation profile.
 
 The approved runtime has separate processes and containers:
 
@@ -47,7 +47,7 @@ The evaluation profile uses `deepseek/deepseek-v4.1-flash-1017` (ADR-0022). The 
 
 ## Network and security boundaries
 
-Web can call only the Backend API. Web has no direct database connection. PostgreSQL and Protected File Archive are not public services. API, Worker, Scheduler, and Agent Runtime use only their required PostgreSQL permissions. Agent Runtime permissions follow ADR-0019.
+Web can call only the Backend API. Web has no direct database connection. PostgreSQL and Protected File Archive are not public services. The local development Compose profile permits PostgreSQL client connections through a loopback-only host port. API, Worker, Scheduler, and Agent Runtime use only their required PostgreSQL permissions. Agent Runtime permissions follow ADR-0019.
 
 ## Volumes and filesystem boundaries
 

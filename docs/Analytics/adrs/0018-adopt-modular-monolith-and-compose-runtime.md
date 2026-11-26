@@ -8,13 +8,13 @@ Accepted
 
 ## Context
 
-DIDRAH needs separate runtime processes for the Web Application, Backend API, Background Worker, Scheduler and Replay Runner, Agent Runtime, and PostgreSQL. The previous evaluation profile put several logical containers in one image. That profile does not match the approved runtime architecture.
+OrgPilot needs separate runtime processes for the Web Application, Backend API, Background Worker, Scheduler and Replay Runner, Agent Runtime, and PostgreSQL. The previous evaluation profile put several logical containers in one image. That profile does not match the approved runtime architecture.
 
 The product also needs one consistent technology stack. The stack must support deterministic processing, durable PostgreSQL state, bounded agent work, and local evaluation without a message broker or a service mesh.
 
 ## Decision
 
-DIDRAH uses a modular monolith with shared libraries and separate deployable processes.
+OrgPilot uses a modular monolith with shared libraries and separate deployable processes.
 
 - The Web Application uses React, TypeScript, and Vite.
 - The Backend API uses ASP.NET Core on .NET 10 LTS.

@@ -200,7 +200,7 @@ The exact OpenAPI file path, generation command, schema version value, and compa
 
 ## 12. Chart-type policy, structures, and limits
 
-The chart-type allowlist is finite and versioned. It uses DIDRAH semantic chart types, not arbitrary ECharts series names. An unlisted type is unsupported.
+The chart-type allowlist is finite and versioned. It uses OrgPilot semantic chart types, not arbitrary ECharts series names. An unlisted type is unsupported.
 
 Each allowlisted type must define:
 

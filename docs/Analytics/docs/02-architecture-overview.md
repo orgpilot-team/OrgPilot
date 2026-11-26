@@ -1,6 +1,6 @@
 # Architecture overview
 
-DIDRAH uses a modular monolith. The Backend API, Background Worker, and Scheduler and Replay Runner use shared .NET libraries. They run as separate processes and containers. The Web Application and Agent Runtime also run in separate containers. Docker Compose defines the local development deployment; the graded evaluation packages all logical containers as separate processes inside one image started with one `docker run` (ADR-0021). The logical C4 model is unchanged in both profiles.
+OrgPilot uses a modular monolith. The Backend API, Background Worker, and Scheduler and Replay Runner use shared .NET libraries. They run as separate processes and containers. The Web Application and Agent Runtime also run in separate containers. Docker Compose defines the local development deployment; the graded evaluation packages all logical containers as separate processes inside one image started with one `docker run` (ADR-0021). The logical C4 model is unchanged in both profiles.
 
 The architecture has seven product containers:
 
@@ -14,7 +14,7 @@ The architecture has seven product containers:
 
 The system uses these external dependencies:
 
-- DIDRAH Input Dataset
+- OrgPilot Input Dataset
 - Submission Output Directory
 - Identity Provider
 - Language Model Provider
@@ -22,7 +22,7 @@ The system uses these external dependencies:
 
 The optional OpenTelemetry Collector is an infrastructure container. It is not a Product Component. Product workflows continue when the collector or Langfuse is unavailable.
 
-The DIDRAH Input Dataset is one versioned `DATA_DIR` package. It contains nightly drops, manifests, manager inputs, uploads, configuration, and history. Development and hidden evaluation datasets use the same structure.
+The OrgPilot Input Dataset is one versioned `DATA_DIR` package. It contains nightly drops, manifests, manager inputs, uploads, configuration, and history. Development and hidden evaluation datasets use the same structure.
 
 The deterministic core is outside the agent. It owns KPI calculation, workflow reconstruction, signal rules, authorization, validation, and publication. The bounded agent analyzes only authorized evidence and can produce a narrative candidate or a decision-card candidate.
 

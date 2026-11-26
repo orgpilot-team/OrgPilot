@@ -1,4 +1,4 @@
-workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH management assistant. Open decisions are not approved facts." {
+workspace "OrgPilot Proposed Architecture" "Proposed C4 model for the OrgPilot management assistant. Open decisions are not approved facts." {
     !identifiers flat
     !impliedRelationships false
 
@@ -22,19 +22,19 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         operator = person "Operator" "Monitors runs, failures, cost, backup, and restore evidence." "Person,Operator"
 
         // External systems
-        inputDataset = softwareSystem "DIDRAH Input Dataset" "Provides versioned source, replay, upload, configuration, and history data." "External,Source,Evaluation" {
-            url "{workspace}/documentation/DIDRAH#input-dataset-contract"
+        inputDataset = softwareSystem "OrgPilot Input Dataset" "Provides versioned source, replay, upload, configuration, and history data." "External,Source,Evaluation" {
+            url "{workspace}/documentation/OrgPilot#input-dataset-contract"
         }
         submissionOutput = softwareSystem "Submission Output Directory" "Writable OUTPUT_DIR mount for approved brief and QA files only." "External,Storage,Evaluation" {
-            url "{workspace}/documentation/DIDRAH#submission-output-contract"
+            url "{workspace}/documentation/OrgPilot#submission-output-contract"
         }
         identityProvider = softwareSystem "Identity Provider" "Authenticates users and supplies a trusted identity. The product or internal method is open." "External,Identity,OpenDecision"
         llmProvider = softwareSystem "Language Model Provider" "Returns bounded language-model completions. Evaluation profile: deepseek/deepseek-v4.1-flash-1017 via OpenAI-compatible API; only external endpoint reachable in the graded run." "External,AI" {
-            url "{workspace}/documentation/DIDRAH#llm-provider-and-configuration"
+            url "{workspace}/documentation/OrgPilot#llm-provider-and-configuration"
         }
         langfuse = softwareSystem "Langfuse" "Receives optional redacted telemetry in the development profile only. Disabled in the graded Evaluation profile because outbound network is closed (ADR-0027)." "External,Observability"
 
-        didrah = softwareSystem "DIDRAH" "A bounded agentic management assistant. It computes deterministic metrics and supports human decisions." "Target" {
+        orgpilot = softwareSystem "OrgPilot" "A bounded agentic management assistant. It computes deterministic metrics and supports human decisions." "Target" {
             !docs docs
             !adrs adrs adrtools
 
@@ -58,13 +58,13 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
 
             webApp = container "Web Application" "One feature-based Persian RTL management UI. Classic Mode supplies the complete 2D experience. Modern Mode is a deferred lazy presentation enhancement with complete Classic fallback. The browser maps authorized ChartSpec records to ECharts options and preserves values, ordering, units, targets, and lineage." "React 19, TypeScript, Vite, Ant Design, Motion, Apache ECharts, React Flow, CSS/SVG" "Web" {
                 chatUi = component "Conversational Assistant UI" "Feature UI that shows validated reports and answers with optional authorized charts. Accepts scoped questions, uploads, and manager operations. Owns temporary presentation state only." "React feature UI" "Web" {
-                    url "{workspace}/documentation/DIDRAH#conversational-assistant-ui"
+                    url "{workspace}/documentation/OrgPilot#conversational-assistant-ui"
                 }
                 dashboardUi = component "Role-Based Dashboard UI" "Feature UI that shows authorized KPIs, targets, trends, drill-downs, decisions, and open actions. Renders returned ChartSpec records and owns temporary presentation state only." "React feature UI" "Web" {
-                    url "{workspace}/documentation/DIDRAH#role-based-dashboard-ui"
+                    url "{workspace}/documentation/OrgPilot#role-based-dashboard-ui"
                 }
                 workflowUi = component "Workflow Control Room UI" "Feature UI that presents Backend-supplied WF1-WF3 state, stage SLA, bottlenecks, escalations, and pending decisions. Can use React Flow or custom 2D presentation. Senior Manager only." "React feature UI" "Web,ExecutiveOnly" {
-                    url "{workspace}/documentation/DIDRAH#workflow-control-room-ui"
+                    url "{workspace}/documentation/OrgPilot#workflow-control-room-ui"
                 }
             }
 
@@ -78,55 +78,55 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 }
                 group "01 Access" {
                     authorizationService = component "Authorization Service" "Validates the session and builds the permitted row, column, role, purpose, and policy scope. Identity validation and request dispatch are in-process functions." "Deterministic module" "Security" {
-                        url "{workspace}/documentation/DIDRAH#authorization-service"
+                        url "{workspace}/documentation/OrgPilot#authorization-service"
                     }
                 }
 
                 group "02 Request Routing" {
                     configurationService = component "Configuration Service" "Stores versioned KPI, organization, and manager-priority candidates. It controls approval, D+1 activation state, and active-version pointers after required parity passes. Absorbs the former Organization Configuration Service." "Deterministic configuration control" "Governance" {
-                        url "{workspace}/documentation/DIDRAH#configuration-service"
+                        url "{workspace}/documentation/OrgPilot#configuration-service"
                     }
                     decisionTracker = component "Decision and Follow-Up" "Stores validated decision cards, handles human confirm/edit/reject review, records authorized signal close or referral dispositions, and records decisions and follow-up contracts. Absorbs the former Decision Confirmation Service. It does not execute decisions." "Deterministic decision control" "Decision" {
-                        url "{workspace}/documentation/DIDRAH#decision-and-follow-up"
+                        url "{workspace}/documentation/OrgPilot#decision-and-follow-up"
                     }
                     runCoordinatorV2 = component "Run Coordinator" "Creates pinned run plans, monitors terminal jobs, and closes each run." "Deterministic run control" "Governance" {
-                        url "{workspace}/documentation/DIDRAH#run-coordinator"
+                        url "{workspace}/documentation/OrgPilot#run-coordinator"
                     }
                 }
 
                 group "03 Bounded Analysis" {
                     agentGateway = component "Agent Runtime Gateway" "Enqueues interactive jobs and sends best-effort job-ID wake-ups. PostgreSQL stays authoritative." "Deterministic job gateway" "AI" {
-                        url "{workspace}/documentation/DIDRAH#agent-runtime-gateway"
+                        url "{workspace}/documentation/OrgPilot#agent-runtime-gateway"
                     }
                     evidenceService = component "Evidence Service" "Builds a traceable Evidence Bundle inside the authorized scope supplied with the request." "Deterministic module" "Evidence" {
-                        url "{workspace}/documentation/DIDRAH#evidence-service"
+                        url "{workspace}/documentation/OrgPilot#evidence-service"
                     }
                     queryGateway = component "Query Gateway" "Runs registered tools and scoped read-only SQL with limits and audit. SQL AST validation is an in-process module." "Deterministic query execution" "Query" {
-                        url "{workspace}/documentation/DIDRAH#query-gateway"
+                        url "{workspace}/documentation/OrgPilot#query-gateway"
                     }
                 }
 
                 group "04 Validate and Deliver" {
                     outputValidator = component "Output Validator" "Checks schema, values, evidence, scope, recipient, and response rules. Validates optional ChartIntent against permitted chart type, measure, period, grouping, and approved query lineage. Requires two independent evidence references for a reported cause and can release the deterministic no-narrative fallback." "Deterministic validator" "Governance" {
-                        url "{workspace}/documentation/DIDRAH#output-validator"
+                        url "{workspace}/documentation/OrgPilot#output-validator"
                     }
                     publisherV2 = component "Publisher" "Atomically publishes validated canonical JSON or deterministic fallback text. Links internal report charts to the immutable report version. Restatements get new version-linked charts." "Deterministic publication module" "Processing" {
-                        url "{workspace}/documentation/DIDRAH#publisher"
+                        url "{workspace}/documentation/OrgPilot#publisher"
                     }
                     submissionExporter = component "Submission Exporter" "Validates and atomically exports only formal brief and QA fields under OUTPUT_DIR." "Deterministic export module" "Processing" {
-                        url "{workspace}/documentation/DIDRAH#submission-exporter"
+                        url "{workspace}/documentation/OrgPilot#submission-exporter"
                     }
                     reportApi = component "Report and Dashboard API" "Rechecks audience, purpose, and scope. Reads report charts for the exact published version. Builds and stores deterministic interactive ChartSpec records from validated ChartIntent and persisted bounded results. Returns a PresentationResponse with validated content and optional charts, authorized job status, or an explicit failure." "Deterministic delivery API" "API" {
-                        url "{workspace}/documentation/DIDRAH#report-and-dashboard-api"
+                        url "{workspace}/documentation/OrgPilot#report-and-dashboard-api"
                     }
                     auditService = component "Audit Service" "Records query, model, validation, cost, and failure evidence." "Deterministic module" "Governance" {
-                        url "{workspace}/documentation/DIDRAH#audit-service"
+                        url "{workspace}/documentation/OrgPilot#audit-service"
                     }
                 }
 
                 group "05 Document Decision Flow" {
                     documentProcessingRunner = component "Document Processing Runner" "Archives uploads, parses them deterministically, and creates durable analysis or revision jobs. Absorbs the former Document Parser." "Deterministic document intake and job producer" "Processing" {
-                        url "{workspace}/documentation/DIDRAH#document-processing-runner"
+                        url "{workspace}/documentation/OrgPilot#document-processing-runner"
                     }
                 }
             }
@@ -142,51 +142,51 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                     "lead.kpi_populations" "K_WF3_SLA_7D and K_ENT_WINRATE_30D: closed leads only; K_ENT_PIPELINE: proposals sent only"
                 }
                 runStageCoordinatorV2 = component "Run Stage Coordinator" "Claims Ready jobs and runs their deterministic stages from stored dependencies." "PostgreSQL-backed deterministic job runner" "Processing" {
-                    url "{workspace}/documentation/DIDRAH#run-stage-coordinator"
+                    url "{workspace}/documentation/OrgPilot#run-stage-coordinator"
                 }
                 ingestionCoordinator = component "Ingestion Coordinator" "Parses, normalizes, checks quality, and atomically commits one versioned source intake. Absorbs Source Adapters, Normalizer, and Data Quality Service; DataIssue is an entity of IngestionBatch." "Deterministic module" "Processing" {
-                    url "{workspace}/documentation/DIDRAH#ingestion-coordinator"
+                    url "{workspace}/documentation/OrgPilot#ingestion-coordinator"
                 }
                 snapshotService = component "Snapshot Service" "Pins committed versions for a run and builds derived projections. Absorbs the former Projection Service; projections are read models, not aggregates." "Deterministic module" "Processing" {
-                    url "{workspace}/documentation/DIDRAH#snapshot-service"
+                    url "{workspace}/documentation/OrgPilot#snapshot-service"
                 }
                 semanticRegistry = component "Semantic Registry" "Owns immutable KPI definition versions, SQL translation, semantic validation, and parity eligibility. Configuration Service controls activation state and the active-version pointer. Absorbs KPI Definition Preprocessor and Configuration Validation Runner. Includes corrected config/monthly_targets.csv with scope=U_SAL for Q03." "Deterministic registry" "Analytics" {
-                    url "{workspace}/documentation/DIDRAH#semantic-registry"
+                    url "{workspace}/documentation/OrgPilot#semantic-registry"
                 }
                 kpiCalculator = component "KPI Calculator" "Executes the 55 approved PostgreSQL KPI queries and records QueryRun and lineage." "PostgreSQL SQL" "Analytics" {
-                    url "{workspace}/documentation/DIDRAH#kpi-calculator"
+                    url "{workspace}/documentation/OrgPilot#kpi-calculator"
                 }
                 workflowEngine = component "Workflow Engine" "Reconstructs three workflows and calculates stage timing, SLA, backlog, and bottlenecks. Stage owner = measuring KPI owner; whole-workflow owner = Senior Manager. Leads with no progress after 14 days are abandoned, not bottlenecks." "Deterministic process analysis" "Analytics" {
-                    url "{workspace}/documentation/DIDRAH#workflow-engine"
+                    url "{workspace}/documentation/OrgPilot#workflow-engine"
                 }
                 signalEngine = component "Signal Engine" "Maintains deterministic signal lifecycles (new/ongoing/escalated), ranks with versioned manager-priority configuration, escalates by crit or warn dwell time, suppresses unchanged repeats, applies unfavorable-direction-only R5, and groups executive co-causes. Guardrail breaches arrive as signals." "Deterministic rules" "Analytics" {
-                    url "{workspace}/documentation/DIDRAH#signal-engine"
+                    url "{workspace}/documentation/OrgPilot#signal-engine"
                 }
                 reportEvidenceBuilderV2 = component "Report Evidence Builder" "Builds a pinned evidence package and model-independent canonical report from approved facts, signals, and follow-up assessments. Builds ordered ChartSpec records from pinned values and approved query lineage under a versioned chart policy. Stores them with the report candidate, snapshot, and manager scope." "Deterministic report evidence assembly" "Reporting" {
-                    url "{workspace}/documentation/DIDRAH#report-evidence-builder"
+                    url "{workspace}/documentation/OrgPilot#report-evidence-builder"
                 }
                 decisionEffectEvaluator = component "Decision Effect Evaluator" "Evaluates KPI change and guardrails with workload normalization or a comparable-case baseline. The reference schema permits improved, worsened, no_change, and too_early; internal not_isolatable is never reported as no effect. A guardrail breach emits a signal. No LLM." "Deterministic evaluation module" "Decision" {
-                    url "{workspace}/documentation/DIDRAH#decision-effect-evaluator"
+                    url "{workspace}/documentation/OrgPilot#decision-effect-evaluator"
                 }
             }
 
             schedulerReplay = container "Scheduler and Replay Runner" "Owns the simulated clock, run lease, replay range, evaluation profile, and resumable job dispatch." ".NET 10 Console or Worker Process" "Scheduler" {
                 replayCommandV2 = component "Replay Command" "Derives the pinned business date, loads the evaluation profile, sequences simulated days, and resumes from the last terminal day. Absorbs Simulation Clock and Evaluation Profile Loader." "Application command" "Scheduler,Candidate" {
-                    url "{workspace}/documentation/DIDRAH#replay-command"
+                    url "{workspace}/documentation/OrgPilot#replay-command"
                 }
                 runStatusClientV2 = component "Run Status Client" "Starts and monitors runs only through the Backend Run Coordinator." "Internal API client" "Scheduler,Candidate" {
-                    url "{workspace}/documentation/DIDRAH#run-status-client"
+                    url "{workspace}/documentation/OrgPilot#run-status-client"
                 }
                 acceptanceTestHarnessV2 = component "Acceptance Test Harness" "Runs replay, regression, leakage, performance, contract, and KPI parity checks. Absorbs the former KPI Parity Validator; it is the single owner of the SQLite oracle." "Deterministic test harness" "Evaluation,Candidate" {
-                    url "{workspace}/documentation/DIDRAH#acceptance-test-harness"
+                    url "{workspace}/documentation/OrgPilot#acceptance-test-harness"
                 }
                 scriptedManagerInputAdapter = component "Scripted Manager Input Adapter" "Submits versioned replay inputs through the same Backend API as interactive inputs." "Deterministic evaluation input adapter" "Evaluation" {
-                    url "{workspace}/documentation/DIDRAH#scripted-manager-input-adapter"
+                    url "{workspace}/documentation/OrgPilot#scripted-manager-input-adapter"
                 }
             }
 
             postgres = container "PostgreSQL" "The only product database. Stores product state, analytical results, access policy, checkpoints, audit records, persisted bounded query results, and scoped ChartSpec records linked to report or answer versions." "PostgreSQL 18" "Database" {
-                url "{workspace}/documentation/DIDRAH#postgresql-product-database"
+                url "{workspace}/documentation/OrgPilot#postgresql-product-database"
                 properties {
                     "schemas.proposed" "ingest, core, org, semantic, analytics, workflow, reporting, document, decision, agent, audit"
                     "security" "RLS, FORCE ROW LEVEL SECURITY, non-owner runtime roles, no BYPASSRLS"
@@ -196,7 +196,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             }
 
             fileArchive = container "Protected File Archive" "Stores original source and upload bytes with hashes and manifests. It is not a query database." "Protected mounted filesystem or compatible object storage" "Storage" {
-                url "{workspace}/documentation/DIDRAH#protected-file-archive"
+                url "{workspace}/documentation/OrgPilot#protected-file-archive"
             }
 
             agentRuntime = container "Agent Runtime" "Claims durable Agent Jobs from PostgreSQL and runs bounded graphs. Wake-ups are hints only. DDD contexts: Job Execution, Bounded Reasoning, Model Access, Conversation (docs/16-domain-model.md)." "Python 3.12, LangGraph, Pydantic" "AI" {
@@ -211,16 +211,16 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                     "model.fallback" "Report with correct numbers and no LLM narrative on provider failure"
                 }
                 agentOrchestrator = component "Bounded Agent Orchestrator" "Coordinates one bounded report, interactive, or document decision-card graph. Produces structured candidates and may propose a ChartIntent with chart type, measure, period, and grouping for interactive answers. Authoritative chart values come from approved deterministic data. Writes checkpoints through ICheckpointRepository." "LangGraph runtime" "AI" {
-                    url "{workspace}/documentation/DIDRAH#bounded-agent-orchestrator"
+                    url "{workspace}/documentation/OrgPilot#bounded-agent-orchestrator"
                 }
                 agentJobRunner = component "Agent Job Runner" "Claims leased jobs, runs the bounded graph, and persists a candidate or terminal failure." "PostgreSQL-backed unified agent job runner" "AI" {
-                    url "{workspace}/documentation/DIDRAH#agent-job-runner"
+                    url "{workspace}/documentation/OrgPilot#agent-job-runner"
                 }
                 conversationService = component "Conversation Service" "Stores manager-scoped conversation sessions and validated turns, returns bounded history window." "Deterministic conversation module" "AI" {
-                    url "{workspace}/documentation/DIDRAH#conversation-service"
+                    url "{workspace}/documentation/OrgPilot#conversation-service"
                 }
                 agentModelGateway = component "Model Gateway" "Applies token, time (30s), retry (max 2), and cost limits to every model call. Reserves and settles the single $5/30-day budget using provider official rates; temperature 0; on failure returns no-narrative deterministic report. Only external endpoint in the graded run." "Provider-neutral model client" "AI" {
-                    url "{workspace}/documentation/DIDRAH#model-gateway"
+                    url "{workspace}/documentation/OrgPilot#model-gateway"
                 }
             }
 
@@ -439,15 +439,15 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         restatementCompute -> restatementPublish "Validate and republish artifacts" "PostgreSQL-backed job queue"
 
         // System-level relationships
-        seniorManager -> didrah "Executive access" "HTTPS"
-        unitManager -> didrah "Unit management access" "HTTPS"
-        teamSupervisor -> didrah "Team supervision access" "HTTPS"
-        evaluator -> didrah "Replay and acceptance" "CLI and HTTPS/JSON"
-        operator -> didrah "Operational monitoring" "HTTPS"
-        inputDataset -> didrah "Versioned source and replay input" "Read-only filesystem: CSV, JSON, and Markdown"
-        didrah -> identityProvider "Identity validation" "OIDC or internal authentication over HTTPS"
-        didrah -> llmProvider "Bounded model calls" "HTTPS/JSON"
-        didrah -> langfuse "Optional redacted telemetry" "OTLP export"
+        seniorManager -> orgpilot "Executive access" "HTTPS"
+        unitManager -> orgpilot "Unit management access" "HTTPS"
+        teamSupervisor -> orgpilot "Team supervision access" "HTTPS"
+        evaluator -> orgpilot "Replay and acceptance" "CLI and HTTPS/JSON"
+        operator -> orgpilot "Operational monitoring" "HTTPS"
+        inputDataset -> orgpilot "Versioned source and replay input" "Read-only filesystem: CSV, JSON, and Markdown"
+        orgpilot -> identityProvider "Identity validation" "OIDC or internal authentication over HTTPS"
+        orgpilot -> llmProvider "Bounded model calls" "HTTPS/JSON"
+        orgpilot -> langfuse "Optional redacted telemetry" "OTLP export"
 
         // Container-level relationships
         seniorManager -> webApp "Executive access" "HTTPS"
@@ -757,16 +757,16 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
         }
 
         // C4 core view: one software system and its directly connected people and software systems.
-        systemContext didrah L1_SystemContext "Business-facing C4 system context for DIDRAH." {
-            title "01 - C4 Level 1 - System Context for DIDRAH"
-            include seniorManager unitManager teamSupervisor evaluator operator didrah inputDataset submissionOutput identityProvider llmProvider langfuse
+        systemContext orgpilot L1_SystemContext "Business-facing C4 system context for OrgPilot." {
+            title "01 - C4 Level 1 - System Context for OrgPilot"
+            include seniorManager unitManager teamSupervisor evaluator operator orgpilot inputDataset submissionOutput identityProvider llmProvider langfuse
             default
             autoLayout lr 180 140
         }
 
-        // C4 core view: deployable applications and data stores inside the DIDRAH boundary.
-        container didrah L2_Containers "C4 container view of the DIDRAH applications, data stores, users, and external dependencies." {
-            title "02 - C4 Level 2 - Containers for DIDRAH"
+        // C4 core view: deployable applications and data stores inside the OrgPilot boundary.
+        container orgpilot L2_Containers "C4 container view of the OrgPilot applications, data stores, users, and external dependencies." {
+            title "02 - C4 Level 2 - Containers for OrgPilot"
             include inputDataset submissionOutput identityProvider llmProvider langfuse webApp backendApi worker schedulerReplay postgres fileArchive agentRuntime otelCollector
             exclude "webApp -> otelCollector"
             exclude "backendApi -> otelCollector"
@@ -847,7 +847,7 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
             autoLayout lr 140 100
         }
 
-        deployment didrah "Evaluation" D1_EvaluationCompose "Evaluation deployment: one team_x image started with one docker run; logical product containers run as separate processes inside the image. Per ADR-0021." {
+        deployment orgpilot "Evaluation" D1_EvaluationCompose "Evaluation deployment: one team_x image started with one docker run; logical product containers run as separate processes inside the image. Per ADR-0021." {
             include *
             autoLayout tb 100 80
         }

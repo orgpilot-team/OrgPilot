@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-DIDRAH must identify important conditions without language-model variation. It must avoid repeated alerts and must preserve escalation history.
+OrgPilot must identify important conditions without language-model variation. It must avoid repeated alerts and must preserve escalation history.
 
 ## Decision
 
