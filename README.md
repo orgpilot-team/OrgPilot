@@ -193,3 +193,4 @@ PostgreSQL تنها پایگاه‌داده محصول است. SQLite فقط ora
 Follow the ordered [development stages](docs/DEVELOPMENT_STAGES.md). After verifying the Walking Skeleton (Stage 1), implement deterministic data intake, snapshots, and KPI parity (Stage 2). The evaluation entrypoint, Agent Runtime, and product UI integration follow their respective stages.
 
 هر تغییر معماری باید هم‌زمان در `workspace.dsl`، سند مرتبط و در صورت نیاز ADR ثبت و طبق [راهنمای اعتبارسنجی](docs/Analytics/README.md) بررسی شود. تغییر schema خروجی یا تعریف KPI نیز باید از منبع معتبر خودش شروع شود، نه از کد مصرف‌کننده.
+<!-- GitHub write-access test -->
