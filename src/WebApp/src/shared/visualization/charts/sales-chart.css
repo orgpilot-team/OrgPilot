@@ -1,0 +1,70 @@
+.didrah-sales-chart-note {
+  margin: 0;
+  color: var(--didrah-color-text-secondary);
+  font: var(--didrah-type-secondary);
+}
+
+.didrah-sales-chart-table {
+  min-inline-size: 0;
+  font: var(--didrah-type-table);
+}
+
+.didrah-sales-chart-table summary {
+  inline-size: fit-content;
+  color: var(--didrah-color-accent-cyan-content);
+  cursor: pointer;
+}
+
+.didrah-sales-chart-table summary:focus-visible {
+  outline: 2px solid var(--didrah-color-focus-ring);
+  outline-offset: 3px;
+}
+
+.didrah-sales-chart-table table {
+  inline-size: 100%;
+  margin-block-start: var(--didrah-space-compact);
+  border-collapse: collapse;
+  text-align: start;
+}
+
+.didrah-sales-chart-table caption {
+  padding-block-end: var(--didrah-space-compact);
+  color: var(--didrah-color-text-secondary);
+  text-align: start;
+}
+
+.didrah-sales-chart-table th,
+.didrah-sales-chart-table td {
+  padding: var(--didrah-space-compact);
+  border-block-end: 1px solid var(--didrah-color-border-subtle);
+  text-align: start;
+}
+
+.didrah-sales-chart-table small {
+  display: block;
+  color: var(--didrah-color-text-secondary);
+  font: var(--didrah-type-caption);
+}
+
+.didrah-sales-chart-table bdi,
+.didrah-sales-chart-tooltip bdi {
+  font-variant-numeric: tabular-nums;
+}
+
+.didrah-sales-chart-tooltip {
+  display: grid;
+  gap: var(--didrah-space-compact);
+  min-inline-size: 8rem;
+  text-align: start;
+  white-space: normal;
+}
+
+.didrah-sales-chart-tooltip > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--didrah-space-inset);
+}
+
+.didrah-sales-chart-tooltip > div > span {
+  color: var(--didrah-color-text-secondary);
+}

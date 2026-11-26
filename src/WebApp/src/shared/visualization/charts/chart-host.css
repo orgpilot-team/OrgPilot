@@ -1,0 +1,22 @@
+.didrah-chart {
+  position: relative;
+  min-inline-size: 0;
+}
+
+.didrah-chart-canvas[aria-hidden="true"] {
+  visibility: hidden;
+}
+
+.didrah-chart-error {
+  position: absolute;
+  inset: 0;
+}
+
+.didrah-chart-canvas {
+  overflow: hidden;
+  block-size: var(--didrah-chart-height, 20rem);
+  min-inline-size: 0;
+  border: 1px solid var(--didrah-color-border-subtle);
+  border-radius: var(--didrah-radius-control);
+  background: var(--didrah-color-surface-input);
+}

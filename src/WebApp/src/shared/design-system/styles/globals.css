@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  background-color: var(--didrah-color-canvas);
+  color: var(--didrah-color-text-primary);
+  font: var(--didrah-type-body);
+}
+
+h1 {
+  font: var(--didrah-type-heading-1);
+}
+
+h2 {
+  font: var(--didrah-type-heading-2);
+}
+
+h3 {
+  font: var(--didrah-type-heading-3);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}

@@ -1,0 +1,7 @@
+@font-face {
+  font-family: Dastkhat;
+  src: url("/fonts/dastkhat/Dastkhat-Variable-v1.220.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}

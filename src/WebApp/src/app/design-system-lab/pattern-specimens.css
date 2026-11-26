@@ -1,0 +1,67 @@
+.lab-patterns {
+  margin-block-end: var(--didrah-space-inset);
+}
+
+.lab-pattern-grid {
+  display: grid;
+  grid-template-columns: minmax(14rem, 1fr) minmax(0, 2fr);
+  gap: var(--didrah-space-inset);
+}
+
+.lab-pattern-selection {
+  display: grid;
+  gap: var(--didrah-space-compact);
+}
+
+.lab-pattern-selection span,
+.lab-pattern-kpi dt {
+  color: var(--didrah-color-text-secondary);
+  font: var(--didrah-type-secondary);
+}
+
+.lab-pattern-kpi,
+.lab-pattern-kpi dd {
+  margin: 0;
+}
+
+.lab-pattern-kpi dd {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 var(--didrah-space-compact);
+  margin-block-start: var(--didrah-space-compact);
+}
+
+.lab-pattern-kpi bdi {
+  font: var(--didrah-type-kpi);
+  font-variant-numeric: tabular-nums;
+}
+
+.lab-pattern-kpi dd span {
+  color: var(--didrah-color-text-secondary);
+}
+
+.lab-pattern-tags,
+.lab-pattern-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--didrah-space-compact);
+}
+
+.lab-pattern-state {
+  min-block-size: 8rem;
+}
+
+.lab-pattern-primary:not(:disabled):not(:hover):not(:active) {
+  background: linear-gradient(
+    145deg,
+    var(--didrah-color-brand-primary),
+    color-mix(in srgb, var(--didrah-color-brand-primary), var(--didrah-color-brand-indigo) 55%)
+  );
+}
+
+@media (max-width: 48rem) {
+  .lab-pattern-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

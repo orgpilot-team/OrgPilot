@@ -1,0 +1,77 @@
+.didrah-flow {
+  --xy-background-color: var(--didrah-color-surface-input);
+  --xy-background-pattern-color: var(--didrah-color-border-subtle);
+  --xy-node-color: var(--didrah-color-text-primary);
+  --xy-node-background-color: var(--didrah-color-surface-raised);
+  --xy-node-border: 1px solid var(--didrah-color-border-control);
+  --xy-node-border-radius: var(--didrah-radius-control);
+  --xy-edge-stroke: var(--didrah-color-text-muted);
+  --xy-edge-stroke-width: 1.5;
+  --xy-edge-stroke-selected: var(--didrah-color-focus-ring);
+  --xy-handle-background-color: var(--didrah-color-text-muted);
+  --xy-handle-border-color: var(--didrah-color-surface-input);
+  --xy-controls-button-background-color: var(--didrah-color-surface-overlay);
+  --xy-controls-button-background-color-hover: var(--didrah-color-surface-selected);
+  --xy-controls-button-color: var(--didrah-color-text-primary);
+  --xy-controls-button-color-hover: var(--didrah-color-text-primary);
+  --xy-controls-button-border-color: var(--didrah-color-border-subtle);
+  --xy-controls-box-shadow: var(--didrah-shadow-overlay);
+  --xy-attribution-background-color: var(--didrah-color-surface-base);
+  border: 1px solid var(--didrah-color-border-subtle);
+  border-radius: var(--didrah-radius-control);
+  font: var(--didrah-type-body);
+}
+
+.didrah-flow .react-flow__node:focus-visible,
+.didrah-flow .react-flow__controls-button:focus-visible {
+  outline: 2px solid var(--didrah-color-focus-ring);
+  outline-offset: 3px;
+  border-radius: var(--didrah-radius-control);
+}
+
+.didrah-flow .react-flow__attribution a {
+  color: var(--didrah-color-text-secondary);
+}
+
+.didrah-flow-stage {
+  --stage-status: var(--didrah-color-text-secondary);
+  display: grid;
+  gap: var(--didrah-space-compact);
+  inline-size: 10.5rem;
+  padding: var(--didrah-space-gap);
+  border: var(--xy-node-border);
+  border-block-start-color: var(--stage-status);
+  border-radius: var(--xy-node-border-radius);
+  background: var(--xy-node-background-color);
+  color: var(--xy-node-color);
+  direction: rtl;
+  text-align: start;
+}
+
+.didrah-flow-stage[data-selected="true"] {
+  background: var(--didrah-color-surface-selected);
+  box-shadow: 0 0 0 2px var(--didrah-color-focus-ring);
+}
+
+.didrah-flow-stage[data-status="active"] { --stage-status: var(--didrah-color-accent-cyan-content); }
+.didrah-flow-stage[data-status="warning"] { --stage-status: var(--didrah-color-status-warning); }
+.didrah-flow-stage[data-status="critical"] { --stage-status: var(--didrah-color-status-critical); }
+.didrah-flow-stage[data-status="complete"] { --stage-status: var(--didrah-color-status-success); }
+
+.didrah-flow-stage-label {
+  color: var(--didrah-color-text-secondary);
+  font: var(--didrah-type-caption);
+}
+
+.didrah-flow-stage strong {
+  font: var(--didrah-type-control);
+}
+
+.didrah-flow-stage-status {
+  justify-self: start;
+  padding-inline: var(--didrah-space-compact);
+  border-radius: var(--didrah-radius-control);
+  background: color-mix(in srgb, var(--stage-status) 8%, var(--xy-node-background-color));
+  color: var(--stage-status);
+  font: var(--didrah-type-caption);
+}

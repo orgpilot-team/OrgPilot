@@ -1,0 +1,10 @@
+Dastkhat Variable v1.220
+Copyright 2015 The Vazirmatn Project Authors
+Copyright 2026 The Dastkhat Project Authors
+License: SIL Open Font License 1.1. See OFL.txt in this directory.
+
+The application ships the upstream main variable webfont without changes to its contents.
+Upstream file: Webfonts/fonts/Dastkhat-Variable.woff2
+Upstream revision: 19f4a12b56a89567b07e02500f0e4aed670e3644
+Source: https://github.com/dastyar-io/dastkhat-font/tree/19f4a12b56a89567b07e02500f0e4aed670e3644
+SHA-256: 832df40323eedc7f242fbd47e53962d5ad4501d64571b79caa0fde9f46bd05ff
