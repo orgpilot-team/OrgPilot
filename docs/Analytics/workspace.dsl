@@ -2,10 +2,12 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
     !identifiers flat
     !impliedRelationships false
 
-    // Architecture sources: this DSL, docs/01-purpose-and-scope.md through docs/17-chart-presentation-contract.md, and adrs/.
+    // Architecture sources: this DSL, docs/01-purpose-and-scope.md through docs/18-ux-and-design-system.md, and adrs/.
     // Authoritative implementation contract: docs/15-implementation-contract.md (ADR-0025); TA clarifications win over older brief values.
     // DDD model for Backend API, Background Worker, and Agent Runtime: docs/16-domain-model.md (ADR-0024).
     // Internal chart contract and Web rendering boundary: docs/17-chart-presentation-contract.md (ADR-0028).
+    // Frontend architecture and progressive presentation modes: docs/09-web-application-components.md (ADR-0029).
+    // UX and Design System guidance: docs/18-ux-and-design-system.md (ADR-0029).
     // Evaluation references: docs/arka_dataset/README_FA.md and output_contract/*.json are read-only.
     // PostgreSQL is the selected product database; any engine with identical results is permitted (ADR-0002).
     // SQLite is an external test oracle for reference SQL only. It is not a runtime container.
@@ -42,6 +44,8 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 "implementation.contract" "docs/15-implementation-contract.md (ADR-0025)"
                 "domain.model" "docs/16-domain-model.md (ADR-0024)"
                 "chart.presentation.contract" "docs/17-chart-presentation-contract.md (ADR-0028)"
+                "frontend.architecture" "docs/09-web-application-components.md (ADR-0029)"
+                "ux.design.system" "docs/18-ux-and-design-system.md (ADR-0029)"
                 "database.decision" "PostgreSQL 18 selected; any engine with identical results permitted"
                 "agent.boundary" "One bounded AI agent; deterministic core outside the agent"
                 "budget.minutes_per_day" "5"
@@ -52,14 +56,14 @@ workspace "DIDRAH Proposed Architecture" "Proposed C4 model for the DIDRAH manag
                 "kpi.parity.tolerance" "±1% (dev and evaluation); zero only for text-to-JSON number matching"
             }
 
-            webApp = container "Web Application" "Persian RTL management UI. Maps authorized ChartSpec records to ECharts options in the browser and preserves values, ordering, units, targets, and lineage. Shows validated content when a chart is unavailable." "React 19, TypeScript, Vite, Apache ECharts" "Web" {
-                chatUi = component "Conversational Assistant UI" "Shows validated reports and answers with optional authorized charts. Accepts scoped questions, uploads, and manager operations." "Web UI" "Web" {
+            webApp = container "Web Application" "One feature-based Persian RTL management UI. Classic Mode supplies the complete 2D experience. Modern Mode is a deferred lazy presentation enhancement with complete Classic fallback. The browser maps authorized ChartSpec records to ECharts options and preserves values, ordering, units, targets, and lineage." "React 19, TypeScript, Vite, Ant Design, Motion, Apache ECharts, React Flow, CSS/SVG" "Web" {
+                chatUi = component "Conversational Assistant UI" "Feature UI that shows validated reports and answers with optional authorized charts. Accepts scoped questions, uploads, and manager operations. Owns temporary presentation state only." "React feature UI" "Web" {
                     url "{workspace}/documentation/DIDRAH#conversational-assistant-ui"
                 }
-                dashboardUi = component "Role-Based Dashboard UI" "Shows authorized KPIs, targets, trends, drill-downs, decisions, and open actions. Renders the ChartSpec records returned with dashboard data." "Web UI" "Web" {
+                dashboardUi = component "Role-Based Dashboard UI" "Feature UI that shows authorized KPIs, targets, trends, drill-downs, decisions, and open actions. Renders returned ChartSpec records and owns temporary presentation state only." "React feature UI" "Web" {
                     url "{workspace}/documentation/DIDRAH#role-based-dashboard-ui"
                 }
-                workflowUi = component "Workflow Control Room UI" "Shows WF1-WF3, stage SLA, bottlenecks, escalations, and pending decisions with authorized charts when available. Senior Manager only." "Web UI" "Web,ExecutiveOnly" {
+                workflowUi = component "Workflow Control Room UI" "Feature UI that presents Backend-supplied WF1-WF3 state, stage SLA, bottlenecks, escalations, and pending decisions. Can use React Flow or custom 2D presentation. Senior Manager only." "React feature UI" "Web,ExecutiveOnly" {
                     url "{workspace}/documentation/DIDRAH#workflow-control-room-ui"
                 }
             }

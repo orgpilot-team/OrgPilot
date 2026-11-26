@@ -34,8 +34,13 @@ venv/
 Thumbs.db
 Desktop.ini
 
+# Frontend dependencies and generated output
 node_modules/
+dist/
+.vite/
+coverage/
+*.tsbuildinfo
 
 # Program Specific
-docs/Analytics/mermaid
-/docs/Analytics/workspace.json
+Docs/Analytics/mermaid
+/Docs/Analytics/workspace.json

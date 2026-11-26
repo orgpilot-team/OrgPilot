@@ -25,6 +25,38 @@
 | [`.agents/skills/`](.agents/skills/) | دستورها و راهنماهای کمکی برای عامل‌های توسعه؛ بخشی از runtime محصول نیست |
 | [`tmp/`](tmp/) | بریف‌ها، برنامه‌ها، exportها و فایل‌های کاری/تاریخی؛ **منبع معتبر تحلیل، توسعه یا استقرار نیست** |
 
+## Frontend Development Setup
+
+The Web Application is in `src/web-app`. The verified environment uses Node.js `24.15.0` and npm `11.12.1`. The frontend supports the Node.js versions declared in `package.json`: Node.js `20.19.0` or later in the 20.x line, or Node.js `22.12.0` or later. Use npm `11.12.1` to match the recorded package-manager version.
+
+The approved frontend stack is:
+
+| Technology | Responsibility |
+|---|---|
+| React 19 | Component composition and application rendering |
+| React DOM 19 | React rendering in the browser |
+| TypeScript | Static type checking |
+| Vite | Local development, production builds, and build preview |
+| Ant Design and Ant Design Icons | UI component foundation and icons under the DIDRAH Design System |
+| Motion | Purposeful transitions and micro-interactions |
+| Apache ECharts | Rendering authorized chart specifications |
+| React Flow | Interactive presentation of Backend-supplied workflow state |
+
+After you clone or pull the repository, run:
+
+```bash
+cd src/web-app
+npm ci
+npm run dev
+```
+
+- `npm ci` installs the exact dependency versions in `package-lock.json`. Run it after you clone the repository and when `package-lock.json` changes.
+- `npm run dev` starts the local development server.
+- `npm run build` creates the optimized production build.
+- `npm run preview` serves the production build locally for verification. Run `npm run build` first.
+
+All frontend dependencies are local to `src/web-app`. The `node_modules` and `dist` directories are generated locally and must not be committed. The `package.json` and `package-lock.json` files must remain tracked. Three.js and Modern Mode dependencies are intentionally deferred.
+
 ## مستندات و تحلیل معماری
 
 منابع فعال معماری در `docs/Analytics/` قرار دارند:
@@ -57,7 +89,7 @@
 | مدل دامنه و محدوده استفاده از DDD | [16 — Domain model](docs/Analytics/docs/16-domain-model.md) |
 | قرارداد نمودار میان backend و UI | [17 — Chart presentation contract](docs/Analytics/docs/17-chart-presentation-contract.md) |
 
-ADRها از [`0001`](docs/Analytics/adrs/0001-unified-data-intake-and-preparation.md) تا [`0028`](docs/Analytics/adrs/0028-use-echarts-and-internal-chart-contract.md) تصمیم‌هایی مثل PostgreSQL، پردازش deterministic، صف پایدار Agent Job، modular monolith، observability، پروفایل ارزیابی و ECharts را ثبت می‌کنند. وضعیت درج‌شده داخل هر ADR تعیین می‌کند که آن تصمیم پذیرفته شده است یا نه.
+ADRها از [`0001`](docs/Analytics/adrs/0001-unified-data-intake-and-preparation.md) تا [`0029`](docs/Analytics/adrs/0029-adopt-feature-based-web-application-and-progressive-presentation.md) تصمیم‌هایی مثل PostgreSQL، پردازش deterministic، صف پایدار Agent Job، modular monolith، observability، پروفایل ارزیابی و ECharts را ثبت می‌کنند. وضعیت درج‌شده داخل هر ADR تعیین می‌کند که آن تصمیم پذیرفته شده است یا نه.
 
 ## دیتاست و قرارداد خروجی
 

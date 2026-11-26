@@ -32,7 +32,7 @@ The deterministic core is outside the agent. It owns KPI calculation, workflow r
 
 | Element | Technology | Constraint |
 |---|---|---|
-| Web Application | React, TypeScript, Vite, Apache ECharts | No business or chart-data calculation |
+| Web Application | React 19, TypeScript, Vite, Ant Design, Motion, Apache ECharts, React Flow, CSS/SVG | One feature-based Web Application; no business or chart-data calculation; Classic is complete without 3D |
 | Backend API | ASP.NET Core on .NET 10 LTS | Modular monolith process |
 | Background Worker | .NET 10 Worker Service | Deterministic processing |
 | Scheduler and Replay Runner | .NET 10 console or Worker Service | The implementation choice is open |
@@ -45,6 +45,10 @@ The deterministic core is outside the agent. It owns KPI calculation, workflow r
 | Deployment | Compose (development); single image + one `docker run` (evaluation) | Separate processes and containers; ADR-0021 |
 | Tracing | OpenTelemetry SDK and OTLP | Optional and fail-open export |
 | Agent observability | Langfuse | Optional and fail-open |
+
+Doc 09 is the frontend architecture source. It defines the three feature boundaries, shared frontend modules, Classic and deferred Modern presentation modes, Design System boundary, dependency rules, target repository structure, session responsibilities, and implementation sequencing. Doc 18 owns visual and interaction guidance. ADR-0029 records the decision and rationale.
+
+Three.js, WebGPU or WebGL 2 renderer selection, 3D assets, and Modern activation are deferred. They are not current runtime technologies or first-release dependencies. Modern does not add a container, component, store, deployment unit, or API contract.
 
 Shared .NET libraries can contain:
 

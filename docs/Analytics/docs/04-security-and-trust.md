@@ -43,6 +43,44 @@ The language model has no database credential. It has no direct file credential.
 
 The Web Application receives only the authorized points required for the requested chart. It does not receive unrestricted facts and does not calculate a wider aggregation. ECharts options are created in the Web Application from the authorized `ChartSpec`; they are not accepted from the language model or stored as business evidence.
 
+## Browser session and scope isolation
+
+The Web Application can manage session lifecycle and Backend-supplied scope context for presentation. It is not an authentication or authorization authority. The Backend API validates the session and applies role, resource, row, column, purpose, organization, and policy scope on every request.
+
+The frontend must not select an authentication product, protocol, credential-storage method, or token-storage method until the open authentication decision is approved.
+
+Scope-sensitive browser state follows these rules:
+
+- Cache identity includes the authenticated principal, authorized scope reference, purpose, policy version, resource, and immutable source version when applicable.
+- An identity, role, scope, purpose, or policy-version change invalidates affected cached data before the new view is shown.
+- Logout and session expiration clear restricted in-memory data and pending scope-sensitive work.
+- A request that belongs to an old session or scope is canceled when possible. Its response is ignored if it arrives later.
+- A feature does not reuse business data from another feature as shared state.
+- Persistent browser storage is not approved for restricted business data by this document.
+- A service worker or offline cache must not cache restricted business responses without a separate approved security design.
+- Hidden controls, route guards, and client-side filters are presentation controls only. They do not grant or deny access.
+
+Initial frontend work can use clearly separated mock data for layouts, the Design System, RTL, and UX validation. Mock data must not include real restricted records. Mock authorization behavior must not become a production security control.
+
+## Safe browser rendering
+
+Backend and model text, labels, tooltip content, uploaded-file names, query text, and report content are untrusted presentation data.
+
+- Render untrusted values as text by default.
+- Do not execute HTML, JavaScript, ECharts callbacks, formatter functions, SVG scripts, or React Flow component definitions from a response.
+- Do not use raw HTML rendering for report or assistant content unless a later contract defines a restricted format and sanitization policy.
+- Use fixed local renderers for supported structured content.
+- Apply length limits from the owning wire contract before rendering labels and tooltips.
+- A Content Security Policy and related browser security headers must be defined before production deployment. Exact header values depend on the approved authentication and deployment decisions.
+
+## Frontend telemetry
+
+OpenTelemetry JavaScript instrumentation follows ADR-0020. Trace correlation is accepted. Export is optional and fail-open. Evaluation export is disabled under ADR-0027.
+
+Frontend telemetry must use an explicit attribute allowlist. It can include route templates, operation names, response class, latency, chart type, chart-contract version, and error category when these values do not expose restricted data.
+
+It must not include credentials, tokens, user prompts, report text, chart labels, query text, full URLs with identifiers, uploaded content, manager-specific business values, raw exceptions that contain response data, or unauthorized context.
+
 ## Agent Runtime database boundary
 
 ADR-0019 permits a restricted Agent Runtime PostgreSQL role. The final role name is open. Migration from the existing `agent_query_reader` role, or continued use of that role, is also open.
@@ -80,3 +118,5 @@ The Agent Runtime does not perform migrations, grant permissions, change policie
 - OpenTelemetry and Langfuse instrumentation must remove secrets, raw restricted business data, full documents, and unauthorized manager context.
 
 A minimal access projection matrix is required before authorization and scoped-query implementation. It must cover Senior Manager, Unit Manager, and Team Supervisor and specify Resource, Row scope, Allowed columns, Purpose, and individual-data access. This document does not define the matrix entries and does not approve a new database-role name or a wider data projection.
+
+The authentication product, protocol, credential-storage method, production Content Security Policy, and Access Projection Matrix entries remain open. These decisions block production session integration and security-sensitive frontend features. They do not block mock-based Design System, RTL, layout, accessibility, or UX work.

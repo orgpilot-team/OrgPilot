@@ -1,32 +1,191 @@
-# Web Application components
+# Web Application components and frontend architecture
 
-## Purpose and Scope
+## Purpose and scope
 
 The Web Application supplies the three Persian RTL management interfaces. It displays authorized data and sends user actions to the Backend API.
 
-## Runtime Technology
+This document is the architecture source for the Web Application. It owns the frontend technology stack, feature boundaries, presentation-mode policy, Design System boundary, shared-module rules, session responsibilities, target directory structure, and implementation boundaries.
 
-React 19, TypeScript, Vite, and Apache ECharts.
+It does not redefine these concerns:
 
-## Trust Boundary
+- Security, session isolation, and scope-aware caching are defined in `04-security-and-trust.md`.
+- Frontend quality attributes and quality gates are defined in `07-quality-attributes.md`.
+- Chart, Presentation response, OpenAPI wire, validation, and ECharts mapping rules are defined in `17-chart-presentation-contract.md`.
+- Visual identity, design tokens, typography, and interaction guidance are defined in `18-ux-and-design-system.md`.
+
+## Runtime technology
+
+The accepted frontend technologies are:
+
+| Technology | Responsibility |
+|---|---|
+| React 19 | Web Application framework and component composition |
+| TypeScript | Static type safety and generated API contract consumption |
+| Vite | Build and development tooling |
+| Ant Design | UI component foundation under the DIDRAH Design System |
+| Motion | Purposeful transitions and micro-interactions |
+| Apache ECharts | Deterministic rendering of authorized `ChartSpec` values |
+| React Flow | Interactive workflow presentation where it is suitable |
+| CSS and SVG | Custom interfaces and interactive 2D infographics |
+| OpenTelemetry JavaScript | Optional redacted trace correlation and fail-open telemetry export |
+
+Ant Design does not define the product visual identity. The DIDRAH Design System controls tokens, component variants, RTL behavior, accessibility, and renderer styling.
+
+No additional general UI framework, global state framework, query-cache framework, or styling framework is approved by this document. A new dependency needs a concrete requirement and must not duplicate an accepted responsibility.
+
+Three.js, 3D assets, and WebGPU or WebGL 2 renderer selection are deferred. They are not first-release dependencies.
+
+## Trust boundary
 
 The browser is not trusted. The Backend API authenticates and authorizes every request. The UI does not make access decisions.
 
-## Allowed Responsibilities
+The Web Application can manage a server-validated session context and temporary presentation state. It cannot act as an authentication or authorization authority. Authentication product, protocol, and credential-storage decisions remain open.
 
-- Display authorized reports, metrics, workflow state, and decision state.
+Detailed session, cache, stale-request, content-rendering, and telemetry rules are in `04-security-and-trust.md`.
+
+## Presentation modes
+
+### Classic Mode
+
+Classic Mode is the default and mandatory product experience. It supplies complete functional coverage with interactive 2D presentation.
+
+Classic Mode can use Ant Design, ECharts, React Flow, Motion, CSS, SVG, gradients, shadows, glow, and depth effects. It does not load Three.js, 3D models, or Modern-only assets.
+
+### Modern Mode
+
+Modern Mode is a deferred future enhancement. It can add selected 3D scenes only after Classic Mode is functionally complete.
+
+Modern Mode must:
+
+- Use the same Web Application, Design System, features, API contracts, and authorized state as Classic Mode.
+- Use lazy loading for its renderer code and assets.
+- Limit 3D to selected visualization areas.
+- Continue to use ECharts and 2D components where they are suitable.
+- Fall back to the complete Classic experience when 3D is unavailable or fails.
+- Avoid becoming a dependency of Classic Mode.
+
+The initial 30 FPS goal is a proposed future 3D rendering target. It is not a target for React, ECharts, or Motion. It is not a measured result. Exact renderer, browser, hardware, model-format, and asset-delivery decisions remain open.
+
+### Shared mode rules
+
+- There is one Web Application and one deployment unit.
+- There is one Design System and one product UX.
+- There is one set of business capabilities and API contracts.
+- Features do not duplicate business logic or authorized state for each mode.
+- Modern Mode is not a C4 component, service, route family, or authorization boundary.
+
+## Feature-based architecture
+
+The Web Application uses a lightweight feature-based architecture. The three features match the accepted C4 components:
+
+| DSL identifier | Feature directory | Component |
+|---|---|---|
+| `chatUi` | `features/assistant` | Conversational Assistant UI |
+| `dashboardUi` | `features/dashboard` | Role-Based Dashboard UI |
+| `workflowUi` | `features/workflow-control` | Workflow Control Room UI |
+
+Each feature owns its page composition, feature-specific presentation state, view models, and UI behavior. A feature must not import another feature's internal implementation. A feature must not call another feature or use another feature as a business-state store.
+
+Shared code is permitted only when it has more than one real consumer or when it implements one accepted cross-cutting boundary. Shared code can include:
+
+- The DIDRAH Design System and generic UI components.
+- Generated renderer-neutral API types and runtime response validation.
+- The HTTP client and request-cancellation support.
+- Session lifecycle and scope-aware cache infrastructure.
+- `ChartSpec` to ECharts mapping and chart lifecycle support.
+- Generic React Flow presentation primitives.
+- Shared Motion presets.
+- Redacted telemetry.
+- Focused technical utilities.
+
+The shared area must not become a general dumping area. Feature-specific types, components, hooks, and state stay in their feature.
+
+Tactical DDD does not apply to the Web Application. Do not create frontend aggregates, repositories, domain events, business-rule engines, or a duplicate domain model.
+
+## Target repository structure
+
+The structure below is a target shape. Create a directory only when it contains required code. Empty directories and speculative wrappers are not required.
+
+```text
+src/web-app/
+├── public/                         # Assets that require public URLs
+├── src/
+│   ├── app/                        # Composition, routes, providers, and configuration
+│   ├── features/
+│   │   ├── assistant/
+│   │   ├── dashboard/
+│   │   └── workflow-control/
+│   ├── shared/
+│   │   ├── api/                    # Generated client/types, transport, validation
+│   │   ├── design-system/          # Tokens, theme, shared component variants
+│   │   ├── visualization/
+│   │   │   ├── charts/             # ECharts mappers and lifecycle
+│   │   │   └── workflow/           # Generic React Flow presentation
+│   │   ├── session/
+│   │   └── observability/
+│   └── main.tsx
+├── e2e/                            # Add when end-to-end tests start
+├── index.html
+├── package.json
+├── package-lock.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+Tests should stay next to the code they verify unless they are end-to-end tests. Do not create generic `utils`, `types`, `hooks`, or `state` directories without a concrete owner and use.
+
+Generated API types must have one location. Do not hand-maintain a second TypeScript copy of Backend wire contracts. Renderer-neutral contract types must not import ECharts, React Flow, Motion, Ant Design, or a future 3D library.
+
+## Design System architecture
+
+The DIDRAH Design System is an internal shared module. It is not a C4 component, service, store, or deployment unit.
+
+It supplies shared tokens and presentation rules to:
+
+- Ant Design theme configuration and component variants.
+- ECharts mappers.
+- React Flow nodes and edges.
+- Motion presets.
+- Custom CSS and SVG.
+- Future Modern scenes when that work is approved.
+
+The Design System can define visual and interaction behavior. It cannot define business status, authorization, KPI meaning, chart values, workflow ownership, signal state, or decision rules.
+
+Exact visual tokens are not approved in this document. They belong to `18-ux-and-design-system.md`.
+
+## Information presentation principles
+
+The Web Application uses three product principles:
+
+1. Information visualization converts authorized business data into understandable visual patterns.
+2. Visual storytelling presents validated facts, their importance, and their evidence in a clear order.
+3. Actionable presentation connects validated insights, signals, decisions, and follow-up state to authorized manager actions.
+
+These principles apply to Classic and Modern modes. They do not permit the browser to detect signals, infer causes, create business conclusions, or change evidence. Detailed UX rules belong to `18-ux-and-design-system.md`.
+
+## Allowed responsibilities
+
+- Display authorized reports, metrics, workflow state, decision state, and explicit response states.
 - Map authorized `ChartSpec` values to ECharts options and render them.
+- Present Backend-supplied workflow state with React Flow when useful.
 - Collect scoped questions, uploads, and manager commands.
 - Send requests to the Backend API over HTTPS/JSON.
+- Own temporary browser and presentation state.
+- Apply the Design System, RTL behavior, responsive layout, accessibility behavior, and reduced-motion behavior.
+- Initialize, update, resize, isolate, and dispose visualization resources.
 
-## Forbidden Responsibilities
+## Forbidden responsibilities
 
-- Run business rules, KPI calculations, or agent graphs.
-- Calculate, regroup, complete, or correct chart data.
+- Run business rules, KPI calculations, workflow reconstruction, signal detection, or agent graphs.
+- Calculate, round, regroup, aggregate, interpolate, complete, or correct chart data.
+- Replace `null` with zero or change point order, units, targets, or evidence identity.
 - Read PostgreSQL, the protected archive, or input contracts directly.
 - Treat hidden UI state as an authorization control.
+- Accept executable chart options, HTML, callbacks, or formatter code from Backend or model output.
+- Infer business causes or conclusions independently.
+- Execute an organizational decision or send an unconfirmed action.
 
-## Component Map
+## Component map
 
 | DSL identifier | Component | Primary users |
 |---|---|---|
@@ -34,21 +193,33 @@ The browser is not trusted. The Backend API authenticates and authorizes every r
 | `dashboardUi` | Role-Based Dashboard UI | Senior Manager, Unit Manager, Team Supervisor |
 | `workflowUi` | Workflow Control Room UI | Senior Manager |
 
-## Internal Relationships
+## Internal relationships
 
 The three components share the same Web Application runtime. They do not call each other and do not share business state.
 
-## External Relationships
+They can use the shared infrastructure in this document. Shared infrastructure does not become a fourth business feature.
 
-Each component calls the Backend API over HTTPS/JSON. The Web Application can send redacted telemetry to the optional OpenTelemetry Collector.
+## External relationships
 
-## Chart Rendering Boundary
+Each component calls the Backend API over HTTPS/JSON. The Web Application can send redacted telemetry to the optional OpenTelemetry Collector. Core UI behavior remains available when telemetry is disabled or unavailable.
 
-The Web Application receives the internal Presentation response defined in doc 17. It contains validated content and zero or more `ChartSpec` values. A frontend mapping function converts each `ChartSpec` to an ECharts option. The mapping owns layout, RTL labels, typography, color, tooltip, legend, responsive behavior, and accessible text. It does not own chart values, KPI rules, grouping, targets, evidence, or authorization.
+## Chart and Presentation response boundary
 
-The frontend mapping function is not part of the Shared Chart Presentation Library because that library is .NET and contains no ECharts or React code. The `ChartSpec` contract remains independent of the rendering library.
+The Web Application receives the internal Presentation response defined in doc 17. It contains validated content and zero or more authorized `ChartSpec` values. A frontend mapping function converts each supported `ChartSpec` to an ECharts option.
 
-## Component Sections
+Doc 17 owns the wire contract, version compatibility, allowlist, limits, runtime validation, unsupported-type behavior, safe labels, mapping tests, and chart lifecycle rules. This document does not duplicate those rules.
+
+Chart capability is mandatory for the product. A specific response can contain zero charts when no chart is requested, the result shape is incompatible, or chart construction fails. Validated content remains available.
+
+## Session and browser-state responsibilities
+
+Shared session infrastructure can manage current authenticated-user information, login and logout presentation state, session expiration, Backend-supplied scope context, and invalidation triggers.
+
+It cannot decide authentication, authorization, role grants, row scope, column scope, resource permission, or purpose permission.
+
+Features own temporary local presentation state. They do not share business state. Scope-sensitive cache and request rules are defined in doc 04.
+
+## Component sections
 
 <a id="conversational-assistant-ui"></a>
 
@@ -61,13 +232,13 @@ The frontend mapping function is not part of the Shared Chart Presentation Libra
 - **Inputs:** User actions and authorized Backend API Presentation responses.
 - **Outputs:** Authenticated HTTPS/JSON requests and rendered results.
 - **Owned state:** Temporary browser view state only.
-- **Dependencies:** Backend API and the trusted browser session.
+- **Dependencies:** Backend API, server-validated session context, and approved shared frontend modules.
 - **Security boundary:** Treat all browser input as untrusted and do not store secrets in client state.
 - **Forbidden responsibilities:** KPI or chart-data calculation, evidence access, authorization, agent execution, and publication.
 - **Failure behavior:** Show an explicit error or persisted job state. Do not invent an answer.
 - **Idempotency:** Use server-issued identifiers and idempotency data for repeated commands.
 - **Observability:** Emit redacted UI request and error telemetry when collection is active.
-- **Related ADRs:** ADR-0005, ADR-0008, ADR-0010, ADR-0019, ADR-0020.
+- **Related ADRs:** ADR-0005, ADR-0008, ADR-0010, ADR-0019, ADR-0020, ADR-0029.
 - **Open issues:** Authentication product and method remain open.
 
 <a id="role-based-dashboard-ui"></a>
@@ -78,16 +249,16 @@ The frontend mapping function is not part of the Shared Chart Presentation Libra
 - **Display name:** Role-Based Dashboard UI
 - **Purpose:** Display authorized KPIs, targets, trends, drill-downs, decisions, and open actions.
 - **Responsibilities:** Request and render role-scoped management data, deterministic `ChartSpec` values, and direct-workload detail when allowed.
-- **Inputs:** Trusted session context and authorized report or dashboard responses.
-- **Outputs:** HTTPS/JSON read requests and rendered dashboards.
+- **Inputs:** Server-validated session context and authorized report or dashboard responses.
+- **Outputs:** HTTPS/JSON read requests and rendered management views.
 - **Owned state:** Temporary filters and presentation state only.
-- **Dependencies:** Backend Report and Dashboard API.
+- **Dependencies:** Backend Report and Dashboard API and approved shared frontend modules.
 - **Security boundary:** The Backend API enforces row, column, role, purpose, and policy scope.
 - **Forbidden responsibilities:** Direct database access, access-policy decisions, KPI or chart-data calculation, and data correction.
 - **Failure behavior:** Show an explicit unavailable or forbidden state. Do not reuse data from another scope.
 - **Idempotency:** Read operations are safe to repeat.
 - **Observability:** Emit redacted page, request, latency, and error telemetry when collection is active.
-- **Related ADRs:** ADR-0002, ADR-0005, ADR-0009, ADR-0020.
+- **Related ADRs:** ADR-0002, ADR-0005, ADR-0009, ADR-0020, ADR-0028, ADR-0029.
 - **Open issues:** No component-specific open issue.
 
 <a id="workflow-control-room-ui"></a>
@@ -97,20 +268,41 @@ The frontend mapping function is not part of the Shared Chart Presentation Libra
 - **DSL identifier:** `workflowUi`
 - **Display name:** Workflow Control Room UI
 - **Purpose:** Display WF1-WF3, stage SLA, bottlenecks, escalations, and pending decisions.
-- **Responsibilities:** Present executive workflow state and request authorized workflow drill-downs.
+- **Responsibilities:** Present Backend-supplied executive workflow state, use React Flow or custom 2D presentation when suitable, and request authorized workflow drill-downs.
 - **Inputs:** Senior Manager actions and authorized workflow responses.
 - **Outputs:** HTTPS/JSON read requests and rendered workflow views.
 - **Owned state:** Temporary filters and presentation state only.
-- **Dependencies:** Backend Report and Dashboard API.
+- **Dependencies:** Backend Report and Dashboard API and approved shared frontend modules.
 - **Security boundary:** Access is for the Senior Manager role. The Backend API verifies the role on each request.
-- **Forbidden responsibilities:** Workflow reconstruction, escalation calculation, authorization, and direct database access.
+- **Forbidden responsibilities:** Workflow reconstruction, SLA calculation, bottleneck detection, escalation calculation, authorization, and direct database access.
 - **Failure behavior:** Show an explicit unavailable or forbidden state and clear stale scoped data.
 - **Idempotency:** Read operations are safe to repeat.
 - **Observability:** Emit redacted workflow-view latency and error telemetry when collection is active.
-- **Related ADRs:** ADR-0005, ADR-0006, ADR-0007, ADR-0020.
+- **Related ADRs:** ADR-0005, ADR-0006, ADR-0007, ADR-0020, ADR-0029.
 - **Open issues:** No component-specific open issue.
 
-## Container-level Open Issues
+## Implementation sequencing
 
-- The authentication product and method remain open.
-- The Web-to-Collector transport is OTLP/HTTP when optional telemetry is active.
+Initial frontend setup can start before production contracts and authentication decisions are complete. The following work can use clearly separated mock data:
+
+- Vite and React application setup.
+- Design System foundations.
+- Ant Design theme integration.
+- Persian and RTL behavior.
+- Layouts, navigation prototypes, and responsive shells.
+- Accessible component states.
+- Motion patterns and reduced-motion behavior.
+- Feature page composition and UX testing.
+- Renderer prototypes that use non-production mock contracts.
+
+Mock work must not become an alternative production contract or an authorization bypass. Production API integration, generated API types, runtime response validation, authenticated session handling, scope-aware caching, and security-sensitive commands remain blocked until their owning contracts or decisions are approved.
+
+## Container-level open issues
+
+- Authentication product, protocol, and credential-storage method remain open.
+- Access Projection Matrix entries remain open.
+- The exact OpenAPI Presentation wire schema remains open.
+- Initial chart allowlist, point and series limits, and numeric display contract remain open.
+- Numeric frontend performance budgets remain open until the measurement profile is approved.
+- Modern renderer, hardware profile, asset format, and activation policy remain deferred.
+- The Web-to-Collector transport is OTLP/HTTP when optional telemetry export is active.
