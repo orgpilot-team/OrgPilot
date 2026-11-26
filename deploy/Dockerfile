@@ -5,6 +5,7 @@ COPY src/BackendApi/OrgPilot.BackendApi.csproj src/BackendApi/
 COPY src/BackgroundWorker/OrgPilot.BackgroundWorker.csproj src/BackgroundWorker/
 COPY src/SchedulerReplay/OrgPilot.SchedulerReplay.csproj src/SchedulerReplay/
 COPY src/Foundation/OrgPilot.Foundation.csproj src/Foundation/
+COPY src/SchedulerReplay/Acceptance/OrgPilot.Acceptance.csproj src/SchedulerReplay/Acceptance/
 RUN dotnet restore OrgPilot.slnx
 COPY src/BackendApi/ src/BackendApi/
 COPY src/BackgroundWorker/ src/BackgroundWorker/

@@ -1,3 +1,4 @@
+using OrgPilot.BackgroundWorker.Modules.Kpi;
 using OrgPilot.BackgroundWorker.Persistence;
 using OrgPilot.BackgroundWorker.Modules.Intake;
 using OrgPilot.BackgroundWorker.Modules.Snapshots;
@@ -19,6 +20,7 @@ builder.Services.AddStage2Persistence(builder.Configuration.GetConnectionString(
 builder.Services.AddScoped<IngestionCoordinator>();
 builder.Services.AddScoped<IngestionBatchStore>();
 builder.Services.AddScoped<SnapshotStore>();
+builder.Services.AddScoped<KpiRegistry>();
 
 using var host = builder.Build();
 if (migrate)

@@ -3,6 +3,7 @@
     <Project Path="src/BackendApi/OrgPilot.BackendApi.csproj" />
     <Project Path="src/BackgroundWorker/OrgPilot.BackgroundWorker.csproj" />
     <Project Path="src/SchedulerReplay/OrgPilot.SchedulerReplay.csproj" />
+    <Project Path="src/SchedulerReplay/Acceptance/OrgPilot.Acceptance.csproj" />
     <Project Path="src/Foundation/OrgPilot.Foundation.csproj" />
   </Folder>
 </Solution>
