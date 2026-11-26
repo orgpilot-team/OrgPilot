@@ -1,3 +1,6 @@
+using OrgPilot.BackgroundWorker.Persistence;
+using OrgPilot.BackgroundWorker.Modules.Intake;
+using OrgPilot.BackgroundWorker.Modules.Snapshots;
 using OrgPilot.Foundation.Archive;
 using OrgPilot.Foundation.Observability;
 using OrgPilot.Foundation.Persistence;
@@ -7,12 +10,23 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 var smokeOnly = args is ["--smoke"];
-var builder = Host.CreateApplicationBuilder(smokeOnly ? [] : args);
+var migrate = args is ["--migrate"];
+var builder = Host.CreateApplicationBuilder(smokeOnly || migrate ? [] : args);
 builder.Services.AddFoundationObservability(builder.Logging, builder.Configuration, "orgpilot-background-worker");
 builder.Services.AddFoundationPersistence(builder.Configuration);
 builder.Services.AddProtectedArchive(builder.Configuration);
+builder.Services.AddStage2Persistence(builder.Configuration.GetConnectionString("Product")!);
+builder.Services.AddScoped<IngestionCoordinator>();
+builder.Services.AddScoped<IngestionBatchStore>();
+builder.Services.AddScoped<SnapshotStore>();
 
 using var host = builder.Build();
+if (migrate)
+{
+    await using var migrationScope = host.Services.CreateAsyncScope();
+    await migrationScope.ServiceProvider.GetRequiredService<Stage2DbContext>().Database.MigrateAsync();
+    return;
+}
 var logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("WorkerStartup");
 await host.StartAsync();
 
