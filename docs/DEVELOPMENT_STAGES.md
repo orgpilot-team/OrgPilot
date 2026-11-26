@@ -6,12 +6,14 @@ The first four stages build the deterministic backend and its replay mechanism. 
 
 | No. | Stage | Main implementation scope | Completion evidence | Status |
 |---:|---|---|---|---|
-| 1 | Foundation and persistence | .NET solution and process projects; module boundaries; PostgreSQL 18; migrations; shared contracts and infrastructure conventions | Projects build, migrations apply from an empty database, and module/process boundaries are visible in code | Not started |
+| 1 | Foundation and persistence (Walking Skeleton) | Minimal runnable .NET processes; module boundaries; PostgreSQL 18; migrations; shared contracts and infrastructure conventions | The foundational services start together, database connectivity and migrations work, and module/process boundaries are visible in code | Not started |
 | 2 | Intake, snapshots, and KPIs | Versioned source intake; protected raw archive; canonical facts; data issues; immutable snapshots; KPI definitions, calculations, and SQLite parity | Pinned-day ingestion is repeatable; missing/late/duplicate cases behave correctly; every activated KPI translation has a passing Parity Receipt | Not started |
 | 3 | Workflows, signals, and report evidence | WF1–WF3 reconstruction; deterministic signal lifecycle, ownership, escalation, ranking; internal canonical report and evidence packages | Repeated pinned inputs produce the same workflow facts, signals, owners, ranking, numbers, and evidence references | Not started |
 | 4 | Durable execution and replay | PostgreSQL job plans and stage jobs; claim/lease/attempt/terminal state; Backend Run Coordinator; Worker stage runner; ordered replay and recovery | A deterministic replay resumes safely, survives a lost wake-up or interrupted worker, and does not read future data | Not started; job policy decision required |
 
-## 1. Foundation and persistence
+## 1. Foundation and persistence (Walking Skeleton)
+
+The objective is a minimal runnable system that verifies the architecture, process connectivity, and persistence infrastructure end to end. Implement only the foundation needed to start and extend the application in subsequent stages.
 
 **Implement**
 
@@ -21,7 +23,9 @@ The first four stages build the deterministic backend and its replay mechanism. 
 - Establish persistence conventions for immutable versions, source hashes, idempotency keys, receipts, and query lineage, plus the protected file archive interface. Keep SQLite outside product runtime.
 - Make the development process topology compatible with the later single-image evaluation entrypoint: API, Worker, Scheduler/Replay, Agent Runtime, and PostgreSQL remain separate logical processes even when packaged together.
 
-**Exit gate:** A clean checkout can build the solution, start the foundational services, apply migrations to an empty PostgreSQL database, and verify the database and archive adapters with a small smoke check. No business-output claim is made at this stage.
+**Scope boundary:** The Identity & Access module is a structural boundary only. Authentication providers, JWT or other token handling, authorization rules, the Access Projection Matrix, and business features belong to subsequent stages. Stage 1 does not introduce placeholder security behavior or business endpoints.
+
+**Exit gate:** A clean checkout can build the solution, start the foundational services together, verify health and configuration, apply migrations to an empty PostgreSQL database, and verify process connectivity and the database and archive adapters with a small smoke check. No business-output claim is made at this stage.
 
 ## 2. Intake, snapshots, and KPIs
 
