@@ -19,7 +19,8 @@ public sealed record SourceRead(
     int? ActualRowCount,
     ArchiveReference? Archive,
     SourceReadStatus Status,
-    string? IssueCode);
+    string? IssueCode,
+    string? SchemaVersion = null);
 
 public sealed record DropRead(
     int DropDay,
@@ -79,14 +80,15 @@ public sealed class DropIntakeReader(IProtectedFileArchive archive)
                 continue;
             }
 
+            await using var stream = await archive.OpenVerifiedAsync(reference, cancellationToken);
             try
             {
-                await using var stream = await archive.OpenVerifiedAsync(reference, cancellationToken);
-                var rowCount = CountRecords(stream, cancellationToken);
-                var matches = rowCount == expectedCount;
+                var (rowCount, schema) = InspectRecords(source, stream, cancellationToken);
+                var issue = schema is null ? "unknown_schema" :
+                    rowCount != expectedCount ? "manifest_row_count_mismatch" : null;
                 sources.Add(new(source, count, rowCount, reference,
-                    matches ? SourceReadStatus.ReadyForNormalization : SourceReadStatus.Invalid,
-                    matches ? null : "manifest_row_count_mismatch"));
+                    issue is null ? SourceReadStatus.ReadyForNormalization : SourceReadStatus.Invalid,
+                    issue, schema?.Version));
             }
             catch (Exception ex) when (ex is MalformedLineException or DecoderFallbackException or InvalidDataException)
             {
@@ -143,7 +145,7 @@ public sealed class DropIntakeReader(IProtectedFileArchive archive)
         return (businessDate, counts);
     }
 
-    private static int CountRecords(Stream stream, CancellationToken cancellationToken)
+    private static (int Count, SourceSchema? Schema) InspectRecords(string source, Stream stream, CancellationToken cancellationToken)
     {
         using var parser = new TextFieldParser(stream, new UTF8Encoding(false, true),
             detectEncoding: false, leaveOpen: true);
@@ -154,6 +156,8 @@ public sealed class DropIntakeReader(IProtectedFileArchive archive)
         if (header is null || header.Length == 0)
             throw new InvalidDataException("CSV header is missing.");
 
+        header[0] = header[0].TrimStart('\uFEFF');
+        var schema = SourceSchemaRegistry.Select(source, header);
         var count = 0;
         while (!parser.EndOfData)
         {
@@ -163,6 +167,6 @@ public sealed class DropIntakeReader(IProtectedFileArchive archive)
                 throw new InvalidDataException("CSV field count does not match its header.");
             count = checked(count + 1);
         }
-        return count;
+        return (count, schema);
     }
 }
