@@ -8,11 +8,11 @@ Accepted
 
 ## Context
 
-DIDRAH needs language analysis and Persian narrative generation. It also needs reproducible numbers, signals, authorization, validation, and publication.
+OrgPilot needs language analysis and Persian narrative generation. It also needs reproducible numbers, signals, authorization, validation, and publication.
 
 ## Decision
 
-DIDRAH uses one bounded agent. LangGraph coordinates only agent work. The deterministic core owns KPI calculation, signal rules, workflow reconstruction, authorization, validation, and publication.
+OrgPilot uses one bounded agent. LangGraph coordinates only agent work. The deterministic core owns KPI calculation, signal rules, workflow reconstruction, authorization, validation, and publication.
 
 The agent can analyze authorized evidence and create a narrative or decision-card candidate. It cannot calculate a KPI, widen scope, confirm a decision, activate configuration, or publish an unvalidated result.
 

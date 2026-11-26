@@ -8,11 +8,11 @@ Accepted
 
 ## Context
 
-DIDRAH can identify conditions and propose options. An automated organization action could create operational or governance risk.
+OrgPilot can identify conditions and propose options. An automated organization action could create operational or governance risk.
 
 ## Decision
 
-DIDRAH creates suggestions and drafts. A human manager makes the decision and sends or executes the action. The system does not send a message, move staff, or execute an organization action.
+OrgPilot creates suggestions and drafts. A human manager makes the decision and sends or executes the action. The system does not send a message, move staff, or execute an organization action.
 
 The system proposes a success criterion on the decision card and the manager confirms it. The criterion contains a target KPI and target value (preferably return below the `warn` threshold or reach the dictionary `target`, not an arbitrary percentage), a measurement window of 3–5 days, and a guardrail KPI with its limit; "10% improvement" is only a fallback default. Follow-up results state the method (workload normalization or comparable case without the decision), assumptions, confidence, and confounding factors. If the effect cannot be isolated, the Persian result states «اثر قابل جدا کردن نیست», not "no effect". Exported effect direction is `improved`, `worsened`, `no_change`, or `too_early`; a guardrail breach is itself a business signal.
 
@@ -24,6 +24,6 @@ The authorized confirmer and evidence of actual execution remain open in `ISSUE-
 
 ## Related requirements
 
-- DIDRAH can propose a decision, but a human manager must confirm it.
-- DIDRAH must not send or execute an organization action.
+- OrgPilot can propose a decision, but a human manager must confirm it.
+- OrgPilot must not send or execute an organization action.
 - Decision Effect evaluation must follow ADR-0015 without changing the output contract.

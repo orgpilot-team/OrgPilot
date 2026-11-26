@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-DIDRAH needs three Persian RTL management interfaces in one Web Application: Conversational Assistant UI, Role-Based Dashboard UI, and Workflow Control Room UI. These interfaces use the same authorized Backend API, product capabilities, Design System, and internal Presentation contract.
+OrgPilot needs three Persian RTL management interfaces in one Web Application: Conversational Assistant UI, Role-Based Dashboard UI, and Workflow Control Room UI. These interfaces use the same authorized Backend API, product capabilities, Design System, and internal Presentation contract.
 
 The accepted frontend stack already includes React 19, TypeScript, Vite, and Apache ECharts. The team also needs a UI component foundation, purposeful animation, interactive workflow presentation, custom 2D presentation, and a controlled path for possible future 3D enhancement.
 
@@ -16,7 +16,7 @@ Without one frontend architecture, the implementation can duplicate API contract
 
 ## Decision
 
-DIDRAH uses one feature-based Web Application.
+OrgPilot uses one feature-based Web Application.
 
 - The three existing C4 components remain the three primary frontend features.
 - Features do not call or import another feature's internal implementation.
@@ -24,7 +24,7 @@ DIDRAH uses one feature-based Web Application.
 - Shared frontend modules can provide the Design System, generic UI, generated API contracts, transport, session lifecycle, scope-aware cache infrastructure, visualization adapters, Motion presets, telemetry, and focused technical utilities.
 - Tactical DDD does not apply to the Web Application. Frontend aggregates, repositories, domain events, and business-rule engines are not used.
 
-Ant Design is the UI component foundation. The DIDRAH Design System controls its visual identity and supplies shared semantic tokens to Ant Design, ECharts, React Flow, Motion, CSS, SVG, and future approved 3D scenes.
+Ant Design is the UI component foundation. The OrgPilot Design System controls its visual identity and supplies shared semantic tokens to Ant Design, ECharts, React Flow, Motion, CSS, SVG, and future approved 3D scenes.
 
 Motion supplies purposeful transitions and micro-interactions. React Flow can present Backend-supplied workflow state where it is suitable. It does not reconstruct workflows or calculate SLA, bottlenecks, or escalations.
 

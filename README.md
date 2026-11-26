@@ -1,8 +1,8 @@
-# OrgPilot / DIDRAH
+# OrgPilot
 
-این مخزن محل طراحی و پیاده‌سازی **DIDRAH**، دستیار ایجنتیک مدیران سازمانی، است. سامانه قرار است داده‌های روزانه سازمان را به گزارش‌های مدیریتی فارسی و قابل‌ردیابی تبدیل کند، پرسش‌های محدود به سطح دسترسی مدیر را پاسخ دهد و تصمیم‌ها و اثر آن‌ها را با کنترل انسانی پیگیری کند.
+این مخزن محل طراحی و پیاده‌سازی **OrgPilot**، دستیار ایجنتیک مدیران سازمانی، است. سامانه قرار است داده‌های روزانه سازمان را به گزارش‌های مدیریتی فارسی و قابل‌ردیابی تبدیل کند، پرسش‌های محدود به سطح دسترسی مدیر را پاسخ دهد و تصمیم‌ها و اثر آن‌ها را با کنترل انسانی پیگیری کند.
 
-> وضعیت فعلی: معماری، تصمیم‌های فنی، قرارداد پیاده‌سازی و دیتاست ارزیابی مستند شده‌اند؛ پوشه‌های `src/` و `deploy/` هنوز عمدتاً اسکلت هستند. در حال حاضر فایل solution، پروژه قابل build، Dockerfile یا Compose اجرایی در مخزن وجود ندارد.
+> Current status: Stage 1 establishes the backend Walking Skeleton. See [Backend development stages](docs/DEVELOPMENT_STAGES.md) for progress and the remaining implementation scope.
 
 ## از کجا شروع کنیم؟
 
@@ -14,20 +14,66 @@
 4. برای شناخت داده‌ها، [راهنمای فارسی دیتاست آرکا](docs/arka_dataset/README_FA.md) و قراردادهای `docs/arka_dataset/output_contract/` را بخوانید.
 5. پیش از تغییر معماری، فرایند اعتبارسنجی در [راهنمای workspace معماری](docs/Analytics/README.md) را اجرا کنید.
 
+برنامهٔ ترتیبی چهار مرحلهٔ نخست پیاده‌سازی بک‌اند در [Backend development stages](docs/DEVELOPMENT_STAGES.md) ثبت شده است. وضعیت و شواهد تکمیل هر مرحله در همان سند به‌روز می‌شود.
+
+Follow the repository's [Coding conventions](docs/CODING_CONVENTIONS.md) for project structure, naming, and general implementation rules.
+
 ## نقشه مخزن
 
 | مسیر | محتوا و کاربرد |
 |---|---|
 | [`docs/Analytics/`](docs/Analytics/) | منابع فعال معماری: مدل C4، مستندات فنی و ADRها |
 | [`docs/arka_dataset/`](docs/arka_dataset/) | دیتاست ساختگی آرکا، تنظیمات KPI و Workflow، ورودی‌های مدیران و schema خروجی ارزیابی |
-| [`src/`](src/) | اسکلت اجزای اجرایی محصول؛ هنوز پیاده‌سازی نشده است |
-| [`deploy/`](deploy/) | جایگاه تنظیمات PostgreSQL و OpenTelemetry Collector؛ فعلاً placeholder |
+| [`src/`](src/) | Backend Walking Skeleton, frontend scaffold, and future product modules |
+| [`deploy/`](deploy/) | Development container build and PostgreSQL bootstrap configuration |
 | [`.agents/skills/`](.agents/skills/) | دستورها و راهنماهای کمکی برای عامل‌های توسعه؛ بخشی از runtime محصول نیست |
 | [`tmp/`](tmp/) | بریف‌ها، برنامه‌ها، exportها و فایل‌های کاری/تاریخی؛ **منبع معتبر تحلیل، توسعه یا استقرار نیست** |
 
+## Backend Development Setup (Stage 1)
+
+The Stage 1 solution is [`OrgPilot.slnx`](OrgPilot.slnx). It requires a .NET 10 SDK (see `global.json`) for host builds and Docker Desktop or an equivalent Docker Engine with Compose for the development stack.
+
+From the repository root in PowerShell:
+
+```powershell
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+dotnet build OrgPilot.slnx
+docker compose up -d --build --wait
+```
+
+Copy `.env.example` only if you do not already have a `.env`. Its values are local development credentials; use separate credentials for other environments. PostgreSQL initializes roles and passwords on the first start of an empty database volume. Changing `.env` alone does not rotate passwords in an existing database.
+
+| Service | Stage 1 responsibility |
+|---|---|
+| `postgresql` | PostgreSQL 18, private network, loopback-only development access, persistent volume |
+| `database-migrate` | One-shot EF Core migration using a dedicated migration role |
+| `backend-api` | ASP.NET Core host, database readiness and development OpenAPI document |
+| `background-worker` | Worker host with database and protected archive startup checks |
+| `scheduler-replay` | Generic Host console shell, checks the Backend API over HTTP |
+
+The API is available on the loopback address `http://localhost:5080` by default (`ORGPILOT_API_PORT` in `.env`). PostgreSQL is published only to the host loopback address for local development (`ORGPILOT_POSTGRES_PORT`, default `5432`). The Worker and Scheduler are idle after their startup checks; their business processing is added in later stages.
+
+Verify the Walking Skeleton:
+
+```powershell
+docker compose ps -a
+Invoke-RestMethod http://localhost:5080/health/live
+Invoke-RestMethod http://localhost:5080/health/ready
+docker compose exec -T background-worker dotnet OrgPilot.BackgroundWorker.dll --smoke
+docker compose exec -T scheduler-replay dotnet OrgPilot.SchedulerReplay.dll --check
+```
+
+Both health endpoints return `Healthy`. The Worker check stores and reads synthetic bytes in an isolated archive directory, confirms repeated storage returns the same reference, and removes the check data. The Scheduler check confirms it can reach the API. `database-migrate` must have exited with code 0 before the runtime services start. The initial migration establishes a version marker only; business tables will be added by their owning modules.
+
+To inspect the local development database from a terminal, run `docker compose exec postgresql psql -U orgpilot_admin -d orgpilot`, then use `\dt foundation.*` to list the current foundation tables. For a graphical database client, such as the PostgreSQL extension for VS Code, connect to `127.0.0.1` on port `5432` (or `ORGPILOT_POSTGRES_PORT`), database `orgpilot`, username `orgpilot_admin`, and the password in `ORGPILOT_POSTGRES_PASSWORD` in `.env`. This host access is local development only; the database is not published on external interfaces.
+
+Use `docker compose down` to stop the development stack while preserving its named volumes. OpenTelemetry tracing and structured JSON logging are initialized; external export is disabled by default. To use an optional development collector, configure `ORGPILOT_OTLP_EXPORT_ENABLED=true` and `ORGPILOT_OTLP_ENDPOINT` to a reachable collector endpoint before starting the stack. The collector and Langfuse deployment are not required for Stage 1. The future evaluation image is a separate packaging task under ADR-0021.
+
+Persistence conventions for later stages: each business module owns its EF Core models and explicit migrations; runtime credentials receive only the necessary permissions. Store source hashes as SHA-256, immutable version references as explicit keys, and idempotency keys with uniqueness constraints in the owning module. Persist receipts as append-only records with `trace_id`; query lineage must preserve query, snapshot and result references. The walking skeleton does not introduce business tables or speculative domain DTOs. The clock contract receives a pinned business date and cutoff from the future replay process.
+
 ## Frontend Development Setup
 
-The Web Application is in `src/web-app`. The verified environment uses Node.js `24.15.0` and npm `11.12.1`. The frontend supports the Node.js versions declared in `package.json`: Node.js `20.19.0` or later in the 20.x line, or Node.js `22.12.0` or later. Use npm `11.12.1` to match the recorded package-manager version.
+The Web Application is in `src/WebApp`. The verified environment uses Node.js `24.15.0` and npm `11.12.1`. The frontend supports the Node.js versions declared in `package.json`: Node.js `20.19.0` or later in the 20.x line, or Node.js `22.12.0` or later. Use npm `11.12.1` to match the recorded package-manager version.
 
 The approved frontend stack is:
 
@@ -37,7 +83,7 @@ The approved frontend stack is:
 | React DOM 19 | React rendering in the browser |
 | TypeScript | Static type checking |
 | Vite | Local development, production builds, and build preview |
-| Ant Design and Ant Design Icons | UI component foundation and icons under the DIDRAH Design System |
+| Ant Design and Ant Design Icons | UI component foundation and icons under the OrgPilot Design System |
 | Motion | Purposeful transitions and micro-interactions |
 | Apache ECharts | Rendering authorized chart specifications |
 | React Flow | Interactive presentation of Backend-supplied workflow state |
@@ -45,7 +91,7 @@ The approved frontend stack is:
 After you clone or pull the repository, run:
 
 ```bash
-cd src/web-app
+cd src/WebApp
 npm ci
 npm run dev
 ```
@@ -55,7 +101,7 @@ npm run dev
 - `npm run build` creates the optimized production build.
 - `npm run preview` serves the production build locally for verification. Run `npm run build` first.
 
-All frontend dependencies are local to `src/web-app`. The `node_modules` and `dist` directories are generated locally and must not be committed. The `package.json` and `package-lock.json` files must remain tracked. Three.js and Modern Mode dependencies are intentionally deferred.
+All frontend dependencies are local to `src/WebApp`. The `node_modules` and `dist` directories are generated locally and must not be committed. The `package.json` and `package-lock.json` files must remain tracked. Three.js and Modern Mode dependencies are intentionally deferred.
 
 ## مستندات و تحلیل معماری
 
@@ -111,12 +157,12 @@ ADRها از [`0001`](docs/Analytics/adrs/0001-unified-data-intake-and-preparati
 
 | جزء | مسئولیت | فناوری پیش‌بینی‌شده |
 |---|---|---|
-| `web-app` | داشبورد، دستیار و کنترل Workflow | React و TypeScript |
-| `backend-api` | API، هویت و دسترسی، اعتبارسنجی، انتشار و هماهنگی تحلیل | ASP.NET Core روی .NET 10 |
-| `background-worker` | intake، KPI، snapshot، signal، evidence و ارزیابی اثر تصمیم | .NET 10 Worker |
-| `scheduler-replay` | زمان‌بندی، replay، ورودی اسکریپت‌شده و acceptance/parity | .NET 10 |
-| `agent-runtime` | اجرای graph محدود، conversation و model gateway | Python 3.12، LangGraph و Pydantic |
-| `shared-dotnet` | قراردادها و primitiveهای مشترک بدون مالکیت مشترک داده | کتابخانه‌های .NET |
+| [`WebApp`](src/WebApp/) | داشبورد، دستیار و کنترل Workflow | React و TypeScript |
+| [`BackendApi`](src/BackendApi/) | API، هویت و دسترسی، اعتبارسنجی، انتشار و هماهنگی تحلیل | ASP.NET Core روی .NET 10 |
+| [`BackgroundWorker`](src/BackgroundWorker/) | intake، KPI، snapshot، signal، evidence و ارزیابی اثر تصمیم | .NET 10 Worker |
+| [`SchedulerReplay`](src/SchedulerReplay/) | زمان‌بندی، replay، ورودی اسکریپت‌شده و acceptance/parity | .NET 10 |
+| [`AgentRuntime`](src/AgentRuntime/) | اجرای graph محدود، conversation و model gateway | Python 3.12، LangGraph و Pydantic |
+| [`Foundation`](src/Foundation/) | قراردادها و primitiveهای مشترک بدون مالکیت مشترک داده | کتابخانه‌های .NET |
 
 PostgreSQL تنها پایگاه‌داده محصول است. SQLite فقط oracle مرجع داخل acceptance harness است. هسته deterministic مالک محاسبه KPI، قواعد signal، authorization، validation و publication می‌ماند؛ مدل زبانی اجازه ندارد عدد، سطح دسترسی یا تصمیم عملیاتی را تعیین کند.
 
@@ -144,6 +190,6 @@ PostgreSQL تنها پایگاه‌داده محصول است. SQLite فقط ora
 
 ## گام بعدی توسعه
 
-پیش از اضافه‌کردن feature، باید foundation قابل اجرا ساخته شود: solution و پروژه‌ها، Compose توسعه، migrationهای PostgreSQL، قراردادهای مشترک، acceptance harness و entrypoint ارزیابی. سپس مسیر deterministic ورود داده و KPI تا تولید JSON قرارداد پیاده‌سازی شود؛ Agent Runtime و UI بعد از تثبیت این مسیر به آن متصل می‌شوند.
+Follow the ordered [development stages](docs/DEVELOPMENT_STAGES.md). After verifying the Walking Skeleton (Stage 1), implement deterministic data intake, snapshots, and KPI parity (Stage 2). The evaluation entrypoint, Agent Runtime, and product UI integration follow their respective stages.
 
 هر تغییر معماری باید هم‌زمان در `workspace.dsl`، سند مرتبط و در صورت نیاز ADR ثبت و طبق [راهنمای اعتبارسنجی](docs/Analytics/README.md) بررسی شود. تغییر schema خروجی یا تعریف KPI نیز باید از منبع معتبر خودش شروع شود، نه از کد مصرف‌کننده.

@@ -30,16 +30,16 @@ Each store or contract has a fixed authority, access mode, and mutability rule. 
 |---|---|---|
 | `postgres` | PostgreSQL | Product store |
 | `fileArchive` | Protected File Archive | Product store |
-| `inputDataset` | DIDRAH Input Dataset | External input contract |
+| `inputDataset` | OrgPilot Input Dataset | External input contract |
 | `submissionOutput` | Submission Output Directory | External output contract |
 
 ## Internal Relationships
 
-PostgreSQL and Protected File Archive are inside the DIDRAH boundary. They do not call other elements.
+PostgreSQL and Protected File Archive are inside the OrgPilot boundary. They do not call other elements.
 
 ## External Relationships
 
-The DIDRAH Input Dataset is read-only. The Submission Output Directory accepts approved brief and QA artifacts from Submission Exporter only.
+The OrgPilot Input Dataset is read-only. The Submission Output Directory accepts approved brief and QA artifacts from Submission Exporter only.
 
 ## Component Sections
 
@@ -88,7 +88,7 @@ The DIDRAH Input Dataset is read-only. The Submission Output Directory accepts a
 ### Input Dataset Contract
 
 - **DSL identifier:** `inputDataset`;
-- **Display name:** DIDRAH Input Dataset.
+- **Display name:** OrgPilot Input Dataset.
 - **Purpose:** Supply versioned source, replay, upload, configuration, and history data.
 - **Responsibilities:** Define evaluation input files and versions.
 - **Inputs:** Formal evaluation dataset contents.

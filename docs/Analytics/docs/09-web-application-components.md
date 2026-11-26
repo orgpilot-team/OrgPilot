@@ -22,14 +22,14 @@ The accepted frontend technologies are:
 | React 19 | Web Application framework and component composition |
 | TypeScript | Static type safety and generated API contract consumption |
 | Vite | Build and development tooling |
-| Ant Design | UI component foundation under the DIDRAH Design System |
+| Ant Design | UI component foundation under the OrgPilot Design System |
 | Motion | Purposeful transitions and micro-interactions |
 | Apache ECharts | Deterministic rendering of authorized `ChartSpec` values |
 | React Flow | Interactive workflow presentation where it is suitable |
 | CSS and SVG | Custom interfaces and interactive 2D infographics |
 | OpenTelemetry JavaScript | Optional redacted trace correlation and fail-open telemetry export |
 
-Ant Design does not define the product visual identity. The DIDRAH Design System controls tokens, component variants, RTL behavior, accessibility, and renderer styling.
+Ant Design does not define the product visual identity. The OrgPilot Design System controls tokens, component variants, RTL behavior, accessibility, and renderer styling.
 
 No additional general UI framework, global state framework, query-cache framework, or styling framework is approved by this document. A new dependency needs a concrete requirement and must not duplicate an accepted responsibility.
 
@@ -88,7 +88,7 @@ Each feature owns its page composition, feature-specific presentation state, vie
 
 Shared code is permitted only when it has more than one real consumer or when it implements one accepted cross-cutting boundary. Shared code can include:
 
-- The DIDRAH Design System and generic UI components.
+- The OrgPilot Design System and generic UI components.
 - Generated renderer-neutral API types and runtime response validation.
 - The HTTP client and request-cancellation support.
 - Session lifecycle and scope-aware cache infrastructure.
@@ -107,7 +107,7 @@ Tactical DDD does not apply to the Web Application. Do not create frontend aggre
 The structure below is a target shape. Create a directory only when it contains required code. Empty directories and speculative wrappers are not required.
 
 ```text
-src/web-app/
+src/WebApp/
 ├── public/                         # Assets that require public URLs
 ├── src/
 │   ├── app/                        # Composition, routes, providers, and configuration
@@ -138,7 +138,7 @@ Generated API types must have one location. Do not hand-maintain a second TypeSc
 
 ## Design System architecture
 
-The DIDRAH Design System is an internal shared module. It is not a C4 component, service, store, or deployment unit.
+The OrgPilot Design System is an internal shared module. It is not a C4 component, service, store, or deployment unit.
 
 It supplies shared tokens and presentation rules to:
 

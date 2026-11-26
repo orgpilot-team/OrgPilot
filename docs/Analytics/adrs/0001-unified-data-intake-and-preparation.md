@@ -8,11 +8,11 @@ Accepted
 
 ## Context
 
-DIDRAH receives ordered data drops, manager inputs, and uploads. The system must support replay, late data, schema changes, duplicate records, conflicting records, and a fixed daily cutoff. It must not guess unknown file contracts or use future data.
+OrgPilot receives ordered data drops, manager inputs, and uploads. The system must support replay, late data, schema changes, duplicate records, conflicting records, and a fixed daily cutoff. It must not guess unknown file contracts or use future data.
 
 ## Decision
 
-DIDRAH uses one deterministic pipeline for source intake, schema validation, normalization, data-quality checks, duplicate and conflict handling, canonical storage, and daily snapshots. It follows the DDD model in `docs/16-domain-model.md` (ADR-0024).
+OrgPilot uses one deterministic pipeline for source intake, schema validation, normalization, data-quality checks, duplicate and conflict handling, canonical storage, and daily snapshots. It follows the DDD model in `docs/16-domain-model.md` (ADR-0024).
 
 The system reads input only from `DATA_DIR` and writes delivery output only to `OUTPUT_DIR`. Each source has a versioned schema contract. Raw and canonical data remain separate. Invalid or conflicting data is quarantined. Each report uses a pinned snapshot. Late or corrected data causes a complete rebuild in the first version.
 

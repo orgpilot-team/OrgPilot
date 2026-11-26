@@ -10,7 +10,7 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <main>
-      <h1>دیدراه</h1>
+      <h1>OrgPilot</h1>
     </main>
   </StrictMode>,
 )

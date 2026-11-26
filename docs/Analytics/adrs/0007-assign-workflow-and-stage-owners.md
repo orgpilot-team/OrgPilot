@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-DIDRAH reconstructs three workflows. Each stage needs one responsible manager. Workflow-level conditions also need one escalation owner.
+OrgPilot reconstructs three workflows. Each stage needs one responsible manager. Workflow-level conditions also need one escalation owner.
 
 ## Decision
 

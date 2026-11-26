@@ -2,7 +2,7 @@
 
 ## Purpose and authority
 
-This document defines the DIDRAH visual language and shared UX guidance. It applies to all three Web Application features and to Classic and future Modern presentation modes.
+This document defines the OrgPilot visual language and shared UX guidance. It applies to all three Web Application features and to Classic and future Modern presentation modes.
 
 This document does not define business workflows, authorization, API contracts, chart values, signal rules, or C4 boundaries. Those concerns remain in their owning architecture and contract documents.
 
@@ -10,7 +10,7 @@ Status: **Accepted direction; detailed tokens and component specifications remai
 
 ## Visual direction
 
-DIDRAH uses a Deep Dark visual direction:
+OrgPilot uses a Deep Dark visual direction:
 
 - Near-black backgrounds with subtle navy tones.
 - Dark elevated surfaces.
@@ -23,11 +23,11 @@ DIDRAH uses a Deep Dark visual direction:
 - Custom chart and infographic styling.
 - Persian and RTL-first composition.
 
-These statements describe visual direction. They do not approve exact colors, typefaces, spacing, shadows, radii, or motion values. The external visual reference defines a visual language only. It does not define DIDRAH navigation, information architecture, manager workflows, or product behavior.
+These statements describe visual direction. They do not approve exact colors, typefaces, spacing, shadows, radii, or motion values. The external visual reference defines a visual language only. It does not define OrgPilot navigation, information architecture, manager workflows, or product behavior.
 
 ## Design System ownership
 
-The DIDRAH Design System is the presentation authority for:
+The OrgPilot Design System is the presentation authority for:
 
 - Semantic color, typography, spacing, elevation, radius, border, and motion tokens.
 - Ant Design theme values and component variants.
@@ -39,7 +39,7 @@ The DIDRAH Design System is the presentation authority for:
 
 Tokens must use semantic names. A renderer can translate semantic tokens into its own configuration. Renderer-specific configuration must not leak into renderer-neutral API contracts.
 
-Ant Design supplies component behavior and structure. Its default appearance must not determine DIDRAH visual identity. Avoid a parallel general-purpose component library.
+Ant Design supplies component behavior and structure. Its default appearance must not determine OrgPilot visual identity. Avoid a parallel general-purpose component library.
 
 ## Information experience
 

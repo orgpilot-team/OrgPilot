@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-A source can be missing or late. DIDRAH must not create a value from incomplete evidence. It must also avoid stopping all valid reports when one source is unavailable.
+A source can be missing or late. OrgPilot must not create a value from incomplete evidence. It must also avoid stopping all valid reports when one source is unavailable.
 
 ## Decision
 

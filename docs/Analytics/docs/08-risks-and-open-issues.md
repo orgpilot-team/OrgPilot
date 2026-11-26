@@ -21,7 +21,7 @@ The active risk and decision record is this document together with the ADR Statu
 | Unsafe report, label, tooltip, or assistant content executes in the browser | Web Application | Text-first rendering, fixed local renderers, runtime validation, length limits, and production security headers |
 | Frontend wire types drift from Backend responses | Backend API and Web Application | Versioned OpenAPI authority, generated TypeScript types, runtime validation, and contract-drift checks |
 | An unsupported or oversized chart changes or hides validated content | Backend API and Web Application | Finite allowlist, accepted limits, explicit unavailable state, and visualization failure isolation |
-| UI framework defaults replace DIDRAH identity or weaken RTL and accessibility | Web Application | Central Design System, semantic tokens, RTL tests, accessibility gates, and UX review |
+| UI framework defaults replace OrgPilot identity or weaken RTL and accessibility | Web Application | Central Design System, semantic tokens, RTL tests, accessibility gates, and UX review |
 | Deferred Modern code increases Classic load or creates a hardware dependency | Web Application | No first-release Three.js dependency, lazy loading, visibility-aware rendering, resource disposal, and complete Classic fallback |
 | Hardcoded behavior fails on hidden data | All deterministic services | Contract-driven processing and hidden-data tests |
 | Replay reads future data | Scheduler and Replay Runner | Pinned cutoff and ordered replay tests |

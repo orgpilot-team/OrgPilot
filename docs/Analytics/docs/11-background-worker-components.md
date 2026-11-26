@@ -44,7 +44,7 @@ The Run Stage Coordinator invokes pinned stages. Components use in-process calls
 
 ## External Relationships
 
-The Worker reads the DIDRAH Input Dataset, writes original bytes to the Protected File Archive, and reads and writes PostgreSQL. It can send redacted telemetry to the optional Collector.
+The Worker reads the OrgPilot Input Dataset, writes original bytes to the Protected File Archive, and reads and writes PostgreSQL. It can send redacted telemetry to the optional Collector.
 
 ## Component Sections
 
@@ -79,7 +79,7 @@ The Worker reads the DIDRAH Input Dataset, writes original bytes to the Protecte
 - **Inputs:** Pinned source contracts and intake job.
 - **Outputs:** Committed batch with `DataIssue[]` and canonical rows, or explicit intake failure. This component absorbs Source Adapters, Normalizer, and Data Quality Service (`sourceAdapters`, `normalizer`, `dataQualityService` in the current DSL): all three are deterministic functions over the same pinned input, and `DataIssue` is an entity of the `IngestionBatch` aggregate.
 - **Owned state:** Batch, source status, data issues, canonical rows, and intake receipts in PostgreSQL; original bytes in archive.
-- **Dependencies:** DIDRAH Input Dataset, Protected File Archive, and PostgreSQL.
+- **Dependencies:** OrgPilot Input Dataset, Protected File Archive, and PostgreSQL.
 - **Security boundary:** Source files are untrusted; unknown schema/unit/key is quarantined, never guessed.
 - **Forbidden responsibilities:** Fabricate missing values, turn a data issue into a business signal, calculate KPIs, or overwrite source bytes.
 - **Failure behavior:** Do not expose a partial batch.

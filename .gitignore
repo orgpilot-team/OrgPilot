@@ -1,46 +1,55 @@
-# Local editor settings
+# Local editor and IDE settings
 .vscode/
 .idea/
+.vs/
+*.user
 .roo/mcp.json
 /.perch
 
-# Test and browser automation artifacts
-.playwright-cli/
-playwright-report/
-test-results/
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
 
-# Temporary and generated output
-output/
-*.tmp
-*.log
+# .NET build outputs
+bin/
+obj/
 
-# Structurizr local cache
-.structurizr/
+# Frontend dependencies and build outputs
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
 
-# Local backup files
-*.backup-*.html
-*~
-*.bak
-
-# Python cache and local environments
+# Python caches and virtual environments
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .venv/
 venv/
 
+# Test, coverage, and browser automation artifacts
+.playwright-cli/
+playwright-report/
+test-results/
+coverage/
+
+# Temporary and generated output
+output/
+*.tmp
+*.log
+
+# Structurizr generated files and local cache
+.structurizr/
+/docs/Analytics/mermaid
+/docs/Analytics/workspace.json
+
+# Local backup files
+*.backup-*.html
+*~
+*.bak
+
 # Operating system files
 .DS_Store
 Thumbs.db
 Desktop.ini
-
-# Frontend dependencies and generated output
-node_modules/
-dist/
-.vite/
-coverage/
-*.tsbuildinfo
-
-# Program Specific
-Docs/Analytics/mermaid
-/Docs/Analytics/workspace.json
