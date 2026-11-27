@@ -60,9 +60,22 @@
   gap: var(--didrah-space-compact);
 }
 
-.didrah-panel-loading {
+.didrah-panel-loading,
+.didrah-panel-empty {
   display: grid;
   gap: var(--didrah-space-compact);
   color: var(--didrah-color-text-secondary);
   font: var(--didrah-type-secondary);
+}
+
+.didrah-panel-loading {
+  padding: var(--didrah-space-inset);
+  border: 1px solid var(--didrah-color-border-subtle);
+  border-radius: var(--didrah-radius-control);
+  background: var(--didrah-color-surface-base);
+}
+
+.didrah-panel-state-title {
+  color: var(--didrah-color-text-primary);
+  font: var(--didrah-type-control);
 }

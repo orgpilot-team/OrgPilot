@@ -1,4 +1,4 @@
-import { FileTextOutlined, HistoryOutlined, InboxOutlined, ShopOutlined } from '@ant-design/icons'
+import { ArrowDownOutlined, FileTextOutlined, HistoryOutlined, InboxOutlined, ShopOutlined } from '@ant-design/icons'
 import { Button, Menu, Popover, Radio, Tag } from 'antd'
 import { useRef, useState } from 'react'
 import type { ComponentRef } from 'react'
@@ -134,8 +134,12 @@ export function PatternSpecimens() {
             />
             <Panel surface="overlay" density="compact">
               <dl className="lab-pattern-kpi">
-                <dt>ارزش خالص موجودی</dt>
-                <dd><bdi dir="ltr">2,584,320,750.25</bdi> <span>ریال</span></dd>
+                <dt>ارزش خالص موجودی شعبهٔ ونک</dt>
+                <dd className="lab-pattern-kpi-value"><bdi dir="ltr">2,584,320,750.25</bdi> <span>ریال</span></dd>
+                <dd className="lab-pattern-kpi-comparison">
+                  <ArrowDownOutlined aria-hidden="true" />
+                  <span><bdi dir="ltr">186,432,500.00</bdi> ریال کاهش نسبت به شیفت قبل</span>
+                </dd>
               </dl>
               <div className="lab-pattern-tags">
                 <Tag color={reviewed ? 'success' : 'warning'}>{reviewed ? 'بررسی شد' : 'در انتظار بررسی'}</Tag>
@@ -144,7 +148,11 @@ export function PatternSpecimens() {
             </Panel>
             {reviewed
               ? <PanelState kind="success" title="بررسی نمونه ثبت شد." />
-              : <PanelState kind="warning" title="موجودی ۳ کالا کمتر از حد سفارش است." />}
+              : <PanelState
+                  kind="warning"
+                  title="موجودی ۳ کالا کمتر از حد سفارش است."
+                  description="موجودی قفسه و انبار این کالاها را پیش از سفارش بعدی تطبیق دهید."
+                />}
           </Panel>
         </div>
         <ReviewStatePanel />

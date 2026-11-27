@@ -1,0 +1,21 @@
+.didrah-ant-table .ant-table-container {
+  border: 1px solid var(--didrah-color-border-subtle);
+  border-radius: var(--didrah-radius-control);
+}
+
+.didrah-ant-alert.ant-alert {
+  border-inline-start-width: 3px;
+}
+
+.didrah-ant-notice:is(.ant-notification-notice, .ant-message-notice) {
+  background-image: var(--didrah-control-tint);
+  box-shadow: var(--didrah-control-inset), var(--didrah-control-popup-shadow);
+  outline: 1px solid var(--didrah-color-border-control);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .didrah-ant-skeleton.ant-skeleton-active :is(.ant-skeleton-title, .ant-skeleton-paragraph li, .ant-skeleton-avatar),
+  .didrah-ant-spinner :is(.ant-spin-dot-spin, .ant-spin-dot-item) {
+    animation: none;
+  }
+}

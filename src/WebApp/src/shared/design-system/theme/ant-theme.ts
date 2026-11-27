@@ -9,6 +9,7 @@ import type { ThemeColors, ThemeName } from '../tokens/theme-contract'
 import { typography } from '../tokens/typography'
 import './ant-controls.css'
 import './ant-selection-overlays.css'
+import './ant-data-feedback.css'
 
 const { roles } = typography
 const toAntPixels = (size: (typeof roles)[keyof typeof roles]['size']) => Number.parseFloat(size) * 16
@@ -33,6 +34,12 @@ export const antControlConfig = {
   dropdown: { classNames: { menu: 'didrah-ant-popup', item: 'didrah-ant-menu-item' } },
   popover: { classNames: { container: 'didrah-ant-popup' } },
   tooltip: { classNames: { container: 'didrah-ant-tooltip' } },
+  table: { className: 'didrah-ant-table' },
+  alert: { classNames: { root: 'didrah-ant-alert' } },
+  skeleton: { classNames: { root: 'didrah-ant-skeleton' } },
+  spin: { classNames: { indicator: 'didrah-ant-spinner' } },
+  message: { classNames: { root: 'didrah-ant-notice' } },
+  notification: { classNames: { root: 'didrah-ant-notice' } },
 } satisfies ConfigProviderProps
 
 function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
@@ -66,6 +73,10 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
     colorWarningBorder: tint(warning, 24),
     colorErrorBorder: tint(error, 24),
     colorInfoBorder: tint(info, 24),
+    colorSuccessText: success,
+    colorWarningText: warning,
+    colorErrorText: error,
+    colorInfoText: info,
   }
   const field = {
     colorTextPlaceholder: 'var(--didrah-control-muted)',
@@ -192,8 +203,35 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
       Drawer: { colorBgElevated: overlay, colorSplit: border },
       Dropdown: { colorBgElevated: overlay, controlItemBgHover: raised },
       Popover: { colorBgElevated: overlay, colorText: text },
-      Tag: status,
-      Alert: status,
+      Tag: { ...status, defaultBg: raised, defaultColor: secondary },
+      Alert: {
+        ...status,
+        containerBorderRadius: layout.radius.control,
+        defaultPadding: '8px 12px',
+        withDescriptionPadding: '12px 16px',
+      },
+      Empty: { colorTextDescription: secondary },
+      Skeleton: {
+        gradientFromColor: tint(muted, 15),
+        gradientToColor: tint(muted, 25),
+        blockRadius: 4,
+      },
+      Spin: { colorPrimary: colors['accent-cyan-content'] },
+      Message: {
+        contentBg: overlay,
+        contentPadding: '8px 14px',
+        colorSuccess: success,
+        colorWarning: warning,
+        colorError: error,
+        colorInfo: info,
+      },
+      Notification: {
+        colorBgElevated: overlay,
+        colorSuccess: success,
+        colorWarning: warning,
+        colorError: error,
+        colorInfo: info,
+      },
       Menu: {
         itemSelectedBg: selected,
         itemSelectedColor: text,
@@ -203,8 +241,19 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
       Table: {
         headerBg: raised,
         headerColor: secondary,
+        headerSplitColor: border,
+        headerBorderRadius: layout.radius.control,
+        borderColor: border,
+        headerSortActiveBg: selected,
+        headerSortHoverBg: selected,
+        bodySortBg: raised,
         rowHoverBg: raised,
-        fontSize: toAntPixels(roles.table.size),
+        rowSelectedBg: selected,
+        rowSelectedHoverBg: tint(primary, 16),
+        footerBg: raised,
+        cellFontSize: toAntPixels(roles.table.size),
+        cellFontSizeMD: toAntPixels(roles.table.size),
+        cellFontSizeSM: toAntPixels(roles['table-compact'].size),
         lineHeight: roles.table.lineHeight,
         cellPaddingBlock: 10,
         cellPaddingInline: layout.space.gap,

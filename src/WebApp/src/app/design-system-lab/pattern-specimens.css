@@ -33,12 +33,24 @@
 }
 
 .lab-pattern-kpi bdi {
-  font: var(--didrah-type-kpi);
   font-variant-numeric: tabular-nums;
 }
 
-.lab-pattern-kpi dd span {
+.lab-pattern-kpi-value bdi {
+  font: var(--didrah-type-kpi);
+}
+
+.lab-pattern-kpi-value span,
+.lab-pattern-kpi-comparison {
   color: var(--didrah-color-text-secondary);
+}
+
+.lab-pattern-kpi-comparison {
+  font: var(--didrah-type-secondary);
+}
+
+.lab-pattern-kpi-comparison > .anticon {
+  color: var(--didrah-color-status-warning);
 }
 
 .lab-pattern-tags,

@@ -35,12 +35,14 @@ const columns: TableColumnsType<(typeof retailRows)[number]> = [
     title: 'موجودی',
     dataIndex: 'stock',
     key: 'stock',
+    align: 'end',
     render: (stock: string) => <bdi className="lab-ant-number" dir="ltr">{stock}</bdi>,
   },
   {
     title: 'فروش خالص (ریال)',
     dataIndex: 'sales',
     key: 'sales',
+    align: 'end',
     render: (sales: string) => <bdi className="lab-ant-number" dir="ltr">{sales}</bdi>,
   },
   {
@@ -99,6 +101,8 @@ export function AntSpecimens() {
               description: <>فهرست موجودی <bdi dir="ltr" lang="en">Stock Audit</bdi> آمادهٔ بررسی است.</>,
               duration: 0,
               placement: 'bottomLeft',
+              role: 'status',
+              closable: { 'aria-label': 'بستن اعلان گزارش' },
             })}>
               اعلان گزارش
             </Button>
@@ -282,14 +286,25 @@ export function AntSpecimens() {
           </div>
         </div>
         {pending
-          ? <div className="lab-ant-loading"><Spin /><Skeleton active title={false} paragraph={{ rows: 3 }} /></div>
+          ? <div className="lab-ant-loading">
+              <div className="lab-ant-loading-label" role="status">
+                <span aria-hidden="true"><Spin size="small" /></span>
+                <span>در حال بارگیری موجودی و فروش شعبه‌ها…</span>
+              </div>
+              <div aria-hidden="true"><Skeleton title={false} paragraph={{ rows: 3 }} /></div>
+            </div>
           : <Table
               columns={columns}
               dataSource={rows}
               rowKey="sku"
               pagination={false}
               scroll={{ x: 620 }}
-              locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
+              locale={{
+                emptyText: <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description="برای این نمای جدول کالایی وجود ندارد."
+                />,
+              }}
             />
         }
       </section>
