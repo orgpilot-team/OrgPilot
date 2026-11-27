@@ -71,6 +71,16 @@ Use `docker compose down` to stop the development stack while preserving its nam
 
 Persistence conventions for later stages: each business module owns its EF Core models and explicit migrations; runtime credentials receive only the necessary permissions. Store source hashes as SHA-256, immutable version references as explicit keys, and idempotency keys with uniqueness constraints in the owning module. Persist receipts as append-only records with `trace_id`; query lineage must preserve query, snapshot and result references. The walking skeleton does not introduce business tables or speculative domain DTOs. The clock contract receives a pinned business date and cutoff from the future replay process.
 
+This deployment uses one PostgreSQL database (`orgpilot`) and three independently migrated EF Core contexts. A history table tracks the migration IDs applied from one context's migration chain; it is not a history table per database. Each context explicitly names a different history table so its migrator reads its own chain. All three tables are placed in the migrator-owned `foundation` schema for administration; that schema does not mean the Configuration and Stage 2 tables belong to `FoundationDbContext`:
+
+| History table | Context | Purpose |
+|---|---|---|
+| `foundation.__EFMigrationsHistory` | `FoundationDbContext` | Records the initial foundation schema marker from Stage 1 |
+| `foundation.__ConfigurationMigrationsHistory` | `ConfigurationDbContext` | Records migrations for configuration candidates and approvals |
+| `foundation.__Stage2MigrationsHistory` | `Stage2DbContext` | Records migrations for intake, snapshots, and KPI persistence |
+
+These tables prevent each migrator from treating an already applied schema migration as pending. The current history contains one applied migration per context. The Foundation migration is only the Stage 1 schema marker; it creates no business table. Removing any history table while its context and migrations remain would lose that context's applied-migration record, so the next migration run would try to apply its existing migration again. A migration's `.Designer.cs` file supplies metadata and its target model; it is part of that migration, not an additional migration. `ModelSnapshot` describes the latest model for generating the next migration. Changes to KPI SQL produce a new immutable KPI definition and parity receipt in the existing tables and do not require a schema migration.
+
 ## Frontend Development Setup
 
 The Web Application is in `src/WebApp`. The verified environment uses Node.js `24.15.0` and npm `11.12.1`. The frontend supports the Node.js versions declared in `package.json`: Node.js `20.19.0` or later in the 20.x line, or Node.js `22.12.0` or later. Use npm `11.12.1` to match the recorded package-manager version.
