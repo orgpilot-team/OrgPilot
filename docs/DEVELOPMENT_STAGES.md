@@ -4,8 +4,6 @@ This is the ordered implementation plan for the **first four stages only**. It i
 
 The first four stages build the deterministic backend and its replay mechanism. They do not claim that the complete evaluation submission, authenticated product API, Agent Runtime, or Web Application is finished.
 
-See the [Design System progress record](Analytics/docs/18-ux-and-design-system.md#phases-24-through-28) for the Web Application checkpoints.
-
 | No. | Stage | Main implementation scope | Completion evidence | Status |
 |---:|---|---|---|---|
 | 1 | Foundation and persistence (Walking Skeleton) | Minimal runnable .NET processes; module boundaries; PostgreSQL 18; migrations; shared contracts and infrastructure conventions | The foundational services start together, database connectivity and migrations work, and module/process boundaries are visible in code | Completed — 2026-11-26 |
