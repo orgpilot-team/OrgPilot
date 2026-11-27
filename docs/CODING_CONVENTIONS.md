@@ -43,4 +43,13 @@ Keep project names aligned with their responsibilities: `OrgPilot.BackendApi`, `
 - Prefer clear names and small, focused implementations. Introduce abstractions when a real boundary or invariant requires them.
 - Keep configuration and secrets outside source code. Commit environment examples only, never actual credentials.
 - Preserve deterministic business time and pinned inputs. Do not use the host clock as business time.
-- Build and verify affected components after changes; record meaningful completion evidence in `DEVELOPMENT_STAGES.md`.
+
+## Completion criteria
+
+The accepted architecture and applicable installed skills are the basis for design and implementation. Use them from the start of the work and verify conformance before closing it.
+
+1. **Before design.** Read the relevant code, stage scope, accepted contracts, domain model, ADRs, and repository instructions. Identify the owning modules, existing callers, and invariants affected by the change. Check the scope of every installed skill available in the repository, directory, and session. Read each applicable skill in full and record the requirements it brings to the design. Record `Not applicable` and a reason for every remaining skill.
+2. **Before and during coding.** Design the change using that context, including the accepted Clean Architecture principles for ownership, separation of responsibilities, and dependency direction. Check the design against the applicable skill requirements before writing code, then follow those requirements throughout implementation. When a new constraint appears, revisit the affected design before proceeding with that part of the code.
+3. **Before completion.** Build the affected components and verify behavior and acceptance criteria. Review the implemented structure against the accepted architecture and verify conformance to each applicable skill against the requirements recorded at the start. Record evidence for all three checks and resolve in-scope findings before closing the work.
+
+**Passing tests alone is insufficient to mark a change, feature, or stage complete.** Keep completion open if behavior, architecture, or skill conformance fails or lacks evidence. Record the results in the change review or pull request and link the evidence from [development stages](DEVELOPMENT_STAGES.md) when closing a stage.

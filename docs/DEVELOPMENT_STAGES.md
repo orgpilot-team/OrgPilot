@@ -4,10 +4,12 @@ This is the ordered implementation plan for the **first four stages only**. It i
 
 The first four stages build the deterministic backend and its replay mechanism. They do not claim that the complete evaluation submission, authenticated product API, Agent Runtime, or Web Application is finished.
 
+The repository [completion criteria](CODING_CONVENTIONS.md#completion-criteria) govern each stage from design through its exit gate.
+
 | No. | Stage | Main implementation scope | Completion evidence | Status |
 |---:|---|---|---|---|
-| 1 | Foundation and persistence (Walking Skeleton) | Minimal runnable .NET processes; module boundaries; PostgreSQL 18; migrations; shared contracts and infrastructure conventions | The foundational services start together, database connectivity and migrations work, and module/process boundaries are visible in code | Completed — 2026-11-26 |
-| 2 | Intake, snapshots, and KPIs | Versioned source intake; protected raw archive; canonical facts; data issues; immutable snapshots; KPI definitions, calculations, and SQLite parity | Pinned-day ingestion is repeatable; missing/late/duplicate cases behave correctly; every activated KPI translation has a passing Parity Receipt | Completed – 2026-11-27 |
+| 1 | Foundation and persistence (Walking Skeleton) | Minimal runnable .NET processes; module boundaries; PostgreSQL 18; migrations; shared contracts and infrastructure conventions | The foundational services start together, database connectivity and migrations work, and module/process boundaries are visible in code | Historical completion recorded on 2026-11-26 |
+| 2 | Intake, snapshots, and KPIs | Versioned source intake; protected raw archive; canonical facts; data issues; immutable snapshots; KPI definitions, calculations, and SQLite parity | Pinned-day ingestion is repeatable; missing/late/duplicate cases behave correctly; every activated KPI translation has a passing Parity Receipt | Functional acceptance passed. Architecture and skill conformance review pending. |
 | 3 | Workflows, signals, and report evidence | WF1–WF3 reconstruction; deterministic signal lifecycle, ownership, escalation, ranking; internal canonical report and evidence packages | Repeated pinned inputs produce the same workflow facts, signals, owners, ranking, numbers, and evidence references | Not started |
 | 4 | Durable execution and replay | PostgreSQL job plans and stage jobs; claim/lease/attempt/terminal state; Backend Run Coordinator; Worker stage runner; ordered replay and recovery | A deterministic replay resumes safely, survives a lost wake-up or interrupted worker, and does not read future data | Not started; job policy decision required |
 
@@ -27,7 +29,7 @@ The objective is a minimal runnable system that verifies the architecture, proce
 
 **Exit gate:** A clean checkout can build the solution, start the foundational services together, verify health and configuration, apply migrations to an empty PostgreSQL database, and verify process connectivity and the database and archive adapters with a small smoke check. No business-output claim is made at this stage.
 
-**Completion evidence (2026-11-26):**
+**Historical verification evidence (2026-11-26):**
 
 | Check | Result |
 |---|---|
@@ -114,7 +116,7 @@ The timing database is held in `tmpfs` and discarded when the isolated stack sto
 - Rebuilt Debug (non-incremental) and Release with zero warnings and errors. All 90 development regression checks passed in 98 seconds on the local host, including the four additional checks for serialized snapshot references, hash-verified reopening of all eleven inputs, new snapshot identity after a policy change, and rejection of inconsistent pins. The 223,558 deduplicated canonical facts and all 55 repeatable SQLite queries remain unchanged. Evidence: `test-results/stage2-review-20261127/regression.log`.
 - All three EF Core contexts reported no pending model changes, and their idempotent migration SQL scripts were generated successfully. Docker Compose configuration validation passed. At this earlier follow-up attempt, live Docker API access was denied and Npgsql connection to the configured local PostgreSQL port 5432 failed with Windows socket error 10013 before authentication. The completion run below subsequently resolved the environment-access block and verified the extended snapshot format against PostgreSQL.
 
-**Completion evidence (2026-11-27):**
+**Functional acceptance evidence (2026-11-27):**
 
 - Durable summary: [`verification/stage2-20261127.json`](verification/stage2-20261127.json). It records counts, snapshot and result hashes, enforced resource limits, per-phase timings, and SHA-256 hashes of the raw evidence. The local raw artifacts remain excluded from Git.
 - Renewed PostgreSQL acceptance after the archive-reference correction passed with exit code 0. Snapshot `0f338c1976e4f7cfb65eed0668525c1230b5d12f33d162554dca27a70a1e0b6b` has all eleven archived input references, 55 passing Parity Receipts and 55 stored Query Runs; the six D+1 configuration checks passed and the fixture candidates and approvals were rolled back. The twelve focused PostgreSQL/SQLite boundary cases also passed. Evidence: `test-results/stage2-completion-20261127/acceptance.log`, `acceptance-summary.json`, and `persisted-evidence.txt` in that evidence directory.
@@ -122,7 +124,7 @@ The timing database is held in `tmpfs` and discarded when the isolated stack sto
 - The slowest KPI, `K_WH_DAMAGE_BY_CAT_7D`, took 51.27 and 41.97 seconds. The remaining Stage 2 budget on the slower run is about 99 seconds; later stages must re-verify the entire product-day budget, including workflow reconstruction, agent and publication work. Original missing-file row counts are not available in the supplied manifests; a later valid file is arrival evidence, but arbitrary partial late coverage cannot be proven from those manifests alone.
 - The acceptance-only Docker target published successfully after excluding referenced API/Worker `appsettings.json` files from the harness output. API, Worker, and migration images rebuilt successfully; API and Worker were restarted with the corrected code. API readiness is healthy and Worker database/archive startup checks passed. Existing database/archive volumes were preserved; no new schema migration was introduced or needed.
 
-Stage 2's build, development regression checks, persisted parity, snapshot reconstruction, calculation repeatability, D+1 configuration and reference-resource performance checks pass. Its exit gate is met for the supplied development dataset. Stage 3 can begin; this does not certify the full evaluation replay or publication pipeline.
+Stage 2 passed its recorded functional, parity, and performance checks for the supplied development dataset. The architecture and skill conformance review is pending.
 
 ## 3. Workflows, signals, and report evidence
 
