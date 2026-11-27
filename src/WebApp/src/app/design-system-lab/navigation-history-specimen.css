@@ -1,0 +1,29 @@
+.lab-history-specimen {
+  margin-block-end: var(--didrah-space-panel);
+}
+
+.lab-history-stage {
+  --didrah-history-height: min(47rem, calc(100dvh - 3rem));
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--didrah-space-inset);
+  padding: 0.75rem;
+  border-radius: var(--didrah-radius-panel);
+  background: var(--didrah-color-surface-raised);
+}
+
+[data-theme='dark'] .lab-history-stage {
+  background: #11111b;
+}
+
+.lab-history-content {
+  min-inline-size: 0;
+  padding: var(--didrah-space-inset);
+  overflow-wrap: anywhere;
+}
+
+.lab-history-content p,
+.lab-history-settings h3 {
+  margin: 0 0 var(--didrah-space-gap);
+}

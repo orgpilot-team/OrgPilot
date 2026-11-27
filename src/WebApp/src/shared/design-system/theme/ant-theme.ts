@@ -1,0 +1,144 @@
+import { theme as ant } from 'antd'
+import type { ThemeConfig } from 'antd'
+import { darkTheme } from '../tokens/dark-theme'
+import { layout, overlayShadow } from '../tokens/layout'
+import { lightTheme } from '../tokens/light-theme'
+import type { ThemeColors, ThemeName } from '../tokens/theme-contract'
+import { typography } from '../tokens/typography'
+
+const { roles } = typography
+const toAntPixels = (size: (typeof roles)[keyof typeof roles]['size']) => Number.parseFloat(size) * 16
+
+function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
+  const isDark = name === 'dark'
+  const primary = colors['brand-primary']
+  const accent = isDark ? colors['brand-indigo'] : primary
+  const focus = colors['focus-ring']
+  const input = colors['surface-input']
+  const raised = colors['surface-raised']
+  const selected = colors['surface-selected']
+  const text = colors['text-primary']
+  const secondary = colors['text-secondary']
+  const muted = colors['text-muted']
+  const border = colors['border-subtle']
+  const surface = colors['surface-base']
+  const success = colors['status-success']
+  const warning = colors['status-warning']
+  const error = colors['status-critical']
+  const info = colors['status-information']
+  const tint = (color: string, amount: number) => `color-mix(in srgb, ${color} ${amount}%, ${surface})`
+  const status = {
+    colorSuccess: success,
+    colorWarning: warning,
+    colorError: error,
+    colorInfo: info,
+    colorSuccessBg: tint(success, 8),
+    colorWarningBg: tint(warning, 8),
+    colorErrorBg: tint(error, 8),
+    colorInfoBg: tint(info, 8),
+    colorSuccessBorder: tint(success, 24),
+    colorWarningBorder: tint(warning, 24),
+    colorErrorBorder: tint(error, 24),
+    colorInfoBorder: tint(info, 24),
+  }
+  const field = {
+    colorBgContainer: input,
+    colorBorder: isDark ? muted : colors['border-control'],
+    hoverBorderColor: accent,
+    activeBorderColor: focus,
+  }
+
+  return {
+    algorithm: isDark ? ant.darkAlgorithm : ant.defaultAlgorithm,
+    cssVar: { key: 'didrah' },
+    token: {
+      colorPrimary: primary,
+      colorPrimaryText: accent,
+      colorPrimaryBorder: focus,
+      colorLink: accent,
+      colorSuccess: success,
+      colorWarning: warning,
+      colorError: error,
+      colorInfo: info,
+      colorText: text,
+      colorTextSecondary: secondary,
+      colorTextTertiary: muted,
+      colorTextPlaceholder: muted,
+      colorTextDisabled: muted,
+      colorTextLightSolid: colors['brand-on-primary'],
+      colorBgLayout: colors.canvas,
+      colorBgContainer: surface,
+      colorBgContainerDisabled: raised,
+      colorBgElevated: colors['surface-overlay'],
+      colorBgMask: `${darkTheme.canvas}99`,
+      colorBorder: colors['border-control'],
+      colorBorderSecondary: border,
+      colorSplit: border,
+      controlItemBgHover: raised,
+      controlItemBgActive: selected,
+      controlOutline: `${focus}40`,
+      controlOutlineWidth: 2,
+      fontFamily: typography.family,
+      fontFamilyCode: typography.family,
+      fontSize: toAntPixels(roles.body.size),
+      fontSizeSM: toAntPixels(roles['table-compact'].size),
+      fontSizeLG: toAntPixels(roles['body-large'].size),
+      fontSizeHeading1: toAntPixels(roles['heading-1'].size),
+      fontSizeHeading2: toAntPixels(roles['heading-2'].size),
+      fontSizeHeading3: toAntPixels(roles['heading-3'].size),
+      lineHeight: roles.body.lineHeight,
+      fontWeightStrong: roles.control.weight,
+      borderRadius: layout.radius.control,
+      controlHeight: layout.controlHeight,
+      boxShadowSecondary: overlayShadow(name, colors),
+    },
+    components: {
+      Button: {
+        primaryColor: colors['brand-on-primary'],
+        dangerColor: isDark ? colors.canvas : colors['brand-on-primary'],
+        defaultHoverColor: text,
+        defaultHoverBorderColor: accent,
+        defaultHoverBg: raised,
+        primaryShadow: 'none',
+        defaultShadow: 'none',
+        dangerShadow: 'none',
+        fontSize: toAntPixels(roles.control.size),
+        fontWeight: roles.control.weight,
+      },
+      Input: field,
+      InputNumber: field,
+      Select: {
+        ...field,
+        optionSelectedBg: selected,
+        optionSelectedColor: text,
+      },
+      DatePicker: field,
+      Tag: status,
+      Alert: status,
+      Menu: {
+        itemSelectedBg: selected,
+        itemSelectedColor: text,
+        horizontalItemSelectedColor: accent,
+        horizontalItemHoverColor: accent,
+      },
+      Table: {
+        headerBg: raised,
+        headerColor: secondary,
+        rowHoverBg: raised,
+        fontSize: toAntPixels(roles.table.size),
+        lineHeight: roles.table.lineHeight,
+        cellPaddingBlock: 10,
+        cellPaddingInline: layout.space.gap,
+      },
+      Tooltip: {
+        colorBgSpotlight: colors['surface-overlay'],
+        colorTextLightSolid: text,
+      },
+    },
+  }
+}
+
+export const antThemes = {
+  dark: createAntTheme('dark', darkTheme),
+  light: createAntTheme('light', lightTheme),
+} satisfies Record<ThemeName, ThemeConfig>

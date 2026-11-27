@@ -1,0 +1,287 @@
+.design-system-lab {
+  --lab-halo: 15%;
+  min-block-size: 100vh;
+  background: radial-gradient(
+    ellipse 56rem 27rem at 85% 0%,
+    color-mix(in srgb, var(--didrah-color-brand-indigo) var(--lab-halo), transparent),
+    transparent 72%
+  );
+}
+
+[data-theme="light"] .design-system-lab {
+  --lab-halo: 8%;
+}
+
+.design-system-lab *,
+.design-system-lab *::before,
+.design-system-lab *::after {
+  box-sizing: border-box;
+}
+
+.lab-frame {
+  max-inline-size: 80rem;
+  margin-inline: auto;
+  padding: clamp(1rem, 4vw, 3.5rem);
+}
+
+.lab-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-block-end: 1.5rem;
+}
+
+.lab-brand {
+  display: inline-block;
+  margin: 0;
+  color: var(--didrah-color-accent-cyan-content);
+  font: var(--didrah-type-technical);
+  letter-spacing: 0.12em;
+}
+
+.lab-brand span {
+  color: var(--didrah-color-text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.lab-header h1 {
+  margin: 0.5rem 0 0;
+}
+
+.lab-description {
+  margin: 0.5rem 0 0;
+  color: var(--didrah-color-text-secondary);
+}
+
+.lab-theme-control {
+  display: inline-flex;
+  gap: 0.25rem;
+  align-items: center;
+  padding: 0.25rem;
+  background: var(--didrah-color-surface-input);
+  border: 1px solid var(--didrah-color-border-subtle);
+  border-radius: 0.75rem;
+}
+
+.lab-theme-control button {
+  min-inline-size: 4.5rem;
+  min-block-size: 2.75rem;
+  padding-inline: 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--didrah-color-text-secondary);
+  font: var(--didrah-type-control);
+  cursor: pointer;
+}
+
+.lab-theme-control button:hover {
+  background: var(--didrah-color-surface-raised);
+}
+
+.lab-theme-control button[aria-pressed="true"] {
+  border-color: var(--didrah-color-border-control);
+  background: var(--didrah-color-surface-selected);
+  color: var(--didrah-color-text-primary);
+}
+
+.lab-theme-control button:focus-visible {
+  outline: 2px solid var(--didrah-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.lab-welcome-profile {
+  display: grid;
+  justify-items: start;
+  gap: var(--didrah-space-inset);
+  margin-block-end: var(--didrah-space-panel);
+}
+
+.lab-welcome-avatar-control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--didrah-space-compact);
+  color: var(--didrah-color-text-secondary);
+  font: var(--didrah-type-control);
+}
+
+.lab-welcome-avatar-control input {
+  margin: 0;
+  accent-color: var(--didrah-color-brand-primary);
+}
+
+.lab-welcome-avatar-control input:focus-visible {
+  outline: 2px solid var(--didrah-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.lab-panel {
+  min-inline-size: 0;
+  padding: clamp(1rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--didrah-color-border-subtle);
+  border-radius: 1.25rem;
+  background: var(--didrah-color-surface-base);
+}
+
+.lab-panel h2 {
+  margin: 0 0 1rem;
+}
+
+.lab-surface-list,
+.lab-token-list,
+.lab-primitive-grid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lab-surface-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.lab-surface-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+  min-block-size: 3rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--didrah-color-border-subtle);
+  border-radius: 0.625rem;
+}
+
+.lab-token-value {
+  display: grid;
+  text-align: start;
+  color: var(--didrah-color-text-secondary);
+  min-inline-size: 0;
+}
+
+.lab-token-value code {
+  font: var(--didrah-type-technical);
+  overflow-wrap: anywhere;
+}
+
+.lab-surface-row .lab-token-value {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}
+
+.lab-type-preview {
+  display: grid;
+  justify-items: start;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  margin-block-end: 0.875rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--didrah-color-border-subtle);
+  background: var(--didrah-color-surface-raised);
+}
+
+.lab-type-preview strong {
+  font: var(--didrah-type-heading-3);
+}
+
+.lab-type-preview span:nth-child(2) {
+  color: var(--didrah-color-text-secondary);
+}
+
+.lab-type-preview span:nth-child(3) {
+  color: var(--didrah-color-text-muted);
+}
+
+.lab-brand-sample {
+  margin-block-start: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.5rem;
+  background: var(--didrah-color-brand-primary);
+  color: var(--didrah-color-brand-on-primary);
+}
+
+.lab-token-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
+  gap: 0.5rem 0.875rem;
+}
+
+.lab-token-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-inline-size: 0;
+}
+
+.lab-token-color {
+  flex: 0 0 1.125rem;
+  block-size: 1.125rem;
+  border: 1px solid var(--didrah-color-border-subtle);
+  border-radius: 0.3125rem;
+}
+
+.lab-status-list {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+}
+
+.lab-status-label {
+  font: var(--didrah-type-secondary);
+}
+
+.lab-line-previews {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.875rem;
+  margin-block-end: 0.75rem;
+}
+
+.lab-line-previews span {
+  block-size: 1.75rem;
+  border-radius: 0.375rem;
+  background: var(--didrah-color-surface-input);
+}
+
+.lab-subtle-preview {
+  border: 1px solid var(--didrah-color-border-subtle);
+}
+
+.lab-control-preview {
+  border: 1px solid var(--didrah-color-border-control);
+}
+
+.lab-focus-preview {
+  border: 2px solid var(--didrah-color-focus-ring);
+}
+
+.lab-primitives {
+  margin-block-start: 1rem;
+}
+
+.lab-primitive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 6rem), 1fr));
+  gap: 0.875rem;
+}
+
+.lab-primitive-color {
+  display: block;
+  block-size: 2.25rem;
+  margin-block-end: 0.375rem;
+  border: 1px solid var(--didrah-color-border-subtle);
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 52rem) {
+  .lab-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -51,7 +51,7 @@ Frontend quality applies to the complete Classic experience. Numeric load, navig
 | CPU and GPU | Classic Mode has no continuous render loop. Nonessential animation stops when content is hidden. Reduced-motion preferences are respected. |
 | Resource disposal | Dispose ECharts instances, resize observers, subscriptions, timers, event listeners, animation controls, and future renderer resources when their owner unmounts or changes. |
 | Responsive layout | Test an approved viewport matrix. A responsive change must not remove required information or actions or change business meaning. The exact matrix remains open. |
-| Accessibility | Keyboard operation, visible focus, screen-reader names, non-color status cues, reduced motion, accessible errors, and text or table alternatives for charts are required. WCAG 2.2 AA is proposed in doc 18; final acceptance remains open. |
+| Accessibility | Keyboard operation, visible focus, screen-reader names, non-color status cues, reduced motion, accessible errors, and text or table alternatives for charts are required. Phase 4 deferred adoption of a formal WCAG conformance target, as recorded in doc 18. The project currently makes no formal WCAG compliance claim. |
 | Persian and RTL | Test Persian-first layouts, mixed-direction content, technical identifiers, numbers, long labels, truncation, and zoom. The UI does not round an authoritative KPI independently. |
 | Failure isolation | A visualization error boundary isolates chart or workflow rendering failures. Validated report, answer, and allowed actions remain available. |
 | Scope isolation | Cache and pending-request tests prove that identity or scope changes cannot display data from the previous principal or scope. |
