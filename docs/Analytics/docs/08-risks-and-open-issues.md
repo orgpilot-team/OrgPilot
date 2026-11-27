@@ -57,7 +57,7 @@ The active risk and decision record is this document together with the ADR Statu
 | Chart series, point, label, and response limits | Open; silent truncation forbidden | `17-chart-presentation-contract.md` |
 | Approved numeric display contract for chart labels and tooltips | Open | `17-chart-presentation-contract.md` |
 | Frontend measurement profile and numeric performance budgets | Open | `07-quality-attributes.md` |
-| Accessibility conformance target | Proposed WCAG 2.2 AA; not yet accepted | `18-ux-and-design-system.md` |
+| Accessibility conformance target | Deferred for this stage. Practical accessibility requirements remain mandatory. The project currently makes no formal WCAG compliance claim. | `18-ux-and-design-system.md` |
 | Design System tokens and detailed component specifications | Open | `18-ux-and-design-system.md` |
 | Modern renderer, hardware profile, asset format, and activation policy | Deferred until Classic is complete | ADR-0029 |
 

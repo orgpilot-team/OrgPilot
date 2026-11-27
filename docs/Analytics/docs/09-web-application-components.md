@@ -51,6 +51,10 @@ Classic Mode is the default and mandatory product experience. It supplies comple
 
 Classic Mode can use Ant Design, ECharts, React Flow, Motion, CSS, SVG, gradients, shadows, glow, and depth effects. It does not load Three.js, 3D models, or Modern-only assets.
 
+#### Classic chart redraw budget
+
+The approved default is 30 redraws per second per chart during scheduled motion for the two luminous Classic Mode sales charts. Both charts stop continuous redraws at idle. The Lab provides a Native comparison for validation. See [doc 18](18-ux-and-design-system.md#luminous-chart-motion) for timing, motion behavior, and measurement evidence.
+
 ### Modern Mode
 
 Modern Mode is a deferred future enhancement. It can add selected 3D scenes only after Classic Mode is functionally complete.
@@ -64,7 +68,7 @@ Modern Mode must:
 - Fall back to the complete Classic experience when 3D is unavailable or fails.
 - Avoid becoming a dependency of Classic Mode.
 
-The initial 30 FPS goal is a proposed future 3D rendering target. It is not a target for React, ECharts, or Motion. It is not a measured result. Exact renderer, browser, hardware, model-format, and asset-delivery decisions remain open.
+The initial 30 FPS goal for active 3D rendering remains a proposal. The renderer, browser, hardware, model format, and asset delivery decisions remain open.
 
 ### Shared mode rules
 
@@ -136,6 +140,24 @@ Tests should stay next to the code they verify unless they are end-to-end tests.
 
 Generated API types must have one location. Do not hand-maintain a second TypeScript copy of Backend wire contracts. Renderer-neutral contract types must not import ECharts, React Flow, Motion, Ant Design, or a future 3D library.
 
+### Current frontend paths
+
+The approved Stage 4.5-R5.5 implementation is in `src/WebApp`. The table lists paths relative to that directory.
+
+| Path | Responsibility |
+|---|---|
+| `src/main.tsx` and `src/app/AppProviders.tsx` | Application entry point and provider composition |
+| `src/app/design-system-lab/` | Development-only Lab at `/design-system`, with specimens, fixtures, and validation controls |
+| `src/shared/design-system/tokens/` | Global Design Tokens |
+| `src/shared/design-system/theme/` and `src/shared/design-system/styles/` | Theme provider and adapters, font, and global styles |
+| `src/shared/design-system/patterns/` | Reusable UI patterns |
+| `src/shared/visualization/charts/` | Reusable ECharts components, renderer lifecycle, chart theme, and chart motion |
+| `src/shared/visualization/workflow/` | Reusable React Flow presentation such as `WorkflowNode.tsx` |
+| `public/fonts/dastkhat/` and `public/licenses/dastkhat/` | Local Dastkhat font, notice, and license |
+| `AGENTS.md` and `.agents/skills/didrah-component-workflow/` | Frontend rules, component workflow, and acceptance checklist |
+
+Use PascalCase for React component names and their filenames, such as `SalesTrendChart.tsx` and `AppProviders.tsx`. Keep internal directory names lowercase and use kebab-case for multiword feature directories. See the [repository coding conventions](../../CODING_CONVENTIONS.md).
+
 ## Design System architecture
 
 The OrgPilot Design System is an internal shared module. It is not a C4 component, service, store, or deployment unit.
@@ -151,7 +173,14 @@ It supplies shared tokens and presentation rules to:
 
 The Design System can define visual and interaction behavior. It cannot define business status, authorization, KPI meaning, chart values, workflow ownership, signal state, or decision rules.
 
-Exact visual tokens are not approved in this document. They belong to `18-ux-and-design-system.md`.
+The approved token architecture and visual scope are in [doc 18](18-ux-and-design-system.md).
+
+### Reusable component ownership and the Lab
+
+- The shared Design System owns generic UI such as `Panel`, `SectionHeader`, and `PanelState`. Shared visualization owns reusable charts and workflow primitives. The owning feature supplies feature-specific composition and temporary UI state. Business decisions remain with their accepted Backend owners.
+- Reusable components accept typed inputs and work with callers outside the Lab. Keep transport, mock fixtures, and feature business logic outside reusable presentation.
+- The Design System Lab consumes the actual reusable components. It owns specimen composition, mock fixtures, reference specimens, validation scenarios, and development and benchmark controls. Shared modules must never import from the Lab.
+- Follow the permanent frontend rules and use the DIDRAH component workflow and checklist for applicable component design, implementation, and validation. [Frontend AGENTS.md](../../../src/WebApp/AGENTS.md) · [DIDRAH component workflow](../../../src/WebApp/.agents/skills/didrah-component-workflow/SKILL.md) · [Acceptance checklist](../../../src/WebApp/.agents/skills/didrah-component-workflow/references/component-checklist.md)
 
 ## Information presentation principles
 
@@ -210,6 +239,16 @@ The Web Application receives the internal Presentation response defined in doc 1
 Doc 17 owns the wire contract, version compatibility, allowlist, limits, runtime validation, unsupported-type behavior, safe labels, mapping tests, and chart lifecycle rules. This document does not duplicate those rules.
 
 Chart capability is mandatory for the product. A specific response can contain zero charts when no chart is requested, the result shape is incompatible, or chart construction fails. Validated content remains available.
+
+### Shared sales chart implementation
+
+`SalesTrendChart` displays ordered current and prior sales observations with stable observation IDs. `BranchSalesChart` displays ordered branch sales with stable branch codes and a nullable target value. Each chart can run under the application providers on its own. A view can use `ChartMotionGroup` to share a clock. [SalesTrendChart.tsx](../../../src/WebApp/src/shared/visualization/charts/SalesTrendChart.tsx) · [BranchSalesChart.tsx](../../../src/WebApp/src/shared/visualization/charts/BranchSalesChart.tsx)
+
+`echarts-runtime.ts` registers the shared ECharts renderer and modules. `chart-theme.ts` adapts the Design System for charts. `SalesChartPresentation.tsx` supplies common sales chart types, panel and state presentation, and text-safe tooltip helpers. `SalesChartMotion.tsx` uses the shared clock in `chart-motion.ts` for finite, event-driven motion and exact final paints.
+
+`ChartHost` waits for the chart fonts and a container with nonzero dimensions. It initializes, updates, and resizes the Canvas renderer. When the host unmounts or the theme changes, it disconnects the resize observer, removes renderer listeners, cancels pending chart motion, and disposes the instance. On an initialization, update, or deferred frame failure, it isolates the affected chart and shows its unavailable state. The table remains available and peer charts can finish. A later valid update or replay can recover the failed chart. [ChartHost.tsx](../../../src/WebApp/src/shared/visualization/charts/ChartHost.tsx)
+
+The current typed component inputs serve local presentation. Production integration still needs generated OpenAPI types, runtime response validation before caching or rendering, and a mapper from authorized `ChartSpec` to the component inputs. Doc 17 governs values, `null`, order, units, targets, evidence identity, numeric display, supported types, and limits.
 
 ## Session and browser-state responsibilities
 
@@ -303,6 +342,6 @@ Mock work must not become an alternative production contract or an authorization
 - Access Projection Matrix entries remain open.
 - The exact OpenAPI Presentation wire schema remains open.
 - Initial chart allowlist, point and series limits, and numeric display contract remain open.
-- Numeric frontend performance budgets remain open until the measurement profile is approved.
+- Product-wide frontend performance budgets and full-dashboard validation remain open. The approved chart redraw budget applies to the two luminous Classic Mode sales charts described above.
 - Modern renderer, hardware profile, asset format, and activation policy remain deferred.
 - The Web-to-Collector transport is OTLP/HTTP when optional telemetry export is active.
