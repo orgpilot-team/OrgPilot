@@ -11,12 +11,13 @@ public sealed class IngestionCoordinator(IProtectedFileArchive archive)
     private static readonly HashSet<string> Numeric = new(StringComparer.Ordinal)
     {
         "items", "order_value_toman", "amount_toman", "sessions", "score",
-        "contract_value_toman", "spend_toman", "impressions", "clicks", "leads"
+        "spend_toman", "impressions", "clicks", "leads"
     };
 
     private static readonly HashSet<string> Optional = new(StringComparer.Ordinal)
     {
-        "campaign_id", "amount_toman", "contract_value_toman", "order_id", "blocker_fa"
+        "campaign_id", "amount_toman", "contract_value_toman", "order_id", "blocker_fa",
+        "promised_by", "staff_id"
     };
 
     public async Task<IngestionBatch> ReadAsync(string dataDirectory, int dropDay,
@@ -46,8 +47,8 @@ public sealed class IngestionCoordinator(IProtectedFileArchive archive)
             header[0] = header[0].TrimStart('\uFEFF');
             var schema = SourceSchemaRegistry.Select(source.Source, header)
                 ?? throw new InvalidDataException("Archived schema changed.");
-            var positions = header.Select((name, index) => (name, index))
-                .ToDictionary(x => x.name, x => x.index, StringComparer.Ordinal);
+            var positions = header.Select((name, index) => (Name: schema.CanonicalColumn(name), Index: index))
+                .ToDictionary(x => x.Name, x => x.Index, StringComparer.Ordinal);
             var recordNumber = 0;
             while (!parser.EndOfData)
             {
@@ -63,8 +64,12 @@ public sealed class IngestionCoordinator(IProtectedFileArchive archive)
                         schema.Columns.Contains("created_at") ? "created_at" :
                         schema.Columns.Contains("answered_at") ? "answered_at" : "date";
                     var date = DateOnly.ParseExact(((string)values[dateColumn]!)[..10], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    if (date > cutoff || (drop.BusinessDate is { } day && date > day))
+                    if (drop.BusinessDate is { } day && date > day)
                         throw new FormatException("future_record");
+                    // The initial load has no manifest date. Reject an incompatible cutoff instead of
+                    // producing different canonical batches from the very same archived source version.
+                    if (date > cutoff)
+                        throw new InvalidDataException("Initial load contains records beyond the pinned cutoff.");
                     var key = JsonSerializer.Serialize(schema.KeyColumns.Select(column => values[column]));
                     facts.Add(new(source.Source, key, date, dropDay, schema.Version, source.Archive,
                         recordNumber, JsonSerializer.Serialize(values)));
@@ -76,7 +81,7 @@ public sealed class IngestionCoordinator(IProtectedFileArchive archive)
             }
         }
 
-        var id = IntakeFingerprint.Of(new { drop, cutoff, NormalizationVersion = "baseline-v1" });
+        var id = IntakeFingerprint.Of(new { drop, NormalizationVersion = "baseline-v2" });
         return new(id, drop, facts.AsReadOnly(), issues.AsReadOnly());
     }
 
@@ -88,6 +93,15 @@ public sealed class IngestionCoordinator(IProtectedFileArchive archive)
             throw new FormatException("required_value_missing:" + column);
         }
 
+        // CRM exports contain decimal contract values, including value_corrected events.
+        // Preserve them at source precision instead of rounding or discarding the row.
+        if (column == "contract_value_toman")
+        {
+            if (!decimal.TryParse(value, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint,
+                    CultureInfo.InvariantCulture, out var amount) || amount < 0)
+                throw new FormatException("invalid_decimal:" + column);
+            return amount;
+        }
         if (Numeric.Contains(column))
         {
             if (!long.TryParse(value, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var number))

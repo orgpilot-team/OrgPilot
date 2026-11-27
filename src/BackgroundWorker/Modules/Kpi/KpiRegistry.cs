@@ -18,7 +18,9 @@ public sealed class KpiRegistry(Stage2DbContext db)
     {
         if (definition.Id != IntakeFingerprint.Of(definition with { Id = "" }) ||
             !BaselineKpiSql.Definitions.TryGetValue(definition.KpiId, out var translation) ||
-            definition.ReferenceSql != translation.ReferenceSql || definition.PostgreSql != translation.PostgreSql)
+            definition.ReferenceSql != translation.ReferenceSql || definition.PostgreSql != translation.PostgreSql ||
+            definition.Window != translation.Window ||
+            !definition.Dependencies.SequenceEqual(translation.Dependencies, StringComparer.Ordinal))
             throw new InvalidDataException("Unregistered or modified definition.");
         var payload = JsonSerializer.Serialize(definition);
         await db.Database.ExecuteSqlInterpolatedAsync($"""
@@ -30,10 +32,10 @@ public sealed class KpiRegistry(Stage2DbContext db)
     public async Task<KpiRun> CalculateAsync(string connectionString, ProjectionData data,
         string definitionId, CancellationToken cancellationToken = default)
     {
-        var row = await db.Definitions.AsNoTracking().SingleAsync(x => x.Id == definitionId, cancellationToken);
-        var definition = JsonSerializer.Deserialize<KpiDefinition>(row.Payload)
-            ?? throw new InvalidDataException("Invalid registered KPI.");
-        if (definition.DictionaryHash != data.Snapshot.Versions.KpiDefinitions)
+        var definition = await ReadAsync(definitionId, cancellationToken);
+        if (definition.DictionaryHash != data.Snapshot.Versions.KpiDictionary ||
+            data.Snapshot.Versions.KpiVersions?.Any(v =>
+                v.KpiId == definition.KpiId && v.DefinitionId == definitionId) != true)
             throw new InvalidDataException("KPI definition is not pinned by this snapshot.");
         var receipts = await db.ParityReceipts.AsNoTracking().Where(x => x.DefinitionId == definitionId)
             .Select(x => x.Payload).ToListAsync(cancellationToken);
@@ -51,6 +53,21 @@ public sealed class KpiRegistry(Stage2DbContext db)
             VALUES ({run.QueryId}, {run.SnapshotId}, {definition.Id}, CAST({payload} AS jsonb), {Activity.Current?.TraceId.ToString() ?? ""})
             ON CONFLICT ("Id") DO NOTHING
             """, cancellationToken);
+        var stored = await db.KpiRuns.AsNoTracking().SingleAsync(x => x.Id == run.QueryId, cancellationToken);
+        var previous = JsonSerializer.Deserialize<KpiRun>(stored.Payload);
+        if (previous is null || previous.ResultHash != run.ResultHash ||
+            previous.SnapshotId != run.SnapshotId || previous.DefinitionId != run.DefinitionId)
+            throw new InvalidDataException("Repeated query produced a different immutable result.");
         return run;
+    }
+
+    public async Task<KpiDefinition> ReadAsync(string definitionId, CancellationToken cancellationToken = default)
+    {
+        var row = await db.Definitions.AsNoTracking().SingleAsync(x => x.Id == definitionId, cancellationToken);
+        var definition = JsonSerializer.Deserialize<KpiDefinition>(row.Payload)
+            ?? throw new InvalidDataException("Invalid registered KPI.");
+        if (definition.Id != definitionId || IntakeFingerprint.Of(definition with { Id = "" }) != definitionId)
+            throw new InvalidDataException("Registered KPI identity mismatch.");
+        return definition;
     }
 }

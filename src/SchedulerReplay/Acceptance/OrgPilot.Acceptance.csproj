@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../BackgroundWorker/OrgPilot.BackgroundWorker.csproj" />
+    <ProjectReference Include="../../BackendApi/OrgPilot.BackendApi.csproj" />
     <PackageReference Include="Microsoft.Data.Sqlite" />
   </ItemGroup>
 </Project>

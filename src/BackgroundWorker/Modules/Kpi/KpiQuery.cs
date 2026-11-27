@@ -44,14 +44,18 @@ public static class KpiQuery
 
     public static KpiRun CreateRun(ProjectionData data, KpiDefinition definition, IReadOnlyList<KpiPoint> raw)
     {
-        var points = raw.Select(p => IsIncomplete(data, definition, p.Date)
+        // Parse only once; repeatedly reparsing the complete projection for each
+        // month-to-date point is prohibitively expensive on the evaluation machine.
+        using var document = System.Text.Json.JsonDocument.Parse(data.Json);
+        var monthStarts = document.RootElement.GetProperty("cal").EnumerateArray().ToDictionary(
+            x => DateOnly.ParseExact(x.GetProperty("d").GetString()!, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+            x => x.GetProperty("day_in_month").GetInt32());
+        var points = raw.Select(p => IsIncomplete(data, definition, p.Date, monthStarts)
             ? p with { Value = null, Status = "data_unavailable" }
             : p.Value is null ? p with { Status = "no_population" } : p).ToList();
         // A missing source must never disappear merely because its SQL produced no row.
-        using var document = System.Text.Json.JsonDocument.Parse(data.Json);
-        foreach (var day in document.RootElement.GetProperty("cal").EnumerateArray()
-            .Select(x => DateOnly.ParseExact(x.GetProperty("d").GetString()!, "yyyy-MM-dd", CultureInfo.InvariantCulture)))
-            if (!points.Any(p => p.Date == day) && IsIncomplete(data, definition, day))
+        foreach (var day in monthStarts.Keys.Order())
+            if (!points.Any(p => p.Date == day) && IsIncomplete(data, definition, day, monthStarts))
                 points.Add(new(day, null, null, "data_unavailable"));
         var sorted = points.OrderBy(p => p.Date).ThenBy(p => p.Dimension, StringComparer.Ordinal).ToArray();
         return new(IntakeFingerprint.Of(new { data.Snapshot.Id, Definition = definition.Id, data.Hash }),
@@ -59,14 +63,16 @@ public static class KpiQuery
             data.Hash, definition.PostgreSql, sorted, IntakeFingerprint.Of(sorted));
     }
 
-    private static bool IsIncomplete(ProjectionData data, KpiDefinition definition, DateOnly date)
+    private static bool IsIncomplete(ProjectionData data, KpiDefinition definition, DateOnly date,
+        IReadOnlyDictionary<DateOnly, int> monthStarts)
     {
         var start = definition.Window switch
         {
             KpiWindow.Rolling7 => date.AddDays(-6),
             KpiWindow.Rolling30 => date.AddDays(-29),
             KpiWindow.History => DateOnly.MinValue,
-            KpiWindow.MonthToDate => MonthStart(data, date),
+            KpiWindow.MonthToDate => monthStarts.TryGetValue(date, out var dayOfMonth)
+                ? date.AddDays(1 - dayOfMonth) : date,
             _ => date
         };
         return data.Snapshot.Issues.Any(i => (i.Type is "missing" or "invalid") &&
@@ -74,13 +80,4 @@ public static class KpiQuery
             (i.EffectiveDate is null || i.EffectiveDate >= start && i.EffectiveDate <= date));
     }
 
-    private static DateOnly MonthStart(ProjectionData data, DateOnly date)
-    {
-        using var json = System.Text.Json.JsonDocument.Parse(data.Json);
-        var rows = json.RootElement.GetProperty("cal").EnumerateArray().ToArray();
-        var value = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-        var row = rows.FirstOrDefault(r => r.GetProperty("d").GetString() == value);
-        return row.ValueKind == System.Text.Json.JsonValueKind.Undefined ? date :
-            date.AddDays(1 - row.GetProperty("day_in_month").GetInt32());
-    }
 }

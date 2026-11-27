@@ -41,10 +41,21 @@ public sealed class ProjectionData
         Hash = IntakeFingerprint.Of(json);
     }
 
+    public static Task<ProjectionData> CreateAsync(DailySnapshot snapshot, IProtectedFileArchive archive,
+        CancellationToken cancellationToken = default)
+    {
+        var sources = snapshot.Versions.Sources
+            ?? throw new InvalidDataException("Legacy snapshot requires explicit archived calendar and target references.");
+        return CreateAsync(snapshot, archive, sources.Calendar, sources.MonthlyTargets, cancellationToken);
+    }
+
     public static async Task<ProjectionData> CreateAsync(DailySnapshot snapshot, IProtectedFileArchive archive,
         ArchiveReference calendar, ArchiveReference monthlyTargets, CancellationToken cancellationToken = default)
     {
-        if (snapshot.Versions.Calendar != calendar.Sha256 || snapshot.Versions.Configuration != monthlyTargets.Sha256)
+        if (snapshot.Versions.Calendar != calendar.Sha256 ||
+            (snapshot.Versions.MonthlyTargets ?? snapshot.Versions.Configuration) != monthlyTargets.Sha256 ||
+            (snapshot.Versions.Sources is { } sources &&
+             (calendar != sources.Calendar || monthlyTargets != sources.MonthlyTargets)))
             throw new InvalidDataException("Calendar or baseline target version is not pinned by the snapshot.");
 
         var rows = Tables.ToDictionary(t => t.Name, _ => new List<SortedDictionary<string, object?>>(), StringComparer.Ordinal);

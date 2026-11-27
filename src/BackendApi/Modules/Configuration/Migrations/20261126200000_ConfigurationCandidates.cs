@@ -1,12 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OrgPilot.BackendApi.Modules.Configuration.Migrations;
 
-[DbContext(typeof(ConfigurationDbContext))]
-[Migration("20261126200000_ConfigurationCandidates")]
-public sealed class ConfigurationCandidates : Migration
+public sealed partial class ConfigurationCandidates : Migration
 {
     protected override void Up(MigrationBuilder migrationBuilder)
     {
@@ -36,5 +32,4 @@ public sealed class ConfigurationCandidates : Migration
             """);
     }
 
-    protected override void BuildTargetModel(ModelBuilder modelBuilder) => ConfigurationModelSnapshot.BuildV1(modelBuilder);
 }

@@ -37,6 +37,7 @@ builder.Services.AddFoundationPersistence(builder.Configuration);
 var productConnection = builder.Configuration.GetConnectionString("Product")!;
 builder.Services.AddDbContext<ConfigurationDbContext>(options => ConfigurationDbContext.Configure(options, productConnection));
 builder.Services.AddScoped(_ => new ConfigurationValidator(productConnection));
+builder.Services.AddScoped<ConfigurationVersionReader>();
 // ConfigurationService is instantiated with a trusted IConfigurationAuthority by the later authorized command path.
 
 if (migrate)

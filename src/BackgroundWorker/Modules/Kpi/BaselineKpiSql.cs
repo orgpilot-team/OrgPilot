@@ -100,7 +100,17 @@ public static class BaselineKpiSql
         ["K_RSP_FRT_MED"] = new("SELECT date(first_response_at) d, ROUND(median((julianday(first_response_at)-julianday(created_at))*24),2) value FROM ticket_fact WHERE first_response_at IS NOT NULL AND team_id='T_RSP' GROUP BY 1",
             "SELECT date(first_response_at) d, ROUND((percentile_cont(0.5) WITHIN GROUP (ORDER BY ((EXTRACT(EPOCH FROM (first_response_at - created_at)) / 86400.0))*24))::numeric, 2) value FROM ticket_fact WHERE first_response_at IS NOT NULL AND team_id='T_RSP' GROUP BY 1", ["ticket_events", "tickets"], KpiWindow.Day),
         ["K_RSP_FRT_2H_PCT"] = new("SELECT date(first_response_at) d, ROUND(100.0*AVG((julianday(first_response_at)-julianday(created_at))*24<=2),1) value FROM ticket_fact WHERE team_id='T_RSP' AND first_response_at IS NOT NULL GROUP BY 1",
-            "SELECT date(first_response_at) d, ROUND((100.0*AVG((((EXTRACT(EPOCH FROM (first_response_at - created_at)) / 86400.0))*24<=2)::integer))::numeric, 1) value FROM ticket_fact WHERE team_id='T_RSP' AND first_response_at IS NOT NULL GROUP BY 1", ["ticket_events", "tickets"], KpiWindow.Day),
+            // Match SQLite's separately rounded binary64 Julian days before comparing the threshold.
+            // PostgreSQL JULIAN starts at midnight; SQLite's Julian day starts at noon.
+            // Fix line endings so the definition hash is identical on Windows and Linux.
+            """
+            SELECT date(first_response_at) d,
+              ROUND(100.0 * AVG((
+                ((EXTRACT(JULIAN FROM first_response_at) - 0.5)::double precision
+                  - (EXTRACT(JULIAN FROM created_at) - 0.5)::double precision) * 24.0 <= 2
+              )::integer), 1) value
+            FROM ticket_fact WHERE team_id='T_RSP' AND first_response_at IS NOT NULL GROUP BY 1
+            """.ReplaceLineEndings("\r\n"), ["ticket_events", "tickets"], KpiWindow.Day),
         ["K_RSP_TICKETS"] = new("SELECT c.d, COUNT(t.ticket_id) value FROM cal c LEFT JOIN tickets t ON date(t.created_at)=c.d AND t.team_id='T_RSP' GROUP BY c.d",
             "SELECT c.d, COUNT(t.ticket_id) value FROM cal c LEFT JOIN tickets t ON date(t.created_at)=c.d AND t.team_id='T_RSP' GROUP BY c.d", ["tickets"], KpiWindow.Day),
         ["K_RSP_TICKETS_BY_CAT"] = new("SELECT date(created_at) d, category dim, COUNT(*) value FROM tickets WHERE team_id='T_RSP' GROUP BY 1,2",

@@ -1,12 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OrgPilot.BackgroundWorker.Persistence.Migrations;
 
-[DbContext(typeof(Stage2DbContext))]
-[Migration("20261126193000_Stage2Intake")]
-public sealed class Stage2Intake : Migration
+public sealed partial class Stage2Intake : Migration
 {
     protected override void Up(MigrationBuilder migrationBuilder)
     {
@@ -59,5 +55,4 @@ public sealed class Stage2Intake : Migration
             """);
     }
 
-    protected override void BuildTargetModel(ModelBuilder modelBuilder) => Stage2ModelSnapshot.BuildV1(modelBuilder);
 }

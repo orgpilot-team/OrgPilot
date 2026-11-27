@@ -46,17 +46,8 @@ public sealed class ConfigurationService(ConfigurationDbContext db, IConfigurati
             """, cancellationToken);
     }
 
-    public async Task<ActiveConfiguration> ResolveAsync(int businessDay, CancellationToken cancellationToken = default)
-    {
-        var rows = await (from c in db.Candidates.AsNoTracking()
-                          join a in db.Approvals.AsNoTracking() on c.Id equals a.CandidateId
-                          where c.EffectiveDay <= businessDay && a.ApprovedDay < businessDay
-                          select c.Payload).ToListAsync(cancellationToken);
-        var ordered = rows.Select(Read).GroupBy(c => (c.Kind, c.Key))
-            .Select(g => g.OrderByDescending(c => c.EffectiveDay).ThenByDescending(c => c.CommandId, StringComparer.Ordinal).First())
-            .OrderBy(c => c.Kind).ThenBy(c => c.Key, StringComparer.Ordinal).ToArray();
-        return new(ConfigurationFingerprint.Of(ordered.Select(c => c.Id).ToArray()), businessDay, Array.AsReadOnly(ordered));
-    }
+    public Task<ActiveConfiguration> ResolveAsync(int businessDay, CancellationToken cancellationToken = default) =>
+        new ConfigurationVersionReader(db).ResolveAsync(businessDay, cancellationToken);
 
     private static ConfigurationCandidate Read(string payload) =>
         JsonSerializer.Deserialize<ConfigurationCandidate>(payload) ?? throw new InvalidDataException("Invalid candidate record.");

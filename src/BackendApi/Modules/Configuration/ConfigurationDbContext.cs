@@ -33,7 +33,7 @@ public sealed class ConfigurationDbContext(DbContextOptions<ConfigurationDbConte
         model.Entity<ConfigurationRow>(e =>
         {
             e.ToTable("candidates");
-            e.HasKey(x => x.Id);
+            e.HasKey(x => x.Id).HasName("candidates_pkey");
             e.Property(x => x.Id).HasMaxLength(64);
             e.Property(x => x.CommandId).IsRequired();
             e.HasIndex(x => x.CommandId).IsUnique();
@@ -44,12 +44,13 @@ public sealed class ConfigurationDbContext(DbContextOptions<ConfigurationDbConte
         model.Entity<ApprovalRow>(e =>
         {
             e.ToTable("approvals");
-            e.HasKey(x => x.CandidateId);
+            e.HasKey(x => x.CandidateId).HasName("approvals_pkey");
             e.Property(x => x.CandidateId).HasMaxLength(64);
+            e.Property(x => x.ApprovedDay).IsRequired();
             e.Property(x => x.Payload).HasColumnType("jsonb").IsRequired();
             e.Property(x => x.TraceId).IsRequired();
             e.HasOne<ConfigurationRow>().WithOne().HasForeignKey<ApprovalRow>(x => x.CandidateId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction).HasConstraintName("approvals_CandidateId_fkey");
         });
     }
 

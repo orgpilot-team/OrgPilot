@@ -32,13 +32,16 @@ public sealed class ConfigurationValidator(string connectionString)
                 var p = receipt.RootElement;
                 if (!p.GetProperty("Passed").GetBoolean() ||
                     p.GetProperty("DefinitionId").GetString() != change.DefinitionVersion ||
+                    p.GetProperty("ReferenceSqlHash").GetString() != ConfigurationFingerprint.Of(d.GetProperty("ReferenceSql").GetString()) ||
+                    p.GetProperty("PostgreSqlHash").GetString() != ConfigurationFingerprint.Of(d.GetProperty("PostgreSql").GetString()) ||
                     d.GetProperty("KpiId").GetString() != change.KpiId)
                     throw new InvalidDataException("KPI version is not eligible.");
                 var direction = d.GetProperty("Direction").GetInt32();
                 var warn = Number(d, "Warn");
                 var crit = Number(d, "Crit");
                 var target = Number(d, "Target");
-                if (direction is not (1 or -1) || (warn is null) != (crit is null) ||
+                if (direction is not (1 or -1) || d.GetProperty("EscalateAfterDays").GetInt32() < 0 ||
+                    (warn is null) != (crit is null) ||
                     (warn is { } w && crit is { } c && direction * (w - c) < 0) ||
                     (target is { } t && warn is { } warning && direction * (t - warning) < 0))
                     throw new InvalidDataException("Thresholds contradict KPI direction.");

@@ -51,14 +51,14 @@ public sealed class Stage2DbContext(DbContextOptions<Stage2DbContext> options) :
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) => ConfigureV1(modelBuilder);
 
-    // Frozen initial mapping; later migrations must preserve this version for their snapshot.
+    // Match the initial SQL migration, including the names PostgreSQL assigns to its constraints.
     internal static void ConfigureV1(ModelBuilder model)
     {
         model.HasDefaultSchema("intake");
         model.Entity<StoredBatch>(e =>
         {
             e.ToTable("batches", "intake");
-            e.HasKey(x => x.Id);
+            e.HasKey(x => x.Id).HasName("batches_pkey");
             e.Property(x => x.Id).HasMaxLength(64);
             e.Property(x => x.Payload).HasColumnType("jsonb").IsRequired();
             e.Property(x => x.TraceId).IsRequired();
@@ -67,7 +67,7 @@ public sealed class Stage2DbContext(DbContextOptions<Stage2DbContext> options) :
         model.Entity<StoredSnapshot>(e =>
         {
             e.ToTable("snapshots", "snapshots");
-            e.HasKey(x => x.Id);
+            e.HasKey(x => x.Id).HasName("snapshots_pkey");
             e.Property(x => x.Id).HasMaxLength(64);
             e.Property(x => x.Payload).HasColumnType("jsonb").IsRequired();
             e.Property(x => x.TraceId).IsRequired();
@@ -76,31 +76,36 @@ public sealed class Stage2DbContext(DbContextOptions<Stage2DbContext> options) :
         model.Entity<StoredDefinition>(e =>
         {
             e.ToTable("definitions", "kpi");
-            e.HasKey(x => x.Id);
+            e.HasKey(x => x.Id).HasName("definitions_pkey");
             e.Property(x => x.Id).HasMaxLength(64);
             e.Property(x => x.Payload).HasColumnType("jsonb").IsRequired();
         });
         model.Entity<StoredParityReceipt>(e =>
         {
             e.ToTable("parity_receipts", "kpi");
-            e.HasKey(x => x.Id);
+            e.HasKey(x => x.Id).HasName("parity_receipts_pkey");
             e.Property(x => x.Id).HasMaxLength(64);
-            e.Property(x => x.DefinitionId).HasMaxLength(64);
+            e.Property(x => x.DefinitionId).HasMaxLength(64).IsRequired();
             e.Property(x => x.Payload).HasColumnType("jsonb").IsRequired();
             e.Property(x => x.TraceId).IsRequired();
-            e.HasOne<StoredDefinition>().WithMany().HasForeignKey(x => x.DefinitionId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne<StoredDefinition>().WithMany().HasForeignKey(x => x.DefinitionId)
+                .OnDelete(DeleteBehavior.NoAction).HasConstraintName("parity_receipts_DefinitionId_fkey");
+            e.HasIndex(x => x.DefinitionId);
         });
         model.Entity<StoredKpiRun>(e =>
         {
             e.ToTable("query_runs", "kpi");
-            e.HasKey(x => x.Id);
+            e.HasKey(x => x.Id).HasName("query_runs_pkey");
             e.Property(x => x.Id).HasMaxLength(64);
-            e.Property(x => x.SnapshotId).HasMaxLength(64);
-            e.Property(x => x.DefinitionId).HasMaxLength(64);
+            e.Property(x => x.SnapshotId).HasMaxLength(64).IsRequired();
+            e.Property(x => x.DefinitionId).HasMaxLength(64).IsRequired();
             e.Property(x => x.Payload).HasColumnType("jsonb").IsRequired();
             e.Property(x => x.TraceId).IsRequired();
-            e.HasOne<StoredDefinition>().WithMany().HasForeignKey(x => x.DefinitionId).OnDelete(DeleteBehavior.Restrict);
-            e.HasOne<StoredSnapshot>().WithMany().HasForeignKey(x => x.SnapshotId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne<StoredDefinition>().WithMany().HasForeignKey(x => x.DefinitionId)
+                .OnDelete(DeleteBehavior.NoAction).HasConstraintName("query_runs_DefinitionId_fkey");
+            e.HasOne<StoredSnapshot>().WithMany().HasForeignKey(x => x.SnapshotId)
+                .OnDelete(DeleteBehavior.NoAction).HasConstraintName("query_runs_SnapshotId_fkey");
+            e.HasIndex(x => x.DefinitionId);
             e.HasIndex(x => new { x.SnapshotId, x.DefinitionId }).IsUnique();
         });
     }
