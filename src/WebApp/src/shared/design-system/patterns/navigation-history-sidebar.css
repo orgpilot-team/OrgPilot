@@ -80,12 +80,13 @@
   gap: 0.1875rem;
   margin: 0 0 1.375rem;
   color: var(--history-ink);
-  font: 600 0.875rem/1rem var(--didrah-font-family);
+  font: var(--didrah-type-action);
+  line-height: 1rem;
 }
 
 .didrah-history-brand span {
   color: var(--history-brand-accent);
-  font-weight: 700;
+  font-weight: var(--didrah-weight-semibold);
 }
 
 .didrah-history-actions {
@@ -109,7 +110,7 @@
   padding-inline: 1.0625rem;
   border-radius: var(--history-radius);
   color: var(--history-ink);
-  font: var(--didrah-type-control);
+  font: var(--didrah-type-action);
   white-space: nowrap;
 }
 
@@ -213,7 +214,8 @@
 .didrah-history-group h3 {
   margin: 0 var(--history-inset) 0.5rem;
   color: var(--history-muted);
-  font: 400 0.75rem/1rem var(--didrah-font-family);
+  font: var(--didrah-type-caption);
+  line-height: 1rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -274,7 +276,7 @@
   min-inline-size: 0;
   padding-inline: 0.5625rem 0.25rem;
   border-radius: var(--history-radius);
-  font: 400 0.875rem/1.25rem var(--didrah-font-family);
+  font: var(--didrah-type-control-input);
   text-align: start;
 }
 

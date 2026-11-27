@@ -1,6 +1,6 @@
 import type { ColorRole, ThemeColors, ThemeName } from '../tokens/theme-contract'
 import { layout, overlayShadow } from '../tokens/layout'
-import { typography } from '../tokens/typography'
+import { fontWeights, typography } from '../tokens/typography'
 
 export function colorVariableName(role: ColorRole) {
   return `--didrah-color-${role}` as const
@@ -41,8 +41,12 @@ export function applyLayout(style: CSSStyleDeclaration) {
 
 export function applyTypography(style: CSSStyleDeclaration) {
   const properties = Object.entries(typography.roles)
+  const weights = Object.entries(fontWeights)
 
   style.setProperty('--didrah-font-family', typography.family)
+  for (const [name, weight] of weights) {
+    style.setProperty(`--didrah-weight-${name}`, String(weight))
+  }
 
   for (const [role, text] of properties) {
     style.setProperty(
@@ -53,6 +57,9 @@ export function applyTypography(style: CSSStyleDeclaration) {
 
   return () => {
     style.removeProperty('--didrah-font-family')
+    for (const [name] of weights) {
+      style.removeProperty(`--didrah-weight-${name}`)
+    }
 
     for (const [role] of properties) {
       style.removeProperty(`--didrah-type-${role}`)

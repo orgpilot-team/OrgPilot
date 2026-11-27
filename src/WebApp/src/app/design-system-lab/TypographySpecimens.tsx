@@ -15,6 +15,13 @@ const bodySamples = [
   ['body-large', 'برای آماده‌سازی شعبهٔ صادقیه پیش از شروع شیفت صبح، موجودی کالاهای ضروری را با فهرست سفارش انبار مرکزی مقایسه کنید.'],
 ] as const
 
+const controlSamples = [
+  ['action', 'ثبت گزارش'],
+  ['label', 'عنوان گزارش'],
+  ['caption', 'آخرین به‌روزرسانی'],
+  ['technical', <bdi lang="en" dir="ltr">ARK-OPS/1405-0905</bdi>],
+] as const
+
 const storeSamples = [
   { store: 'ونک', sku: 'SKU-ARK-04821', quantity: '12,480', sales: '58,240,750.25', stock: '97.50%', density: 'table' },
   { store: 'صادقیه', sku: 'SKU-ARK-10236', quantity: '7,624', sales: '43,701,056.75', stock: '92.75%', density: 'table' },
@@ -23,14 +30,14 @@ const storeSamples = [
 ] as const
 
 function TypeSample({ role, children }: { role: TypographyRole; children: ReactNode }) {
-  const { size, weight } = typography.roles[role]
+  const { size, weight, lineHeight } = typography.roles[role]
 
   return (
     <div className="lab-type-sample">
       <span data-typography-role={role} style={{ font: `var(--didrah-type-${role})` }}>
         {children}
       </span>
-      <bdi className="lab-type-meta" dir="ltr">{Number.parseFloat(size) * 16}px / {weight}</bdi>
+      <bdi className="lab-type-meta" dir="ltr">{Number.parseFloat(size) * 16}px / {weight} / {lineHeight}</bdi>
     </div>
   )
 }
@@ -49,6 +56,9 @@ export function TypographySpecimens() {
           {headingSamples.map(([role, sample]) => <TypeSample key={role} role={role}>{sample}</TypeSample>)}
           <div className="lab-body-samples">
             {bodySamples.map(([role, sample]) => <TypeSample key={role} role={role}>{sample}</TypeSample>)}
+          </div>
+          <div className="lab-body-samples">
+            {controlSamples.map(([role, sample]) => <TypeSample key={role} role={role}>{sample}</TypeSample>)}
           </div>
         </section>
 

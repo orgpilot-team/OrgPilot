@@ -145,7 +145,11 @@
 
 .lab-retail-table thead {
   color: var(--didrah-color-text-secondary);
-  font: var(--didrah-type-control);
+  font: var(--didrah-type-action);
+}
+
+.lab-retail-table th {
+  font-weight: var(--didrah-weight-medium);
 }
 
 .lab-chart-labels {

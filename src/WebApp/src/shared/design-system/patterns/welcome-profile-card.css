@@ -105,12 +105,13 @@
 .didrah-welcome-date {
   margin-block-start: var(--welcome-profile-inset);
   color: var(--welcome-profile-date, var(--didrah-color-text-secondary));
-  font: 700 clamp(1rem, 4.6875cqi, 1.5rem)/clamp(1.5rem, 6.25cqi, 2rem) var(--didrah-font-family);
+  font: var(--didrah-weight-medium) clamp(1rem, 4.6875cqi, 1.5rem)/clamp(1.5rem, 6.25cqi, 2rem) var(--didrah-font-family);
+  font-variant-numeric: tabular-nums;
 }
 
 .didrah-welcome-heading {
   margin: var(--didrah-space-compact) 0 0;
-  font: 700 clamp(1.75rem, 9.18cqi, 2.9375rem)/clamp(2.5rem, 12.5cqi, 4rem) var(--didrah-font-family);
+  font: var(--didrah-weight-semibold) clamp(1.75rem, 9.18cqi, 2.9375rem)/clamp(2.5rem, 12.5cqi, 4rem) var(--didrah-font-family);
   overflow-wrap: anywhere;
 }
 

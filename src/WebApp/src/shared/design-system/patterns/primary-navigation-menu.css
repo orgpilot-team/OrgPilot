@@ -49,8 +49,7 @@
   border-radius: 0.6875rem;
   background: transparent;
   color: var(--didrah-color-text-secondary);
-  font: var(--didrah-type-body);
-  line-height: 1.5;
+  font: var(--didrah-type-navigation);
   text-align: start;
   cursor: pointer;
 }
@@ -84,7 +83,7 @@
   border-color: transparent;
   color: var(--primary-nav-current-ink);
   box-shadow: var(--primary-nav-current-shadow);
-  font-weight: 700;
+  font-weight: var(--didrah-weight-semibold);
 }
 
 .didrah-primary-nav-item[aria-current="page"]:enabled:hover:not(:active) {
