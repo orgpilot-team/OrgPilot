@@ -1,0 +1,54 @@
+# Isolated Stage 2 timing check. Restore a development database dump into this
+# PostgreSQL instance first. Both processes share CPUs 0-3 and at most 14 GiB RAM.
+services:
+  postgresql:
+    image: postgres:18
+    cpuset: "0-3"
+    mem_limit: 2g
+    memswap_limit: 2g
+    environment:
+      POSTGRES_DB: orgpilot
+      POSTGRES_USER: orgpilot_admin
+      POSTGRES_PASSWORD: ${ORGPILOT_POSTGRES_PASSWORD:?Set database credentials in .env}
+      ORGPILOT_MIGRATOR_PASSWORD: ${ORGPILOT_MIGRATOR_PASSWORD:?Set migration credentials in .env}
+      ORGPILOT_API_PASSWORD: ${ORGPILOT_API_PASSWORD:?Set API credentials in .env}
+      ORGPILOT_WORKER_PASSWORD: ${ORGPILOT_WORKER_PASSWORD:?Set Worker credentials in .env}
+    volumes:
+      - ./postgresql/10-roles.sql:/docker-entrypoint-initdb.d/10-roles.sql:ro
+      - ${STAGE2_EVIDENCE_DIR:?Set an evidence directory}/database.sql:/seed/database.sql:ro
+    tmpfs:
+      - /var/lib/postgresql:size=1073741824
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+      start_period: 10s
+    restart: "no"
+
+  acceptance:
+    image: orgpilot-stage2-acceptance:local
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: acceptance
+    cpuset: "0-3"
+    mem_limit: 12g
+    memswap_limit: 12g
+    environment:
+      DATA_DIR: /data
+      Archive__RootPath: /archive
+      ConnectionStrings__Product: "Host=postgresql;Database=orgpilot;Username=orgpilot_worker;Password=${ORGPILOT_WORKER_PASSWORD};Timeout=5;GSS Encryption Mode=Disable"
+      ConnectionStrings__Configuration: "Host=postgresql;Database=orgpilot;Username=orgpilot_api;Password=${ORGPILOT_API_PASSWORD};Timeout=5;GSS Encryption Mode=Disable"
+    volumes:
+      - ${STAGE2_DATA_DIR:?Set the dataset directory}:/data:ro
+      - ${STAGE2_ARCHIVE_DIR:?Set the existing raw archive directory}:/archive
+    command: ["--check-performance", "${STAGE2_SNAPSHOT_ID:?Set a passing snapshot ID}"]
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    restart: "no"
+
+networks:
+  default:
+    internal: true

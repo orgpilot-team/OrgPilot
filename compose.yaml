@@ -33,6 +33,20 @@ services:
         condition: service_healthy
     restart: "no"
 
+  worker-database-migrate:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      target: background-worker
+    command: ["--migrate"]
+    environment:
+      ConnectionStrings__Product: "Host=postgresql;Database=orgpilot;Username=orgpilot_migrator;Password=${ORGPILOT_MIGRATOR_PASSWORD};Timeout=5;GSS Encryption Mode=Disable"
+      Archive__RootPath: /archive
+    depends_on:
+      database-migrate:
+        condition: service_completed_successfully
+    restart: "no"
+
   backend-api:
     build:
       context: .
@@ -73,7 +87,7 @@ services:
     volumes:
       - protected-archive:/archive
     depends_on:
-      database-migrate:
+      worker-database-migrate:
         condition: service_completed_successfully
 
   scheduler-replay:
