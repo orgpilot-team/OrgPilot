@@ -1,0 +1,28 @@
+.lab-composer-specimen {
+  display: grid;
+  gap: var(--didrah-space-panel);
+  max-inline-size: 50.75rem;
+  margin-block: var(--didrah-space-panel) 0;
+  margin-inline: auto;
+}
+
+.lab-composer-specimen .lab-theme-control {
+  justify-self: start;
+  flex-wrap: wrap;
+}
+
+.lab-composer-feedback,
+.lab-composer-submission {
+  margin: 0;
+  color: var(--didrah-color-text-secondary);
+  font: var(--didrah-type-secondary);
+}
+
+.lab-composer-submission {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.lab-composer-feedback:empty {
+  position: absolute;
+}

@@ -4,6 +4,7 @@ import type { ColorRole, HexColor, ThemeName } from '../../shared/design-system/
 import { colorVariableName } from '../../shared/design-system/theme/css-variables'
 import { useDidrahTheme } from '../../shared/design-system/theme/DidrahThemeProvider'
 import { AntSpecimens } from './AntSpecimens'
+import { LuminousChatComposerSpecimen } from './LuminousChatComposerSpecimen'
 import { NavigationHistorySpecimen } from './NavigationHistorySpecimen'
 import { PatternSpecimens } from './PatternSpecimens'
 import { TypographySpecimens } from './TypographySpecimens'
@@ -164,6 +165,8 @@ export default function DesignSystemLab() {
             ))}
           </ul>
         </section>
+
+        <LuminousChatComposerSpecimen />
       </div>
     </main>
   )

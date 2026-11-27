@@ -1,0 +1,287 @@
+.didrah-chat-composer {
+  --composer-radius: 1.5rem;
+  --composer-action-size: 2.25rem;
+  --composer-editor-min: 3.25rem;
+  --composer-editor-max: 8.75rem;
+  --composer-inline-angle: 90deg;
+  --composer-send-angle: 133deg;
+  --composer-fill: #0a0a16;
+  --composer-ink: #fdfdff;
+  --composer-caret: #3d69ef;
+  --composer-rim-top: linear-gradient(var(--composer-inline-angle),
+    #32a8dc 0%, #41b1e0 13%, #58bfe3 34%, #60cbd4 51%,
+    #58b0d9 63%, #4f98d7 76%, #4780d6 88%, #4370d5 100%);
+  --composer-rim-bottom: linear-gradient(var(--composer-inline-angle),
+    #32a8dc 0%, #39ade6 13%, #50bde5 34%, #59c6d9 51%,
+    #56c8d6 63%, #53addf 76%, #5091d9 88%, #4474d7 100%);
+  --composer-glow: linear-gradient(var(--composer-inline-angle),
+    #1d2350, transparent 9%, transparent 87%, #27397b),
+    linear-gradient(180deg, #1b2853, #1b295f 45%, #283c86 100%);
+  --composer-edge-light: rgb(36 89 239 / 37%);
+  position: relative;
+  isolation: isolate;
+  min-inline-size: 0;
+  border-radius: var(--composer-radius);
+}
+
+.didrah-chat-composer:dir(rtl) {
+  --composer-inline-angle: 270deg;
+  --composer-send-angle: 227deg;
+}
+
+[data-theme="light"] .didrah-chat-composer {
+  --composer-fill: var(--didrah-color-surface-input);
+  --composer-ink: var(--didrah-color-text-primary);
+  --composer-caret: var(--didrah-color-focus-ring);
+  --composer-rim-top: linear-gradient(var(--composer-inline-angle), #237ba9, #328b9c 51%, #465fbe);
+  --composer-rim-bottom: linear-gradient(var(--composer-inline-angle), #267ba8, #338b9c 63%, #4965bf);
+  --composer-glow: linear-gradient(var(--composer-inline-angle),
+    rgb(37 125 175 / 17%), transparent 9%, transparent 87%, rgb(48 86 184 / 29%)),
+    linear-gradient(180deg, rgb(69 128 191 / 8%), rgb(58 89 190 / 22%));
+  --composer-edge-light: rgb(36 89 239 / 16%);
+}
+
+/* The lower and inline-end edges cast more light on the parent surface. */
+.didrah-chat-composer::before,
+.didrah-chat-composer::after {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+}
+
+.didrah-chat-composer::before {
+  inset-block: 2px -2px;
+  inset-inline: 0.5px -2px;
+  border-radius: inherit;
+  background: var(--composer-glow);
+  filter: blur(9.5px);
+}
+
+.didrah-chat-composer::after {
+  inset-block: 8.5px 6px;
+  inset-inline-end: 0;
+  inline-size: 3.0625rem;
+  border-start-end-radius: 1.3125rem;
+  border-end-end-radius: 1.3125rem;
+  background: linear-gradient(var(--composer-inline-angle), transparent 40%, var(--composer-edge-light));
+  mask-image: linear-gradient(180deg, transparent, #000 22% 82%, transparent);
+  filter: blur(5.5px);
+}
+
+.didrah-composer-form,
+.didrah-composer-form::before,
+.didrah-composer-message,
+.didrah-composer-editor::after {
+  box-sizing: border-box;
+}
+
+.didrah-composer-form {
+  position: relative;
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  padding: 0.9375rem;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  background:
+    linear-gradient(var(--composer-fill), var(--composer-fill)) padding-box,
+    var(--composer-rim-top) border-box;
+  color: var(--composer-ink);
+}
+
+.didrah-composer-form::before {
+  position: absolute;
+  inset: -1px;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  background:
+    linear-gradient(var(--composer-fill), var(--composer-fill)) padding-box,
+    var(--composer-rim-bottom) border-box;
+  mask-image: linear-gradient(180deg, transparent 12%, #000 90%);
+  pointer-events: none;
+  content: "";
+}
+
+.didrah-composer-editor,
+.didrah-composer-actions,
+.didrah-composer-attachments {
+  position: relative;
+  min-inline-size: 0;
+}
+
+.didrah-composer-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.didrah-composer-editor::after,
+.didrah-composer-message {
+  grid-area: 1 / 1;
+  min-block-size: var(--composer-editor-min);
+  max-block-size: var(--composer-editor-max);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: 400 0.875rem/1.25rem var(--didrah-font-family);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* The hidden copy sizes the grid, including an empty final line. */
+.didrah-composer-editor::after {
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+  content: attr(data-value) ' ';
+}
+
+.didrah-composer-message {
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  resize: none;
+  overflow: auto;
+  border-radius: 2px;
+  background: transparent;
+  color: inherit;
+  caret-color: var(--composer-caret);
+}
+
+.didrah-composer-message::placeholder {
+  color: var(--didrah-color-text-muted);
+  opacity: 1;
+}
+
+.didrah-composer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.didrah-composer-actions button,
+.didrah-composer-remove {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--composer-action-size);
+  block-size: var(--composer-action-size);
+  padding: 0;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.didrah-composer-actions svg {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+.didrah-composer-form svg {
+  pointer-events: none;
+}
+
+.didrah-composer-actions .didrah-composer-attach {
+  justify-items: start;
+  inline-size: 1.5rem;
+}
+
+.didrah-composer-actions .didrah-composer-send {
+  background: linear-gradient(var(--composer-send-angle), #204fff 36%, #6498ff 93%);
+  color: #fff;
+}
+
+.didrah-chat-composer:dir(rtl) .didrah-composer-send svg {
+  transform: scaleX(-1);
+}
+
+.didrah-composer-attach:hover:enabled,
+.didrah-composer-remove:hover:enabled {
+  color: var(--didrah-color-accent-cyan-content);
+}
+
+.didrah-composer-send:hover:enabled { filter: brightness(1.1); }
+.didrah-composer-actions button:active:enabled { filter: brightness(0.87); }
+
+.didrah-composer-actions button:disabled,
+.didrah-composer-remove:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.didrah-composer-form[data-disabled="true"] .didrah-composer-message {
+  opacity: 0.65;
+}
+
+.didrah-composer-message:focus-visible,
+.didrah-composer-form button:focus-visible {
+  outline: 2px solid var(--didrah-color-focus-ring);
+  outline-offset: 3px;
+}
+
+.didrah-composer-message:focus-visible { outline-offset: 1px; }
+
+.didrah-composer-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--didrah-space-compact);
+  margin: 0 0 0.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.didrah-composer-file {
+  display: flex;
+  align-items: center;
+  gap: var(--didrah-space-compact);
+  min-inline-size: 0;
+  max-inline-size: min(100%, 17rem);
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--didrah-color-border-subtle);
+  border-radius: var(--didrah-radius-control);
+  background: var(--didrah-color-surface-raised);
+  color: var(--didrah-color-text-primary);
+  font: var(--didrah-type-caption);
+}
+
+.didrah-composer-file img {
+  flex: none;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: 0.25rem;
+  object-fit: cover;
+}
+
+.didrah-composer-file bdi {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.didrah-composer-remove {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.didrah-composer-remove svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.didrah-composer-status {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .didrah-composer-form { border-color: CanvasText; }
+  .didrah-composer-form::before { display: none; }
+  .didrah-composer-actions .didrah-composer-send { border: 1px solid ButtonText; }
+}
