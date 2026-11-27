@@ -8,6 +8,7 @@ import { lightTheme } from '../tokens/light-theme'
 import type { ThemeColors, ThemeName } from '../tokens/theme-contract'
 import { typography } from '../tokens/typography'
 import './ant-controls.css'
+import './ant-selection-overlays.css'
 
 const { roles } = typography
 const toAntPixels = (size: (typeof roles)[keyof typeof roles]['size']) => Number.parseFloat(size) * 16
@@ -23,6 +24,15 @@ export const antControlConfig = {
     classNames: { ...fieldClassNames, popup: { root: 'didrah-ant-select-popup' } },
     menuItemSelectedIcon: createElement(CheckOutlined, { 'aria-hidden': true }),
   },
+  checkbox: { classNames: { icon: 'didrah-ant-choice' } },
+  radio: { classNames: { icon: 'didrah-ant-choice' } },
+  switch: { classNames: { root: 'didrah-ant-switch' } },
+  segmented: { classNames: { root: 'didrah-ant-segmented', item: 'didrah-ant-segment' } },
+  modal: { classNames: { container: 'didrah-ant-dialog' } },
+  drawer: { classNames: { section: 'didrah-ant-dialog' } },
+  dropdown: { classNames: { menu: 'didrah-ant-popup', item: 'didrah-ant-menu-item' } },
+  popover: { classNames: { container: 'didrah-ant-popup' } },
+  tooltip: { classNames: { container: 'didrah-ant-tooltip' } },
 } satisfies ConfigProviderProps
 
 function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
@@ -65,6 +75,15 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
     ...field,
     paddingInline: layout.space.gap,
   }
+  const choice = {
+    colorBorder: 'var(--didrah-control-edge)',
+    colorBgContainer: 'var(--didrah-control-fill)',
+    colorBgContainerDisabled: 'var(--didrah-control-disabled)',
+    colorPrimaryBorder: focus,
+    colorPrimary: isDark ? '#5162c6' : '#3e50ac',
+    colorPrimaryHover: isDark ? '#6072d6' : '#35499d',
+  }
+  const overlay = colors['surface-overlay']
 
   return {
     algorithm: isDark ? ant.darkAlgorithm : ant.defaultAlgorithm,
@@ -145,6 +164,34 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
         hoverBorderColor: accent,
         activeBorderColor: focus,
       },
+      Checkbox: choice,
+      Radio: { ...choice, dotColorDisabled: muted },
+      Switch: {
+        ...choice,
+        colorTextQuaternary: 'var(--didrah-control-edge)',
+        colorTextTertiary: 'var(--didrah-control-edge-hover)',
+        handleShadow: 'none',
+      },
+      Segmented: {
+        trackBg: 'var(--didrah-control-fill)',
+        trackPadding: 3,
+        itemColor: secondary,
+        itemHoverColor: text,
+        itemHoverBg: 'var(--didrah-control-hover)',
+        itemActiveBg: 'var(--didrah-control-option-active)',
+        itemSelectedBg: 'var(--didrah-control-option-selected)',
+        itemSelectedColor: text,
+      },
+      Modal: {
+        contentBg: overlay,
+        headerBg: 'transparent',
+        footerBg: 'transparent',
+        titleColor: text,
+        borderRadiusLG: layout.radius.panel,
+      },
+      Drawer: { colorBgElevated: overlay, colorSplit: border },
+      Dropdown: { colorBgElevated: overlay, controlItemBgHover: raised },
+      Popover: { colorBgElevated: overlay, colorText: text },
       Tag: status,
       Alert: status,
       Menu: {
@@ -163,7 +210,7 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
         cellPaddingInline: layout.space.gap,
       },
       Tooltip: {
-        colorBgSpotlight: colors['surface-overlay'],
+        colorBgSpotlight: overlay,
         colorTextLightSolid: text,
       },
     },

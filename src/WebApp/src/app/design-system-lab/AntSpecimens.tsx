@@ -1,7 +1,7 @@
 import { CloseCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import {
   Alert, App, Button, Checkbox, DatePicker, Drawer, Dropdown, Empty, Input,
-  InputNumber, Menu, Popover, Radio, Select, Skeleton, Spin, Switch, Table, Tag, Tooltip,
+  InputNumber, Menu, Modal, Popover, Radio, Segmented, Select, Skeleton, Spin, Switch, Table, Tag, Tooltip,
 } from 'antd'
 import type { TableColumnsType } from 'antd'
 // Ant Design's DatePicker uses the bundled Day.js locale data for calendar labels.
@@ -58,6 +58,8 @@ export function AntSpecimens() {
   const [orderLevel, setOrderLevel] = useState<string | null>('20.00')
   const [branchesLoading, setBranchesLoading] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [popoverOpen, setPopoverOpen] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
   const [pending, setPending] = useState(false)
   const [empty, setEmpty] = useState(false)
@@ -132,10 +134,11 @@ export function AntSpecimens() {
             ]}
           />
           <div className="lab-ant-actions">
-            <Dropdown menu={{
+            <Dropdown autoFocus menu={{
               items: [
                 { key: 'daily', label: 'گزارش روزانه' },
                 { key: 'weekly', label: 'گزارش هفتگی' },
+                { key: 'archive', label: 'بایگانی گزارش‌ها', disabled: true },
               ],
               onClick: ({ key }) => void message.info(key === 'daily' ? 'گزارش روزانه انتخاب شد.' : 'گزارش هفتگی انتخاب شد.'),
             }} trigger={['click']}>
@@ -144,10 +147,25 @@ export function AntSpecimens() {
             <Tooltip title="واحد همهٔ مبالغ جدول ریال است." trigger={['hover', 'focus']}>
               <Button>واحد مبالغ</Button>
             </Tooltip>
-            <Popover title="آستانهٔ سفارش" content="موجودی کمتر از ۲۰ واحد نیاز به بررسی دارد." trigger="click">
-              <Button>راهنمای موجودی</Button>
+            <Popover
+              title="آستانهٔ سفارش"
+              content="موجودی کمتر از ۲۰ واحد نیاز به بررسی دارد."
+              trigger="click"
+              open={popoverOpen}
+              onOpenChange={setPopoverOpen}
+            >
+              <Button
+                aria-expanded={popoverOpen}
+                onBlur={() => setPopoverOpen(false)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Escape') setPopoverOpen(false)
+                }}
+              >
+                راهنمای موجودی
+              </Button>
             </Popover>
             <Button onClick={() => setDrawerOpen(true)}>جزئیات شعبه</Button>
+            <Button onClick={() => setModalOpen(true)}>پیش‌نمایش گزارش</Button>
           </div>
         </section>
       </div>
@@ -235,7 +253,22 @@ export function AntSpecimens() {
           <Radio.Group
             aria-label="شیفت گزارش"
             defaultValue="morning"
-            options={[{ label: 'شیفت صبح', value: 'morning' }, { label: 'شیفت عصر', value: 'evening' }]}
+            options={[
+              { label: 'شیفت صبح', value: 'morning' },
+              { label: 'شیفت عصر', value: 'evening' },
+              { label: 'شیفت شب', value: 'night', disabled: true },
+            ]}
+          />
+          <Checkbox indeterminate disabled>برخی شعبه‌ها</Checkbox>
+          <Switch disabled aria-label="ارسال خودکار گزارش" />
+          <Segmented
+            aria-label="بازهٔ گزارش"
+            defaultValue="day"
+            options={[
+              { label: 'امروز', value: 'day' },
+              { label: 'این هفته', value: 'week' },
+              { label: 'این ماه', value: 'month', disabled: true },
+            ]}
           />
         </div>
       </section>
@@ -261,6 +294,14 @@ export function AntSpecimens() {
         }
       </section>
 
+      <Modal
+        title="پیش‌نمایش گزارش موجودی"
+        open={modalOpen}
+        onCancel={() => setModalOpen(false)}
+        footer={<Button onClick={() => setModalOpen(false)}>بستن پیش‌نمایش</Button>}
+      >
+        <p>گزارش امروز شامل سه شعبه است.</p>
+      </Modal>
       <Drawer title="جزئیات شعبهٔ ونک" open={drawerOpen} onClose={() => setDrawerOpen(false)} size="default">
         <p>فهرست کالاهای شعبه با گزارش <bdi dir="ltr" lang="en">Stock Audit</bdi> مطابقت دارد.</p>
         <Alert type="success" showIcon title="کنترل موجودی انجام شد." />
