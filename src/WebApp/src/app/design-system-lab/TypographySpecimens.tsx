@@ -46,7 +46,7 @@ export function TypographySpecimens() {
   return (
     <section className="lab-panel lab-typography" aria-labelledby="lab-typography-heading">
       <div className="lab-typography-header">
-        <h2 id="lab-typography-heading">تایپوگرافی</h2>
+        <h3 id="lab-typography-heading">نمونه‌های قلم</h3>
         <bdi className="lab-type-meta" lang="en" dir="ltr">Dastkhat Variable v1.220</bdi>
       </div>
 

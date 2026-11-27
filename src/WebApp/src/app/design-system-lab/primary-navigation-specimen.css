@@ -2,7 +2,6 @@
   display: grid;
   max-inline-size: 36rem;
   gap: var(--didrah-space-gap);
-  margin-block-end: var(--didrah-space-panel);
 }
 
 .lab-primary-navigation-stage {
@@ -24,7 +23,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--didrah-space-compact);
-  font: var(--didrah-type-control);
+  font: var(--didrah-type-label);
 }
 
 .lab-primary-navigation-controls input {

@@ -23,7 +23,7 @@ const reviewOptions = [
 
 type ReviewState = (typeof reviewOptions)[number]['value']
 
-function ReviewStatePanel() {
+export function ReviewStateSpecimen() {
   const [state, setState] = useState<ReviewState>('empty')
   const resetButton = useRef<ComponentRef<typeof Button>>(null)
 
@@ -77,86 +77,94 @@ function ReviewStatePanel() {
   )
 }
 
-export function PatternSpecimens() {
+export function NavigationPatternSpecimen() {
   const [selection, setSelection] = useState('inventory')
-  const [reviewed, setReviewed] = useState(false)
   const selectedItem = navigation.find(({ key }) => key === selection)
 
   return (
-    <section aria-labelledby="lab-pattern-heading" className="lab-patterns">
-      <Panel>
-        <SectionHeader
-          id="lab-pattern-heading"
-          level={2}
-          title="الگوهای رابط دیدراه"
-          description="سطوح، ناوبری و وضعیت‌ها در نمونهٔ بررسی موجودی شعب آرکا."
+    <div className="lab-ant-grid">
+      <Panel surface="raised" density="compact">
+        <SectionHeader title="بخش‌های شعبه" />
+        <Menu
+          aria-label="بخش‌های شعبه"
+          mode="inline"
+          style={{ background: 'transparent', borderInlineEnd: 0 }}
+          selectedKeys={[selection]}
+          items={navigation}
+          onSelect={({ key }) => setSelection(key)}
         />
-        <div className="lab-pattern-grid">
-          <Panel surface="raised" density="compact">
-            <SectionHeader title="بخش‌های شعبه" />
-            <Menu
-              aria-label="بخش‌های شعبه"
-              mode="inline"
-              style={{ background: 'transparent', borderInlineEnd: 0 }}
-              selectedKeys={[selection]}
-              items={navigation}
-              onSelect={({ key }) => setSelection(key)}
-            />
-            <Panel surface="selected" density="compact">
-              <div className="lab-pattern-selection" role="status">
-                <span>بخش انتخاب‌شده</span>
-                <strong>{selectedItem?.label}</strong>
-              </div>
-            </Panel>
-          </Panel>
-          <Panel surface="raised">
-            <SectionHeader
-              title="بررسی موجودی شعبهٔ ونک"
-              description={<>گزارش شیفت صبح <bdi dir="ltr" lang="en">INV-ARK/1405-0905</bdi></>}
-              actions={
-                <>
-                  <Popover
-                    title="جزئیات بررسی"
-                    content="موجودی قفسه‌ها با آخرین گزارش انبار مرکزی مقایسه شده است."
-                    trigger="click"
-                  >
-                    <Button>جزئیات</Button>
-                  </Popover>
-                  <Button
-                    className={reviewed ? undefined : 'lab-pattern-primary'}
-                    type={reviewed ? 'default' : 'primary'}
-                    onClick={() => setReviewed(!reviewed)}
-                  >
-                    {reviewed ? 'بازنشانی بررسی' : 'ثبت بررسی'}
-                  </Button>
-                </>
-              }
-            />
-            <Panel surface="overlay" density="compact">
-              <dl className="lab-pattern-kpi">
-                <dt>ارزش خالص موجودی شعبهٔ ونک</dt>
-                <dd className="lab-pattern-kpi-value"><bdi dir="ltr">2,584,320,750.25</bdi> <span>ریال</span></dd>
-                <dd className="lab-pattern-kpi-comparison">
-                  <ArrowDownOutlined aria-hidden="true" />
-                  <span><bdi dir="ltr">186,432,500.00</bdi> ریال کاهش نسبت به شیفت قبل</span>
-                </dd>
-              </dl>
-              <div className="lab-pattern-tags">
-                <Tag color={reviewed ? 'success' : 'warning'}>{reviewed ? 'بررسی شد' : 'در انتظار بررسی'}</Tag>
-                <Tag color="processing">شعبهٔ ونک</Tag>
-              </div>
-            </Panel>
-            {reviewed
-              ? <PanelState kind="success" title="بررسی نمونه ثبت شد." />
-              : <PanelState
-                  kind="warning"
-                  title="موجودی ۳ کالا کمتر از حد سفارش است."
-                  description="موجودی قفسه و انبار این کالاها را پیش از سفارش بعدی تطبیق دهید."
-                />}
-          </Panel>
-        </div>
-        <ReviewStatePanel />
+        <Panel surface="selected" density="compact">
+          <div className="lab-pattern-selection" role="status">
+            <span>بخش انتخاب‌شده</span>
+            <strong>{selectedItem?.label}</strong>
+          </div>
+        </Panel>
       </Panel>
-    </section>
+      <Panel surface="raised" density="compact">
+        <SectionHeader title="منوی افقی" />
+        <Menu
+          aria-label="بخش‌های گزارش"
+          className="lab-ant-menu"
+          mode="horizontal"
+          defaultSelectedKeys={['inventory']}
+          items={[
+            { key: 'inventory', label: 'موجودی' },
+            { key: 'sales', label: 'فروش' },
+            { key: 'orders', label: 'سفارش‌ها' },
+          ]}
+        />
+      </Panel>
+    </div>
+  )
+}
+
+export function InsightSpecimen() {
+  const [reviewed, setReviewed] = useState(false)
+
+  return (
+    <Panel surface="raised">
+      <SectionHeader
+        title="بررسی موجودی شعبهٔ ونک"
+        description={<>گزارش شیفت صبح <bdi dir="ltr" lang="en">INV-ARK/1405-0905</bdi></>}
+        actions={
+          <>
+            <Popover
+              title="جزئیات بررسی"
+              content="موجودی قفسه‌ها با آخرین گزارش انبار مرکزی مقایسه شده است."
+              trigger="click"
+            >
+              <Button>جزئیات</Button>
+            </Popover>
+            <Button
+              type={reviewed ? 'default' : 'primary'}
+              onClick={() => setReviewed(!reviewed)}
+            >
+              {reviewed ? 'بازنشانی بررسی' : 'ثبت بررسی'}
+            </Button>
+          </>
+        }
+      />
+      <Panel surface="overlay" density="compact">
+        <dl className="lab-pattern-kpi">
+          <dt>ارزش خالص موجودی شعبهٔ ونک</dt>
+          <dd className="lab-pattern-kpi-value"><bdi dir="ltr">2,584,320,750.25</bdi> <span>ریال</span></dd>
+          <dd className="lab-pattern-kpi-comparison">
+            <ArrowDownOutlined aria-hidden="true" />
+            <span><bdi dir="ltr">186,432,500.00</bdi> ریال کاهش نسبت به شیفت قبل</span>
+          </dd>
+        </dl>
+        <div className="lab-pattern-tags">
+          <Tag color={reviewed ? 'success' : 'warning'}>{reviewed ? 'بررسی شد' : 'در انتظار بررسی'}</Tag>
+          <Tag color="processing">شعبهٔ ونک</Tag>
+        </div>
+      </Panel>
+      {reviewed
+        ? <PanelState kind="success" title="بررسی نمونه ثبت شد." />
+        : <PanelState
+            kind="warning"
+            title="موجودی ۳ کالا کمتر از حد سفارش است."
+            description="موجودی قفسه و انبار این کالاها را پیش از سفارش بعدی تطبیق دهید."
+          />}
+    </Panel>
   )
 }

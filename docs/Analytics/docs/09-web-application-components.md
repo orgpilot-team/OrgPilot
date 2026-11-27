@@ -190,6 +190,10 @@ The shared Design System owns the Phase 2.3 Soft Glass styling for Button, Input
 
 Import the controls directly from `antd` and render each control where needed under `AppProviders`. Use the standard Ant Design props for values, events, and states. Supply accessible labels and link validation messages to their fields. The Select dropdown inherits the active theme when Ant Design renders it in a portal. The Lab at `/design-system` uses these same controls and owns the sample data and interactions. [Lab specimens](../../../src/WebApp/src/app/design-system-lab/AntSpecimens.tsx) · [Approved visual rules](18-ux-and-design-system.md#phase-23-soft-glass-controls)
 
+The same adapter applies shared styles to selection controls, overlays, data display, and feedback. Use `App.useApp()` for confirmation dialogs, messages, and notifications so that the portal receives the theme and Persian locale. Use the shared `PanelState` for panel loading, empty, success, warning, and error states. [Selection and overlay styles](../../../src/WebApp/src/shared/design-system/theme/ant-selection-overlays.css) · [Data and feedback styles](../../../src/WebApp/src/shared/design-system/theme/ant-data-feedback.css) · [PanelState](../../../src/WebApp/src/shared/design-system/patterns/PanelState.tsx)
+
+The Lab has a section index and a theme switch. The chart and Workflow examples load when their sections are expanded. The Lab owns the controls that open these examples and the fixtures they use. [Lab catalog](../../../src/WebApp/src/app/design-system-lab/DesignSystemLab.tsx) · [Design System progress record](18-ux-and-design-system.md#phases-24-through-28)
+
 ### Approved shared UI patterns
 
 The shared Design System owns the patterns below. Their TypeScript modules define the public interfaces. Their local CSS files and SVG define the approved visual details. See [Doc 18 for the visual specifications and approval record](18-ux-and-design-system.md#approved-shared-ui-patterns).

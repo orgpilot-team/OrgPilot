@@ -63,6 +63,22 @@ The user approved Soft Glass for Button, Input, `Input.TextArea`, InputNumber, S
 
 Limit the effect to CSS paint. A resting field uses one linear gradient over a translucent fill, a border, and an unblurred inset shadow. A primary button uses two gradient layers. The popup adds a shadow with a 12 px blur radius. State changes use short transitions and loading icons stay static. The controls respect reduced-motion and forced-color preferences. Use the shared source for exact theme values. [Shared control stylesheet](../../../src/WebApp/src/shared/design-system/theme/ant-controls.css) · [Ant Design adapter](../../../src/WebApp/src/shared/design-system/theme/ant-theme.ts)
 
+### Phases 2.4 through 2.8
+
+Implementation checkpoints are complete. Manual visual acceptance is pending.
+
+| Phase | Design rules in use |
+|---|---|
+| 2.4 Selection and overlays | Checkbox, Radio, Switch, and Segmented use the shared control edge and focus ring. The mark, thumb position, or inset edge identifies the selected state. Dialogs and popups use a solid base with a light tint and a short shadow. |
+| 2.5 Data display and feedback | Tables align numbers and keep their full precision. Feedback shows its status in words. KPI examples show the value, unit, and comparison period. Insight examples show the condition and an action. |
+| 2.6 Typography | Shared roles set the Dastkhat sizes, weights, and line heights. Use regular body text, medium action and label text, and semibold primary headings and KPI values. Isolate Latin codes and formatted numbers with bidirectional markup where necessary. |
+| 2.7 Light Mode | Use a blue-gray canvas, near-opaque control surfaces, visible borders, and short shadows. Use a defined edge for the chat composer in Light Mode. |
+| 2.8 Lab navigation | Use the section index to go to an example group. The theme switch stays in view and the browser stores the selected theme. Expand the Charts or Workflow section to load its example. |
+
+Technical checks passed for TypeScript, the production build, and Git diff whitespace. Desktop browser checks covered keyboard navigation, overlay focus return, table states, KPI precision, on-demand loading, saved theme selection, and a 1024 px viewport. The known Workflow resize issue remains open.
+
+[Typography roles](../../../src/WebApp/src/shared/design-system/tokens/typography.ts) · [Lab catalog](../../../src/WebApp/src/app/design-system-lab/DesignSystemLab.tsx)
+
 ### Approved shared UI patterns
 
 The shared Design System owns these patterns in `src/WebApp/src/shared/design-system/patterns`. The Lab consumes the patterns at `/design-system` and owns the specimens, fixtures, and controls. See [Doc 09 for the canonical paths, ownership boundaries, and public interfaces](09-web-application-components.md#approved-shared-ui-patterns).

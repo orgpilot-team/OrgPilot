@@ -67,7 +67,7 @@ export function LuminousChatComposerSpecimen() {
 
   return (
     <section className="lab-composer-specimen" aria-labelledby="lab-composer-heading">
-      <SectionHeader id="lab-composer-heading" level={2} title="کادر پیام گفت‌وگو" />
+      <SectionHeader id="lab-composer-heading" title="کادر پیام گفت‌وگو" />
       <LuminousChatComposer
         value={value}
         attachments={attachments}

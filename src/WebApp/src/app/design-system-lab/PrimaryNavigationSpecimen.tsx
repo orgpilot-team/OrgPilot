@@ -51,7 +51,7 @@ export function PrimaryNavigationSpecimen() {
 
   return (
     <section className="lab-primary-navigation" aria-labelledby="lab-primary-navigation-heading">
-      <SectionHeader id="lab-primary-navigation-heading" level={2} title="منوی ناوبری اصلی" />
+      <SectionHeader id="lab-primary-navigation-heading" title="منوی ناوبری اصلی" />
       <div className="lab-primary-navigation-stage">
         <PrimaryNavigationMenu items={items} activeItemId={activeItemId} onNavigate={setActiveItemId} />
         <div className="lab-primary-navigation-controls">
