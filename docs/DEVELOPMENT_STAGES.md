@@ -7,7 +7,7 @@ The first four stages build the deterministic backend and its replay mechanism. 
 | No. | Stage | Main implementation scope | Completion evidence | Status |
 |---:|---|---|---|---|
 | 1 | Foundation and persistence (Walking Skeleton) | Minimal runnable .NET processes; module boundaries; PostgreSQL 18; migrations; shared contracts and infrastructure conventions | The foundational services start together, database connectivity and migrations work, and module/process boundaries are visible in code | Completed — 2026-11-26 |
-| 2 | Intake, snapshots, and KPIs | Versioned source intake; protected raw archive; canonical facts; data issues; immutable snapshots; KPI definitions, calculations, and SQLite parity | Pinned-day ingestion is repeatable; missing/late/duplicate cases behave correctly; every activated KPI translation has a passing Parity Receipt | In progress – extended regression checks passed; renewed persisted acceptance and reference-environment performance gate remain open |
+| 2 | Intake, snapshots, and KPIs | Versioned source intake; protected raw archive; canonical facts; data issues; immutable snapshots; KPI definitions, calculations, and SQLite parity | Pinned-day ingestion is repeatable; missing/late/duplicate cases behave correctly; every activated KPI translation has a passing Parity Receipt | Completed – 2026-11-27 |
 | 3 | Workflows, signals, and report evidence | WF1–WF3 reconstruction; deterministic signal lifecycle, ownership, escalation, ranking; internal canonical report and evidence packages | Repeated pinned inputs produce the same workflow facts, signals, owners, ranking, numbers, and evidence references | Not started |
 | 4 | Durable execution and replay | PostgreSQL job plans and stage jobs; claim/lease/attempt/terminal state; Backend Run Coordinator; Worker stage runner; ordered replay and recovery | A deterministic replay resumes safely, survives a lost wake-up or interrupted worker, and does not read future data | Not started; job policy decision required |
 
@@ -58,7 +58,7 @@ The subsequent OrgPilot naming refactor was verified with another clean .NET bui
 
 **Exit gate:** Re-ingesting the same drop is idempotent; the same pinned inputs produce the same canonical facts, snapshot and KPI results; missing/late/duplicate fixtures meet doc 15; all baseline KPI translations used by the product have passing parity evidence. The harness is an acceptance tool, not a product database or daily runtime stage.
 
-**Verification evidence (2026-11-27; partial Stage 2 gate):**
+**Verification evidence (2026-11-27; initial implementation):**
 
 - .NET SDK 10.0.303: solution build passed with zero warnings and errors. Both Stage 2 contexts report no pending EF Core model changes, and both idempotent SQL migration scripts were generated successfully. The existing migration DDL and migration IDs remain unchanged.
 - The development regression harness (`--check-dev-dataset`) passed all 86 checks with zero failures on two executions: all 91 drop manifests and their listed records normalize; day 66 missing sources, day 67 late arrival, day 70 CRM correction, day 76 duplicate orders, and day 82 schema aliases behave as expected. The final snapshot contains 223,558 deduplicated canonical facts; all 55 SQLite reference queries execute repeatably. The harness also checks the accepted parity comparison tolerance, nulls, and row populations.
@@ -87,18 +87,42 @@ The persisted acceptance path re-ingests and reloads the immutable snapshot, che
 
 For the focused PostgreSQL/SQLite two-hour boundary regression, set the Worker `ConnectionStrings__Product` and run `dotnet run --project src/SchedulerReplay/Acceptance -- --check-kpi-sql`. This check uses read-only PostgreSQL CTEs and an in-memory SQLite fixture.
 
+The product-day timing check uses [`deploy/compose.stage2-check.yaml`](../deploy/compose.stage2-check.yaml). Both PostgreSQL and the acceptance process share CPUs 0-3, with separate 2 GiB and 12 GiB limits and no additional swap, GPU, or internet access. It clones the development business schemas into a temporary PostgreSQL instance. Given a passing snapshot, `--check-performance SNAPSHOT_ID` ingests the latest drop, reloads historical batches, pins configuration, rebuilds and reloads the snapshot, builds its projection, and calculates every pinned KPI through the receipt-gated product path. It repeats that path twice, requires identical result hashes, and fails if either pass exceeds 300 seconds. Historical ingestion and parity certification are prerequisites rather than daily work; SQLite is excluded from this timing.
+
+To repeat the isolated timing check from the repository root after persisted acceptance succeeds (stop if any Docker command fails):
+
+```powershell
+$env:STAGE2_EVIDENCE_DIR = (New-Item -ItemType Directory -Force test-results/stage2-timing).FullName
+$env:STAGE2_DATA_DIR = (Resolve-Path docs/arka_dataset).Path
+$env:STAGE2_ARCHIVE_DIR = (Resolve-Path test-results/stage2-db-20261127/archive).Path
+$env:STAGE2_SNAPSHOT_ID = '0f338c1976e4f7cfb65eed0668525c1230b5d12f33d162554dca27a70a1e0b6b'
+docker compose exec -T postgresql pg_dump -U orgpilot_admin -d orgpilot --no-owner --no-comments --schema=configuration --schema=intake --schema=snapshots --schema=kpi | Set-Content -Encoding utf8 (Join-Path $env:STAGE2_EVIDENCE_DIR 'database.sql')
+$benchmarkCompose = @('--env-file', '.env', '-p', 'orgpilot-stage2-check', '-f', 'deploy/compose.stage2-check.yaml')
+docker compose @benchmarkCompose config --quiet
+docker compose @benchmarkCompose build acceptance
+docker compose @benchmarkCompose up -d --wait postgresql
+docker compose @benchmarkCompose exec -T postgresql psql -X -q -v ON_ERROR_STOP=1 -U orgpilot_admin -d orgpilot -f /seed/database.sql
+docker compose @benchmarkCompose up --no-build --no-deps --abort-on-container-exit --exit-code-from acceptance acceptance
+docker compose @benchmarkCompose down
+```
+
+The timing database is held in `tmpfs` and discarded when the isolated stack stops; the original database and raw archive remain available. This measures Stage 2 on the largest supplied snapshot, including all historical KPI points. Later workflow, model, and publication stages must fit within the remaining daily budget when implemented.
+
 **Follow-up verification (2026-11-27):**
 
 - Review identified that the combined organization and policy hashes did not retain the individual archive addresses needed to reconstruct historical inputs. New snapshots now persist all eleven named archive references (organization, policy, KPI dictionary, calendar, and monthly targets). Projection and reference SQL are restored from those pinned inputs; the original snapshot format and IDs remain readable. No database migration, reference SQL or source data changes were necessary.
 - Rebuilt Debug (non-incremental) and Release with zero warnings and errors. All 90 development regression checks passed in 98 seconds on the local host, including the four additional checks for serialized snapshot references, hash-verified reopening of all eleven inputs, new snapshot identity after a policy change, and rejection of inconsistent pins. The 223,558 deduplicated canonical facts and all 55 repeatable SQLite queries remain unchanged. Evidence: `test-results/stage2-review-20261127/regression.log`.
-- All three EF Core contexts report no pending model changes, and their idempotent migration SQL scripts were generated successfully. Docker Compose configuration validation passed. Live Docker API access was denied, and Npgsql connection to the configured local PostgreSQL port 5432 failed with Windows socket error 10013 before authentication. The previous persisted parity and D+1 results are historical evidence for the previous snapshot format, not a new database-backed run of the extended snapshot format.
+- All three EF Core contexts reported no pending model changes, and their idempotent migration SQL scripts were generated successfully. Docker Compose configuration validation passed. At this earlier follow-up attempt, live Docker API access was denied and Npgsql connection to the configured local PostgreSQL port 5432 failed with Windows socket error 10013 before authentication. The completion run below subsequently resolved the environment-access block and verified the extended snapshot format against PostgreSQL.
 
-**Remaining work (2026-11-27; implementation in progress):**
+**Completion evidence (2026-11-27):**
 
-- Re-run the persisted acceptance path with PostgreSQL after the archive-reference correction; verify snapshot reload, all 55 parity and calculation results, and D+1 configuration checks.
-- Verify the per-day execution budget on the reference environment (4 CPU cores, 16 GB RAM, no GPU). The local SQLite regression timing is not a measurement of the PostgreSQL product day. Original missing-file row counts are not available in the supplied manifests; a later valid file is arrival evidence, but arbitrary partial late coverage cannot be proven from those manifests alone.
+- Durable summary: [`verification/stage2-20261127.json`](verification/stage2-20261127.json). It records counts, snapshot and result hashes, enforced resource limits, per-phase timings, and SHA-256 hashes of the raw evidence. The local raw artifacts remain excluded from Git.
+- Renewed PostgreSQL acceptance after the archive-reference correction passed with exit code 0. Snapshot `0f338c1976e4f7cfb65eed0668525c1230b5d12f33d162554dca27a70a1e0b6b` has all eleven archived input references, 55 passing Parity Receipts and 55 stored Query Runs; the six D+1 configuration checks passed and the fixture candidates and approvals were rolled back. The twelve focused PostgreSQL/SQLite boundary cases also passed. Evidence: `test-results/stage2-completion-20261127/acceptance.log`, `acceptance-summary.json`, and `persisted-evidence.txt` in that evidence directory.
+- The isolated Docker performance check on the largest supplied pinned day (report day 91, 223,558 canonical facts and 55 KPIs) completed twice in **201.090 seconds and 178.702 seconds**, both below the 300-second budget, with identical result hashes and exit code 0. The local reference-resource simulation shared four logical CPUs and capped total container memory at 14 GiB without swap, GPU, or external network; this is not a measurement on the instructor's physical host. Evidence: `test-results/stage2-completion-20261127/performance.log`, `performance-exit.json`, and `resources.json` in that evidence directory.
+- The slowest KPI, `K_WH_DAMAGE_BY_CAT_7D`, took 51.27 and 41.97 seconds. The remaining Stage 2 budget on the slower run is about 99 seconds; later stages must re-verify the entire product-day budget, including workflow reconstruction, agent and publication work. Original missing-file row counts are not available in the supplied manifests; a later valid file is arrival evidence, but arbitrary partial late coverage cannot be proven from those manifests alone.
+- The acceptance-only Docker target published successfully after excluding referenced API/Worker `appsettings.json` files from the harness output. API, Worker, and migration images rebuilt successfully; API and Worker were restarted with the corrected code. API readiness is healthy and Worker database/archive startup checks passed. Existing database/archive volumes were preserved; no new schema migration was introduced or needed.
 
-Stage 2's updated build and development regression checks pass. The previous persisted parity, calculation repeatability, and D+1 configuration checks also passed. Its full exit gate remains open pending renewed database-backed acceptance and the reference-environment performance check; Stage 3 has not started.
+Stage 2's build, development regression checks, persisted parity, snapshot reconstruction, calculation repeatability, D+1 configuration and reference-resource performance checks pass. Its exit gate is met for the supplied development dataset. Stage 3 can begin; this does not certify the full evaluation replay or publication pipeline.
 
 ## 3. Workflows, signals, and report evidence
 

@@ -7,4 +7,11 @@
     <ProjectReference Include="../../BackendApi/OrgPilot.BackendApi.csproj" />
     <PackageReference Include="Microsoft.Data.Sqlite" />
   </ItemGroup>
+  <Target Name="ExcludeReferencedHostSettings" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <!-- The harness configures both hosts explicitly through environment variables. -->
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+                             Condition="'%(ResolvedFileToPublish.RelativePath)' == 'appsettings.json'" />
+    </ItemGroup>
+  </Target>
 </Project>

@@ -20,13 +20,17 @@ if (args is ["--check-kpi-sql"])
     return 0;
 }
 
+if (args is ["--check-performance", var snapshotId])
+    return await Stage2PerformanceChecks.RunAsync(Required("DATA_DIR"), Required("Archive__RootPath"),
+        Required("ConnectionStrings__Product"), Required("ConnectionStrings__Configuration"), snapshotId);
+
 var checkConfiguration = args.LastOrDefault() == "--check-configuration";
 if (checkConfiguration) args = args[..^1];
 if (args is not ["--report-day", var reportDayText, "--cutoff", var cutoffText] ||
     !int.TryParse(reportDayText, CultureInfo.InvariantCulture, out var reportDay) || reportDay < 2 ||
     !DateOnly.TryParseExact(cutoffText, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var cutoff))
 {
-    Console.Error.WriteLine("Usage: --report-day N --cutoff yyyy-MM-dd [--check-configuration] | --check-dev-dataset | --check-kpi-sql");
+    Console.Error.WriteLine("Usage: --report-day N --cutoff yyyy-MM-dd [--check-configuration] | --check-dev-dataset | --check-kpi-sql | --check-performance SNAPSHOT_ID");
     return 2;
 }
 

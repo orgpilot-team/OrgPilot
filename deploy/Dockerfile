@@ -21,10 +21,17 @@ RUN dotnet publish src/BackgroundWorker/OrgPilot.BackgroundWorker.csproj -c Rele
 FROM build AS scheduler-publish
 RUN dotnet publish src/SchedulerReplay/OrgPilot.SchedulerReplay.csproj -c Release --no-restore -o /publish
 
+FROM build AS acceptance-publish
+RUN dotnet publish src/SchedulerReplay/Acceptance/OrgPilot.Acceptance.csproj -c Release --no-restore -o /publish
+
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 RUN mkdir /archive && chown "$APP_UID" /archive
 USER $APP_UID
+
+FROM runtime AS acceptance
+COPY --from=acceptance-publish /publish/ ./
+ENTRYPOINT ["dotnet", "OrgPilot.Acceptance.dll"]
 
 FROM runtime AS backend-api
 COPY --from=api-publish /publish/ ./

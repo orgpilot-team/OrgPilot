@@ -1,0 +1,129 @@
+{
+  "Date": "2026-11-27",
+  "Stage": 2,
+  "Status": "Completed",
+  "Scope": "Intake, archived inputs, snapshots, receipt-gated KPI calculations, and configuration activation",
+  "SnapshotId": "0f338c1976e4f7cfb65eed0668525c1230b5d12f33d162554dca27a70a1e0b6b",
+  "ArchivedInputs": 11,
+  "CanonicalFacts": 223558,
+  "HistoricalBatches": 91,
+  "DevelopmentRegression": {
+    "Passed": 90,
+    "Failed": 0,
+    "Log": "test-results/stage2-review-20261127/regression.log"
+  },
+  "PersistedAcceptance": {
+    "ExitCode": 0,
+    "KpisPassed": 55,
+    "KpisFailed": 0,
+    "ConfigurationPassed": 6,
+    "SqlBoundaryCasesPassed": 12,
+    "SnapshotReloadMatched": true,
+    "PersistedPassingReceipts": 55,
+    "PersistedQueryRuns": 55,
+    "FixtureCandidatesAfterRollback": 0,
+    "FixtureApprovalsAfterRollback": 0,
+    "HarnessElapsedSeconds": 393.5854746
+  },
+  "ProductDayTiming": {
+    "Passed": 2,
+    "Failed": 0,
+    "BudgetSeconds": 300,
+    "Results": [
+      {
+        "Check": "Stage2ProductDay",
+        "Attempt": 1,
+        "Passed": true,
+        "ReportDay": 91,
+        "Cutoff": "2026-10-20",
+        "SnapshotId": "0f338c1976e4f7cfb65eed0668525c1230b5d12f33d162554dca27a70a1e0b6b",
+        "Facts": 223558,
+        "Definitions": 55,
+        "ResultHash": "105c01fa2e5ab424e04487bab2fbcc49a6e93df2292d12e540e253a06ef8b213",
+        "ElapsedSeconds": 201.0903664,
+        "BudgetSeconds": 300,
+        "Timings": {
+          "IntakeAndHistorySeconds": 2.7984748,
+          "KpiSeconds": 192.1382241,
+          "SnapshotAndProjectionSeconds": 6.1536675
+        },
+        "Processors": 4
+      },
+      {
+        "Check": "Stage2ProductDay",
+        "Attempt": 2,
+        "Passed": true,
+        "ReportDay": 91,
+        "Cutoff": "2026-10-20",
+        "SnapshotId": "0f338c1976e4f7cfb65eed0668525c1230b5d12f33d162554dca27a70a1e0b6b",
+        "Facts": 223558,
+        "Definitions": 55,
+        "ResultHash": "105c01fa2e5ab424e04487bab2fbcc49a6e93df2292d12e540e253a06ef8b213",
+        "ElapsedSeconds": 178.7015374,
+        "BudgetSeconds": 300,
+        "Timings": {
+          "IntakeAndHistorySeconds": 2.3069174,
+          "KpiSeconds": 170.06738280000002,
+          "SnapshotAndProjectionSeconds": 6.327237200000001
+        },
+        "Processors": 4
+      }
+    ],
+    "Resources": {
+      "BudgetSeconds": 300,
+      "Containers": [
+        {
+          "Name": "/orgpilot-stage2-check-postgresql-1",
+          "Image": "sha256:71351f08f4be0e8675d0c8c35c7613b37a8e247e1a346e87ae06592cfa6e2b63",
+          "User": "",
+          "Cpuset": "0-3",
+          "MemoryBytes": 2147483648,
+          "MemorySwapBytes": 2147483648,
+          "DeviceRequests": null
+        },
+        {
+          "Name": "/orgpilot-stage2-check-acceptance-1",
+          "Image": "sha256:63903d25e8902316060923ad31ac6021672d4c640c8d9416c34d1101a07334a6",
+          "User": "1654",
+          "Cpuset": "0-3",
+          "MemoryBytes": 12884901888,
+          "MemorySwapBytes": 12884901888,
+          "DeviceRequests": null
+        }
+      ],
+      "Snapshot": "0f338c1976e4f7cfb65eed0668525c1230b5d12f33d162554dca27a70a1e0b6b",
+      "InternalNetwork": true,
+      "Dataset": "day_000 through day_090"
+    },
+    "Includes": "Current-drop intake, historical reload, configuration pins, snapshot build/save/reload, projection, and all 55 receipt-gated KPI calculations",
+    "Prerequisites": "Historical intake and parity receipts from the copied development database",
+    "Excludes": "One-time history bootstrap, SQLite oracle, and later product stages"
+  },
+  "Runtime": {
+    "Api": "Healthy after rebuild",
+    "Worker": "Database and archive startup checks passed",
+    "Migrations": "One applied migration per context; no new migration required"
+  },
+  "Artifacts": [
+    {
+      "Path": "test-results/stage2-completion-20261127/acceptance.log",
+      "Sha256": "d91eef8a1f6a70a5c921e61bac753d11a338e3883e2d167386a1588b3737fa11"
+    },
+    {
+      "Path": "test-results/stage2-completion-20261127/acceptance-summary.json",
+      "Sha256": "6f85a04bb45175831e7cd3dcd471d7a2c062f0101637e422e165b6aa6d7dc121"
+    },
+    {
+      "Path": "test-results/stage2-completion-20261127/performance.log",
+      "Sha256": "c399aaa5b4a4c807acc4a4e5f685186796ce8a73b4fdabf34a6fa597fa796f02"
+    },
+    {
+      "Path": "test-results/stage2-completion-20261127/resources.json",
+      "Sha256": "e184bef8d25be1752ae378e672cfc0286bcf42ed69a44da72299c6ff05e97f38"
+    },
+    {
+      "Path": "test-results/stage2-completion-20261127/persisted-evidence.txt",
+      "Sha256": "1b25bcf4d795a7f075d6b6372349ace0cfce685f8f38cac4349cb7a18b5d3db1"
+    }
+  ]
+}
