@@ -35,23 +35,23 @@ The earlier migration record covers both themes, a full Lab review at 1366 × 76
 
 ## Delivery sequence and exit gates
 
-The order below is established. The product breakdown under Stage 4 and the detailed scope of later stages are proposed. Start the next stage only after the applicable approval.
+Complete the frontend foundation pull request, then start the Application Shell and product pages. Evaluate and redesign Workflow after frontend feature development. Validate the complete frontend after the Workflow redesign, then proceed with Backend integration and integration testing. The product breakdown under Stage 2 and the detailed scope of later stages are proposed. Start each stage after the applicable approval.
 
 | Stage | Scope | Exit gate |
 |---|---|---|
-| 1. Frontend documentation consolidation | Align the README, Docs 08, 09, and 18, and this roadmap. | Check links, anchors, consistency, and whitespace. Give the user the complete unstaged patch for manual review and approval. |
-| 2. Workflow technology evaluation and redesign | Evaluate React Flow and a custom 2D option against the accepted Workflow scope, desktop resize, keyboard access, accessible alternatives, and rendering cost. Use mock data until the Backend contract is available. | The user approves the technology direction before redesign and reviews the redesigned specimen. Address the known resize issue in the approved design. |
-| 3. Final Design System validation | Review the approved components and Workflow specimen in both themes. Check Persian RTL, keyboard access, focus, desktop resizing, component states, and applicable renderer behavior. | Record the targeted technical evidence and obtain final user visual approval. [Acceptance checklist](../.agents/skills/didrah-component-workflow/references/component-checklist.md) |
-| 4. Application Shell and product pages | Build the Classic Mode shell and compose the three features with isolated mock data where needed. | Review navigation, feature ownership, and applicable loading, empty, forbidden, error, and unavailable states. |
+| 1. Frontend foundation pull request | Submit the approved Design System foundation and consolidated frontend documentation for review. | Review the diff against current main, record the validation status, and open the pull request. |
+| 2. Application Shell and product pages | Build the Classic Mode shell and compose the three features with isolated mock data where needed. Leave the final Workflow renderer and redesign for Stage 3. | Review navigation, feature ownership, and applicable loading, empty, forbidden, error, and unavailable states. |
+| 3. Workflow technology evaluation and redesign | After frontend feature development, evaluate React Flow and a custom 2D option against the accepted Workflow scope, desktop resize, keyboard access, accessible alternatives, and rendering cost. Use mock data until the Backend contract is available. | The user approves the technology direction before redesign. Review the updated Workflow Control Room and Lab specimen, including the known resize issue. |
+| 4. Final frontend validation | Review the Design System, Application Shell, and product pages, including the redesigned Workflow experience, in both themes. Check Persian RTL, keyboard access, focus, desktop resizing, component states, and applicable renderer behavior. | Record the targeted technical evidence and obtain final user visual approval. [Acceptance checklist](../.agents/skills/didrah-component-workflow/references/component-checklist.md) |
 | 5. Backend integration | Connect the approved session and scoped API paths as Backend capabilities become available. Generate applicable wire types, validate responses, and map authorized charts. | Verify contract compatibility, authorized states and actions, scope invalidation, and safe failure for each integrated path. |
 | 6. Integration testing and optimization | Exercise complete Classic flows with representative data. Check scope transitions, chart failure isolation, keyboard access, desktop resizing, and renderer performance. | Pass the applicable quality gates. Record product-wide measurements against the approved profile and budgets when they are available. [Quality gates](Analytics/docs/07-quality-attributes.md) |
 
-### Proposed product breakdown within Stage 4
+### Proposed product breakdown within Stage 2
 
 1. **Application Shell.** Compose providers, primary navigation, shared layout, routes, and temporary presentation state.
 2. **Role-Based Dashboard.** Compose brief, KPI, trend, and authorized drill-down views with the shared panels, charts, tables, and feedback states.
 3. **Conversational Assistant.** Compose conversation history, brief and answer cards, composer and uploads, job states, and confirmed manager action views.
-4. **Workflow Control Room.** Apply the renderer selected in Stage 2. Compose the Senior Manager view for WF1–WF3, SLA, bottlenecks, escalations, pending decisions, and authorized drill-downs.
+4. **Workflow Control Room.** Compose the Senior Manager page using mock executive workflow state for WF1–WF3, SLA, bottlenecks, escalations, pending decisions, and authorized drill-downs. Select the renderer and redesign the Workflow experience in Stage 3.
 
 Extend the approved panels, navigation, form controls, KPI and insight patterns, tables, and feedback only where the product pages need them.
 
