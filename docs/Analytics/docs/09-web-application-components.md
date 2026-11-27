@@ -156,7 +156,7 @@ The approved Stage 4.5-R5.5 baseline and the approved shared patterns are in `sr
 | `src/shared/visualization/charts/` | Reusable ECharts components, renderer lifecycle, chart theme, and chart motion |
 | `src/shared/visualization/workflow/` | Reusable React Flow presentation such as `WorkflowNode.tsx` |
 | `public/fonts/dastkhat/` and `public/licenses/dastkhat/` | Local Dastkhat font, notice, and license |
-| `AGENTS.md` and `.agents/skills/didrah-component-workflow/` | Frontend rules, component workflow, and acceptance checklist |
+| `AGENTS.md` | Frontend rules |
 
 Use PascalCase for React component names and their filenames, such as `SalesTrendChart.tsx` and `AppProviders.tsx`. Keep internal directory names lowercase and use kebab-case for multiword feature directories. See the [repository coding conventions](../../CODING_CONVENTIONS.md).
 
@@ -182,7 +182,7 @@ The approved token architecture and visual scope are in [doc 18](18-ux-and-desig
 - The shared Design System owns generic UI such as `Panel`, `SectionHeader`, and `PanelState`. Shared visualization owns reusable charts and workflow primitives. The owning feature supplies feature-specific composition and temporary UI state. Business decisions remain with their accepted Backend owners.
 - Reusable components accept typed inputs and work with callers outside the Lab. Keep transport, mock fixtures, and feature business logic outside reusable presentation.
 - The Design System Lab consumes the actual reusable components. It owns specimen composition, mock fixtures, reference specimens, validation scenarios, and development and benchmark controls. Shared modules must never import from the Lab.
-- Follow the permanent frontend rules and use the DIDRAH component workflow and checklist for applicable component design, implementation, and validation. [Frontend AGENTS.md](../../../src/WebApp/AGENTS.md) · [DIDRAH component workflow](../../../src/WebApp/.agents/skills/didrah-component-workflow/SKILL.md) · [Acceptance checklist](../../../src/WebApp/.agents/skills/didrah-component-workflow/references/component-checklist.md)
+- Follow the frontend rules. Use the repository-level DIDRAH component workflow and checklist for applicable component design, implementation, and validation. [Frontend AGENTS.md](../../../src/WebApp/AGENTS.md) · [DIDRAH component workflow](../../../.agents/skills/didrah-component-workflow/SKILL.md) · [Acceptance checklist](../../../.agents/skills/didrah-component-workflow/references/component-checklist.md)
 
 ### Approved shared UI patterns
 

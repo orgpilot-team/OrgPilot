@@ -10,7 +10,7 @@ Complete every applicable check and record the evidence. Mark checks that do not
 - [ ] Check visuals against the approved source. Use existing tokens, adapters, and shared recipes. Keep family-specific variants local.
 - [ ] Check Persian RTL, Dastkhat, supported viewport sizes, Dark Mode, and Light Mode.
 - [ ] Check accessible names, meaningful status text, and accessible alternatives where applicable. Exercise loading, empty, error, and disabled states where supported.
-- [ ] Record the results of `npm run typecheck` and `npm run build`.
+- [ ] Record the results of the applicable typecheck and production build checks.
 
 ## Interactive components
 
@@ -29,8 +29,8 @@ Complete every applicable check and record the evidence. Mark checks that do not
 - [ ] Cause a failure in one chart and verify that other charts remain usable. Check its fallback and recovery where applicable.
 - [ ] Measure actual redraws during motion and at idle. For luminous Classic Mode charts, verify the default 30 FPS redraw budget and zero continuous redraws at idle. Record the scenario and CPU and GPU use where measurable.
 
-## Reference reconstruction and visual approval
+## Reference work and visual approval
 
-- [ ] Compare the representative component and relevant states at matching browser sizes. Record observed and inferred properties and include screenshots where appropriate.
-- [ ] Keep temporary reconstruction specimens outside production source. Record user approval of reference fidelity or material redesign before reusable implementation.
-- [ ] Include the final comparison with the acceptance evidence and stop at the requested approval gate.
+- [ ] If the user supplied a reference, record what you can see and what you infer. Check the representative states in the Lab at relevant desktop sizes.
+- [ ] Give the user the Lab route and the steps for interactive review. Include focused screenshots if requested or if they help explain a specific visual issue.
+- [ ] Record the user's visual approval at the applicable gate. After stage approval and technical validation, make a dedicated Git commit for that stage.

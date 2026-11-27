@@ -231,9 +231,9 @@ The earlier 1440 × 960 visual comparison recorded 26 changed pixels in Dark Mod
 
 ## Reference reconstruction and visual approval
 
-Inspect existing components first. When reconstruction is needed, record observed and inferred properties and build a temporary browser specimen outside production source. Compare the representative states at matching desktop browser sizes. Report visible differences and obtain human visual approval before reusable implementation for reference fidelity work or a material redesign. Use the approved browser reconstruction as the visual authority. Use Figma capture when it helps the comparison or the user requests it. [DIDRAH component workflow](../../../src/WebApp/.agents/skills/didrah-component-workflow/SKILL.md) · [Frontend instructions](../../../src/WebApp/AGENTS.md)
+Inspect existing components first. If the user supplies a reference, record what you can see and what you infer. Implement the reusable component directly in its owning WebApp module and render it in the Lab. Make an external prototype only if the user requests one. [DIDRAH component workflow](../../../.agents/skills/didrah-component-workflow/SKILL.md) · [Frontend instructions](../../../src/WebApp/AGENTS.md)
 
-Implement the reusable component in its owning module and render it in the Lab. Apply the acceptance checklist to relevant states, themes, accessibility, layout, and behavior. Use focused renderer and performance checks for complex visualizations. Report evidence and stop at the requested approval gate. Give the user the absolute paths of applicable desktop artifacts for manual visual inspection.
+Use the acceptance checklist to select technical checks for the changes. Use focused renderer and performance checks for complex visualizations. Avoid extensive screenshot matrices and pixel comparisons. Give the user the Lab route and the steps for interactive visual review. The user gives visual approval at the applicable gate. After stage approval and technical validation, make a dedicated Git commit for that stage.
 
 For routine Backend integration, follow docs 09 and 17 and map accepted data to the typed component inputs. Use the design stages when the task includes component design work.
 

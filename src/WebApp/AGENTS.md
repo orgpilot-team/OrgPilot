@@ -24,5 +24,5 @@ Follow the [repository instructions](../../AGENTS.md). Apply these rules to work
 - The DIDRAH Web Application is desktop-only. Mobile and tablet layouts, breakpoints, screenshots, and device-specific validation are out of scope.
 - Support resizing at supported desktop viewports. Keep keyboard access and visible focus states functional.
 - Defer global typography refinement until the initial component families are complete.
-- Use the [DIDRAH component workflow](.agents/skills/didrah-component-workflow/SKILL.md) for relevant component creation, reference reconstruction, visual redesign, component-family refinement, and Design System validation. Apply these architectural rules to integration and maintenance work as well.
+- Use the [DIDRAH component workflow](../../.agents/skills/didrah-component-workflow/SKILL.md) for relevant component creation, reference reconstruction, visual redesign, component-family refinement, and Design System validation. Apply these architectural rules to integration and maintenance work as well.
 - Complete only the authorized stage. Stop at each explicit approval gate and wait for approval before starting a subsequent component family. Get authorization before installing dependencies or changing unrelated architecture.
