@@ -49,6 +49,20 @@ The shared token modules define primitive colors, one typed set of semantic colo
 
 Use global tokens for design decisions that apply across the Design System. Keep colors, gradients, glows, shadows, and geometry specific to a component in its owning module. Keep chart plot geometry in the chart variants. Use the approved source files for exact rendering values.
 
+### Phase 2.3 Soft Glass controls
+
+The user approved Soft Glass for Button, Input, `Input.TextArea`, InputNumber, Select, and the Select dropdown in Dark Mode and Light Mode on 2026-11-27. The controls use Persian RTL and Dastkhat. Use left-to-right editing and right alignment for tracking codes and numbers. [Control ownership and usage](09-web-application-components.md#shared-ant-design-controls)
+
+| Element | Approved visual rules |
+|---|---|
+| Geometry | Standard buttons and single-line fields use a 38 px height. Controls and the Select dropdown use an 8 px corner radius. Buttons use 14 px inline padding. Input, TextArea, and InputNumber use 12 px inline padding. Select uses the spacing from the Ant Design adapter. |
+| Button | The primary action uses white text over a blue-to-violet gradient with a top tint. The gradient runs at 270° in RTL. The secondary action uses a neutral translucent fill. A text action has a transparent resting fill. A destructive action uses the semantic error border and a tinted fill. Hover changes the fill. Pressed buttons use a denser fill, with an inset shadow on bordered buttons. Disabled buttons use a muted edge. Loading uses a static icon and a progress cursor. |
+| Fields | The outlined fields share the translucent fill, vertical tint, border, and inset highlight. Hover and focus change the fill. Keyboard focus uses a 2 px outline with a 2 px offset. Error and warning keep their semantic border during focus. Use a status icon and associated message to explain a validation state. Disabled fields use a muted edge and fill. |
+| TextArea and InputNumber | TextArea supports vertical resizing. The two-row Lab specimen is about 64 px high. The enabled InputNumber stepper is 24 px wide and uses the secondary action fill. |
+| Select dropdown | The popup uses a near-opaque base, a tint, a border, and a short shadow. Options have a 34 px minimum height, with 5 px block padding and 10 px inline padding. An active option has a 1 px inset outline. A selected option has a check mark and a distinct fill. Ant Design handles keyboard navigation, search, selection, disabled options, loading, and empty results. |
+
+Limit the effect to CSS paint. A resting field uses one linear gradient over a translucent fill, a border, and an unblurred inset shadow. A primary button uses two gradient layers. The popup adds a shadow with a 12 px blur radius. State changes use short transitions and loading icons stay static. The controls respect reduced-motion and forced-color preferences. Use the shared source for exact theme values. [Shared control stylesheet](../../../src/WebApp/src/shared/design-system/theme/ant-controls.css) · [Ant Design adapter](../../../src/WebApp/src/shared/design-system/theme/ant-theme.ts)
+
 ### Approved shared UI patterns
 
 The shared Design System owns these patterns in `src/WebApp/src/shared/design-system/patterns`. The Lab consumes the patterns at `/design-system` and owns the specimens, fixtures, and controls. See [Doc 09 for the canonical paths, ownership boundaries, and public interfaces](09-web-application-components.md#approved-shared-ui-patterns).
@@ -243,7 +257,7 @@ This proposed roadmap covers frontend design. The repository-wide development st
 
 - Surfaces and Panels
 - Navigation and Sidebar
-- Buttons and Controls
+- Remaining form controls
 - KPI and Insight Components
 - AI Assistant and Chat
 - Workflow Visualization

@@ -1,13 +1,29 @@
+import { CheckOutlined } from '@ant-design/icons'
 import { theme as ant } from 'antd'
-import type { ThemeConfig } from 'antd'
+import type { ConfigProviderProps, ThemeConfig } from 'antd'
+import { createElement } from 'react'
 import { darkTheme } from '../tokens/dark-theme'
 import { layout, overlayShadow } from '../tokens/layout'
 import { lightTheme } from '../tokens/light-theme'
 import type { ThemeColors, ThemeName } from '../tokens/theme-contract'
 import { typography } from '../tokens/typography'
+import './ant-controls.css'
 
 const { roles } = typography
 const toAntPixels = (size: (typeof roles)[keyof typeof roles]['size']) => Number.parseFloat(size) * 16
+
+const fieldClassNames = { root: 'didrah-ant-field' }
+
+export const antControlConfig = {
+  button: { classNames: { root: 'didrah-ant-button' } },
+  input: { classNames: fieldClassNames },
+  textArea: { classNames: fieldClassNames },
+  inputNumber: { classNames: { ...fieldClassNames, input: 'didrah-ant-number-editor' } },
+  select: {
+    classNames: { ...fieldClassNames, popup: { root: 'didrah-ant-select-popup' } },
+    menuItemSelectedIcon: createElement(CheckOutlined, { 'aria-hidden': true }),
+  },
+} satisfies ConfigProviderProps
 
 function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
   const isDark = name === 'dark'
@@ -42,10 +58,12 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
     colorInfoBorder: tint(info, 24),
   }
   const field = {
-    colorBgContainer: input,
-    colorBorder: isDark ? muted : colors['border-control'],
-    hoverBorderColor: accent,
-    activeBorderColor: focus,
+    colorTextPlaceholder: 'var(--didrah-control-muted)',
+    colorTextDisabled: 'var(--didrah-control-muted)',
+  }
+  const inputField = {
+    ...field,
+    paddingInline: layout.space.gap,
   }
 
   return {
@@ -94,25 +112,39 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
     },
     components: {
       Button: {
-        primaryColor: colors['brand-on-primary'],
-        dangerColor: isDark ? colors.canvas : colors['brand-on-primary'],
-        defaultHoverColor: text,
-        defaultHoverBorderColor: accent,
-        defaultHoverBg: raised,
         primaryShadow: 'none',
         defaultShadow: 'none',
         dangerShadow: 'none',
+        paddingInline: layout.space.inset - 2,
         fontSize: toAntPixels(roles.control.size),
         fontWeight: roles.control.weight,
       },
-      Input: field,
-      InputNumber: field,
+      Input: inputField,
+      InputNumber: {
+        ...inputField,
+        handleVisible: true,
+        handleWidth: 24,
+        handleBg: 'var(--didrah-control-secondary)',
+        handleActiveBg: 'var(--didrah-control-secondary-pressed)',
+        handleHoverColor: text,
+        handleBorderColor: 'var(--didrah-control-edge-disabled)',
+      },
       Select: {
         ...field,
-        optionSelectedBg: selected,
+        paddingSM: layout.space.gap + 1,
+        optionHeight: 34,
+        optionPadding: '5px 10px',
         optionSelectedColor: text,
+        optionActiveBg: 'var(--didrah-control-option-active)',
+        optionSelectedBg: 'var(--didrah-control-option-selected)',
+        controlItemBgActiveHover: 'var(--didrah-control-option-selected-active)',
       },
-      DatePicker: field,
+      DatePicker: {
+        colorBgContainer: input,
+        colorBorder: isDark ? muted : colors['border-control'],
+        hoverBorderColor: accent,
+        activeBorderColor: focus,
+      },
       Tag: status,
       Alert: status,
       Menu: {

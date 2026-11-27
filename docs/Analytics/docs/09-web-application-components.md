@@ -184,6 +184,12 @@ The approved token architecture and visual scope are in [doc 18](18-ux-and-desig
 - The Design System Lab consumes the actual reusable components. It owns specimen composition, mock fixtures, reference specimens, validation scenarios, and development and benchmark controls. Shared modules must never import from the Lab.
 - Follow the frontend rules. Use the repository-level DIDRAH component workflow and checklist for applicable component design, implementation, and validation. [Frontend AGENTS.md](../../../src/WebApp/AGENTS.md) · [DIDRAH component workflow](../../../.agents/skills/didrah-component-workflow/SKILL.md) · [Acceptance checklist](../../../.agents/skills/didrah-component-workflow/references/component-checklist.md)
 
+### Shared Ant Design controls
+
+The shared Design System owns the Phase 2.3 Soft Glass styling for Button, Input, `Input.TextArea`, InputNumber, Select, and the Select dropdown. The Ant Design adapter sets the component tokens and semantic classes. The shared stylesheet defines the control surfaces, state styles, and popup styles for both themes. `AppProviders` applies the adapter through Ant Design's `ConfigProvider`. [Ant Design adapter](../../../src/WebApp/src/shared/design-system/theme/ant-theme.ts) · [Shared control stylesheet](../../../src/WebApp/src/shared/design-system/theme/ant-controls.css) · [Application providers](../../../src/WebApp/src/app/AppProviders.tsx)
+
+Import the controls directly from `antd` and render each control where needed under `AppProviders`. Use the standard Ant Design props for values, events, and states. Supply accessible labels and link validation messages to their fields. The Select dropdown inherits the active theme when Ant Design renders it in a portal. The Lab at `/design-system` uses these same controls and owns the sample data and interactions. [Lab specimens](../../../src/WebApp/src/app/design-system-lab/AntSpecimens.tsx) · [Approved visual rules](18-ux-and-design-system.md#phase-23-soft-glass-controls)
+
 ### Approved shared UI patterns
 
 The shared Design System owns the patterns below. Their TypeScript modules define the public interfaces. Their local CSS files and SVG define the approved visual details. See [Doc 18 for the visual specifications and approval record](18-ux-and-design-system.md#approved-shared-ui-patterns).

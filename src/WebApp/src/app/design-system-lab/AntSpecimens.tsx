@@ -1,3 +1,4 @@
+import { CloseCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import {
   Alert, App, Button, Checkbox, DatePicker, Drawer, Dropdown, Empty, Input,
   InputNumber, Menu, Popover, Radio, Select, Skeleton, Spin, Switch, Table, Tag, Tooltip,
@@ -12,6 +13,7 @@ const branches = [
   { value: 'vanak', label: 'شعبهٔ ونک' },
   { value: 'sadeghieh', label: 'شعبهٔ صادقیه' },
   { value: 'tehranpars', label: 'شعبهٔ تهرانپارس' },
+  { value: 'tajrish', label: 'شعبهٔ تجریش', disabled: true },
 ]
 
 const retailRows = [
@@ -53,6 +55,8 @@ const columns: TableColumnsType<(typeof retailRows)[number]> = [
 export function AntSpecimens() {
   const { message, notification, modal } = App.useApp()
   const [reference, setReference] = useState('')
+  const [orderLevel, setOrderLevel] = useState<string | null>('20.00')
+  const [branchesLoading, setBranchesLoading] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
   const [pending, setPending] = useState(false)
@@ -66,7 +70,8 @@ export function AntSpecimens() {
     return () => window.clearTimeout(timer)
   }, [refreshing])
 
-  const validReference = reference.trim().length > 0
+  const validReference = /^ARK-\d{5}$/.test(reference.trim())
+  const lowOrderLevel = orderLevel !== null && Number(orderLevel) < 25
   const rows = empty ? [] : retailRows.filter((item) => !lowStockOnly || item.lowStock)
 
   return (
@@ -83,8 +88,8 @@ export function AntSpecimens() {
             <Button type="primary" onClick={() => void message.success('نمونهٔ گزارش ذخیره شد.')}>
               ذخیرهٔ گزارش
             </Button>
-            <Button onClick={() => setRefreshing(true)} loading={refreshing}>
-              تازه‌سازی
+            <Button onClick={() => setRefreshing(true)} loading={refreshing} aria-busy={refreshing}>
+              {refreshing ? 'در حال تازه‌سازی…' : 'تازه‌سازی'}
             </Button>
             <Button type="text" onClick={() => notification.info({
               key: 'lab-shift-notice',
@@ -166,22 +171,46 @@ export function AntSpecimens() {
               aria-invalid={!validReference}
               aria-describedby={validReference ? undefined : 'lab-ant-reference-error'}
             />
-            {!validReference && <span id="lab-ant-reference-error" className="lab-ant-error">شناسهٔ پیگیری را وارد کنید.</span>}
+            {!validReference && (
+              <span id="lab-ant-reference-error" className="lab-ant-field-hint" data-status="error">
+                <CloseCircleOutlined aria-hidden="true" />
+                شناسه را با قالب نمونه وارد کنید.
+              </span>
+            )}
           </div>
           <div className="lab-ant-field">
             <label htmlFor="lab-ant-branch">شعبه</label>
-            <Select id="lab-ant-branch" defaultValue="vanak" options={branches} />
+            <Select
+              id="lab-ant-branch"
+              defaultValue="vanak"
+              options={branchesLoading ? [] : branches}
+              placeholder="شعبه را انتخاب کنید"
+              showSearch={{ optionFilterProp: 'label' }}
+              virtual={false}
+              allowClear
+              loading={branchesLoading}
+              aria-busy={branchesLoading}
+              notFoundContent={branchesLoading ? 'در حال بارگیری شعبه‌ها…' : 'شعبه‌ای پیدا نشد.'}
+            />
           </div>
           <div className="lab-ant-field">
             <label htmlFor="lab-ant-order-level">حد سفارش</label>
             <InputNumber
               id="lab-ant-order-level"
-              defaultValue="20.00"
+              value={orderLevel}
+              onChange={setOrderLevel}
               stringMode
               step="0.01"
               min="0"
-              style={{ width: '100%' }}
+              status={lowOrderLevel ? 'warning' : undefined}
+              aria-describedby={lowOrderLevel ? 'lab-ant-order-warning' : undefined}
             />
+            {lowOrderLevel && (
+              <span id="lab-ant-order-warning" className="lab-ant-field-hint" data-status="warning">
+                <ExclamationCircleOutlined aria-hidden="true" />
+                حد سفارش کمتر از ۲۵ واحد است.
+              </span>
+            )}
           </div>
           <div className="lab-ant-field">
             <label htmlFor="lab-ant-date">تاریخ گزارش</label>
@@ -197,6 +226,9 @@ export function AntSpecimens() {
           </div>
         </div>
         <div className="lab-ant-actions">
+          <Checkbox checked={branchesLoading} onChange={(event) => setBranchesLoading(event.target.checked)}>
+            بارگیری شعبه‌ها
+          </Checkbox>
           <Checkbox checked={lowStockOnly} onChange={(event) => setLowStockOnly(event.target.checked)}>
             فقط کالاهای کم‌موجودی
           </Checkbox>
