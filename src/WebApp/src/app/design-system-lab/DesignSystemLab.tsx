@@ -7,6 +7,7 @@ import { AntSpecimens } from './AntSpecimens'
 import { LuminousChatComposerSpecimen } from './LuminousChatComposerSpecimen'
 import { NavigationHistorySpecimen } from './NavigationHistorySpecimen'
 import { PatternSpecimens } from './PatternSpecimens'
+import { PrimaryNavigationSpecimen } from './PrimaryNavigationSpecimen'
 import { TypographySpecimens } from './TypographySpecimens'
 import { WelcomeProfileSpecimen } from './WelcomeProfileSpecimen'
 import './design-system-lab.css'
@@ -167,6 +168,7 @@ export default function DesignSystemLab() {
         </section>
 
         <LuminousChatComposerSpecimen />
+        <PrimaryNavigationSpecimen />
       </div>
     </main>
   )

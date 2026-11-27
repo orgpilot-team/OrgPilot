@@ -6,7 +6,7 @@ This document defines the OrgPilot visual language and shared UX guidance. It ap
 
 This document does not define business workflows, authorization, API contracts, chart values, signal rules, or C4 boundaries. Those concerns remain in their owning architecture and contract documents.
 
-The approved Stage 4.5-R5.5 baseline includes the implemented Design Tokens, Dark and Light themes, Dastkhat typography, and two Dark Mode luminous sales chart variants. The approved shared UI patterns also include `WelcomeProfileCard` and `NavigationHistorySidebar`.
+The approved Stage 4.5-R5.5 baseline includes the implemented Design Tokens, Dark and Light themes, Dastkhat typography, and two Dark Mode luminous sales chart variants. The approved shared UI patterns include `WelcomeProfileCard`, `NavigationHistorySidebar`, `LuminousChatComposer`, and `PrimaryNavigationMenu`.
 
 ## Visual direction
 
@@ -51,7 +51,7 @@ Use global tokens for design decisions that apply across the Design System. Keep
 
 ### Approved shared UI patterns
 
-The shared Design System owns both patterns in `src/WebApp/src/shared/design-system/patterns`. The Lab consumes the patterns at `/design-system` and owns the specimens, fixtures, and controls. The component paths and public interfaces are in [doc 09](09-web-application-components.md#approved-shared-ui-patterns).
+The shared Design System owns these patterns in `src/WebApp/src/shared/design-system/patterns`. The Lab consumes the patterns at `/design-system` and owns the specimens, fixtures, and controls. See [Doc 09 for the canonical paths, ownership boundaries, and public interfaces](09-web-application-components.md#approved-shared-ui-patterns).
 
 #### WelcomeProfileCard
 
@@ -78,6 +78,31 @@ The sidebar is `14.25rem` wide. Its default height is `47rem` and its minimum he
 The sidebar sets Persian RTL explicitly. Logical CSS places the row detail and delete control at inline end. The mask uses the physical left edge of this RTL layout. The component measures the selected row against the frame and scroll viewport. It updates the mask offset on selection or list changes, filtering, search expansion, scrolling, and resize. The mask appears while any part of the selected row is visible in the list. The row and its inline SVG scroll together. A bottom fade indicates more content and clears when a list control has visible focus.
 
 Dark Mode uses the shared canvas. Its local selected and delete fills are `#22222e` and `#262835`. Its local accent is `#284aff`. The local Dark Mode brand accent is `#4c72f0`. The search border gradient, cutout path, and SVG glow settings are local to the pattern. Light Mode uses semantic surfaces, text, and borders, plus the local brand accent `#3555ba`. Both themes use the shared focus ring. [Component](../../../src/WebApp/src/shared/design-system/patterns/NavigationHistorySidebar.tsx) and [visual rules](../../../src/WebApp/src/shared/design-system/patterns/navigation-history-sidebar.css).
+
+#### LuminousChatComposer
+
+The composer is an independent Persian RTL form. The caller places the form in the conversation layout. The form uses a `1.5rem` corner radius, `0.9375rem` padding, and a `1px` gradient rim. The Dastkhat editor uses `0.875rem` text with a `1.25rem` line height. It grows from `3.25rem` to `8.75rem` and scrolls at that limit. The paperclip is at inline start on the right. The `2.25rem` blue Send or Stop button is at inline end on the left. The Send glyph mirrors in RTL.
+
+Dark Mode uses the local `#0a0a16` fill, `#fdfdff` ink, and `#3d69ef` caret. The cyan-to-blue rim has a stronger glow along the bottom and inline end. The action button uses a local `#204fff` to `#6498ff` gradient in both themes. Light Mode uses the shared input surface, primary text, and focus color, with local rim gradients and reduced glow. Both themes use the shared focus ring and semantic attachment surfaces. In forced colors, the form and action button have visible borders.
+
+- Click the editor or the surrounding form surface to focus the editor. Typing and paste update the controlled draft.
+- Plain Enter or Send submits a draft that contains non-whitespace text or at least one attachment. Shift+Enter adds a line break. Enter during input method composition and repeated Enter do not submit. Send returns focus to the editor.
+- The paperclip opens a native multiple-file picker. The picker uses the caller's `accept` value and clears its input after selection so the same file can be selected again. Attachment chips display file names and optional image previews. If a preview fails, the file name stays visible. Remove returns focus to the paperclip.
+- During processing, the live status announces response generation and Stop replaces Send. The editor and attachment controls stay available if the form is enabled. Stop calls `onStop` and returns focus to the editor. The disabled state prevents editing and action activation.
+
+The Lab shows the shared form with sample draft and processing controls. The Lab sets its own specimen width and owns the mock response, attachment data, and preview URLs. [Component](../../../src/WebApp/src/shared/design-system/patterns/LuminousChatComposer.tsx) · [Visual rules](../../../src/WebApp/src/shared/design-system/patterns/luminous-chat-composer.css) · [Lab specimen](../../../src/WebApp/src/app/design-system-lab/LuminousChatComposerSpecimen.tsx)
+
+#### PrimaryNavigationMenu
+
+The menu is a named Persian RTL navigation landmark with a vertical list of native buttons. The compact panel uses the shared `1rem` panel radius and a `1px` border. The panel inset is `0.5625rem` on top and at the sides and `0.6875rem` at the bottom. Rows are at least `2.125rem` tall with a `0.6875rem` radius and a `0.1875rem` gap. Each row puts a `1.25rem` decorative icon at inline start on the right, with a `0.875rem` gap before the isolated Dastkhat label. The Lab uses a `17rem` menu column and `24 × 24` SVG viewboxes for the reference icons. The caller supplies the icons and sets the available width.
+
+Dark Mode mixes the shared base and raised surfaces and uses the approved blue-to-violet selected treatment. The selected row has a blue fill on the right, a dark-blue midpoint, violet on the left, a lit gradient border, and blue and violet shadows. White ink and bold text identify the current row. Light Mode uses the semantic selected fill, control border, and primary text. Both themes use the shared focus ring. Forced colors add a system `Highlight` border to the current row.
+
+Enabled rows respond to pointer hover and show a pressed state. Tab moves through enabled buttons in list order. Enter and Space activate a focused button. Activation calls `onNavigate` with the item ID. The caller sets the current row through `activeItemId` and the row exposes `aria-current="page"`. Disabled rows use native button disabling and muted styling. If the caller marks a disabled row current, the selection stays visible at reduced opacity. An empty list shows a Persian status message. [Component](../../../src/WebApp/src/shared/design-system/patterns/PrimaryNavigationMenu.tsx) · [Visual rules](../../../src/WebApp/src/shared/design-system/patterns/primary-navigation-menu.css) · [Lab specimen](../../../src/WebApp/src/app/design-system-lab/PrimaryNavigationSpecimen.tsx)
+
+#### Phase 2.2 approval record
+
+The Phase 2.2 approval followed review of the Phase 2.1 audit. It identifies `LuminousChatComposer` as approved with its corrected independent form boundary and working input controls. It explicitly approves the current `PrimaryNavigationMenu` appearance, including the blue-to-violet selected row. Use the component and CSS links above as the source for the approved rendering values. Phase 2.2 closes the reference-driven design phase.
 
 ## Information experience
 

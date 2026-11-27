@@ -186,20 +186,28 @@ The approved token architecture and visual scope are in [doc 18](18-ux-and-desig
 
 ### Approved shared UI patterns
 
-The shared Design System owns the two patterns below. Their TypeScript modules define the public interfaces. Their local CSS files and inline SVG define the approved visual parameters. See the [visual specifications in doc 18](18-ux-and-design-system.md#approved-shared-ui-patterns).
+The shared Design System owns the patterns below. Their TypeScript modules define the public interfaces. Their local CSS files and SVG define the approved visual details. See [Doc 18 for the visual specifications and approval record](18-ux-and-design-system.md#approved-shared-ui-patterns).
 
 | Component | Canonical modules under `src/WebApp` | Public interface |
 |---|---|---|
 | `WelcomeProfileCard` | `src/shared/design-system/patterns/WelcomeProfileCard.tsx` and `src/shared/design-system/patterns/welcome-profile-card.css` | `WelcomeProfileCardProps` has required `managerName: string` and `date: Date`, and optional `avatarSrc?: string`. Supply a valid date. The card formats the local day in Tehran. |
 | `NavigationHistorySidebar` | `src/shared/design-system/patterns/NavigationHistorySidebar.tsx` and `src/shared/design-system/patterns/navigation-history-sidebar.css` | `NavigationHistorySidebarProps` has `groups: readonly NavigationHistoryGroup[]`, `activeItemId: string \| null`, `onSelect(itemId: string)`, `onDelete(itemId: string)`, `onNewChat()`, and `onSettings()`. Each callback returns `void`. |
+| `LuminousChatComposer` | [Component](../../../src/WebApp/src/shared/design-system/patterns/LuminousChatComposer.tsx) and [CSS](../../../src/WebApp/src/shared/design-system/patterns/luminous-chat-composer.css) | `LuminousChatComposerProps` requires `value: string`, `attachments: readonly LuminousChatAttachment[]`, `onChange(value: string)`, `onFilesSelected(files: readonly File[])`, `onRemoveAttachment(id: string)`, `onSubmit(value: string, attachments: readonly LuminousChatAttachment[])`, and `onStop()`. Optional props are `placeholder?: string`, `accept?: string`, `disabled?: boolean`, and `processing?: boolean`. Each callback returns `void`. |
+| `PrimaryNavigationMenu` | [Component](../../../src/WebApp/src/shared/design-system/patterns/PrimaryNavigationMenu.tsx) and [CSS](../../../src/WebApp/src/shared/design-system/patterns/primary-navigation-menu.css) | Readonly `PrimaryNavigationMenuProps` requires `items: readonly PrimaryNavigationItem[]`, `activeItemId: string \| null`, and `onNavigate(itemId: string): void`. Optional `ariaLabel?: string` sets the navigation landmark name. |
 
 A `NavigationHistoryGroup` has a string `id`, a string `label`, and an `items` field of type `readonly NavigationHistoryItem[]`. Each item has a string `id` and a string `title`. The group and item fields are readonly. Use stable group IDs and unique, stable item IDs. The caller supplies the groups and controls the active item. A null active ID means no selection.
 
 The sidebar presents AI conversation history for the Conversational Assistant UI. The application shell owns primary navigation. The Assistant feature owns conversation data, grouping, selection state, and the effects of the callbacks. The sidebar owns temporary title search, list scrolling, and selected-row rendering. It filters the supplied groups locally.
 
-`WelcomeProfileCard` uses `Panel` and reads and updates the shared theme through `useDidrahTheme`. The sidebar reads root `data-theme` and semantic CSS variables. The sidebar aligns its local CSS mask and SVG detail with the visible selected row when the caller or the desktop layout changes. Both patterns use Persian RTL and keep their visual overrides in their own modules.
+`WelcomeProfileCard` uses `Panel` and reads and updates the shared theme through `useDidrahTheme`. The sidebar reads root `data-theme` and semantic CSS variables. The sidebar aligns its local CSS mask and SVG detail with the visible selected row when the caller or the desktop layout changes.
 
-The Lab consumes both patterns at `/design-system`. It owns demo data and controls in `WelcomeProfileSpecimen.tsx` and `NavigationHistorySpecimen.tsx`. Lab code demonstrates the public interfaces. The patterns also work in views under the application providers outside the Lab.
+A `LuminousChatAttachment` has `id: string`, `name: string`, and optional `imagePreviewUrl?: string`. Use unique, stable attachment IDs. The composer is an independent form. It owns the editor, file picker, attachment display and controls, keyboard handling, and focus behavior. The default placeholder is `پیام خود را بنویسید…`. The `disabled` and `processing` props default to `false`. The caller owns draft text, attachment data, preview URL lifetime, processing state, and the effects of send and stop. The Assistant feature owns the surrounding conversation layout and connects the callbacks to transport as needed. The form takes its width from the caller's layout.
+
+A readonly `PrimaryNavigationItem` has `id: string`, `label: string`, `icon: ReactNode`, and optional `disabled?: boolean`. Use unique, stable IDs and decorative icons. The label gives the button its accessible name. The default landmark name is `ناوبری اصلی`. The application shell supplies the permitted items and controls selection with `activeItemId`. A null ID or an ID absent from the list leaves all items unselected. The component displays the list and sends enabled button activations to `onNavigate`. The caller owns navigation effects and integration with the router and authorized application state.
+
+The composer and menu use Persian RTL, Dastkhat, root `data-theme`, and semantic CSS variables from `DidrahThemeProvider`. Each component keeps its visual rules in its local stylesheet. Both components can render under the application providers independently of the Lab.
+
+The development-only Lab route `/design-system` renders the shared patterns. The Lab owns the fixtures and controls for `WelcomeProfileSpecimen.tsx`, `NavigationHistorySpecimen.tsx`, and the two baseline specimens. [Composer specimen](../../../src/WebApp/src/app/design-system-lab/LuminousChatComposerSpecimen.tsx) · [Primary navigation specimen](../../../src/WebApp/src/app/design-system-lab/PrimaryNavigationSpecimen.tsx)
 
 ## Information presentation principles
 
