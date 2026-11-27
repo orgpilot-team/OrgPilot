@@ -52,13 +52,16 @@ The active risk and decision record is this document together with the ADR Statu
 | Frontend authentication product and protocol | Open | `04-security-and-trust.md`, `09-web-application-components.md` |
 | Frontend credential and token storage | Open; do not select before authentication decision | `04-security-and-trust.md` |
 | Access Projection Matrix entries | Open; blocks production scoped integration | `04-security-and-trust.md` |
-| Exact OpenAPI Presentation wire schema and artifact path | Open; blocks production API integration | `17-chart-presentation-contract.md` |
+| Exact OpenAPI Presentation wire schema, artifact path, schema version, and compatibility policy | Open. Approval is required before production Presentation integration. | `17-chart-presentation-contract.md` |
 | Initial chart-type allowlist | Open; arbitrary types forbidden | `17-chart-presentation-contract.md` |
 | Chart series, point, label, and response limits | Open; silent truncation forbidden | `17-chart-presentation-contract.md` |
 | Approved numeric display contract for chart labels and tooltips | Open | `17-chart-presentation-contract.md` |
-| Frontend measurement profile and numeric performance budgets | Open | `07-quality-attributes.md` |
+| Presentation response validation and chart failure isolation | Open. Specify which validation failures reject the response and which make an individual chart unavailable. | `17-chart-presentation-contract.md` |
+| Frontend measurement profile and numeric performance budgets | Partially resolved. The approved default is 30 scheduled redraws per second per chart during motion for the two luminous Classic Mode sales charts. The product-wide measurement profile and numeric budgets remain open. | `07-quality-attributes.md`, `18-ux-and-design-system.md` |
 | Accessibility conformance target | Deferred for this stage. Practical accessibility requirements remain mandatory. The project currently makes no formal WCAG compliance claim. | `18-ux-and-design-system.md` |
-| Design System tokens and detailed component specifications | Open | `18-ux-and-design-system.md` |
+| Design System tokens and detailed component specifications | Partially resolved. The existing baseline has approval within the scope recorded in Doc 18. Further token extensions and specifications for future component families remain open. | `18-ux-and-design-system.md` |
+| Production Workflow Control Room renderer | Open. Evaluate the renderer for Backend-supplied workflow state. The Design System Lab uses React Flow for its current specimen. | `09-web-application-components.md`, ADR-0029 |
+| Supported desktop viewport matrix | Open. The desktop-only scope is approved. The product-wide viewport matrix remains open. | `07-quality-attributes.md`, `18-ux-and-design-system.md` |
 | Modern renderer, hardware profile, asset format, and activation policy | Deferred until Classic is complete | ADR-0029 |
 
 ## Decision rules

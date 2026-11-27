@@ -24,7 +24,7 @@ Follow the repository's [Coding conventions](docs/CODING_CONVENTIONS.md) for pro
 |---|---|
 | [`docs/Analytics/`](docs/Analytics/) | منابع فعال معماری: مدل C4، مستندات فنی و ADRها |
 | [`docs/arka_dataset/`](docs/arka_dataset/) | دیتاست ساختگی آرکا، تنظیمات KPI و Workflow، ورودی‌های مدیران و schema خروجی ارزیابی |
-| [`src/`](src/) | Backend Walking Skeleton, frontend scaffold, and future product modules |
+| [`src/`](src/) | Backend Walking Skeleton, frontend scaffold and Design System Lab, and future product modules |
 | [`deploy/`](deploy/) | Development container build and PostgreSQL bootstrap configuration |
 | [`.agents/skills/`](.agents/skills/) | دستورها و راهنماهای کمکی برای عامل‌های توسعه؛ بخشی از runtime محصول نیست |
 | [`tmp/`](tmp/) | بریف‌ها، برنامه‌ها، exportها و فایل‌های کاری/تاریخی؛ **منبع معتبر تحلیل، توسعه یا استقرار نیست** |
@@ -85,18 +85,9 @@ These tables prevent each migrator from treating an already applied schema migra
 
 The Web Application is in `src/WebApp`. The verified environment uses Node.js `24.15.0` and npm `11.12.1`. The frontend supports the Node.js versions declared in `package.json`: Node.js `20.19.0` or later in the 20.x line, or Node.js `22.12.0` or later. Use npm `11.12.1` to match the recorded package-manager version.
 
-The approved frontend stack is:
+The current frontend includes the application entry point, shared providers, reusable components, and a development-only Design System Lab with mock data. The product shell, Assistant, Dashboard, Workflow Control Room, and authenticated Backend integration are planned.
 
-| Technology | Responsibility |
-|---|---|
-| React 19 | Component composition and application rendering |
-| React DOM 19 | React rendering in the browser |
-| TypeScript | Static type checking |
-| Vite | Local development, production builds, and build preview |
-| Ant Design and Ant Design Icons | UI component foundation and icons under the OrgPilot Design System |
-| Motion | Purposeful transitions and micro-interactions |
-| Apache ECharts | Rendering authorized chart specifications |
-| React Flow | Interactive presentation of Backend-supplied workflow state |
+See the [Web Application architecture (Doc 09)](docs/Analytics/docs/09-web-application-components.md), [chart presentation contract (Doc 17)](docs/Analytics/docs/17-chart-presentation-contract.md), [UX and Design System (Doc 18)](docs/Analytics/docs/18-ux-and-design-system.md), and [frontend development stages](docs/FRONTEND_DEVELOPMENT_STAGES.md).
 
 After you clone or pull the repository, run:
 
@@ -107,7 +98,7 @@ npm run dev
 ```
 
 - `npm ci` installs the exact dependency versions in `package-lock.json`. Run it after you clone the repository and when `package-lock.json` changes.
-- `npm run dev` starts the local development server.
+- `npm run dev` starts the local development server. Open `/design-system` on the server URL to use the Lab. The route is available only in development.
 - `npm run build` creates the optimized production build.
 - `npm run preview` serves the production build locally for verification. Run `npm run build` first.
 
