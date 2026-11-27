@@ -29,6 +29,14 @@
     -0.125rem 0 0.8125rem #5935f346;
 }
 
+[data-theme="light"] .didrah-primary-nav {
+  --primary-nav-surface: linear-gradient(180deg, #fff, #f4f7fe);
+  --primary-nav-current-fill: linear-gradient(to left, #e4edff, #ede9fc);
+  --primary-nav-current-edge: linear-gradient(to left, #6c82ba, #8173af);
+  --primary-nav-current-ink: #253879;
+  --primary-nav-current-shadow: inset 0 1px 0 #ffffffbf;
+}
+
 .didrah-primary-nav-list {
   display: grid;
   gap: 0.1875rem;

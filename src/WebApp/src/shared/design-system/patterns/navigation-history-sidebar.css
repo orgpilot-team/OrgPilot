@@ -46,6 +46,13 @@
   --history-search-edge: linear-gradient(255deg, #c5c4d4 2%, #9291a1 45%, #292838 100%);
 }
 
+[data-theme='light'] .didrah-history-sidebar {
+  --history-surface: #f7f9fe;
+  --history-selected: #e5ecfc;
+  --history-delete: #dbe5f9;
+  --history-search-edge: #7787a8;
+}
+
 .didrah-history-sidebar button {
   border: 0;
   padding: 0;
@@ -120,6 +127,10 @@
   padding-inline: 0.375rem;
   background: linear-gradient(188deg, var(--didrah-color-brand-primary) 24%, var(--didrah-color-brand-indigo) 76%);
   color: var(--didrah-color-brand-on-primary);
+}
+
+[data-theme='light'] .didrah-history-sidebar .didrah-history-new {
+  background: linear-gradient(188deg, #2c4aaf 24%, #4b449a 76%);
 }
 
 .didrah-history-sidebar .didrah-history-search,

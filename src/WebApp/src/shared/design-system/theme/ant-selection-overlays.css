@@ -26,6 +26,10 @@
   box-shadow: var(--didrah-control-inset), var(--didrah-shadow-overlay);
 }
 
+[data-theme="light"] .didrah-ant-dialog:is(.ant-modal-container, .ant-drawer-section) {
+  box-shadow: var(--didrah-control-inset), 0 10px 24px #293e7026, 0 0 0 1px var(--didrah-color-border-subtle);
+}
+
 .didrah-ant-popup:is(.ant-dropdown-menu, .ant-popover-container) {
   background-image: var(--didrah-control-tint);
   box-shadow: var(--didrah-control-inset), var(--didrah-control-popup-shadow);

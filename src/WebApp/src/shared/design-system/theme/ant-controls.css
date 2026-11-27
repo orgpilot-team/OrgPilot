@@ -29,32 +29,32 @@
 }
 
 :root[data-theme="light"] {
-  --didrah-control-fill: #f9fbffab;
-  --didrah-control-hover: #f7f9ffc4;
-  --didrah-control-focus: #fbfcffd9;
-  --didrah-control-disabled: #ebeff9ab;
-  --didrah-control-edge: #72809c;
-  --didrah-control-edge-hover: #4b5e86;
-  --didrah-control-edge-disabled: #bac3d7;
-  --didrah-control-tint: linear-gradient(180deg, #ffffff3d, #7585e112 72%);
-  --didrah-control-tint-hover: linear-gradient(180deg, #ffffff52, #7585e114 72%);
-  --didrah-control-inset: inset 0 1px 0 #ffffff8f;
-  --didrah-control-inset-pressed: inset 0 1px 0 #2d3b6b29;
-  --didrah-control-muted: #5a647b;
+  --didrah-control-fill: #f8fafff2;
+  --didrah-control-hover: #edf2fe;
+  --didrah-control-focus: #fdfdff;
+  --didrah-control-disabled: #e9edf6;
+  --didrah-control-edge: #687798;
+  --didrah-control-edge-hover: #465985;
+  --didrah-control-edge-disabled: #b9c3d8;
+  --didrah-control-tint: linear-gradient(180deg, #ffffffa6, #647fc20a 78%);
+  --didrah-control-tint-hover: linear-gradient(180deg, #ffffff73, #647fc214 78%);
+  --didrah-control-inset: inset 0 1px 0 #ffffffd9;
+  --didrah-control-inset-pressed: inset 0 1px 0 #2d3b6b1f;
+  --didrah-control-muted: #515d77;
   --didrah-control-danger-text: #9f1717;
-  --didrah-control-secondary: #ebf1ffbd;
-  --didrah-control-secondary-pressed: #dee6faf0;
+  --didrah-control-secondary: #edf2fd;
+  --didrah-control-secondary-pressed: #dfe7f9;
   --didrah-control-primary-tint: linear-gradient(180deg, #dde5ff1f, transparent 65%);
   --didrah-control-primary-tint-hover: linear-gradient(180deg, #dde5ff24, transparent 65%);
   --didrah-control-primary-edge: #465cb9;
   --didrah-control-primary-stops: #2343a6fa, #46338dfa;
   --didrah-control-primary-stops-hover: #2a4bb0fa, #4f3b9afa;
   --didrah-control-primary-stops-pressed: #1f3486fc, #392976fc;
-  --didrah-control-popup: #f9fbfffc;
-  --didrah-control-popup-shadow: 0 5px 12px #1c274c2b;
-  --didrah-control-option-active: #e8edfa;
-  --didrah-control-option-selected: #dfe7fb;
-  --didrah-control-option-selected-active: #d8e2fb;
+  --didrah-control-popup: #fcfdff;
+  --didrah-control-popup-shadow: 0 4px 12px #293e701f;
+  --didrah-control-option-active: #ebf0fc;
+  --didrah-control-option-selected: #dfe8fc;
+  --didrah-control-option-selected-active: #d5e0fb;
   --didrah-control-option-edge: #566b9b;
 }
 

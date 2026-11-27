@@ -9,7 +9,7 @@
 }
 
 [data-theme="light"] .design-system-lab {
-  --lab-halo: 8%;
+  background: linear-gradient(165deg, #e7edfb, transparent 23rem);
 }
 
 .design-system-lab *,

@@ -30,15 +30,12 @@
 }
 
 [data-theme="light"] .didrah-chat-composer {
-  --composer-fill: var(--didrah-color-surface-input);
+  --composer-fill: #fbfcff;
   --composer-ink: var(--didrah-color-text-primary);
   --composer-caret: var(--didrah-color-focus-ring);
-  --composer-rim-top: linear-gradient(var(--composer-inline-angle), #237ba9, #328b9c 51%, #465fbe);
-  --composer-rim-bottom: linear-gradient(var(--composer-inline-angle), #267ba8, #338b9c 63%, #4965bf);
-  --composer-glow: linear-gradient(var(--composer-inline-angle),
-    rgb(37 125 175 / 17%), transparent 9%, transparent 87%, rgb(48 86 184 / 29%)),
-    linear-gradient(180deg, rgb(69 128 191 / 8%), rgb(58 89 190 / 22%));
-  --composer-edge-light: rgb(36 89 239 / 16%);
+  --composer-rim-top: linear-gradient(var(--composer-inline-angle), #4c80a0, #587b9d 51%, #5969a7);
+  --composer-rim-bottom: linear-gradient(var(--composer-inline-angle), #4c80a0, #587b9d 63%, #5969a7);
+  --composer-send-fill: linear-gradient(var(--composer-send-angle), #315dc4 36%, #4c55a8 93%);
 }
 
 /* The lower and inline-end edges cast more light on the parent surface. */
@@ -48,6 +45,11 @@
   z-index: -1;
   pointer-events: none;
   content: "";
+}
+
+[data-theme="light"] .didrah-chat-composer::before,
+[data-theme="light"] .didrah-chat-composer::after {
+  display: none;
 }
 
 .didrah-chat-composer::before {
@@ -189,7 +191,7 @@
 }
 
 .didrah-composer-actions .didrah-composer-send {
-  background: linear-gradient(var(--composer-send-angle), #204fff 36%, #6498ff 93%);
+  background: var(--composer-send-fill, linear-gradient(var(--composer-send-angle), #204fff 36%, #6498ff 93%));
   color: #fff;
 }
 

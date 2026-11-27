@@ -60,19 +60,21 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
   const error = colors['status-critical']
   const info = colors['status-information']
   const tint = (color: string, amount: number) => `color-mix(in srgb, ${color} ${amount}%, ${surface})`
+  const statusFill = isDark ? 8 : 6
+  const statusEdge = isDark ? 24 : 34
   const status = {
     colorSuccess: success,
     colorWarning: warning,
     colorError: error,
     colorInfo: info,
-    colorSuccessBg: tint(success, 8),
-    colorWarningBg: tint(warning, 8),
-    colorErrorBg: tint(error, 8),
-    colorInfoBg: tint(info, 8),
-    colorSuccessBorder: tint(success, 24),
-    colorWarningBorder: tint(warning, 24),
-    colorErrorBorder: tint(error, 24),
-    colorInfoBorder: tint(info, 24),
+    colorSuccessBg: tint(success, statusFill),
+    colorWarningBg: tint(warning, statusFill),
+    colorErrorBg: tint(error, statusFill),
+    colorInfoBg: tint(info, statusFill),
+    colorSuccessBorder: tint(success, statusEdge),
+    colorWarningBorder: tint(warning, statusEdge),
+    colorErrorBorder: tint(error, statusEdge),
+    colorInfoBorder: tint(info, statusEdge),
     colorSuccessText: success,
     colorWarningText: warning,
     colorErrorText: error,
@@ -118,7 +120,7 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
       colorBgContainer: surface,
       colorBgContainerDisabled: raised,
       colorBgElevated: colors['surface-overlay'],
-      colorBgMask: `${darkTheme.canvas}99`,
+      colorBgMask: isDark ? `${darkTheme.canvas}99` : '#26345852',
       colorBorder: colors['border-control'],
       colorBorderSecondary: border,
       colorSplit: border,

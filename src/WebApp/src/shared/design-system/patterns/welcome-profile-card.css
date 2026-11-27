@@ -12,6 +12,12 @@
   --welcome-profile-ink: #fff;
 }
 
+[data-theme="light"] .didrah-welcome-profile {
+  --welcome-profile-surface: linear-gradient(160deg, #fff 20%, #f2f6fe);
+  --welcome-profile-selected: #e0e9fd;
+  --welcome-profile-icon-muted: var(--didrah-color-text-secondary);
+}
+
 .didrah-welcome-profile > .didrah-panel {
   --welcome-profile-inset: clamp(1.25rem, 6.25cqi, 2rem);
   gap: 0;
