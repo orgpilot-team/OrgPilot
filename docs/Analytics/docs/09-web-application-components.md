@@ -2,7 +2,9 @@
 
 ## Purpose and scope
 
-The Web Application supplies the three Persian RTL management interfaces. It displays authorized data and sends user actions to the Backend API.
+The DIDRAH Web Application supplies the three Persian RTL management interfaces in desktop browsers. It displays authorized data and sends user actions to the Backend API.
+
+DIDRAH is desktop-only. Mobile and tablet layouts, breakpoints, screenshots, and device-specific validation are out of scope. The frontend must support resizing at supported desktop viewports, keyboard access, and visible focus states. The exact desktop viewport matrix remains open. Keep the approved Dastkhat typography in use. Defer global typography refinement until the initial component families are complete.
 
 This document is the architecture source for the Web Application. It owns the frontend technology stack, feature boundaries, presentation-mode policy, Design System boundary, shared-module rules, session responsibilities, target directory structure, and implementation boundaries.
 
@@ -142,7 +144,7 @@ Generated API types must have one location. Do not hand-maintain a second TypeSc
 
 ### Current frontend paths
 
-The approved Stage 4.5-R5.5 implementation is in `src/WebApp`. The table lists paths relative to that directory.
+The approved Stage 4.5-R5.5 baseline and the approved shared patterns are in `src/WebApp`. The table lists paths relative to that directory.
 
 | Path | Responsibility |
 |---|---|
@@ -182,6 +184,23 @@ The approved token architecture and visual scope are in [doc 18](18-ux-and-desig
 - The Design System Lab consumes the actual reusable components. It owns specimen composition, mock fixtures, reference specimens, validation scenarios, and development and benchmark controls. Shared modules must never import from the Lab.
 - Follow the permanent frontend rules and use the DIDRAH component workflow and checklist for applicable component design, implementation, and validation. [Frontend AGENTS.md](../../../src/WebApp/AGENTS.md) · [DIDRAH component workflow](../../../src/WebApp/.agents/skills/didrah-component-workflow/SKILL.md) · [Acceptance checklist](../../../src/WebApp/.agents/skills/didrah-component-workflow/references/component-checklist.md)
 
+### Approved shared UI patterns
+
+The shared Design System owns the two patterns below. Their TypeScript modules define the public interfaces. Their local CSS files and inline SVG define the approved visual parameters. See the [visual specifications in doc 18](18-ux-and-design-system.md#approved-shared-ui-patterns).
+
+| Component | Canonical modules under `src/WebApp` | Public interface |
+|---|---|---|
+| `WelcomeProfileCard` | `src/shared/design-system/patterns/WelcomeProfileCard.tsx` and `src/shared/design-system/patterns/welcome-profile-card.css` | `WelcomeProfileCardProps` has required `managerName: string` and `date: Date`, and optional `avatarSrc?: string`. Supply a valid date. The card formats the local day in Tehran. |
+| `NavigationHistorySidebar` | `src/shared/design-system/patterns/NavigationHistorySidebar.tsx` and `src/shared/design-system/patterns/navigation-history-sidebar.css` | `NavigationHistorySidebarProps` has `groups: readonly NavigationHistoryGroup[]`, `activeItemId: string \| null`, `onSelect(itemId: string)`, `onDelete(itemId: string)`, `onNewChat()`, and `onSettings()`. Each callback returns `void`. |
+
+A `NavigationHistoryGroup` has a string `id`, a string `label`, and an `items` field of type `readonly NavigationHistoryItem[]`. Each item has a string `id` and a string `title`. The group and item fields are readonly. Use stable group IDs and unique, stable item IDs. The caller supplies the groups and controls the active item. A null active ID means no selection.
+
+The sidebar presents AI conversation history for the Conversational Assistant UI. The application shell owns primary navigation. The Assistant feature owns conversation data, grouping, selection state, and the effects of the callbacks. The sidebar owns temporary title search, list scrolling, and selected-row rendering. It filters the supplied groups locally.
+
+`WelcomeProfileCard` uses `Panel` and reads and updates the shared theme through `useDidrahTheme`. The sidebar reads root `data-theme` and semantic CSS variables. The sidebar aligns its local CSS mask and SVG detail with the visible selected row when the caller or the desktop layout changes. Both patterns use Persian RTL and keep their visual overrides in their own modules.
+
+The Lab consumes both patterns at `/design-system`. It owns demo data and controls in `WelcomeProfileSpecimen.tsx` and `NavigationHistorySpecimen.tsx`. Lab code demonstrates the public interfaces. The patterns also work in views under the application providers outside the Lab.
+
 ## Information presentation principles
 
 The Web Application uses three product principles:
@@ -200,7 +219,7 @@ These principles apply to Classic and Modern modes. They do not permit the brows
 - Collect scoped questions, uploads, and manager commands.
 - Send requests to the Backend API over HTTPS/JSON.
 - Own temporary browser and presentation state.
-- Apply the Design System, RTL behavior, responsive layout, accessibility behavior, and reduced-motion behavior.
+- Apply the Design System, RTL behavior, desktop layout resizing, accessibility behavior, and reduced-motion behavior.
 - Initialize, update, resize, isolate, and dispose visualization resources.
 
 ## Forbidden responsibilities
@@ -328,7 +347,7 @@ Initial frontend setup can start before production contracts and authentication 
 - Design System foundations.
 - Ant Design theme integration.
 - Persian and RTL behavior.
-- Layouts, navigation prototypes, and responsive shells.
+- Desktop layouts, navigation prototypes, and shells that adapt when the desktop viewport changes.
 - Accessible component states.
 - Motion patterns and reduced-motion behavior.
 - Feature page composition and UX testing.

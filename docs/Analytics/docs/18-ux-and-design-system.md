@@ -6,7 +6,7 @@ This document defines the OrgPilot visual language and shared UX guidance. It ap
 
 This document does not define business workflows, authorization, API contracts, chart values, signal rules, or C4 boundaries. Those concerns remain in their owning architecture and contract documents.
 
-The approved Stage 4.5-R5.5 baseline includes the implemented Design Tokens, Dark and Light themes, Dastkhat typography, and two Dark Mode luminous sales chart variants.
+The approved Stage 4.5-R5.5 baseline includes the implemented Design Tokens, Dark and Light themes, Dastkhat typography, and two Dark Mode luminous sales chart variants. The approved shared UI patterns also include `WelcomeProfileCard` and `NavigationHistorySidebar`.
 
 ## Visual direction
 
@@ -47,7 +47,37 @@ The shared token modules define primitive colors, one typed set of semantic colo
 
 `DidrahThemeProvider` makes the active theme available to consumers and sets `data-theme` and `color-scheme` on the document root. The CSS adapter applies semantic variables to the same root. The Ant Design adapter uses the same tokens for its theme and component overrides. The ECharts adapter maps shared roles to baseline chart text, axes, legends, tooltips, and series colors. [Theme provider](../../../src/WebApp/src/shared/design-system/theme/DidrahThemeProvider.tsx) · [CSS adapter](../../../src/WebApp/src/shared/design-system/theme/css-variables.ts) · [Ant Design adapter](../../../src/WebApp/src/shared/design-system/theme/ant-theme.ts) · [ECharts adapter](../../../src/WebApp/src/shared/visualization/charts/chart-theme.ts)
 
-Use global tokens for design decisions that apply across the Design System. Keep chart-family colors, gradients, glows, shadows, radii, and plot geometry in the chart variants. Use the approved source files for exact rendering values.
+Use global tokens for design decisions that apply across the Design System. Keep colors, gradients, glows, shadows, and geometry specific to a component in its owning module. Keep chart plot geometry in the chart variants. Use the approved source files for exact rendering values.
+
+### Approved shared UI patterns
+
+The shared Design System owns both patterns in `src/WebApp/src/shared/design-system/patterns`. The Lab consumes the patterns at `/design-system` and owns the specimens, fixtures, and controls. The component paths and public interfaces are in [doc 09](09-web-application-components.md#approved-shared-ui-patterns).
+
+#### WelcomeProfileCard
+
+The card uses a rounded `Panel`. The avatar is at the right and the moon and sun theme controls are at the left. The Persian weekday, day, and month appear below the controls and above the two-line greeting. The display date uses the Persian calendar and the Tehran time zone. The avatar uses a square image with rounded corners. The manager's initial appears while the image loads or if it is unavailable. A blank name uses the Persian fallback for manager. The displayed name uses bidirectional isolation.
+
+The card fills its container up to `32rem`. Container units set the scale within these bounds:
+
+| Parameter | Approved bounds |
+|---|---|
+| Panel padding and corner radius | `1.25rem` to `2rem` |
+| Avatar size | `3rem` to `4.5rem` |
+| Theme button size | `2.75rem` to `3.5rem` |
+| Date font size | `1rem` to `1.5rem`, weight 700 |
+| Greeting font size | `1.75rem` to `2.9375rem`, weight 700 |
+
+The controls update `DidrahThemeProvider` and show the selected theme with `aria-pressed`. Dark Mode uses local surface `#11111b`, selected fill `#22222c`, date text `#bdbcca`, muted icon `#8c8da1`, and primary ink `#fff`. Light Mode uses semantic surfaces and text with a subtle inset border. Use the source for the container formulas, icon paths, focus ring, and fallback states. [Component](../../../src/WebApp/src/shared/design-system/patterns/WelcomeProfileCard.tsx) and [visual rules](../../../src/WebApp/src/shared/design-system/patterns/welcome-profile-card.css).
+
+#### NavigationHistorySidebar
+
+The sidebar shows AI conversation history in the Conversational Assistant UI. Primary application navigation belongs to the application shell. The sidebar has a DIDRAH brand header, a gradient New Chat button, a search control, a scrollable list of labeled conversation groups, and a Settings footer. The search field opens in the header, takes focus, and filters titles locally. The close button and Escape return focus to the search button. Long titles use ellipsis and bidirectional isolation. The sidebar has distinct status text for empty history and for a search with no results.
+
+The sidebar is `14.25rem` wide. Its default height is `47rem` and its minimum height is `22rem`. A caller can set `--didrah-history-height` for desktop layout. The inline inset is `1.5rem`. The row and standard control height are `2.25rem`. The selected row button uses `aria-current="true"` and shows a curved cutout at its inline end, a blue edge glow and dot, and a delete control. The cutout mask is `2.25rem` wide by `5.125rem` high, with upper and lower return offsets of `1.375rem` and `1.5rem`. The `144 x 72` SVG detail is `4.5rem` wide in CSS and fills the row height.
+
+The sidebar sets Persian RTL explicitly. Logical CSS places the row detail and delete control at inline end. The mask uses the physical left edge of this RTL layout. The component measures the selected row against the frame and scroll viewport. It updates the mask offset on selection or list changes, filtering, search expansion, scrolling, and resize. The mask appears while any part of the selected row is visible in the list. The row and its inline SVG scroll together. A bottom fade indicates more content and clears when a list control has visible focus.
+
+Dark Mode uses the shared canvas. Its local selected and delete fills are `#22222e` and `#262835`. Its local accent is `#284aff`. The local Dark Mode brand accent is `#4c72f0`. The search border gradient, cutout path, and SVG glow settings are local to the pattern. Light Mode uses semantic surfaces, text, and borders, plus the local brand accent `#3555ba`. Both themes use the shared focus ring. [Component](../../../src/WebApp/src/shared/design-system/patterns/NavigationHistorySidebar.tsx) and [visual rules](../../../src/WebApp/src/shared/design-system/patterns/navigation-history-sidebar.css).
 
 ## Information experience
 
@@ -75,6 +105,8 @@ The UI must not create a cause, signal, recommendation, target, or conclusion th
 - Fonts and icons required for core operation must be available at build time. Core presentation must not depend on a runtime CDN.
 
 The HTML root uses `lang="fa"` and `dir="rtl"`. The Ant Design provider uses the `fa_IR` locale and RTL direction. Dastkhat Variable v1.220 is the approved typeface, with Tahoma, Segoe UI, and sans-serif fallbacks. The application preloads the local WOFF2 file and uses weights 400 to 700 through named roles for headings, body text, controls, tables, captions, KPIs, and technical text. The chart host waits for the chart fonts before drawing. [Typography tokens](../../../src/WebApp/src/shared/design-system/tokens/typography.ts) · [Font notice](../../../src/WebApp/public/licenses/dastkhat/NOTICE.txt)
+
+Keep the approved Dastkhat typography in use. Defer global typography refinement until the initial component families are complete.
 
 ## Interaction and Motion rules
 
@@ -147,13 +179,15 @@ Detailed quality gates and test requirements belong to doc 07.
 
 The shared sales charts have accessible names, keyboard-operable disclosures for their data tables, and explicit text for unavailable and missing data. Tooltips use local text formatting. Bidirectional isolation keeps technical codes and decimal strings readable in Persian context. During a renderer failure, the table remains available.
 
-## Responsive behavior
+## Desktop layout and resizing
 
-Layouts must adapt without removing authorized information or actions. Responsive behavior must preserve business meaning, scope, evidence identity, and contract values. The product-wide supported viewport matrix remains open.
+The DIDRAH Web Application is desktop-only. Mobile and tablet layouts, breakpoints, screenshots, and device-specific validation are out of scope.
+
+Layouts must adapt at supported desktop viewports without removing authorized information or actions. Preserve business meaning, scope, evidence identity, and contract values. Check keyboard access and visible focus during desktop validation. The exact product-wide desktop viewport matrix remains open.
 
 ### Desktop and laptop validation
 
-The frontend migration handoff (`frontend-migration-handoff.md`) records the following checks in both themes for integration commit `0bcb1adb17af52c77fc9a88d4deac4765fb749d2`. This is the desktop and laptop Lab validation scope. Mobile was outside that scope.
+The frontend migration handoff (`frontend-migration-handoff.md`) records the following checks in both themes for integration commit `0bcb1adb17af52c77fc9a88d4deac4765fb749d2`. These results record the earlier desktop and laptop Lab validation.
 
 | Browser size | Zoom | CSS viewport | Result in both themes |
 |---|---:|---|---|
@@ -172,9 +206,9 @@ The earlier 1440 × 960 visual comparison recorded 26 changed pixels in Dark Mod
 
 ## Reference reconstruction and visual approval
 
-Inspect existing components first. When reconstruction is needed, record observed and inferred properties and build a temporary browser specimen outside production source. Compare the representative states at matching browser sizes. Report visible differences and obtain human visual approval before reusable implementation for reference fidelity work or a material redesign. Use the approved browser reconstruction as the visual authority. Use Figma capture when it helps the comparison or the user requests it. [DIDRAH component workflow](../../../src/WebApp/.agents/skills/didrah-component-workflow/SKILL.md) · [Frontend instructions](../../../src/WebApp/AGENTS.md)
+Inspect existing components first. When reconstruction is needed, record observed and inferred properties and build a temporary browser specimen outside production source. Compare the representative states at matching desktop browser sizes. Report visible differences and obtain human visual approval before reusable implementation for reference fidelity work or a material redesign. Use the approved browser reconstruction as the visual authority. Use Figma capture when it helps the comparison or the user requests it. [DIDRAH component workflow](../../../src/WebApp/.agents/skills/didrah-component-workflow/SKILL.md) · [Frontend instructions](../../../src/WebApp/AGENTS.md)
 
-Implement the reusable component in its owning module and render it in the Lab. Apply the acceptance checklist to relevant states, themes, accessibility, layout, and behavior. Use focused renderer and performance checks for complex visualizations. Report evidence and stop at the requested approval gate.
+Implement the reusable component in its owning module and render it in the Lab. Apply the acceptance checklist to relevant states, themes, accessibility, layout, and behavior. Use focused renderer and performance checks for complex visualizations. Report evidence and stop at the requested approval gate. Give the user the absolute paths of applicable desktop artifacts for manual visual inspection.
 
 For routine Backend integration, follow docs 09 and 17 and map accepted data to the typed component inputs. Use the design stages when the task includes component design work.
 
@@ -205,5 +239,5 @@ This proposed roadmap covers frontend design. The repository-wide development st
 
 - Visual refinement for Light Mode and detailed design for the remaining component families.
 - Any extension of the global token scales or general UI motion presets.
-- Product-wide supported viewport matrix.
+- Exact product-wide desktop viewport matrix.
 - Future 3D scene style and asset guidance.

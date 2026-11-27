@@ -12,6 +12,12 @@ description: >-
 
 Read the frontend [AGENTS.md](../../../AGENTS.md) for permanent rules. Use only the stages that apply to the authorized task. For Backend integration, follow the feature and API boundaries in [doc 09](../../../../../docs/Analytics/docs/09-web-application-components.md) and [doc 17](../../../../../docs/Analytics/docs/17-chart-presentation-contract.md). Map accepted data to the existing typed inputs. Use the design stages only if the user also requests component design work.
 
+## Desktop scope
+
+DIDRAH supports desktop browsers only. Mobile and tablet layouts, breakpoints, screenshots, and device-specific validation are out of scope. Check resizing at supported desktop viewports. Keep keyboard access and visible focus states functional.
+
+Use the approved Dastkhat typography. Defer global typography refinement until the initial component families are complete.
+
 ## A. Discovery and reuse
 
 Inspect the current source for relevant components, variants, tokens, theme adapters, and related implementations. Identify what to reuse. Decide which shared or feature module owns the component and define its public interface. Extend an existing implementation where its contract can support the change.
@@ -22,7 +28,7 @@ If the user supplies a reference, identify the representative component and its 
 
 ## C. Reconstruction and visual approval
 
-When a reconstruction is necessary, use HTML, CSS, and SVG as appropriate. Keep temporary specimens outside production source. Capture equivalent browser views for comparison and report any visible differences. Use Figma capture only if it helps the comparison or the user requests it. Use the approved browser reconstruction as the implementation authority. For reference fidelity work or a material redesign, present the comparison and wait for visual approval before reusable implementation.
+When a reconstruction is necessary, use HTML, CSS, and SVG as appropriate. Keep temporary specimens outside production source. Capture equivalent desktop browser views for comparison and report any visible differences. Use Figma capture only if it helps the comparison or the user requests it. Use the approved browser reconstruction as the implementation authority. For reference fidelity work or a material redesign, present the comparison and wait for visual approval before reusable implementation.
 
 ## D. Reusable implementation
 
@@ -38,11 +44,19 @@ Implement the interactions that the component needs. Reuse the existing animatio
 
 ## G. Validation
 
-Use the [component acceptance checklist](references/component-checklist.md) for the applicable checks. Check the public inputs, dependency direction, Lab use, visuals, supported states, accessibility, RTL, typography, layout at supported sizes, and both themes. Run `npm run typecheck` and `npm run build` from `src/WebApp` for component implementation work. For complex visualizations, also verify dynamic data, numeric and tooltip accuracy, synchronization, disposal, failure isolation, idle behavior, actual redraw rates, and CPU and GPU use where measurable. Match the checks to the component. Simple static components need no performance benchmark.
+Use the [component acceptance checklist](references/component-checklist.md) for the applicable checks. Check the public inputs, dependency direction, Lab use, visuals, supported states, accessibility, RTL, typography, layout and resizing at supported desktop viewports, and both themes. Run `npm run typecheck` and `npm run build` from `src/WebApp` for component implementation work. For complex visualizations, also verify dynamic data, numeric and tooltip accuracy, synchronization, disposal, failure isolation, idle behavior, actual redraw rates, and CPU and GPU use where measurable. Match the checks to the component. Simple static components need no performance benchmark.
 
 ## H. Approval and completion
 
 Report the implemented component and its public interface, exact changed paths, applicable screenshots and comparisons, validation results, known limitations, unresolved technical debt, and proposed documentation changes. Stop at the requested approval gate. Obtain user approval for visual decisions at that gate. Start subsequent work only when authorized.
+
+### Artifact delivery and visual inspection
+
+Generate the required artifacts. Use available tools within existing permissions to do automated technical and visual checks. Use automated browser tests, headless browser rendering, screenshot capture, and visual regression tests as applicable.
+
+Apply this policy at each approval gate and at completion. Give the exact absolute filesystem path of each generated output. The user opens the artifacts and does the manual visual inspection.
+
+Do not open Windows File Explorer or output directories. Do not launch the user's interactive browser. Do not open generated screenshots, HTML previews, or reports on the user's desktop. Do not request elevated permissions solely for these actions.
 
 ## Approved chart examples
 

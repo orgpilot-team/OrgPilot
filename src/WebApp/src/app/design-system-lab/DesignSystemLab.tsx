@@ -4,8 +4,10 @@ import type { ColorRole, HexColor, ThemeName } from '../../shared/design-system/
 import { colorVariableName } from '../../shared/design-system/theme/css-variables'
 import { useDidrahTheme } from '../../shared/design-system/theme/DidrahThemeProvider'
 import { AntSpecimens } from './AntSpecimens'
+import { NavigationHistorySpecimen } from './NavigationHistorySpecimen'
 import { PatternSpecimens } from './PatternSpecimens'
 import { TypographySpecimens } from './TypographySpecimens'
+import { WelcomeProfileSpecimen } from './WelcomeProfileSpecimen'
 import './design-system-lab.css'
 
 const VisualizationSpecimens = lazy(() => import('./VisualizationSpecimens'))
@@ -99,9 +101,11 @@ export default function DesignSystemLab() {
           </div>
         </header>
 
+        <WelcomeProfileSpecimen />
         <Suspense fallback={<p role="status">در حال آماده‌سازی نمونه‌های تصویری…</p>}>
           <VisualizationSpecimens />
         </Suspense>
+        <NavigationHistorySpecimen />
         <PatternSpecimens />
         <AntSpecimens />
         <TypographySpecimens />

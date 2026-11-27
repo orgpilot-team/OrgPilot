@@ -92,6 +92,31 @@
   outline-offset: 2px;
 }
 
+.lab-welcome-profile {
+  display: grid;
+  justify-items: start;
+  gap: var(--didrah-space-inset);
+  margin-block-end: var(--didrah-space-panel);
+}
+
+.lab-welcome-avatar-control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--didrah-space-compact);
+  color: var(--didrah-color-text-secondary);
+  font: var(--didrah-type-control);
+}
+
+.lab-welcome-avatar-control input {
+  margin: 0;
+  accent-color: var(--didrah-color-brand-primary);
+}
+
+.lab-welcome-avatar-control input:focus-visible {
+  outline: 2px solid var(--didrah-color-focus-ring);
+  outline-offset: 2px;
+}
+
 .lab-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
