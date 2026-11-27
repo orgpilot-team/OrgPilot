@@ -1,0 +1,86 @@
+.didrah-ant-choice:is(.ant-checkbox, .ant-radio):not(.ant-checkbox-disabled, .ant-radio-disabled),
+.didrah-ant-switch.ant-switch:not(:disabled),
+.didrah-ant-segmented.ant-segmented {
+  background-image: var(--didrah-control-tint);
+  box-shadow: var(--didrah-control-inset);
+}
+
+.didrah-ant-segmented.ant-segmented {
+  border: 1px solid var(--didrah-color-border-subtle);
+}
+
+.didrah-ant-segment.ant-segmented-item-selected {
+  box-shadow: inset 0 0 0 1px var(--didrah-control-option-edge);
+}
+
+.didrah-ant-choice:is(.ant-checkbox, .ant-radio):has(input:focus-visible),
+.didrah-ant-switch.ant-switch:focus-visible,
+.didrah-ant-segment.ant-segmented-item:has(input:focus-visible),
+.didrah-ant-menu-item:focus-visible {
+  outline: 2px solid var(--didrah-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.didrah-ant-dialog:is(.ant-modal-container, .ant-drawer-section) {
+  background-image: var(--didrah-control-tint);
+  box-shadow: var(--didrah-control-inset), var(--didrah-shadow-overlay);
+}
+
+[data-theme="light"] .didrah-ant-dialog:is(.ant-modal-container, .ant-drawer-section) {
+  box-shadow: var(--didrah-control-inset), 0 10px 24px #293e7026, 0 0 0 1px var(--didrah-color-border-subtle);
+}
+
+.didrah-ant-popup:is(.ant-dropdown-menu, .ant-popover-container) {
+  background-image: var(--didrah-control-tint);
+  box-shadow: var(--didrah-control-inset), var(--didrah-control-popup-shadow);
+  outline: 1px solid var(--didrah-color-border-control);
+}
+
+.didrah-ant-tooltip.ant-tooltip-container {
+  box-shadow: var(--didrah-control-popup-shadow);
+  outline: 1px solid var(--didrah-color-border-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .didrah-ant-choice:is(.ant-checkbox, .ant-radio),
+  .didrah-ant-choice::after,
+  .didrah-ant-switch.ant-switch,
+  .didrah-ant-switch .ant-switch-handle,
+  .didrah-ant-segment.ant-segmented-item,
+  .didrah-ant-segmented .ant-segmented-thumb {
+    transition: none;
+  }
+
+  .didrah-ant-segmented .ant-segmented-thumb,
+  .ant-modal,
+  .ant-modal-mask,
+  .ant-drawer-mask,
+  .ant-dropdown:has(.didrah-ant-popup),
+  .ant-popover:has(.didrah-ant-popup),
+  .ant-tooltip:has(.didrah-ant-tooltip) {
+    animation-duration: 0s;
+  }
+
+  .ant-drawer .ant-drawer-content-wrapper {
+    transition-duration: 0s;
+  }
+}
+
+@media (forced-colors: active) {
+  .didrah-ant-choice,
+  .didrah-ant-switch,
+  .didrah-ant-segment,
+  .didrah-ant-menu-item {
+    --didrah-color-focus-ring: Highlight;
+  }
+
+  .didrah-ant-segment.ant-segmented-item-selected {
+    outline: 1px solid SelectedItem;
+    outline-offset: -2px;
+  }
+
+  .didrah-ant-segment.ant-segmented-item-selected:has(input:focus-visible) {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}

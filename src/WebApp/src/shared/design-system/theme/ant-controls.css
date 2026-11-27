@@ -1,0 +1,299 @@
+:root {
+  --didrah-control-fill: #1c2036b8;
+  --didrah-control-hover: #272d47cc;
+  --didrah-control-focus: #1f253dd9;
+  --didrah-control-disabled: #141726a8;
+  --didrah-control-edge: #777f9c;
+  --didrah-control-edge-hover: #969fbd;
+  --didrah-control-edge-disabled: #3d445d;
+  --didrah-control-tint: linear-gradient(180deg, #b3c2ff17, #8374eb08 72%);
+  --didrah-control-tint-hover: linear-gradient(180deg, #b3c2ff21, #8374eb0a 72%);
+  --didrah-control-inset: inset 0 1px 0 #ccd8ff24;
+  --didrah-control-inset-pressed: inset 0 1px 0 #05071552;
+  --didrah-control-muted: #a0a7bd;
+  --didrah-control-danger-text: #ffb3b3;
+  --didrah-control-secondary: #282d44c9;
+  --didrah-control-secondary-pressed: #282b43f0;
+  --didrah-control-primary-tint: linear-gradient(180deg, #dde5ff1c, transparent 65%);
+  --didrah-control-primary-tint-hover: linear-gradient(180deg, #dde5ff1f, transparent 65%);
+  --didrah-control-primary-edge: #8697fc;
+  --didrah-control-primary-stops: #294dbcf7, #4e3d9bf7;
+  --didrah-control-primary-stops-hover: #2c4ec0fa, #5644a6fa;
+  --didrah-control-primary-stops-pressed: #223e9dfa, #423084fa;
+  --didrah-control-popup: #1a1d30fa;
+  --didrah-control-popup-shadow: 0 5px 12px #05071557;
+  --didrah-control-option-active: #313a58;
+  --didrah-control-option-selected: #364367;
+  --didrah-control-option-selected-active: #404f77;
+  --didrah-control-option-edge: #a9b9f5;
+}
+
+:root[data-theme="light"] {
+  --didrah-control-fill: #f8fafff2;
+  --didrah-control-hover: #edf2fe;
+  --didrah-control-focus: #fdfdff;
+  --didrah-control-disabled: #e9edf6;
+  --didrah-control-edge: #687798;
+  --didrah-control-edge-hover: #465985;
+  --didrah-control-edge-disabled: #b9c3d8;
+  --didrah-control-tint: linear-gradient(180deg, #ffffffa6, #647fc20a 78%);
+  --didrah-control-tint-hover: linear-gradient(180deg, #ffffff73, #647fc214 78%);
+  --didrah-control-inset: inset 0 1px 0 #ffffffd9;
+  --didrah-control-inset-pressed: inset 0 1px 0 #2d3b6b1f;
+  --didrah-control-muted: #515d77;
+  --didrah-control-danger-text: #9f1717;
+  --didrah-control-secondary: #edf2fd;
+  --didrah-control-secondary-pressed: #dfe7f9;
+  --didrah-control-primary-tint: linear-gradient(180deg, #dde5ff1f, transparent 65%);
+  --didrah-control-primary-tint-hover: linear-gradient(180deg, #dde5ff24, transparent 65%);
+  --didrah-control-primary-edge: #465cb9;
+  --didrah-control-primary-stops: #2343a6fa, #46338dfa;
+  --didrah-control-primary-stops-hover: #2a4bb0fa, #4f3b9afa;
+  --didrah-control-primary-stops-pressed: #1f3486fc, #392976fc;
+  --didrah-control-popup: #fcfdff;
+  --didrah-control-popup-shadow: 0 4px 12px #293e701f;
+  --didrah-control-option-active: #ebf0fc;
+  --didrah-control-option-selected: #dfe8fc;
+  --didrah-control-option-selected-active: #d5e0fb;
+  --didrah-control-option-edge: #566b9b;
+}
+
+.didrah-ant-button:not(.ant-btn-background-ghost):is(
+  .ant-btn-color-primary.ant-btn-variant-solid,
+  .ant-btn-color-default:is(.ant-btn-variant-outlined, .ant-btn-variant-text),
+  .ant-btn-color-dangerous:is(.ant-btn-variant-solid, .ant-btn-variant-outlined)
+) {
+  --button-fill: transparent;
+  --button-fill-hover: var(--didrah-control-fill);
+  --button-fill-pressed: var(--didrah-control-secondary-pressed);
+  --button-edge: transparent;
+  --button-edge-hover: var(--button-edge);
+  --button-text: var(--didrah-color-text-secondary);
+  --button-text-hover: var(--didrah-color-text-primary);
+  --button-inset: none;
+  --button-inset-pressed: var(--didrah-control-inset-pressed);
+  background: var(--button-fill) padding-box;
+  border-color: var(--button-edge);
+  color: var(--button-text);
+  box-shadow: var(--button-inset);
+
+  &.ant-btn-color-primary {
+    --button-gradient-angle: 90deg;
+    --button-fill: var(--didrah-control-primary-tint),
+      linear-gradient(var(--button-gradient-angle), var(--didrah-control-primary-stops));
+    --button-fill-hover: var(--didrah-control-primary-tint-hover),
+      linear-gradient(var(--button-gradient-angle), var(--didrah-control-primary-stops-hover));
+    --button-fill-pressed: linear-gradient(var(--button-gradient-angle), var(--didrah-control-primary-stops-pressed));
+    --button-edge: var(--didrah-control-primary-edge);
+    --button-text: var(--didrah-color-brand-on-primary);
+    --button-text-hover: var(--button-text);
+    --button-inset: var(--didrah-control-inset);
+  }
+
+  &.ant-btn-color-primary:dir(rtl) {
+    --button-gradient-angle: 270deg;
+  }
+
+  &.ant-btn-color-default.ant-btn-variant-outlined {
+    --button-fill: var(--didrah-control-tint), var(--didrah-control-secondary);
+    --button-fill-hover: var(--didrah-control-tint-hover), var(--didrah-control-hover);
+    --button-edge: var(--didrah-control-edge);
+    --button-edge-hover: var(--didrah-control-edge-hover);
+    --button-text: var(--didrah-color-text-primary);
+    --button-inset: var(--didrah-control-inset);
+  }
+
+  &.ant-btn-color-dangerous {
+    --button-fill: var(--didrah-control-tint),
+      color-mix(in srgb, var(--didrah-color-status-critical) 9%, var(--didrah-control-fill));
+    --button-fill-hover: var(--didrah-control-tint),
+      color-mix(in srgb, var(--didrah-color-status-critical) 13%, var(--didrah-control-hover));
+    --button-fill-pressed: color-mix(in srgb, var(--didrah-color-status-critical) 18%, var(--didrah-control-focus));
+    --button-edge: var(--didrah-color-status-critical);
+    --button-text: var(--didrah-control-danger-text);
+    --button-text-hover: var(--button-text);
+    --button-inset: var(--didrah-control-inset);
+  }
+
+  &.ant-btn-variant-text {
+    --button-inset-pressed: none;
+  }
+
+  &:not(:disabled, .ant-btn-disabled, .ant-btn-loading):hover {
+    background: var(--button-fill-hover) padding-box;
+    border-color: var(--button-edge-hover);
+    color: var(--button-text-hover);
+  }
+
+  &:not(:disabled, .ant-btn-disabled, .ant-btn-loading):active {
+    background: var(--button-fill-pressed) padding-box;
+    box-shadow: var(--button-inset-pressed);
+  }
+
+  &:is(:disabled, .ant-btn-disabled) {
+    background: var(--didrah-control-disabled) padding-box;
+    border-color: var(--didrah-control-edge-disabled);
+    color: var(--didrah-control-muted);
+    box-shadow: none;
+  }
+}
+
+.didrah-ant-button.ant-btn-loading:not(:disabled, .ant-btn-disabled) {
+  cursor: progress;
+  opacity: 1;
+}
+
+/* The theme scope gives these rules precedence over Ant Design's outlined states. */
+html[data-theme] .didrah-ant-field:is(
+  .ant-input.ant-input-outlined,
+  .ant-input-affix-wrapper.ant-input-outlined,
+  .ant-input-number.ant-input-number-outlined,
+  .ant-select.ant-select-outlined
+) {
+  --field-fill: var(--didrah-control-fill);
+  --field-tint: var(--didrah-control-tint);
+  --field-inset: var(--didrah-control-inset);
+  --field-edge: var(--didrah-control-edge);
+  --field-status-edge: var(--field-edge);
+  background: var(--field-tint) padding-box, var(--field-fill) padding-box;
+  border-color: var(--field-status-edge);
+  box-shadow: var(--field-inset);
+
+  &:hover {
+    --field-fill: var(--didrah-control-hover);
+    --field-tint: var(--didrah-control-tint-hover);
+    --field-edge: var(--didrah-control-edge-hover);
+  }
+
+  &:is(:focus-within, .ant-select-focused) {
+    --field-fill: var(--didrah-control-focus);
+    --field-edge: var(--didrah-color-focus-ring);
+  }
+
+  &:is(.ant-input-status-error, .ant-input-number-status-error, .ant-select-status-error, [aria-invalid="true"]) {
+    --field-status-edge: var(--didrah-color-status-critical);
+  }
+
+  &:is(.ant-input-status-warning, .ant-input-number-status-warning, .ant-select-status-warning) {
+    --field-status-edge: var(--didrah-color-status-warning);
+  }
+
+  &:is(:disabled, .ant-input-disabled, .ant-input-affix-wrapper-disabled, .ant-input-number-disabled, .ant-select-disabled) {
+    --field-fill: var(--didrah-control-disabled);
+    --field-tint: none;
+    --field-inset: none;
+    --field-status-edge: var(--didrah-control-edge-disabled);
+  }
+
+  &:is(:focus-visible, :has(:focus-visible)) {
+    outline: 2px solid var(--didrah-color-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.didrah-ant-button.ant-btn:not(:disabled):focus-visible {
+  outline: 2px solid var(--didrah-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.didrah-ant-field:is(input, textarea)[dir="ltr"],
+.didrah-ant-field :is(input, textarea)[dir="ltr"],
+.didrah-ant-field.ant-input-number .didrah-ant-number-editor {
+  direction: ltr;
+  text-align: right;
+}
+
+.didrah-ant-field .didrah-ant-number-editor {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ant Design calculates the resting stepper width before it applies the configured handle width. */
+.didrah-ant-field.ant-input-number-mode-input .ant-input-number-actions {
+  width: var(--ant-input-number-handle-width);
+}
+
+.didrah-ant-field.ant-input-number-mode-input:not(.ant-input-number-without-controls, .ant-input-number-disabled, .ant-input-number-readonly)
+  .ant-input-number-suffix {
+  margin-inline-end: var(--ant-input-number-handle-width);
+}
+
+.didrah-ant-field :is(.ant-input-clear-icon, .ant-select-clear, .ant-select-suffix) {
+  color: var(--didrah-control-muted);
+  background: transparent;
+}
+
+.didrah-ant-field :is(.ant-input-clear-icon, .ant-select-clear):hover {
+  color: var(--didrah-color-text-primary);
+}
+
+.didrah-ant-field.ant-select-open .ant-select-content-has-value:not(.ant-select-content-has-search-value) {
+  color: var(--didrah-color-text-secondary);
+  opacity: 1;
+}
+
+.didrah-ant-select-popup.ant-select-dropdown {
+  background: var(--didrah-control-tint), var(--didrah-control-popup);
+  border: 1px solid var(--didrah-control-edge);
+  border-radius: var(--didrah-radius-control);
+  box-shadow: var(--didrah-control-inset), var(--didrah-control-popup-shadow);
+}
+
+.didrah-ant-select-popup .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  outline: 1px solid var(--didrah-control-option-edge);
+  outline-offset: -1px;
+}
+
+.didrah-ant-select-popup .ant-select-item-option-selected .ant-select-item-option-state {
+  color: var(--didrah-color-focus-ring);
+}
+
+.didrah-ant-button.ant-btn-loading .anticon-spin,
+.didrah-ant-field.ant-select-loading .anticon-spin {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .didrah-ant-button.ant-btn,
+  .didrah-ant-button .ant-btn-loading-icon,
+  .didrah-ant-field.ant-input-outlined,
+  .didrah-ant-field.ant-input-number-outlined,
+  .didrah-ant-field :is(.didrah-ant-number-editor, .ant-input-number-actions, .ant-input-number-action, .ant-input-number-suffix),
+  .didrah-ant-field.ant-select-outlined,
+  .didrah-ant-select-popup .ant-select-item {
+    transition: none;
+  }
+
+  .didrah-ant-select-popup.ant-select-dropdown {
+    animation-duration: 0s;
+  }
+}
+
+@media (forced-colors: active) {
+  html[data-theme] .didrah-ant-button.ant-btn:not(.ant-btn-variant-text, .ant-btn-variant-link) {
+    border-color: ButtonText;
+
+    &:hover {
+      border-color: ButtonText;
+    }
+
+    &:is(:disabled, .ant-btn-disabled) {
+      border-color: GrayText;
+    }
+  }
+
+  html[data-theme] .didrah-ant-field,
+  .didrah-ant-select-popup.ant-select-dropdown {
+    --didrah-control-edge: ButtonText;
+    --didrah-control-edge-hover: ButtonText;
+    --didrah-control-edge-disabled: GrayText;
+    --didrah-color-status-critical: ButtonText;
+    --didrah-color-status-warning: ButtonText;
+  }
+
+  .didrah-ant-button.ant-btn,
+  .didrah-ant-field,
+  .didrah-ant-select-popup {
+    --didrah-color-focus-ring: Highlight;
+    --didrah-control-option-edge: Highlight;
+  }
+}

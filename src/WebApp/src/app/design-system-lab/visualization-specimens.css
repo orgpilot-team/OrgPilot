@@ -1,10 +1,15 @@
-.lab-visualization {
-  margin-block-end: var(--didrah-space-inset);
-}
-
-.lab-viz-content:not([hidden]) {
+.lab-viz-content,
+.lab-viz-examples:not([hidden]) {
   display: grid;
   gap: var(--didrah-space-inset);
+}
+
+.lab-viz-content > button {
+  justify-self: start;
+}
+
+#charts {
+  container-type: inline-size;
 }
 
 .lab-chart-grid {
@@ -88,7 +93,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-@media (max-width: 56rem) {
+@container (max-width: 48rem) {
   .lab-chart-grid {
     grid-template-columns: minmax(0, 1fr);
   }

@@ -1,6 +1,7 @@
+import { CloseCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import {
   Alert, App, Button, Checkbox, DatePicker, Drawer, Dropdown, Empty, Input,
-  InputNumber, Menu, Popover, Radio, Select, Skeleton, Spin, Switch, Table, Tag, Tooltip,
+  InputNumber, Modal, Popover, Radio, Segmented, Select, Skeleton, Spin, Switch, Table, Tag, Tooltip,
 } from 'antd'
 import type { TableColumnsType } from 'antd'
 // Ant Design's DatePicker uses the bundled Day.js locale data for calendar labels.
@@ -12,6 +13,7 @@ const branches = [
   { value: 'vanak', label: 'شعبهٔ ونک' },
   { value: 'sadeghieh', label: 'شعبهٔ صادقیه' },
   { value: 'tehranpars', label: 'شعبهٔ تهرانپارس' },
+  { value: 'tajrish', label: 'شعبهٔ تجریش', disabled: true },
 ]
 
 const retailRows = [
@@ -33,12 +35,14 @@ const columns: TableColumnsType<(typeof retailRows)[number]> = [
     title: 'موجودی',
     dataIndex: 'stock',
     key: 'stock',
+    align: 'end',
     render: (stock: string) => <bdi className="lab-ant-number" dir="ltr">{stock}</bdi>,
   },
   {
     title: 'فروش خالص (ریال)',
     dataIndex: 'sales',
     key: 'sales',
+    align: 'end',
     render: (sales: string) => <bdi className="lab-ant-number" dir="ltr">{sales}</bdi>,
   },
   {
@@ -50,14 +54,12 @@ const columns: TableColumnsType<(typeof retailRows)[number]> = [
   },
 ]
 
-export function AntSpecimens() {
-  const { message, notification, modal } = App.useApp()
+export function ButtonFieldSpecimens() {
+  const { message } = App.useApp()
   const [reference, setReference] = useState('')
-  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [orderLevel, setOrderLevel] = useState<string | null>('20.00')
+  const [branchesLoading, setBranchesLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
-  const [pending, setPending] = useState(false)
-  const [empty, setEmpty] = useState(false)
-  const [lowStockOnly, setLowStockOnly] = useState(false)
 
   useEffect(() => {
     if (!refreshing) return
@@ -66,87 +68,24 @@ export function AntSpecimens() {
     return () => window.clearTimeout(timer)
   }, [refreshing])
 
-  const validReference = reference.trim().length > 0
-  const rows = empty ? [] : retailRows.filter((item) => !lowStockOnly || item.lowStock)
+  const validReference = /^ARK-\d{5}$/.test(reference.trim())
+  const lowOrderLevel = orderLevel !== null && Number(orderLevel) < 25
 
   return (
-    <section className="lab-panel lab-ant" aria-labelledby="lab-ant-heading">
-      <div className="lab-ant-heading">
-        <h2 id="lab-ant-heading">اجزای رابط کاربری</h2>
-        <bdi lang="en" dir="ltr">Ant Design</bdi>
-      </div>
-
-      <div className="lab-ant-grid">
-        <section className="lab-ant-card">
-          <h3>دکمه‌ها و بازخورد</h3>
-          <div className="lab-ant-actions">
-            <Button type="primary" onClick={() => void message.success('نمونهٔ گزارش ذخیره شد.')}>
-              ذخیرهٔ گزارش
-            </Button>
-            <Button onClick={() => setRefreshing(true)} loading={refreshing}>
-              تازه‌سازی
-            </Button>
-            <Button type="text" onClick={() => notification.info({
-              key: 'lab-shift-notice',
-              title: 'گزارش شیفت',
-              description: <>فهرست موجودی <bdi dir="ltr" lang="en">Stock Audit</bdi> آمادهٔ بررسی است.</>,
-              duration: 0,
-              placement: 'bottomLeft',
-            })}>
-              اعلان گزارش
-            </Button>
-            <Button type="primary" danger onClick={() => modal.confirm({
-              title: 'پیش‌نویس نمونه حذف شود؟',
-              content: 'این پیش‌نویس فقط برای آزمایش رابط کاربری است.',
-              okButtonProps: { danger: true },
-              onOk: () => { void message.success('پیش‌نویس نمونه حذف شد.') },
-            })}>
-              حذف پیش‌نویس
-            </Button>
-            <Button disabled>ارسال نهایی</Button>
-          </div>
-          <div className="lab-ant-actions lab-ant-status">
-            <Tag color="success">تأیید شد</Tag>
-            <Tag color="warning">نیاز به بررسی</Tag>
-            <Tag color="error">ناموفق</Tag>
-            <Tag color="processing">در حال بررسی</Tag>
-          </div>
-          <Alert type="warning" showIcon title="موجودی شعبهٔ صادقیه کمتر از حد سفارش است." />
-        </section>
-
-        <section className="lab-ant-card">
-          <h3>منوها و پنجره‌ها</h3>
-          <Menu
-            className="lab-ant-menu"
-            mode="horizontal"
-            defaultSelectedKeys={['inventory']}
-            items={[
-              { key: 'inventory', label: 'موجودی' },
-              { key: 'sales', label: 'فروش' },
-              { key: 'orders', label: 'سفارش‌ها' },
-            ]}
-          />
-          <div className="lab-ant-actions">
-            <Dropdown menu={{
-              items: [
-                { key: 'daily', label: 'گزارش روزانه' },
-                { key: 'weekly', label: 'گزارش هفتگی' },
-              ],
-              onClick: ({ key }) => void message.info(key === 'daily' ? 'گزارش روزانه انتخاب شد.' : 'گزارش هفتگی انتخاب شد.'),
-            }} trigger={['click']}>
-              <Button>گزینه‌های گزارش</Button>
-            </Dropdown>
-            <Tooltip title="واحد همهٔ مبالغ جدول ریال است." trigger={['hover', 'focus']}>
-              <Button>واحد مبالغ</Button>
-            </Tooltip>
-            <Popover title="آستانهٔ سفارش" content="موجودی کمتر از ۲۰ واحد نیاز به بررسی دارد." trigger="click">
-              <Button>راهنمای موجودی</Button>
-            </Popover>
-            <Button onClick={() => setDrawerOpen(true)}>جزئیات شعبه</Button>
-          </div>
-        </section>
-      </div>
-
+    <>
+      <section className="lab-ant-card">
+        <h3>دکمه‌ها</h3>
+        <div className="lab-ant-actions">
+          <Button type="primary" onClick={() => void message.success('نمونهٔ گزارش ذخیره شد.')}>
+            ذخیرهٔ گزارش
+          </Button>
+          <Button onClick={() => setRefreshing(true)} loading={refreshing} aria-busy={refreshing}>
+            {refreshing ? 'در حال تازه‌سازی…' : 'تازه‌سازی'}
+          </Button>
+          <Button type="text" onClick={() => void message.info('نمونهٔ گزارش آمادهٔ بررسی است.')}>بررسی گزارش</Button>
+          <Button disabled>ارسال نهایی</Button>
+        </div>
+      </section>
       <section className="lab-ant-card">
         <h3>کنترل‌های فرم</h3>
         <div className="lab-ant-fields">
@@ -166,22 +105,49 @@ export function AntSpecimens() {
               aria-invalid={!validReference}
               aria-describedby={validReference ? undefined : 'lab-ant-reference-error'}
             />
-            {!validReference && <span id="lab-ant-reference-error" className="lab-ant-error">شناسهٔ پیگیری را وارد کنید.</span>}
+            {!validReference && (
+              <span id="lab-ant-reference-error" className="lab-ant-field-hint" data-status="error">
+                <CloseCircleOutlined aria-hidden="true" />
+                شناسه را با قالب نمونه وارد کنید.
+              </span>
+            )}
           </div>
           <div className="lab-ant-field">
             <label htmlFor="lab-ant-branch">شعبه</label>
-            <Select id="lab-ant-branch" defaultValue="vanak" options={branches} />
+            <Select
+              id="lab-ant-branch"
+              defaultValue="vanak"
+              options={branchesLoading ? [] : branches}
+              placeholder="شعبه را انتخاب کنید"
+              showSearch={{ optionFilterProp: 'label' }}
+              virtual={false}
+              allowClear
+              loading={branchesLoading}
+              aria-busy={branchesLoading}
+              notFoundContent={branchesLoading ? 'در حال بارگیری شعبه‌ها…' : 'شعبه‌ای پیدا نشد.'}
+            />
+            <Checkbox checked={branchesLoading} onChange={(event) => setBranchesLoading(event.target.checked)}>
+              بارگیری شعبه‌ها
+            </Checkbox>
           </div>
           <div className="lab-ant-field">
             <label htmlFor="lab-ant-order-level">حد سفارش</label>
             <InputNumber
               id="lab-ant-order-level"
-              defaultValue="20.00"
+              value={orderLevel}
+              onChange={setOrderLevel}
               stringMode
               step="0.01"
               min="0"
-              style={{ width: '100%' }}
+              status={lowOrderLevel ? 'warning' : undefined}
+              aria-describedby={lowOrderLevel ? 'lab-ant-order-warning' : undefined}
             />
+            {lowOrderLevel && (
+              <span id="lab-ant-order-warning" className="lab-ant-field-hint" data-status="warning">
+                <ExclamationCircleOutlined aria-hidden="true" />
+                حد سفارش کمتر از ۲۵ واحد است.
+              </span>
+            )}
           </div>
           <div className="lab-ant-field">
             <label htmlFor="lab-ant-date">تاریخ گزارش</label>
@@ -196,43 +162,198 @@ export function AntSpecimens() {
             <Input.TextArea id="lab-ant-notes" rows={2} defaultValue="موجودی قفسه با گزارش انبار مرکزی بررسی شد." />
           </div>
         </div>
-        <div className="lab-ant-actions">
-          <Checkbox checked={lowStockOnly} onChange={(event) => setLowStockOnly(event.target.checked)}>
-            فقط کالاهای کم‌موجودی
-          </Checkbox>
-          <Radio.Group
-            aria-label="شیفت گزارش"
-            defaultValue="morning"
-            options={[{ label: 'شیفت صبح', value: 'morning' }, { label: 'شیفت عصر', value: 'evening' }]}
-          />
-        </div>
       </section>
+    </>
+  )
+}
 
+const selectionBranches = branches.filter(({ disabled }) => !disabled).map(({ value }) => value)
+
+export function SelectionSpecimens() {
+  const [selectedBranches, setSelectedBranches] = useState(['vanak'])
+  const allSelected = selectedBranches.length === selectionBranches.length
+
+  return (
+    <div className="lab-ant-grid">
+      <fieldset className="lab-ant-card">
+        <legend>شعبه‌های گزارش</legend>
+        <Checkbox
+          checked={allSelected}
+          indeterminate={selectedBranches.length > 0 && !allSelected}
+          onChange={(event) => setSelectedBranches(event.target.checked ? selectionBranches : [])}
+        >
+          همهٔ شعبه‌ها
+        </Checkbox>
+        <Checkbox.Group options={branches} value={selectedBranches} onChange={setSelectedBranches} />
+      </fieldset>
+      <fieldset className="lab-ant-card">
+        <legend>شیفت گزارش</legend>
+        <Radio.Group
+          aria-label="شیفت گزارش"
+          defaultValue="morning"
+          options={[
+            { label: 'شیفت صبح', value: 'morning' },
+            { label: 'شیفت عصر', value: 'evening' },
+            { label: 'شیفت شب', value: 'night', disabled: true },
+          ]}
+        />
+      </fieldset>
+      <fieldset className="lab-ant-card">
+        <legend>ارسال گزارش</legend>
+        <div className="lab-ant-actions">
+          <label><Switch defaultChecked /> یادآوری ارسال</label>
+          <label><Switch disabled /> ارسال خودکار گزارش</label>
+        </div>
+      </fieldset>
+      <fieldset className="lab-ant-card">
+        <legend>بازهٔ گزارش</legend>
+        <Segmented
+          aria-label="بازهٔ گزارش"
+          defaultValue="day"
+          options={[
+            { label: 'امروز', value: 'day' },
+            { label: 'این هفته', value: 'week' },
+            { label: 'این ماه', value: 'month', disabled: true },
+          ]}
+        />
+      </fieldset>
+    </div>
+  )
+}
+
+export function OverlaySpecimens() {
+  const { message, modal } = App.useApp()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [popoverOpen, setPopoverOpen] = useState(false)
+
+  return (
+    <div className="lab-ant-card">
+      <div className="lab-ant-actions">
+        <Dropdown autoFocus menu={{
+          items: [
+            { key: 'daily', label: 'گزارش روزانه' },
+            { key: 'weekly', label: 'گزارش هفتگی' },
+            { key: 'archive', label: 'بایگانی گزارش‌ها', disabled: true },
+          ],
+          onClick: ({ key }) => void message.info(key === 'daily' ? 'گزارش روزانه انتخاب شد.' : 'گزارش هفتگی انتخاب شد.'),
+        }} trigger={['click']}>
+          <Button>گزینه‌های گزارش</Button>
+        </Dropdown>
+        <Tooltip title="واحد همهٔ مبالغ جدول ریال است." trigger={['hover', 'focus']}>
+          <Button>واحد مبالغ</Button>
+        </Tooltip>
+        <Popover
+          title="آستانهٔ سفارش"
+          content="موجودی کمتر از ۲۰ واحد نیاز به بررسی دارد."
+          trigger="click"
+          open={popoverOpen}
+          onOpenChange={setPopoverOpen}
+        >
+          <Button
+            aria-expanded={popoverOpen}
+            onBlur={() => setPopoverOpen(false)}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') setPopoverOpen(false)
+            }}
+          >
+            راهنمای موجودی
+          </Button>
+        </Popover>
+        <Button onClick={() => setDrawerOpen(true)}>جزئیات شعبه</Button>
+        <Button onClick={() => setModalOpen(true)}>پیش‌نمایش گزارش</Button>
+        <Button type="primary" danger onClick={() => modal.confirm({
+          title: 'پیش‌نویس نمونه حذف شود؟',
+          content: 'این پیش‌نویس فقط برای آزمایش رابط کاربری است.',
+          okButtonProps: { danger: true },
+          onOk: () => { void message.success('پیش‌نویس نمونه حذف شد.') },
+        })}>
+          حذف پیش‌نویس
+        </Button>
+      </div>
+      <Modal
+        title="پیش‌نمایش گزارش موجودی"
+        open={modalOpen}
+        onCancel={() => setModalOpen(false)}
+        footer={<Button onClick={() => setModalOpen(false)}>بستن پیش‌نمایش</Button>}
+      >
+        <p>گزارش امروز شامل سه شعبه است.</p>
+      </Modal>
+      <Drawer title="جزئیات شعبهٔ ونک" open={drawerOpen} onClose={() => setDrawerOpen(false)} size="default">
+        <p>فهرست کالاهای شعبه با گزارش <bdi dir="ltr" lang="en">Stock Audit</bdi> مطابقت دارد.</p>
+        <Alert type="success" showIcon title="کنترل موجودی انجام شد." />
+      </Drawer>
+    </div>
+  )
+}
+
+export function DataFeedbackSpecimens() {
+  const { message, notification } = App.useApp()
+  const [pending, setPending] = useState(false)
+  const [empty, setEmpty] = useState(false)
+  const [lowStockOnly, setLowStockOnly] = useState(false)
+  const rows = empty ? [] : retailRows.filter((item) => !lowStockOnly || item.lowStock)
+
+  return (
+    <>
+      <section className="lab-ant-card">
+        <h3>وضعیت و اعلان</h3>
+        <div className="lab-ant-actions">
+          <Button onClick={() => void message.success('نمونهٔ گزارش ذخیره شد.')}>پیام ذخیرهٔ گزارش</Button>
+          <Button type="text" onClick={() => notification.info({
+            key: 'lab-shift-notice',
+            title: 'گزارش شیفت',
+            description: <>فهرست موجودی <bdi dir="ltr" lang="en">Stock Audit</bdi> آمادهٔ بررسی است.</>,
+            duration: 0,
+            placement: 'bottomLeft',
+            role: 'status',
+            closable: { 'aria-label': 'بستن اعلان گزارش' },
+          })}>
+            اعلان گزارش
+          </Button>
+        </div>
+        <div className="lab-ant-actions lab-ant-status">
+          <Tag color="success">تأیید شد</Tag>
+          <Tag color="warning">نیاز به بررسی</Tag>
+          <Tag color="error">ناموفق</Tag>
+          <Tag color="processing">در حال بررسی</Tag>
+        </div>
+        <Alert type="warning" showIcon title="موجودی شعبهٔ صادقیه کمتر از حد سفارش است." />
+      </section>
       <section className="lab-ant-card">
         <div className="lab-ant-table-header">
           <h3>موجودی و فروش شعب آرکا</h3>
           <div className="lab-ant-actions">
+            <Checkbox checked={lowStockOnly} onChange={(event) => setLowStockOnly(event.target.checked)}>
+              فقط کالاهای کم‌موجودی
+            </Checkbox>
             <label><Switch checked={pending} onChange={setPending} /> حالت بارگیری</label>
             <label><Switch checked={empty} onChange={setEmpty} /> جدول خالی</label>
           </div>
         </div>
         {pending
-          ? <div className="lab-ant-loading"><Spin /><Skeleton active title={false} paragraph={{ rows: 3 }} /></div>
+          ? <div className="lab-ant-loading">
+              <div className="lab-ant-loading-label" role="status">
+                <span aria-hidden="true"><Spin size="small" /></span>
+                <span>در حال بارگیری موجودی و فروش شعبه‌ها…</span>
+              </div>
+              <div aria-hidden="true"><Skeleton title={false} paragraph={{ rows: 3 }} /></div>
+            </div>
           : <Table
               columns={columns}
               dataSource={rows}
               rowKey="sku"
               pagination={false}
               scroll={{ x: 620 }}
-              locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
+              locale={{
+                emptyText: <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description="برای این نمای جدول کالایی وجود ندارد."
+                />,
+              }}
             />
         }
       </section>
-
-      <Drawer title="جزئیات شعبهٔ ونک" open={drawerOpen} onClose={() => setDrawerOpen(false)} size="default">
-        <p>فهرست کالاهای شعبه با گزارش <bdi dir="ltr" lang="en">Stock Audit</bdi> مطابقت دارد.</p>
-        <Alert type="success" showIcon title="کنترل موجودی انجام شد." />
-      </Drawer>
-    </section>
+    </>
   )
 }

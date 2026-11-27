@@ -2,7 +2,6 @@
   display: grid;
   gap: var(--didrah-space-panel);
   max-inline-size: 50.75rem;
-  margin-block: var(--didrah-space-panel) 0;
   margin-inline: auto;
 }
 

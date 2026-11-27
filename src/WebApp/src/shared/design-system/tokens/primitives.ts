@@ -13,7 +13,7 @@ export const primitiveColors = {
   silver: '#A7A8BA',
   frost: '#F7F8FF',
   white: '#FFFFFF',
-  porcelain: '#F4F6FB',
+  porcelain: '#EDF1FA',
   ice: '#F8FAFF',
   pearl: '#F8F9FD',
   lavender: '#E9EEFF',

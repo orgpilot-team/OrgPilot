@@ -16,7 +16,7 @@ export function PanelState(props: PanelStateProps) {
   if (props.kind === 'loading') {
     return (
       <div className="didrah-panel-loading" role="status">
-        <span>{props.title}</span>
+        <span className="didrah-panel-state-title">{props.title}</span>
         <div aria-hidden="true">
           <Skeleton title={false} paragraph={{ rows: 3 }} />
         </div>
@@ -30,7 +30,12 @@ export function PanelState(props: PanelStateProps) {
     return (
       <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}
-        description={<><strong>{title}</strong>{description && <div>{description}</div>}</>}
+        description={
+          <div className="didrah-panel-empty" role="status">
+            <span className="didrah-panel-state-title">{title}</span>
+            {description && <div>{description}</div>}
+          </div>
+        }
       >
         {action}
       </Empty>

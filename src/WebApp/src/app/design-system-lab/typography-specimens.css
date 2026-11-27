@@ -1,7 +1,3 @@
-.lab-typography {
-  margin-block-end: 1rem;
-}
-
 .lab-typography-header {
   display: flex;
   flex-wrap: wrap;
@@ -11,7 +7,7 @@
   margin-block-end: 1rem;
 }
 
-.lab-panel .lab-typography-header h2,
+.lab-panel .lab-typography-header h3,
 .lab-type-card h3,
 .lab-chart-labels h3 {
   margin: 0;
@@ -145,7 +141,11 @@
 
 .lab-retail-table thead {
   color: var(--didrah-color-text-secondary);
-  font: var(--didrah-type-control);
+  font: var(--didrah-type-action);
+}
+
+.lab-retail-table th {
+  font-weight: var(--didrah-weight-medium);
 }
 
 .lab-chart-labels {

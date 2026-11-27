@@ -1,7 +1,3 @@
-.lab-history-specimen {
-  margin-block-end: var(--didrah-space-panel);
-}
-
 .lab-history-stage {
   --didrah-history-height: min(47rem, calc(100dvh - 3rem));
   display: grid;

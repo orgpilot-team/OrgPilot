@@ -1,0 +1,132 @@
+.didrah-primary-nav {
+  --primary-nav-surface: var(--didrah-color-surface-base);
+  --primary-nav-border: var(--didrah-color-border-subtle);
+  --primary-nav-current-fill: linear-gradient(var(--didrah-color-surface-selected), var(--didrah-color-surface-selected));
+  --primary-nav-current-edge: linear-gradient(var(--didrah-color-border-control), var(--didrah-color-border-control));
+  --primary-nav-current-ink: var(--didrah-color-text-primary);
+  --primary-nav-current-shadow: none;
+  box-sizing: border-box;
+  padding: 0.5625rem 0.5625rem 0.6875rem;
+  border: 1px solid var(--primary-nav-border);
+  border-radius: var(--didrah-radius-panel);
+  background: var(--primary-nav-surface);
+}
+
+[data-theme="dark"] .didrah-primary-nav {
+  --primary-nav-surface: color-mix(in srgb, var(--didrah-color-surface-raised) 58%, var(--didrah-color-surface-base));
+  --primary-nav-border: color-mix(in srgb, var(--didrah-color-border-subtle) 52%, var(--primary-nav-surface));
+  --primary-nav-current-fill: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--didrah-color-brand-primary) 78%, #005cba),
+    #192785 52%,
+    #382bbe
+  );
+  --primary-nav-current-edge: linear-gradient(to left, #317aff, var(--didrah-color-brand-indigo) 49%, #9574ff);
+  --primary-nav-current-ink: var(--didrah-color-brand-on-primary);
+  --primary-nav-current-shadow:
+    inset 0 0 0.4375rem #8590ff38,
+    0.125rem 0 0.8125rem #164cff58,
+    -0.125rem 0 0.8125rem #5935f346;
+}
+
+[data-theme="light"] .didrah-primary-nav {
+  --primary-nav-surface: linear-gradient(180deg, #fff, #f4f7fe);
+  --primary-nav-current-fill: linear-gradient(to left, #e4edff, #ede9fc);
+  --primary-nav-current-edge: linear-gradient(to left, #6c82ba, #8173af);
+  --primary-nav-current-ink: #253879;
+  --primary-nav-current-shadow: inset 0 1px 0 #ffffffbf;
+}
+
+.didrah-primary-nav-list {
+  display: grid;
+  gap: 0.1875rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.didrah-primary-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: 2.125rem;
+  padding: 0.125rem 0.875rem;
+  border: 1px solid transparent;
+  border-radius: 0.6875rem;
+  background: transparent;
+  color: var(--didrah-color-text-secondary);
+  font: var(--didrah-type-navigation);
+  text-align: start;
+  cursor: pointer;
+}
+
+.didrah-primary-nav-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+.didrah-primary-nav-icon > :is(svg, img) {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.didrah-primary-nav-label {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.didrah-primary-nav-item:enabled:hover:not([aria-current="page"]) {
+  background-color: var(--didrah-color-surface-overlay);
+  border-color: var(--didrah-color-border-subtle);
+  color: var(--didrah-color-text-primary);
+}
+
+.didrah-primary-nav-item[aria-current="page"] {
+  background: var(--primary-nav-current-fill) padding-box, var(--primary-nav-current-edge) border-box;
+  border-color: transparent;
+  color: var(--primary-nav-current-ink);
+  box-shadow: var(--primary-nav-current-shadow);
+  font-weight: var(--didrah-weight-semibold);
+}
+
+.didrah-primary-nav-item[aria-current="page"]:enabled:hover:not(:active) {
+  filter: brightness(1.1);
+}
+
+.didrah-primary-nav-item:enabled:active {
+  background-color: var(--didrah-color-surface-selected);
+  filter: brightness(0.88);
+}
+
+.didrah-primary-nav-item:disabled {
+  color: var(--didrah-color-text-muted);
+  cursor: not-allowed;
+}
+
+.didrah-primary-nav-item[aria-current="page"]:disabled {
+  color: var(--primary-nav-current-ink);
+  opacity: 0.7;
+}
+
+.didrah-primary-nav-item:focus-visible {
+  outline: 2px solid var(--didrah-color-focus-ring);
+  outline-offset: 1px;
+}
+
+.didrah-primary-nav-empty {
+  margin: 0;
+  padding: var(--didrah-space-compact);
+  color: var(--didrah-color-text-secondary);
+  font: var(--didrah-type-secondary);
+}
+
+@media (forced-colors: active) {
+  .didrah-primary-nav-item[aria-current="page"] {
+    border-color: Highlight;
+  }
+}

@@ -61,7 +61,7 @@ export function NavigationHistorySpecimen() {
   return (
     <section className="lab-history-specimen" aria-labelledby="lab-history-heading">
       <Panel>
-        <SectionHeader id="lab-history-heading" level={2} title="نوار کناری تاریخچهٔ گفت‌وگوها" />
+        <SectionHeader id="lab-history-heading" title="نوار کناری تاریخچهٔ گفت‌وگوها" />
         <div className="lab-history-stage">
           <NavigationHistorySidebar
             groups={groups}

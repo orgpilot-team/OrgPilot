@@ -17,6 +17,11 @@ h3 {
   font: var(--didrah-type-heading-3);
 }
 
+b,
+strong {
+  font-weight: var(--didrah-weight-semibold);
+}
+
 button,
 input,
 select,

@@ -1,13 +1,46 @@
+import { CheckOutlined } from '@ant-design/icons'
 import { theme as ant } from 'antd'
-import type { ThemeConfig } from 'antd'
+import type { ConfigProviderProps, ThemeConfig } from 'antd'
+import { createElement } from 'react'
 import { darkTheme } from '../tokens/dark-theme'
 import { layout, overlayShadow } from '../tokens/layout'
 import { lightTheme } from '../tokens/light-theme'
 import type { ThemeColors, ThemeName } from '../tokens/theme-contract'
 import { typography } from '../tokens/typography'
+import './ant-controls.css'
+import './ant-selection-overlays.css'
+import './ant-data-feedback.css'
 
 const { roles } = typography
 const toAntPixels = (size: (typeof roles)[keyof typeof roles]['size']) => Number.parseFloat(size) * 16
+
+const fieldClassNames = { root: 'didrah-ant-field' }
+
+export const antControlConfig = {
+  button: { classNames: { root: 'didrah-ant-button' } },
+  input: { classNames: fieldClassNames },
+  textArea: { classNames: fieldClassNames },
+  inputNumber: { classNames: { ...fieldClassNames, input: 'didrah-ant-number-editor' } },
+  select: {
+    classNames: { ...fieldClassNames, popup: { root: 'didrah-ant-select-popup' } },
+    menuItemSelectedIcon: createElement(CheckOutlined, { 'aria-hidden': true }),
+  },
+  checkbox: { classNames: { icon: 'didrah-ant-choice' } },
+  radio: { classNames: { icon: 'didrah-ant-choice' } },
+  switch: { classNames: { root: 'didrah-ant-switch' } },
+  segmented: { classNames: { root: 'didrah-ant-segmented', item: 'didrah-ant-segment' } },
+  modal: { classNames: { container: 'didrah-ant-dialog' } },
+  drawer: { classNames: { section: 'didrah-ant-dialog' } },
+  dropdown: { classNames: { menu: 'didrah-ant-popup', item: 'didrah-ant-menu-item' } },
+  popover: { classNames: { container: 'didrah-ant-popup' } },
+  tooltip: { classNames: { container: 'didrah-ant-tooltip' } },
+  table: { className: 'didrah-ant-table' },
+  alert: { classNames: { root: 'didrah-ant-alert' } },
+  skeleton: { classNames: { root: 'didrah-ant-skeleton' } },
+  spin: { classNames: { indicator: 'didrah-ant-spinner' } },
+  message: { classNames: { root: 'didrah-ant-notice' } },
+  notification: { classNames: { root: 'didrah-ant-notice' } },
+} satisfies ConfigProviderProps
 
 function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
   const isDark = name === 'dark'
@@ -27,26 +60,43 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
   const error = colors['status-critical']
   const info = colors['status-information']
   const tint = (color: string, amount: number) => `color-mix(in srgb, ${color} ${amount}%, ${surface})`
+  const statusFill = isDark ? 8 : 6
+  const statusEdge = isDark ? 24 : 34
   const status = {
     colorSuccess: success,
     colorWarning: warning,
     colorError: error,
     colorInfo: info,
-    colorSuccessBg: tint(success, 8),
-    colorWarningBg: tint(warning, 8),
-    colorErrorBg: tint(error, 8),
-    colorInfoBg: tint(info, 8),
-    colorSuccessBorder: tint(success, 24),
-    colorWarningBorder: tint(warning, 24),
-    colorErrorBorder: tint(error, 24),
-    colorInfoBorder: tint(info, 24),
+    colorSuccessBg: tint(success, statusFill),
+    colorWarningBg: tint(warning, statusFill),
+    colorErrorBg: tint(error, statusFill),
+    colorInfoBg: tint(info, statusFill),
+    colorSuccessBorder: tint(success, statusEdge),
+    colorWarningBorder: tint(warning, statusEdge),
+    colorErrorBorder: tint(error, statusEdge),
+    colorInfoBorder: tint(info, statusEdge),
+    colorSuccessText: success,
+    colorWarningText: warning,
+    colorErrorText: error,
+    colorInfoText: info,
   }
   const field = {
-    colorBgContainer: input,
-    colorBorder: isDark ? muted : colors['border-control'],
-    hoverBorderColor: accent,
-    activeBorderColor: focus,
+    colorTextPlaceholder: 'var(--didrah-control-muted)',
+    colorTextDisabled: 'var(--didrah-control-muted)',
   }
+  const inputField = {
+    ...field,
+    paddingInline: layout.space.gap,
+  }
+  const choice = {
+    colorBorder: 'var(--didrah-control-edge)',
+    colorBgContainer: 'var(--didrah-control-fill)',
+    colorBgContainerDisabled: 'var(--didrah-control-disabled)',
+    colorPrimaryBorder: focus,
+    colorPrimary: isDark ? '#5162c6' : '#3e50ac',
+    colorPrimaryHover: isDark ? '#6072d6' : '#35499d',
+  }
+  const overlay = colors['surface-overlay']
 
   return {
     algorithm: isDark ? ant.darkAlgorithm : ant.defaultAlgorithm,
@@ -70,7 +120,7 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
       colorBgContainer: surface,
       colorBgContainerDisabled: raised,
       colorBgElevated: colors['surface-overlay'],
-      colorBgMask: `${darkTheme.canvas}99`,
+      colorBgMask: isDark ? `${darkTheme.canvas}99` : '#26345852',
       colorBorder: colors['border-control'],
       colorBorderSecondary: border,
       colorSplit: border,
@@ -87,34 +137,105 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
       fontSizeHeading2: toAntPixels(roles['heading-2'].size),
       fontSizeHeading3: toAntPixels(roles['heading-3'].size),
       lineHeight: roles.body.lineHeight,
-      fontWeightStrong: roles.control.weight,
+      fontWeightStrong: roles['heading-3'].weight,
       borderRadius: layout.radius.control,
       controlHeight: layout.controlHeight,
       boxShadowSecondary: overlayShadow(name, colors),
     },
     components: {
       Button: {
-        primaryColor: colors['brand-on-primary'],
-        dangerColor: isDark ? colors.canvas : colors['brand-on-primary'],
-        defaultHoverColor: text,
-        defaultHoverBorderColor: accent,
-        defaultHoverBg: raised,
         primaryShadow: 'none',
         defaultShadow: 'none',
         dangerShadow: 'none',
-        fontSize: toAntPixels(roles.control.size),
-        fontWeight: roles.control.weight,
+        paddingInline: layout.space.inset - 2,
+        fontSize: toAntPixels(roles.action.size),
+        fontWeight: roles.action.weight,
       },
-      Input: field,
-      InputNumber: field,
+      Input: inputField,
+      InputNumber: {
+        ...inputField,
+        handleVisible: true,
+        handleWidth: 24,
+        handleBg: 'var(--didrah-control-secondary)',
+        handleActiveBg: 'var(--didrah-control-secondary-pressed)',
+        handleHoverColor: text,
+        handleBorderColor: 'var(--didrah-control-edge-disabled)',
+      },
       Select: {
         ...field,
-        optionSelectedBg: selected,
+        paddingSM: layout.space.gap + 1,
+        optionHeight: 34,
+        optionPadding: '5px 10px',
         optionSelectedColor: text,
+        optionActiveBg: 'var(--didrah-control-option-active)',
+        optionSelectedBg: 'var(--didrah-control-option-selected)',
+        controlItemBgActiveHover: 'var(--didrah-control-option-selected-active)',
       },
-      DatePicker: field,
-      Tag: status,
-      Alert: status,
+      DatePicker: {
+        colorBgContainer: input,
+        colorBorder: isDark ? muted : colors['border-control'],
+        hoverBorderColor: accent,
+        activeBorderColor: focus,
+      },
+      Checkbox: choice,
+      Radio: { ...choice, dotColorDisabled: muted },
+      Switch: {
+        ...choice,
+        colorTextQuaternary: 'var(--didrah-control-edge)',
+        colorTextTertiary: 'var(--didrah-control-edge-hover)',
+        handleShadow: 'none',
+      },
+      Segmented: {
+        trackBg: 'var(--didrah-control-fill)',
+        trackPadding: 3,
+        itemColor: secondary,
+        itemHoverColor: text,
+        itemHoverBg: 'var(--didrah-control-hover)',
+        itemActiveBg: 'var(--didrah-control-option-active)',
+        itemSelectedBg: 'var(--didrah-control-option-selected)',
+        itemSelectedColor: text,
+      },
+      Modal: {
+        contentBg: overlay,
+        headerBg: 'transparent',
+        footerBg: 'transparent',
+        titleColor: text,
+        titleFontSize: toAntPixels(roles['heading-3'].size),
+        titleLineHeight: roles['heading-3'].lineHeight,
+        borderRadiusLG: layout.radius.panel,
+      },
+      Drawer: { colorBgElevated: overlay, colorSplit: border },
+      Dropdown: { colorBgElevated: overlay, controlItemBgHover: raised },
+      Popover: { colorBgElevated: overlay, colorText: text },
+      Tag: { ...status, defaultBg: raised, defaultColor: secondary },
+      Alert: {
+        ...status,
+        containerBorderRadius: layout.radius.control,
+        defaultPadding: '8px 12px',
+        withDescriptionPadding: '12px 16px',
+      },
+      Empty: { colorTextDescription: secondary },
+      Skeleton: {
+        gradientFromColor: tint(muted, 15),
+        gradientToColor: tint(muted, 25),
+        blockRadius: 4,
+      },
+      Spin: { colorPrimary: colors['accent-cyan-content'] },
+      Message: {
+        contentBg: overlay,
+        contentPadding: '8px 14px',
+        colorSuccess: success,
+        colorWarning: warning,
+        colorError: error,
+        colorInfo: info,
+      },
+      Notification: {
+        colorBgElevated: overlay,
+        colorSuccess: success,
+        colorWarning: warning,
+        colorError: error,
+        colorInfo: info,
+      },
       Menu: {
         itemSelectedBg: selected,
         itemSelectedColor: text,
@@ -124,14 +245,25 @@ function createAntTheme(name: ThemeName, colors: ThemeColors): ThemeConfig {
       Table: {
         headerBg: raised,
         headerColor: secondary,
+        headerSplitColor: border,
+        headerBorderRadius: layout.radius.control,
+        borderColor: border,
+        headerSortActiveBg: selected,
+        headerSortHoverBg: selected,
+        bodySortBg: raised,
         rowHoverBg: raised,
-        fontSize: toAntPixels(roles.table.size),
+        rowSelectedBg: selected,
+        rowSelectedHoverBg: tint(primary, 16),
+        footerBg: raised,
+        cellFontSize: toAntPixels(roles.table.size),
+        cellFontSizeMD: toAntPixels(roles.table.size),
+        cellFontSizeSM: toAntPixels(roles['table-compact'].size),
         lineHeight: roles.table.lineHeight,
         cellPaddingBlock: 10,
         cellPaddingInline: layout.space.gap,
       },
       Tooltip: {
-        colorBgSpotlight: colors['surface-overlay'],
+        colorBgSpotlight: overlay,
         colorTextLightSolid: text,
       },
     },

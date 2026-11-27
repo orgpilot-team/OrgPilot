@@ -1,0 +1,37 @@
+.lab-primary-navigation {
+  display: grid;
+  max-inline-size: 36rem;
+  gap: var(--didrah-space-gap);
+}
+
+.lab-primary-navigation-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--didrah-space-panel);
+}
+
+.lab-primary-navigation-controls {
+  color: var(--didrah-color-text-secondary);
+}
+
+.lab-primary-navigation-controls p {
+  margin: 0 0 var(--didrah-space-compact);
+}
+
+.lab-primary-navigation-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--didrah-space-compact);
+  font: var(--didrah-type-label);
+}
+
+.lab-primary-navigation-controls input {
+  margin: 0;
+  accent-color: var(--didrah-color-brand-primary);
+}
+
+.lab-primary-navigation-controls input:focus-visible {
+  outline: 2px solid var(--didrah-color-focus-ring);
+  outline-offset: 2px;
+}
